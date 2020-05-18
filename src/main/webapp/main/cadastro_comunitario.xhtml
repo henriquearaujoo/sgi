@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="menu_lateral">
+
+		<h:form id="tabela_menu">
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{comunitario_controller.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{comunitario_controller.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{comunitario_controller.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right; color: #849A39"
+						class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="formComunitario">
+			<p:dataTable id="list" 
+				value="#{comunitario_controller.listaComunidades}" var="bean"
+				paginator="true" widgetVar="filteredComunitario">
+				
+				<f:facet name="header">
+				
+					<p:inputText id="globalFilter"
+						onkeyup="PF('filteredComunitario').filter()" placeholder="Busque..." />
+
+					<p:commandLink id="add"  style="margin-left:5px"
+						action="#{comunitario_controller.novo}" rendered="#{usuario_controller.poderEditar()}" title="Adicionar Comunidade">
+						<span style="color: green; font-size: 25px;" class="icon-plus-alt">
+						</span>
+					</p:commandLink>
+
+			    </f:facet>
+				
+				<p:column filterBy="#{bean.denominacao}"
+					filterStyle="display:none" headerText="Denominacao">
+					<h:outputText value="#{bean.denominacao}" />
+				</p:column>
+				
+				<p:column filterBy="#{bean.nomeCompleto}"
+					filterStyle="display:none" headerText="Líder comunitário">
+					<h:outputText value="#{bean.nomeCompleto}" />
+				</p:column>
+				
+				<p:column filterBy="#{bean.comunidade.nome}"
+					filterStyle="display:none" headerText="Comunidade">
+					<h:outputText value="#{bean.comunidade.nome}" />
+				</p:column>
+				
+				
+				<p:column headerText="Ação" style="width:10%;text-align: center;">
+					<p:commandLink title="Excluir" rendered="true" update="list"
+						value="Excluir" action="#{comunitario_controller.delete(bean)}" />
+					<p:spacer width="10px" />
+					
+					<p:link value="Editar" outcome="/main/cadastro_comunitario_edit">
+						<f:param name="idComunitario" value="#{bean.id}" />
+					</p:link>
+				
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,204 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<h:form id="form-edit-pagamento-tab2">
+
+		<p:panel id="panel-edit-pgto">
+			<div class="ui-g ui-fluid">
+				<div class="ui-g-12">
+					<p:messages id="edit-pagamento-tab2-msg" showSummary="false"
+						showDetail="true" closable="true" showIcon="true" />
+				</div>
+
+				<div class="ui-g-3">
+					<p:outputLabel value="Lançamento:" />
+					<p:inputText disabled="true"
+						value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.lancamento.id}" />
+
+				</div>
+
+				<div class="ui-g-3">
+					<p:outputLabel value="N° Nota:" />
+					<p:inputText
+						value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.lancamento.notaFiscal}" />
+
+				</div>
+
+				<div class="ui-g-3">
+					<p:outputLabel value="Data:" />
+					<p:calendar navigator="true"
+						value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.dataPagamento}"
+						 pattern="dd/MM/yyyy" />
+
+				</div>
+
+				<div class="ui-g-3">
+					<p:outputLabel value="Valor:" />
+					<p:inputText
+						value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.valor}"
+						onkeypress="return formatarNumero(this,event,19,2);">
+						<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+							locale="pt_BR" />
+					</p:inputText>
+
+				</div>
+
+				<div class="ui-g-6">
+					<p:outputLabel value="Fonte:"
+						rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}" />
+
+					<p:outputLabel
+						rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}"
+						value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica.rubricaOrcamento.orcamento.titulo}" />
+
+				</div>
+
+				<div class="ui-g-6">
+					<p:outputLabel value="Doação:"
+						rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}" />
+
+					<p:outputLabel
+						rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}"
+						value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica.rubricaOrcamento.orcamento.fonte.nome}" />
+
+				</div>
+
+				<div class="ui-g-12">
+					<p:outputLabel value="Linhas orçamentárias:"
+						rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.rubricaOrcamento != null}" />
+					<p:autoComplete id="cate_compra" placeholder="Categoria"
+						rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.rubricaOrcamento != null}"
+						value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.rubricaOrcamento}"
+						completeMethod="#{custo_pessoal_controller.completeRubricasDeOrcamento}"
+						var="categoria" itemLabel="#{categoria.rubrica.nome}"
+						itemValue="#{categoria}" converter="rubricaOrcamentoConverter">
+
+						<p:column headerText="Doação">
+							<h:outputText value="#{categoria.orcamento.fonte.nome}" />
+						</p:column>
+
+						<p:column headerText="Doação">
+							<h:outputText value="#{categoria.orcamento.titulo}" />
+						</p:column>
+
+						<p:column headerText="Componente">
+							<h:outputText value="#{categoria.componente.nome}" />
+						</p:column>
+
+						<p:column headerText="SubComponente">
+							<h:outputText value="#{categoria.subComponente.nome}" />
+						</p:column>
+
+						<p:column headerText="Categoria">
+							<h:outputText value="#{categoria.rubrica.nome}" />
+						</p:column>
+
+					</p:autoComplete>
+				</div>
+
+				<div class="ui-g-12">
+					<p:outputLabel value="Projetos:"
+						rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}" />
+					<p:selectOneMenu
+						value="#{liberacao_lancamento_controller.projetoAux}"
+						filter="true" filterMatchMode="contains"
+						rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}">
+						<f:selectItem noSelectionOption="true" />
+						<f:selectItems
+							value="#{liberacao_lancamento_controller.listaProjeto}"
+							var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}" />
+						<p:ajax update="linha_orcament" onstart="start()" onerror="stop()"
+							onsuccess="stop()"
+							listener="#{liberacao_lancamento_controller.listaRubricas()}" />
+					</p:selectOneMenu>
+
+				</div>
+
+				<div class="ui-g-12">
+					<h:outputText value="Linha orçamentária:"
+						rendered="#{liberacao_lancamento_controller.projetoAux != null}" />
+
+					<p:selectOneMenu id="linha_orcament"
+						rendered="#{liberacao_lancamento_controller.projetoAux != null}"
+						placeholder="Entre com o código/nome do projeto."
+						value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica}"
+						filter="true" filterMatchMode="contains" var="categoria"
+						converter="projetoRubricaConverter">
+
+						<f:selectItems
+							value="#{liberacao_lancamento_controller.listaDeRubricasProjeto}"
+							var="ru" itemLabel="#{ru.nomeCategoria}" itemValue="#{ru}" />
+
+
+						<p:column headerText="Código">
+							<h:outputText value="#{categoria.codigo}" />
+						</p:column>
+
+						<p:column headerText="Fonte">
+							<h:outputText value="#{categoria.nomeFonte}" />
+						</p:column>
+
+						<p:column headerText="Projeto">
+							<h:outputText value="#{categoria.nomeProjeto}" />
+						</p:column>
+
+						<p:column headerText="Componente">
+							<h:outputText value="#{categoria.nomeComponente}" />
+						</p:column>
+
+						<p:column headerText="SubComponente">
+							<h:outputText value="#{categoria.nomeSubComponente}" />
+						</p:column>
+
+						<p:column headerText="Linha orçamentária">
+							<h:outputText value="#{categoria.nomeCategoria}" />
+						</p:column>
+
+						<p:column headerText="Saldo">
+							<h:outputText value="#{categoria.valorSaldo}">
+								<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+									maxFractionDigits="2" locale="pt_BR" />
+							</h:outputText>
+						</p:column>
+
+
+					</p:selectOneMenu>
+				</div>
+
+				<div class="ui-g-12">
+
+					<p:outputLabel value="Descrição:" />
+					<p:inputText
+						value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.lancamento.descricao}" />
+
+				</div>
+
+				<div class="ui-g-12">
+					<p:commandLink style="color:#fff"
+						update=":form-lancamento-pagamento, edit-pagamento-tab2-msg"
+						process="form-edit-pagamento-tab2"
+						styleClass="btn btn-primary btn-sm"
+						action="#{liberacao_lancamento_controller.editarPagamentoTab2()}"
+						onclick="start()" onerror="stop()" oncomplete="stop()">
+						<span class="glyphicon glyphicon-floppy-disk"></span>
+						<span style="margin: 3px;">Salvar</span>
+					</p:commandLink>
+
+				</div>
+
+
+			</div>
+
+		</p:panel>
+
+	</h:form>
+
+
+
+</ui:fragment>

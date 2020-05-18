@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+
+	<ui:define name="content">
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+		</script>
+
+		<style type="text/css">
+.oppt .ui-widget {
+	font-size: 94%;
+}
+</style>
+
+		<h:form id="form-pagamentoPE" styleClass="oppt">
+
+			<p:toolbar>
+				<f:facet name="right">
+
+					<p:menuButton value="Relatórios">
+						<p:menuitem update="form_rel_contas"
+							value="Conferência de lançamentos"
+							action="#{report_financ_controller.prepararFiltrosParaConferenciaDeLancamentos()}"
+							icon="ui-icon-disk" oncomplete="PF('dlg_conferencia').show();" />
+
+						<p:menuitem value="Contas a pagar" icon="ui-icon-disk"
+							oncomplete="PF('dialog_contasapagar').show();" />
+
+						<p:menuitem value="Orçado x Realizado" icon="ui-icon-disk"
+							onclick="PF('dialog_orcado_realizado').show();" />
+					</p:menuButton>
+				</f:facet>
+			</p:toolbar>
+
+			<p:commandLink></p:commandLink>
+
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog modal="true" header="Conferência de lançamentos"
+			hideEffect="clip" closeOnEscape="true" showEffect="clip"
+			widgetVar="dlg_conferencia">
+			<h:form id="form_rel_contas">
+				<p:panelGrid columns="1" style="width:100%">
+
+					<h:panelGrid columns="2" cellpadding="5" cellspacing="5">
+						<h:outputText value="Dt inicio:" />
+						<p:calendar navigator="true"
+							value="#{report_financ_controller.filtro.dataInicio}"
+							timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+						<h:outputText value="Dt final:" />
+						<p:calendar navigator="true"
+							value="#{report_financ_controller.filtro.dataFinal}"
+							timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+					</h:panelGrid>
+
+
+					<h:panelGrid columns="2">
+						<h:outputText value="Contas:" />
+						<p:selectCheckboxMenu id="menu"
+							value="#{report_financ_controller.filtro.contas}"
+							label="Selecione" filter="true" filterMatchMode="contains">
+							<f:selectItems value="#{report_financ_controller.contas}"
+								var="conta" itemLabel="#{conta.nomeConta}"
+								itemValue="#{conta.id}" />
+						</p:selectCheckboxMenu>
+					</h:panelGrid>
+
+					<h:panelGrid columns="2">
+						<h:outputText value="Fontes:" />
+						<p:selectCheckboxMenu id="fonte" style="width:100%"
+							value="#{report_financ_controller.filtro.fontes}"
+							label="Selecione" filter="true" filterMatchMode="contains">
+							<f:selectItems value="#{report_financ_controller.fontes}"
+								var="fonte" itemLabel="#{fonte.nome}" itemValue="#{fonte.id}" />
+						</p:selectCheckboxMenu>
+					</h:panelGrid>
+
+					<h:panelGrid columns="2">
+						<h:outputText value="Projeto:" />
+						<p:selectOneMenu id="projeto"
+							value="#{report_financ_controller.filtro.projetoId}"
+							filter="true" panelStyle="width:270px" filterMatchMode="contains">
+							<f:selectItem itemLabel="Selecione um projeto" itemValue="0" />
+							<f:selectItems value="#{report_financ_controller.projetos}"
+								var="project" itemLabel="#{project.nome}"
+								itemValue="#{project.id}" />
+							<p:ajax listener="#{report_financ_controller.carregarAções()}"
+								process="@this" update="acoes" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+
+
+					<h:panelGrid columns="2">
+						<h:outputText value="Ações:" />
+						<p:selectCheckboxMenu id="acoes"
+							value="#{report_financ_controller.filtro.acoes}" label="Ações" filter="true"
+							filterMatchMode="contains" panelStyle="width:270px">
+							<f:selectItems value="#{report_financ_controller.acoes}" var="ac"
+								itemLabel="#{ac.codigo}" itemValue="#{ac.id}" />
+						</p:selectCheckboxMenu>
+
+					</h:panelGrid>
+
+					<p:commandLink style="color:#fff" ajax="false"
+						action="#{report_financ_controller.gerarConferenciaDeLancamentos()}"
+						styleClass="btn btn-block btn-primary btn" value="Gerar" />
+
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="menu_lateral">
+
+
+		<script>
+function goBack() {
+    window.history.back();
+}
+</script>
+
+
+		<f:metadata>
+			<o:viewParam name="ped" value="#{pedidoCadController.pedido}" />
+			<f:viewAction action="#{pedidoCadController.carregarPedidos()}" />
+		</f:metadata>
+
+		<h:form id="form-menu">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{pedidoCadController.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{pedidoCadController.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{pedidoCadController.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right; color: #849A39"
+						class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+		<f:view>
+
+
+			<h:form id="form-tabela-pedido" style="width:100%;margin:auto">
+
+				<p:messages  showSummary="true" closable="true"
+					showDetail="true"></p:messages>
+
+				<p:outputPanel>
+
+					<div class="botao_central" align="left"
+						style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+
+						<p:commandLink styleClass="btn btn-primary btn-xs"
+							update="form-tabela-pedido" type="button"
+							action="#{pedidoCadController.salvar()}"
+							style="color:#fff; margin: 2px 2px;" value="Salvar">
+							<f:param name="comp"
+								value="#{pedidoCadController.pedido.compra.id}" />
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-info btn-xs" type="button"
+							style="color:#fff; margin: 2px 2px;" value="Voltar"
+							onclick="goBack();" />
+
+						<p:outputLabel value="Status:" style="margin-left:10px"></p:outputLabel>
+
+						<h:outputText
+							value="#{pedidoCadController.pedido.statusCompra.nome}"
+							rendered="#{pedidoCadController.pedido.statusCompra.nome.equals('Não iniciado/Solicitado')}" />
+
+						<h:outputText styleClass="tamanho-status status-amarelo"
+							value="#{pedidoCadController.pedido.statusCompra.nome}"
+							rendered="#{pedidoCadController.pedido.statusCompra.nome.equals('Em cotação')}" />
+
+						<h:outputText styleClass="tamanho-status status-azul"
+							value="#{pedidoCadController.pedido.statusCompra.nome}"
+							rendered="#{pedidoCadController.pedido.statusCompra.nome.equals('Autorizado')}" />
+
+
+						<h:outputText styleClass="tamanho-status status-vermelho"
+							style="color:#fff"
+							value="#{pedidoCadController.pedido.statusCompra.nome}"
+							rendered="#{pedidoCadController.pedido.statusCompra.nome.equals('Cancelado')}" />
+
+
+						<h:outputText styleClass="tamanho-status status-verde"
+							value="#{pedidoCadController.pedido.statusCompra.nome}"
+							rendered="#{pedidoCadController.pedido.statusCompra.nome.equals('Parcialmente Concluído')}" />
+
+						<h:outputText styleClass="tamanho-status status-verde"
+							style="color:#fff"
+							value="#{pedidoCadController.pedido.statusCompra.nome}"
+							rendered="#{pedidoCadController.pedido.statusCompra.nome.equals('Concluído')}" />
+
+						<h:outputText styleClass="tamanho-status status-verde"
+							value="#{pedidoCadController.pedido.statusCompra.nome}"
+							rendered="#{pedidoCadController.pedido.statusCompra.nome.equals('Logística')}" />
+
+						<p:outputLabel value="Pedido:" style="margin-left:15px"></p:outputLabel>
+						<p:outputLabel
+							value="#{pedidoCadController.pedido.compra.id}/#{pedidoCadController.pedido.id}"></p:outputLabel>
+
+						<p:commandLink title="Excluir" update="form-tabela-pedido" disabled="#{pedidoCadController.verificarPagamentos()}"
+							styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove-circle"
+							style="margin-left:9px;float:right"
+							action="#{pedidoCadController.removerPedido()}">
+							<span style="font-family: Arial">Excluir</span>
+							<p:confirm header="Confirmar suspensão do pedido"
+								icon="ui-icon-alert" message="Ecluir pedido, deseja continuar?" />
+
+						</p:commandLink>
+
+
+					</div>
+				</p:outputPanel>
+				
+				<p:panel>
+				<p:panelGrid columns="4" styleClass="semBorda" style="width:100%">
+
+					<h:panelGrid columns="1" styleClass="width-100-vi">
+						<p:outputLabel value="Fornecedor:" />
+						<p:autoComplete id="fornecedor-cotacao" styleClass="font11-vi"
+							disabled="#{pedidoCadController.verificarPagamentos()}"
+							placeholder="Fornecedor"
+							requiredMessage="Preencha o campo Fornecedor" size="40"
+							value="#{pedidoCadController.pedido.fornecedor}"
+							completeMethod="#{pedidoCadController.completeFornecedor}"
+							var="fornecedor" itemLabel="#{fornecedor.nomeFantasia}"
+							itemValue="#{fornecedor}" converter="fornecedorConverter"
+							forceSelection="true" />
+					</h:panelGrid>
+
+					<h:panelGrid columns="1" styleClass="width-100-vi">
+						<p:outputLabel value="Data de entrega:" />
+						<p:calendar value="#{pedidoCadController.pedido.dataEntrega}"
+							styleClass="font11-vi" timeZone="America/Manaus" navigator="true"
+							pattern="dd/MM/yyyy" />
+					</h:panelGrid>
+
+					<h:panelGrid columns="1" styleClass="width-100-vi">
+						<p:outputLabel value="Data de pagamento:" />
+						<p:calendar value="#{pedidoCadController.pedido.dataPagamento}"
+							styleClass="font11-vi" timeZone="America/Manaus" navigator="true"
+							pattern="dd/MM/yyyy" />
+					</h:panelGrid>
+
+					<h:panelGrid columns="1" styleClass="width-100-vi">
+						<p:outputLabel value="Condições de pagamento:" />
+						<p:selectOneMenu styleClass="font11-vi"
+							value="#{pedidoCadController.pedido.condicaoPagamentoEnum}">
+							<f:selectItems value="#{pedidoCadController.condicoes}"
+								var="condicao" itemLabel="#{condicao.nome}"
+								itemValue="#{condicao}" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+
+
+					<h:panelGrid columns="1" styleClass="width-100-vi">
+						<p:outputLabel value="Tipo parcelamento:" />
+						<p:selectOneMenu styleClass="font11-vi"
+							value="#{pedidoCadController.pedido.tipoParcelamento}">
+							<f:selectItems value="#{pedidoCadController.tiposParcelas}"
+								var="parcela" itemLabel="#{parcela.nome}" itemValue="#{parcela}" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+
+					<h:panelGrid columns="1" styleClass="width-100-vi">
+						<p:outputLabel value="Quantidade de parcelas:" />
+						<p:inputText styleClass="font11-vi"
+							value="#{pedidoCadController.pedido.quantidadeParcela}" />
+					</h:panelGrid>
+
+					<h:panelGrid columns="1" styleClass="width-100-vi">
+						<p:outputLabel value="Responsável Expedição:" />
+						<p:selectOneMenu styleClass="font11-vi"
+							value="#{pedidoCadController.controleExpedicao.gestaoResponsavel}"
+							converter="gestaoConverter" required="true"
+							requiredMessage="Preencha o campo 'Responsável Expedição'"
+							filter="true" filterMatchMode="contains">
+							<f:selectItems value="#{pedidoCadController.listGestao}"
+								var="gestao" itemValue="#{gestao}" itemLabel="#{gestao.nome}" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+
+					<h:panelGrid columns="1" styleClass="width-100-vi">
+						<p:outputLabel value="Nome responsável:" />
+						<p:inputText styleClass="font11-vi"
+							value="#{pedidoCadController.controleExpedicao.nomeResponsavel}"
+							required="true"
+							requiredMessage="Preencha o campo 'Nome responsável'" />
+					</h:panelGrid>
+
+				</p:panelGrid>
+
+				
+				</p:panel>
+				<p:panelGrid columns="2" styleClass="width-100-vi"
+					columnClasses="ui-grid-col-2, ui-grid-col-10">
+					<p:outputLabel value="Observações" style="float:right" />
+					<p:inputText required="true" requiredMessage="teste"
+						style="width:100%"
+						value="#{pedidoCadController.pedido.observacao}" />
+				</p:panelGrid>
+
+				<p:panelGrid columns="8" style="width:100%" id="panel_header">
+					
+					<p:outputLabel value="Total a devolver:" style="float:right" />
+					<h:outputText id="vl_total_devolucao"
+						value="#{pedidoCadController.pedido.valorDevolucao}">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+							currencySymbol="R$" />
+					</h:outputText>
+					
+					<p:outputLabel value="Total de descontos:" style="float:right" />
+					<h:outputText id="vl_total_desconto"
+						value="#{pedidoCadController.pedido.totalDeDesonto}">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+							currencySymbol="R$" />
+					</h:outputText>
+
+					<p:outputLabel value="Total:" style="float:right" />
+					<h:outputText id="vl"
+						value="#{pedidoCadController.pedido.valorTotalSemDesconto}">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+							currencySymbol="R$" />
+					</h:outputText>
+
+					<p:outputLabel value="Total c/ desconto:" style="float:right" />
+					<h:outputText id="vl_c_desconto"
+						value="#{pedidoCadController.pedido.valorTotalComDesconto}">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+							currencySymbol="R$" />
+					</h:outputText>
+
+				</p:panelGrid>
+
+				<p:panelGrid columns="2" style="width:100%" styleClass="ui-fluid">
+				
+					<h:outputText value="Selecione o item a excluir e clique na opção desejada ao  lado ->" style="float:right" />
+					
+				   <h:panelGroup>
+
+					<p:commandLink 
+						styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove"
+						style="color:#fff;float:right"
+						action="#{pedidoCadController.removerItemTypeA()}"
+						update=":form-tabela-pedido:tabela-item-pedido panel_header">
+						<p:confirm message="Excluir item?" />
+						<f:setPropertyActionListener value="#{item}"
+							target="#{pedidoCadController.itemPedido}" />
+						<span style="font-family: Arial">Exclusão por desistência do fornecedor</span>
+					</p:commandLink>
+
+					<p:commandLink 
+						styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove"
+						style="color:#fff;float:right;margin-left:5px;margin-right:5px"
+						action="#{pedidoCadController.removerItemTypeB()}"
+						update=":form-tabela-pedido:tabela-item-pedido panel_header">
+						<p:confirm message="Excluir item?" />
+						<span style="font-family: Arial">Exclusão por desistência do solicitante</span>
+						<f:setPropertyActionListener value="#{item}"
+							target="#{pedidoCadController.itemPedido}" />
+
+					</p:commandLink>
+
+					</h:panelGroup>
+				</p:panelGrid>
+
+
+				<p:dataTable id="tabela-item-pedido" rowStyleClass="#{item.cancelado ? 'highlight_red' : null} "
+					selection="#{pedidoCadController.itensPedidosSelected}"
+					rowKey="#{item.id}" binding="#{pedidoCadController.table}"
+					rowIndexVar="indexRow"
+					value="#{pedidoCadController.pedido.itensPedidos}" var="item"
+					style="margin-bottom:0">
+
+
+					<p:column headerText="Produto" width="30%">
+						<h:outputText value="#{item.descricaoProduto}" />
+					</p:column>
+
+					<p:column style="width:35px" headerText="Qtd.">
+						<h:outputText value="#{item.quantidade}" style="float:right">
+							<f:convertNumber maxFractionDigits="2" />
+						</h:outputText>
+					</p:column>
+
+					<p:column style="width:70px" headerText="Valor">
+						<h:outputText value="#{item.valorUnitario}" style="float:right">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+
+					<p:column style="width:70px" headerText="Valor c/ desconto">
+						<h:outputText value="#{item.valorUnitarioComDesconto}"
+							style="float:right">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+
+					<p:column style="width:70px" headerText="Total">
+						<h:outputText
+							value="#{item.quantidade * item.valorUnitarioComDesconto}"
+							style="float:right">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+
+					<p:column selectionMode="multiple" style="width:25px" rendered="#{!item.cancelado}"/>
+
+				</p:dataTable>
+
+
+
+				<p:separator></p:separator>
+				<p:separator></p:separator>
+
+				<p:confirmDialog global="true" showEffect="clip" hideEffect="clip"
+					icon="ui-icon-alert">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</h:form>
+		</f:view>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+
+
+
+	</ui:define>
+
+
+</ui:composition>

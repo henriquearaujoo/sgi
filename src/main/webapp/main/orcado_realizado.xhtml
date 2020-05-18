@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="menu_lateral">
+
+		<h:form id="tabela_projeto">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{cp_controler.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{cp_controler.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{cp_controler.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right;" class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+
+
+		<h:form style="margin-top: 99px;margin-left: auto;margin-right: auto;width: 80%;">
+
+			<p:panelGrid columns="2">
+
+				<h:outputText value="Dt. Inicio - Pgto:" />
+
+				<p:calendar navigator="true"
+					value="#{cp_controler.filtro.dataInicio}" timeZone="America/Manaus"
+					pattern="dd/MM/yyyy" />
+					
+				<h:outputText value="Dt. Fim - Pgto:" />	
+
+				<p:calendar navigator="true"
+					value="#{cp_controler.filtro.dataFinal}" timeZone="America/Manaus"
+					pattern="dd/MM/yyyy" />
+					
+				<h:outputText value="Dt. Inicio Emissão:" />
+
+				<p:calendar navigator="true"
+					value="#{cp_controler.filtro.dataInicioEmissao}" timeZone="America/Manaus"
+					pattern="dd/MM/yyyy" />
+					
+				<h:outputText value="Dt. Fim Emissão:" />	
+
+				<p:calendar navigator="true"
+					value="#{cp_controler.filtro.dataFinalEmissao}" timeZone="America/Manaus"
+					pattern="dd/MM/yyyy" />	
+
+
+				<p:selectOneMenu value="#{cp_controler.filtro.projetoId}"
+					filter="true" style="width:210px" filterMatchMode="contains">
+					<f:selectItem itemLabel="Selecione um projeto" itemValue="0" />
+					<f:selectItems value="#{cp_controler.listProjetos}" var="project"
+						itemLabel="#{project.nome}" itemValue="#{project.id}" />
+
+					<p:ajax listener="#{cp_controler.carregarAções()}" process="@this"
+						update="menu" />
+
+
+				</p:selectOneMenu>
+
+
+				<p:selectCheckboxMenu id="menu" value="#{cp_controler.filtro.acoes}"
+					label="Ações" filter="true" filterMatchMode="contains"
+					panelStyle="width:270px">
+					<f:selectItems value="#{cp_controler.acoes}" var="ac"
+						itemLabel="#{ac.codigo}" itemValue="#{ac.id}" />
+				</p:selectCheckboxMenu>
+
+				<p:commandLink style="color:#fff" ajax="false"
+					action="#{cp_controler.gerarOrcamentariaDeAcoes()}"
+					styleClass="btn btn-primary btn-xs" value="Gerar" />
+
+			</p:panelGrid>
+		</h:form>
+
+
+
+
+
+
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+
+</ui:composition>

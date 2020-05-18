@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="content">
+		
+
+		<p:panel rendered="#{fornecedor_controller.panelBloqueio}"
+			style="width:100%;margin-auto">
+			<h3>Você nem tem autorização pra acessar essa página</h3>
+		</p:panel>
+
+		<h:form id="formFornecedores"
+			rendered="#{!fornecedor_controller.panelBloqueio}">
+			
+		 <br/>
+	
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Fornecedores" url="fornecedores.xhtml" />
+			</p:breadCrumb>
+
+			<p:panel>
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-4 ">
+						<h:outputText value="Nome Fantasia/Razão Social:" />
+						<p:inputText
+							value="#{fornecedor_controller.filtro.nomeFornecedor}" />
+					</div>
+
+					<div class="ui-g-4 ">
+						<h:outputText value="CNPJ/CPF:" />
+						<p:inputMask mask="99.999.999/9999-99" autoClear="false"
+							value="#{fornecedor_controller.filtro.cnpjcpf}" />
+					</div>
+
+					<div class="ui-g-4">
+						<h:outputText value="Ativo: " />
+						<p:selectOneMenu value="#{fornecedor_controller.filtro.ativo}">
+							<f:selectItem noSelectionOption="true" />
+							<f:selectItem itemValue="true" itemLabel="Sim" />
+							<f:selectItem itemValue="false" itemLabel="Não" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+
+				<div class="ui-g ui-fluid">
+					
+					<div class="ui-g-1 ui-lg-12 " style="text-align: right">
+					
+					<p:commandLink title="Exportar para excel" style="margin-right:10px"
+							action="#{fornecedor_controller.exportarExcel}" ajax="false">
+							<p:graphicImage library="image" name="excel.png" width="24" />
+						</p:commandLink> 
+						<p:commandLink title="Exportar para PDF" style="margin-right:20px"
+							action="#{fornecedor_controller.exportarPDF}" ajax="false">
+							<p:graphicImage library="image" name="pdf.png" width="24" />
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-primary "
+							action="#{fornecedor_controller.filtrar()}"
+							update=":formFornecedores:list">
+							<span class="fa fa-fw fa-search"></span>
+							<span>Procurar</span>
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-danger "
+							action="#{fornecedor_controller.limparFiltro()}"
+							update=":formFornecedores">
+							<span class="fa fa-fw fa-trash-o"></span>
+							<span> Limpar filtro</span>
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-success"
+							action="#{fornecedor_controller.mandaPronovo()}"
+							title="Adicionar fornecedor">
+							<span class="fa fa-fw fa-plus"></span>
+							<span>Novo</span>
+						</p:commandLink>
+
+					</div>
+
+				</div>
+				<p:separator></p:separator>
+					<p:messages id="msgs"  showSummary="false"
+					showDetail="true" showIcon="true" closable="true" />
+
+						<p:dataTable id="list"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+							value="#{fornecedor_controller.listaFornecedor}" var="bean" paginator="true"
+							widgetVar="filteredFornecedor" rows="10">
+		
+							<p:column headerText="Razão Social">
+								<p:outputLabel value="#{bean.razaoSocial.toUpperCase()}" />
+							</p:column>
+		
+							<p:column headerText="Nome Fantasia">
+								<p:outputLabel value="#{bean.nomeFantasia.toUpperCase()}" />
+							</p:column>
+		
+							<p:column filterBy="#{bean.cnpj}" filterStyle="display:none"
+								headerText="Cnpj/Cpf">
+								<p:outputLabel rendered="#{bean.tipo.equals('juridica')}"
+									value="#{bean.cnpj}" />
+								<p:outputLabel rendered="#{bean.tipo.equals('fisica')}"
+									value="#{bean.cpf}" />
+							</p:column>
+		
+							<p:column filterBy="#{bean.email}" filterStyle="display:none"
+								headerText="Email">
+								<p:outputLabel value="#{bean.email}" />
+							</p:column>
+		
+							<p:column filterBy="#{bean.telefone}" filterStyle="display:none"
+								headerText="Contato">
+								<p:outputLabel value="#{bean.telefone}" />
+							</p:column>
+		
+							<p:column headerText="Situação" style="text-align:center">
+								<p:outputLabel value="Ativo" rendered="#{bean.ativo}" />
+								<p:outputLabel value="Inativo" rendered="#{!bean.ativo}" />
+							</p:column>
+		
+							<p:column style="width:90px;text-align:center" headerText="Ação"
+								exportable="false">
+		
+								<p:link title="Editar" icon="ui-icon-star"
+									styleClass="btn btn-default btn-xs glyphicon glyphicon-edit"
+									style="font-size:10px;" outcome="/main/fornecedores_cadastro">
+									<f:param name="forn" value="#{bean.id}" />
+								</p:link>
+		
+								<p:commandLink title="excluir" style="color:#fff;margin-left:5px"
+									styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove-circle"
+									action="#{fornecedor_controller.removerFornecedor()}"
+									process="@this" update="@parent list">
+									<p:confirm message="Excluir fornecedor?" />
+									<f:setPropertyActionListener value="#{bean}"
+										target="#{fornecedor_controller.fornecedor}" />
+								</p:commandLink>
+							</p:column>
+					</p:dataTable>
+			</p:panel>
+			
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+
+
+	</ui:define>
+
+
+
+</ui:composition>

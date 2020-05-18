@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="content">
+		
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+		</script>
+
+		<h:form id="form-lista-termos">
+		
+		<br/>
+		<p:messages  showSummary="false" showDetail="true" showIcon="true" closable="true"/>
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml"	/>
+				<p:menuitem style="font-size:15px" value="Termos"	url="termo_expedicao.xhtml" />
+			</p:breadCrumb>
+			
+				
+			
+				<p:panel id="panel-content">
+
+
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-12 ui-lg-12 " style="text-align: right">
+						<p:commandLink id="add" styleClass="btn btn-success btn-sm" update=":form-cadastro-termo"
+							action="#{termo_controller.iniciarNovoTermo()}" title="Novo termo" 
+							oncomplete="PF('dlg_novo_termo').show();">
+							<span class="fa fa-fw fa-plus" ></span><span style="margin: 3px;">Novo</span>
+						</p:commandLink>
+					</div>
+				</div>	
+				
+				<div class="ui-g ui-fluid">
+				
+					<p:dataTable value="#{termo_controller.termos}" var="termo"
+						paginator="true" rows="15" widgetVar="tbl_termos">
+				
+				<p:column headerText="Código" filterBy="#{termo.id}"
+					filterMatchMode="contains">
+					<p:commandLink value="#{termo.id}"
+						action="#{termo_controller.editarTermo()}"
+						update=":form-cadastro-termo"
+						onclick="start()" onsuccess="stop()" onerror="stop()"
+						>
+						<f:setPropertyActionListener value="#{termo}"
+							target="#{termo_controller.termo}"></f:setPropertyActionListener>
+					</p:commandLink>
+
+				</p:column>
+
+				<p:column headerText="Tipo" filterBy="#{termo.tipo}"
+					filterMatchMode="exact">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('tbl_termos').filter()">
+							<f:selectItem itemLabel="Select One" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{termo_controller.tipos}" />
+						</p:selectOneMenu>
+					</f:facet>
+					<h:outputText value="#{termo.tipo.nome}" />
+				</p:column>
+
+				<p:column headerText="Status" filterBy="#{termo.statusTermo}"
+					filterMatchMode="exact">
+
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('tbl_termos').filter()">
+							<f:selectItem itemLabel="Select One" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItem itemLabel="Não assinado" itemValue="n_assinado" />
+							<f:selectItem itemLabel="Assinado" itemValue="assinado" />
+						</p:selectOneMenu>
+					</f:facet>
+
+					<h:outputText rendered="#{termo.statusTermo.equals('n_assinado')}"
+						value="Não assinado" />
+					<h:outputText rendered="#{!termo.statusTermo.equals('n_assinado')}"
+						value="Assinado" />
+				</p:column>
+
+				<p:column headerText="UC" filterBy="#{termo.localidade.mascara}"
+					filterMatchMode="contains">
+					<h:outputText value="#{termo.localidade.mascara}" />
+				</p:column>
+
+				<p:column headerText="Opções" >
+
+					<p:commandLink title="Imprimir"
+						styleClass="btn btn-success btn-xs"
+						target="_blank" style="color:#000;font-size:12px" ajax="false"
+						action="#{termo_controller.geraRelatorio(termo)}">
+							<span class="glyphicon glyphicon-print" ></span>
+					    	<span>Termo de doação</span>
+					</p:commandLink>
+
+					<p:commandLink title="Imprimir"
+						styleClass="btn btn-primary btn-xs"
+						target="_blank" style="color:#FFF;font-size:12px" ajax="false"
+						action="#{termo_controller.geraRelatorioCautela(termo)}">
+							<span class="glyphicon glyphicon-print" ></span>
+						<span>Cautela</span>
+					</p:commandLink>
+
+				</p:column>
+			  </p:dataTable>
+					
+				</div>				
+			</p:panel>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+		
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+	
+
+		<p:dialog header="Adicionar/Editar Termo" closable="true"
+			widgetVar="dlg_novo_termo" modal="true" height="90%" width="90%"
+			showEffect="clip" hideEffect="clip">
+
+			<h:form id="form-cadastro-termo">
+
+				<p:messages  showDetail="true" showIcon="true"
+					showSummary="false" closable="true" />
+				
+				
+				<div class="ui-g ui-fluid">
+					
+					<div class="ui-g-3">
+						<p:outputLabel value="Ano Referência:" />
+						<p:inputText value="#{termo_controller.termo.anoReferencia}" />
+					</div>
+					
+					<div class="ui-g-3">
+						<p:outputLabel value="Tipo:" />
+						<p:selectOneMenu value="#{termo_controller.termo.tipo}">
+							<f:selectItems value="#{termo_controller.tiposTermos}"
+								var="tiposTermos" itemLabel="#{tiposTermos.nome}"
+								itemValue="#{tiposTermos}" />
+						</p:selectOneMenu>
+					</div>
+					
+					<div class="ui-g-3">
+						<p:outputLabel value="Aprovador:" />
+						<p:selectOneMenu value="#{termo_controller.termo.aprovador}">
+							<f:selectItems value="#{termo_controller.aprovadores}"
+								var="aprovador" itemLabel="#{aprovador.nome}"
+								itemValue="#{aprovador}" />
+						</p:selectOneMenu>
+					</div>
+					
+					<div class="ui-g-3">
+						<p:outputLabel value="Destino/Localização:" for="uc_compra" />
+							<p:selectOneMenu id="uc_compra" style="margin-left:5px"
+								value="#{termo_controller.termo.localidade}" filter="true"
+								filterMatchMode="contains" converter="localConverter">
+								<f:selectItems value="#{termo_controller.localidades}" var="loc"
+									itemLabel="#{loc.mascara}" itemValue="#{loc}" />
+
+							</p:selectOneMenu>
+					</div>
+					
+				</div>
+				
+				<div class="ui-g ui-fluid">
+				
+					<div class="ui-g-3">
+						<p:outputLabel value="Associação:" />
+						<p:inputText disabled="true"></p:inputText>
+					</div>
+					
+					<div class="ui-g-3">
+						<p:outputLabel value="Descrição Material:" />
+						<p:inputText value="#{termo_controller.termo.descricao}" />
+					</div>
+					
+					<div class="ui-g-3">
+						<p:outputLabel value="Status:" />
+						<p:selectOneMenu value="#{termo_controller.termo.statusTermo}">
+							<f:selectItem itemLabel="N/ Assinado" itemValue="n_assinado" />
+							<f:selectItem itemLabel="Assinado" itemValue="assinado" />
+						</p:selectOneMenu>
+					</div>
+					
+					<div class="ui-g-3">
+						<p:outputLabel value="Data envio:" />
+						<p:calendar id="dt_inicio"
+							value="#{termo_controller.termo.dataEnvio}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+					</div>
+					
+				</div>
+					
+				<div class="ui-g ui-fluid">
+					
+					<div class="ui-g-12 " style="text-align: right">
+						<p:commandLink value="salvar" styleClass="btn btn-primary btn-sm"
+							 action="#{termo_controller.salvarTermo()}"
+							update="form-cadastro-termo :form-lista-termos" />
+					</div>
+				
+				</div>
+				
+				<p:separator></p:separator>
+				
+				<div class="ui-g ui-fluid" >
+					
+					<div class="ui-g-6" style="text-align: right">
+						<h:outputText value="Código pedido:" />
+						<p:inputText value="#{termo_controller.idPedido}" style=" margin: 0px 300px;"/>
+									
+					</div>
+					
+				<div class="ui-g-6 ui-lg-7 " style="text-align: right">
+						<p:commandLink update="table-lista-pedidos"   style="color:#fff; margin: 0px 110px;"
+									styleClass="btn btn-primary btn-sm" value="Enviar pedido"
+									action="#{termo_controller.adicionarNovoPedido()}" />
+					</div>
+				
+				</div>	
+				
+				<p:separator></p:separator>
+				
+				<div class="ui-g ui-fluid" >
+				
+					<p:dataTable id="table-lista-pedidos" rowIndexVar="indexRow"
+						paginator="true" rows="5"
+						value="#{termo_controller.termo.pedidos}" var="pedido">
+
+						<p:column headerText="Nº Pedido">
+							<h:outputText value="#{pedido.id}" />
+						</p:column>
+
+						<p:column headerText="Fornecedor">
+							<h:outputText value="#{pedido.fornecedor.nomeFantasia}" />
+						</p:column>
+
+						<p:column headerText="Localidade">
+							<h:outputText value="#{pedido.localidade.mascara}" />
+						</p:column>
+
+						<p:column headerText="Valor">
+							<h:outputText value="#{pedido.valorTotalComDesconto}" />
+						</p:column>
+
+						<p:column headerText="Expedição">
+							<h:outputText
+								value="#{pedido.termo != null ? pedido.termo.statusTermo : 'N_Iniciado'}" />
+						</p:column>
+
+						<p:column style="width:65px">
+							<p:commandLink title="Excluir" styleClass="btn btn-danger btn-sm"
+								action="#{termo_controller.removerPedidoDoTermo(indexRow)}"
+								update="table-lista-pedidos">
+								<span class="fa fa-fw fa-times-circle" ></span>
+							</p:commandLink>
+
+						</p:column>
+
+					</p:dataTable>
+				
+				</div>
+
+			</h:form>
+
+
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

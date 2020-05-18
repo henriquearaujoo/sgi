@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="content">
+
+
+		<script type="text/javascript">
+			
+			function stopDlgfilter() {
+			    PF('dlg_filtro_compra').hide();
+			}
+		</script>
+
+		<h:form id="listagem_custo_pessoal">
+
+
+
+			<f:metadata>
+				<f:viewAction action="#{custo_pessoal_controller.initListagem()}" />
+			</f:metadata>
+
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Custo de Pessoal" url="custo_pessoal.xhtml" />
+			</p:breadCrumb>
+
+
+
+			<div class="uig ui-fluid">
+
+				<div class="ui-g-12"></div>
+
+			</div>
+
+
+			<p:panel id="toggleable_custo_pessoal" header="Filtro"
+				toggleable="true" collapsed="false" closable="false"
+				toggleSpeed="500" closeSpeed="500" widgetVar="panel_custo_pessoal"
+				style="margin-bottom:20px;">
+
+				<p:panelGrid columns="2">
+					<h:outputText value="Competência:" />
+					<p:inputText value="#{custo_pessoal_controller.filtro.competencia}" />
+				</p:panelGrid>
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(255, 255, 255, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						action="#{custo_pessoal_controller.filtrar()}" onclick="start()"
+						onsuccess="stop()" onerror="stop()"
+						update="listagem_custo_pessoal"
+						style="color:#fff; margin: 8px 2px;">
+						<span class="glyphicon glyphicon-search"></span>
+						<span style="margin: 3px;">Procurar</span>
+					</p:commandLink>
+
+					<p:link styleClass="btn btn-success btn-sm"
+						style="color:#fff;margin: 8px 2px;"
+						outcome="/main/cadastro_custo_pessoal" title="Adicionar novo">
+						<span class="glyphicon glyphicon-plus"></span>
+						<span style="margin: 3px;">Novo</span>
+					</p:link>
+
+					<p:link styleClass="btn btn-success btn-sm "
+						style="color:#fff;margin: 8px 2px;"
+						outcome="/main/reembolso_custo" title="Lista de reembolso">
+
+						<span class="glyphicon glyphicon-usd"></span>
+						<span style="margin: 3px;">Reembolso</span>
+					</p:link>
+
+				</div>
+
+			</p:panel>
+
+
+			<p:dataTable id="table_custo_pessoal"
+				selection="#{custo_pessoal_controller.listaSelected}"
+				rowKey="#{custo_pessoal.id}"
+				value="#{custo_pessoal_controller.lista}" var="custo_pessoal"
+				style="margin-bottom:0">
+
+				<f:facet name="header">
+
+					<h:panelGrid columns="2" styleClass="semBorda">
+						<p:commandLink styleClass="btn btn-default btn-sm fa fa-search"
+							action="#{custo_pessoal_controller.prepararReembolso()}"
+							oncomplete="PF('dlg_cadastro_reembolso').show();"
+							onclick="start()" onsuccess="stop()" onerror="stop()"
+							update=":cadastro_reembolso"
+							style="color:#000; margin: 8px 2px;float:right">
+							<span style="font-family: Arial">Reembolsar</span>
+						</p:commandLink>
+					</h:panelGrid>
+				</f:facet>
+
+
+				<p:column headerText="Nº Lançamento" style="width:100px">
+					<h:outputText value="#{custo_pessoal.id}" />
+				</p:column>
+
+				<p:column headerText="Pagador">
+					<h:outputText value="#{custo_pessoal.contaPagador.nomeConta}" />
+				</p:column>
+
+				<p:column headerText="Recebedor">
+					<h:outputText value="#{custo_pessoal.contaRecebedor.nomeConta}" />
+				</p:column>
+
+				<p:column headerText="Categoria">
+					<h:outputText value="#{custo_pessoal.categoriaDespesaClass.nome}" />
+				</p:column>
+
+				<p:column headerText="competência" style="width:90px">
+					<h:outputText value="#{custo_pessoal.competencia}" />
+				</p:column>
+
+				<p:column headerText="Reembolsado" style="width:90px">
+					<h:outputText value="#{custo_pessoal.reembolsado}" />
+				</p:column>
+
+				<p:column headerText="Dt de Pagamento" style="width:110px">
+					<h:outputText value="#{custo_pessoal.dataPagamento}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Valor" style="width:110px">
+					<h:outputText value="#{custo_pessoal.valorTotalComDesconto}">
+						<f:convertNumber type="currency" locale="pt_BR" />
+					</h:outputText>
+
+				</p:column>
+
+				<p:column headerText="opções" style="width:90px">
+					<p:link styleClass="btn btn-default btn-xs"
+						outcome="/main/cadastro_custo_pessoal"
+						style="font-size:14px;color:#000">
+						<f:param name="custo" value="#{custo_pessoal.id}" />
+						<span class=" glyphicon glyphicon-edit"></span>
+					</p:link>
+
+					<p:commandLink title="excluir" style="color:#fff;margin-left:5px"
+						styleClass="btn btn-danger btn-xs "
+						action="#{custo_pessoal_controller.remover()}" process="@this"
+						update="table_custo_pessoal" onclick="start()" onsuccess="stop()"
+						onerror="stop()">
+						<span class="glyphicon glyphicon-remove-circle"></span>
+						<p:confirm message="Excluir lançamento?" />
+						<f:setPropertyActionListener value="#{custo_pessoal}"
+							target="#{custo_pessoal_controller.custoPessoal}" />
+
+					</p:commandLink>
+
+
+
+				</p:column>
+
+				<p:column style="width:40px" selectionMode="multiple"
+					rendered="#{!custo_pessoal.reembolsado}" />
+				<p:column style="width:40px" rendered="#{custo_pessoal.reembolsado}">
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog global="true" showEffect="clip" hideEffect="clip"
+				icon="ui-icon-alert">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+		</h:form>
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+
+		<p:dialog widgetVar="dlg_cadastro_reembolso" header="Reembolso"
+			closable="true" width="700" modal="true" showEffect="clip"
+			hideEffect="clip" resizable="false">
+
+			<h:form id="cadastro_reembolso">
+
+
+				<p:outputLabel style="font-size:38px"
+					value="#{custo_pessoal_controller.totalReembolso}">
+					<f:convertNumber type="currency" maxFractionDigits="2"
+						currencySymbol="R$" />
+				</p:outputLabel>
+				<p:panelGrid columns="2" id="panel_categoria">
+					<h:outputText value="Categoria:" />
+					<p:autoComplete id="cate_compra" placeholder="Categoria" size="40"
+						value="#{custo_pessoal_controller.lancamentoAcao.rubricaOrcamento}"
+						completeMethod="#{custo_pessoal_controller.completeRubricasDeOrcamento}"
+						var="categoria" itemLabel="#{categoria.rubrica.nome}"
+						itemValue="#{categoria}" converter="rubricaOrcamentoConverter">
+
+						<p:column headerText="Doação">
+							<h:outputText value="#{categoria.orcamento.fonte.nome}" />
+						</p:column>
+
+						<p:column headerText="Doação">
+							<h:outputText value="#{categoria.orcamento.titulo}" />
+						</p:column>
+
+						<p:column headerText="Componente">
+							<h:outputText value="#{categoria.componente.nome}" />
+						</p:column>
+
+						<p:column headerText="SubComponente">
+							<h:outputText value="#{categoria.subComponente.nome}" />
+						</p:column>
+
+						<p:column headerText="Categoria">
+							<h:outputText value="#{categoria.rubrica.nome}" />
+						</p:column>
+
+
+
+					</p:autoComplete>
+
+					<h:outputText value="Valor:" />
+					<p:inputText onkeypress="return formatarNumero(this,event,19,2);"
+						placeholder="valor"
+						value="#{custo_pessoal_controller.lancamentoAcao.valor}">
+						<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+							locale="pt_BR" />
+					</p:inputText>
+				</p:panelGrid>
+
+				<p:commandLink styleClass="btn btn-primary btn-sm"
+					process="cadastro_reembolso" type="button"
+					update="cadastro_reembolso"
+					action="#{custo_pessoal_controller.adicionarRecursoDeReembolso()}"
+					style="color:#fff; margin: 2px 2px;" value="Adicionar" />
+
+				<p:commandLink styleClass="btn btn-primary btn-sm"
+					oncomplete="PF('dlg_data_reembolso').show()"
+					process="cadastro_reembolso" type="button"
+					update="cadastro_reembolso" style="color:#fff; margin: 2px 2px;"
+					value="Salvar Reembolso" />
+
+				<p:dataTable id="tab_lanc_acao" var="lac_acao"
+					rowIndexVar="indexRow" paginator="true" rows="12"
+					value="#{custo_pessoal_controller.reembolso.lancamentosAcoes}">
+
+					<f:facet name="header">
+
+
+
+					</f:facet>
+
+					<p:column headerText="Fonte">
+						<h:outputText
+							value="#{lac_acao.rubricaOrcamento.orcamento.fonte.nome}" />
+					</p:column>
+
+
+					<p:column headerText="Doação">
+						<h:outputText
+							value="#{lac_acao.rubricaOrcamento.orcamento.titulo}" />
+					</p:column>
+
+					<p:column headerText="Categoria">
+						<h:outputText value="#{lac_acao.rubricaOrcamento.rubrica.nome}" />
+					</p:column>
+
+					<p:column headerText="Valor">
+						<h:outputText value="#{lac_acao.valor}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+
+					<p:column style="width:50px;">
+						<p:commandLink
+							action="#{custo_pessoal_controller.removerAcao(indexRow)}"
+							process="@this" update="cadastro_reembolso">
+
+							<span class="fa fa-times"></span>
+						</p:commandLink>
+					</p:column>
+
+
+				</p:dataTable>
+
+
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog widgetVar="dlg_data_reembolso" header="Reembolso"
+			closable="true" modal="true" showEffect="clip" hideEffect="clip"
+			resizable="false">
+			<h:form id="form_data">
+
+				<p:panelGrid columns="2">
+
+					<h:outputText value="Dt. Pagamento:" />
+					<p:calendar id="dt_pagamento" styleClass="font12-vi"
+						value="#{custo_pessoal_controller.reembolso.dataPagamento}"
+						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+				</p:panelGrid>
+
+				<p:commandLink styleClass="btn btn-primary btn-sm"
+					process="form_data" type="button" update="form_data"
+					oncomplete="PF('dlg_data_reembolso').hide()" onstart="start()"
+					onerror="stop()" onsuccess="stop()"
+					action="#{custo_pessoal_controller.salvarReembolso()}"
+					style="color:#fff; margin: 2px 2px;" value="Salvar Reembolso" />
+
+
+			</h:form>
+
+		</p:dialog>
+
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+
+	</ui:define>
+
+
+</ui:composition>

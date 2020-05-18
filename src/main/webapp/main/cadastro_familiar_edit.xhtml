@@ -1,0 +1,2413 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="menu_lateral">
+
+		<h:form id="tabela_menu">
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{familiar_controller.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{familiar_controller.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{familiar_controller.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right; color: #849A39"
+						class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+	
+	<ui:define name="content">
+		<h:form id="formFamiliar" acceptcharset="ISO-8859-1">
+			<p:tabView id="cadastroFamiliar" prependId="false">
+				<p:tab title="Cadastro Familiar">
+					<p:messages id="msgs"  showSummary="false"
+						showDetail="true" showIcon="true" closable="true" />
+
+					<div class="botao_central" align="left"
+						style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+						<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+							action="#{familiar_controller.insert()}" 
+							style="color:#fff; margin: 2px 2px;" value="Salvar" />
+						<p:commandLink action="#{familiar_controller.listagemFamiliar}" value="voltar"
+							 immediate="true" styleClass="btn btn-info btn-sm" />
+
+					</div>
+					
+					<p:accordionPanel prependId="false">
+						<p:tab>
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Dados de Identificação</span>
+								</p:commandLink>
+							</f:facet>
+							
+							<p:panelGrid columns="4">
+								<p:outputLabel value="Data: " />
+								<p:calendar
+										value="#{familiar_controller.familiar.data}"
+										timeZone="America/Manaus" navigator="true"
+										pattern="dd/MM/yyyy" mask="true"/>
+										
+								<p:outputLabel value="Unidade de Conservação: " />
+								<p:autoComplete style="width:500px"
+									panelStyle="width:300px"
+									value="#{familiar_controller.familiar.unidadeConservacao}"
+									completeMethod="#{familiar_controller.completeUnidadeConservacao}"
+									var="uc" itemLabel="#{uc.mascara}"
+									itemValue="#{uc}" converter="unidadeConservacaoConverter"
+									minQueryLength="3" forceSelection="true" >
+									<p:ajax event="itemSelect" update="panelComunidade" listener="#{familiar_controller.limparComunidade}"/>
+								</p:autoComplete>		
+							</p:panelGrid>
+							
+							<br />
+							
+							<h:panelGroup>
+								<p:panelGrid columns="1">
+									<h:panelGroup>
+										<p:panelGrid id="panelMunicipio" columns="2">
+											<p:outputLabel value="Município: " />
+											<p:autoComplete styleClass="font12-vi" 
+												panelStyle="width:180px"
+												value="#{familiar_controller.familiar.municipio}"
+												completeMethod="#{familiar_controller.completeMunicipio}"
+												var="municipio" itemLabel="#{municipio.nome}"
+												itemValue="#{municipio}" converter="localConverterVI"
+												minQueryLength="3" />
+												
+											<p:outputLabel value="Setor: " />
+											<p:autoComplete styleClass="font12-vi" 
+												panelStyle="width:180px"
+												value="#{familiar_controller.familiar.setor}"
+												completeMethod="#{familiar_controller.completeSetores}"
+												var="setor" itemLabel="#{setor.nome}"
+												itemValue="#{setor}" converter="localConverterVI"
+												minQueryLength="3" />
+												
+											<p:outputLabel value="Pólo: " />
+											<p:autoComplete styleClass="font12-vi" 
+												panelStyle="width:180px"
+												value="#{familiar_controller.familiar.polo}"
+												completeMethod="#{familiar_controller.completePolos}"
+												var="polo" itemLabel="#{polo.nome}"
+												itemValue="#{polo}" converter="localConverterVI"
+												minQueryLength="3" />
+												
+											<p:outputLabel value="Rio: " />
+											<p:autoComplete styleClass="font12-vi" 
+												panelStyle="width:180px"
+												value="#{familiar_controller.familiar.rio}"
+												completeMethod="#{familiar_controller.completeRios}"
+												var="rio" itemLabel="#{rio.descricao}"
+												itemValue="#{rio}" 
+												minQueryLength="3" />
+												
+											<p:outputLabel value="Lago: " />
+											<p:inputText value="#{familiar_controller.familiar.lago}" style="width:300px">
+											</p:inputText>
+												
+										</p:panelGrid>
+									</h:panelGroup>
+								</p:panelGrid>	
+							</h:panelGroup>
+							
+							<br />
+							
+							<h:panelGroup>
+								<p:panelGrid columns="1">
+									<h:panelGroup>
+										<p:panelGrid id="panelComunidade" columns="2">
+											<p:outputLabel value="Localização (informenome por extenso, sem abreviações e completo): " />
+											<h:outputText value=""/>
+											
+											<h:panelGroup>
+												<p:selectBooleanCheckbox value="#{familiar_controller.familiar.moradiaIsolada}"/>
+												<p:outputLabel value="Moradia Isolada?" style="padding-left: 10px;" />
+											</h:panelGroup>
+											<h:outputText value=""/>
+											
+											<p:outputLabel value="Localidade:" />
+											<p:inputText value="#{familiar_controller.familiar.localidade}" style="width:300px">
+											</p:inputText>
+												
+											<p:outputLabel value="Comunidade:" />
+											<p:autoComplete styleClass="font12-vi" 
+												panelStyle="width:180px"
+												value="#{familiar_controller.familiar.comunidade}"
+												completeMethod="#{familiar_controller.completeLocalidadePorUc}"
+												var="comunidade" itemLabel="#{comunidade.nome}"
+												itemValue="#{comunidade}" converter="comunidadeConverter"
+												minQueryLength="3" />
+										</p:panelGrid>
+									</h:panelGroup>
+								</p:panelGrid>	
+							</h:panelGroup>	
+							
+							<br />
+							
+							<h:panelGroup>
+								<p:panelGrid columns="1">
+									<p:panelGrid columns="2">
+										<p:outputLabel value="Nº do ponto GPS: " />
+										<p:inputText
+											onkeypress="return somenteNumeros(event);"
+											placeholder="Número"
+											value="#{familiar_controller.familiar.numeroPontoGPS}">
+										</p:inputText>
+									</p:panelGrid>
+									
+									<h:panelGroup>
+										<p:outputLabel value="Coordenadas geográficas: " />
+										<p:panelGrid columns="2">
+											<p:outputLabel value="Latitude (S): " />
+											<p:inputMask value="#{familiar_controller.familiar.latitude}" style="width:100px" mask="99º99'9''9">
+											</p:inputMask>
+											<p:outputLabel value="Longitude (W): " />
+											<p:inputMask value="#{familiar_controller.familiar.longitude}" style="width:100px" mask="99º99'99''9">
+											</p:inputMask>		
+										</p:panelGrid>
+									</h:panelGroup>
+								</p:panelGrid>
+							</h:panelGroup>
+						</p:tab>
+						
+						<p:tab >
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Membros</span>
+								</p:commandLink>
+							</f:facet>
+							
+							<p:commandLink
+								styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+								title="Adicionar membro"
+								oncomplete="PF('dlg_cadastro_membro').show()"
+								update=":form-cadastro-membro"
+								action="#{familiar_controller.prepararCadastroIdentificacao}"
+								style="color:#fff; margin: 8px 2px;">
+								<span style="font-family: Arial"> Adicionar Novo</span>
+							</p:commandLink>
+							
+							<br/>
+							<br/>
+							
+							<p:outputLabel value="Data de modificação: " />
+								<p:calendar
+										value="#{familiar_controller.familiar.dataModificacaoMembros}"
+										timeZone="America/Manaus" navigator="true"
+										pattern="dd/MM/yyyy" readonly="true"/>
+							
+							<p:dataTable id="identificacoes" 
+								value="#{familiar_controller.familiar.identificacoes}" var="item"
+								paginator="true" rows="5">
+								
+								<f:facet name="header">
+									<h:outputText value="Membros" />
+							    </f:facet>
+							    
+							    <p:column filterBy="#{item.tipoIdentificacao.descricao}"
+									filterStyle="display:none" headerText="Tipo">
+									<h:outputText value="#{item.tipoIdentificacao.descricao}" />
+								</p:column>
+								
+								<p:column filterBy="#{item.nome}"
+									filterStyle="display:none" headerText="Nome">
+									<h:outputText value="#{item.nome}" />
+								</p:column>
+								
+								<p:column headerText="Data de nascimento">
+									<h:outputText value="#{item.dataNascimento}">
+										<f:convertDateTime pattern="dd/MM/yyyy"
+											timeZone="America/Manaus" />
+									</h:outputText>
+								</p:column>
+								<p:column filterBy="#{item.rg}"
+									filterStyle="display:none" headerText="RG">
+									<h:outputText value="#{item.rg}" />
+								</p:column>
+								
+								<p:column filterBy="#{item.cpf}"
+									filterStyle="display:none" headerText="CPF">
+									<h:outputText value="#{item.cpf}" />
+								</p:column>
+								
+								<p:column headerText="Ação" style="width:10%;text-align: center;">
+									<p:commandLink title="Excluir" rendered="true" update="identificacoes"
+										value="Excluir" oncomplete="PF('confirmacaoDeleteIdentificacao').show()" >
+										<f:setPropertyActionListener target="#{familiar_controller.identificacao}"
+											value="#{item}" />
+									</p:commandLink>
+									<p:spacer width="10px" />
+									
+									<p:commandLink value="Editar" action="#{familiar_controller.prepararEditarIdentificacao}" oncomplete="PF('dlg_cadastro_membro').show()" update=":form-cadastro-membro">
+										<f:setPropertyActionListener target="#{familiar_controller.identificacao}"
+											value="#{item}" />
+									</p:commandLink>
+								
+								</p:column>
+							</p:dataTable>
+						</p:tab>
+						<p:tab >
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Protocolo</span>
+								</p:commandLink>
+							</f:facet>
+								
+							<p:panelGrid columns="3" id="protocolo">
+								<p:outputLabel value="Protocolo: " />
+								<p:inputText value="#{familiar_controller.familiar.protocolo}" style="width:200px" readonly="true">
+								</p:inputText>
+								<p:commandLink
+									styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+									title="Gerar protocolo"
+									action="#{familiar_controller.gerarProtocolo}"
+									style="color:#fff; margin: 8px 2px;"
+									update="protocolo :formFamiliar:msgs">
+									<span style="font-family: Arial"> Gerar protocolo</span>
+								</p:commandLink>
+							</p:panelGrid>
+							
+							<p:panelGrid id="panelProtocolo" columns="2">
+								<p:outputLabel value="Protocolo AFEAM: " />
+								<p:inputText value="#{familiar_controller.familiar.protolocoAFEAM}" readonly="true" style="width:200px">
+								</p:inputText>
+								<p:outputLabel value="Nome cartão: " />
+								<p:inputText value="#{familiar_controller.familiar.nomeCartao}" readonly="true" style="width:200px">
+								</p:inputText>
+								<p:outputLabel value="Conta Bancária: " />
+								<p:inputText value="#{familiar_controller.familiar.contaBancaria}" readonly="true" style="width:200px">
+								</p:inputText>
+								
+								<h:panelGroup>
+									<h:panelGrid columns="2">
+										<p:selectBooleanCheckbox value="#{familiar_controller.familiar.assinouAcordoCompromisso}"/>
+										<p:outputLabel value="Assinou acordo de compromisso?" style="padding-left:20px"/>
+									</h:panelGrid>
+								</h:panelGroup>
+								<h:outputText value=""/>
+								
+								<p:outputLabel value="Número do acordo: " />
+								<p:inputText
+									onkeypress="return somenteNumeros(event);"
+									placeholder="Número"
+									value="#{familiar_controller.familiar.numeroDoAcordo}">
+								</p:inputText>
+								
+								<h:panelGroup>
+									<h:panelGrid columns="2">
+										<p:selectBooleanCheckbox value="#{familiar_controller.familiar.participacaoOficina}"/>
+										<p:outputLabel value="Participação oficina?" style="padding-left:20px"/>
+									</h:panelGrid>
+								</h:panelGroup>
+								<h:outputText value=""/>
+								
+								<h:panelGroup>
+									<h:panelGrid columns="2">
+										<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiCartao}"/>
+										<p:outputLabel value="Possui cartão?" style="padding-left:20px"/>
+									</h:panelGrid>
+								</h:panelGroup>
+								<h:outputText value=""/>
+								
+								<p:outputLabel value="Status cartão: " />
+								<p:selectOneMenu value="#{familiar_controller.familiar.statusCartao}" >
+									<f:selectItem itemLabel="Selecione um status" itemValue=""/>
+									<f:selectItems value="#{familiar_controller.statusCartao}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+								</p:selectOneMenu>
+								
+								<p:outputLabel value="Data de entrega do cartão: " />
+								<p:calendar
+									value="#{familiar_controller.familiar.dataEntregaCartao}"
+									timeZone="America/Manaus" navigator="true"
+									pattern="dd/MM/yyyy" />
+									
+								<p:outputLabel value="Convênio: " />
+								<p:selectOneMenu value="#{familiar_controller.familiar.tipoConvenio}" >
+									<f:selectItem itemLabel="Selecione um tipo" itemValue=""/>
+									<f:selectItems value="#{familiar_controller.convenios}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+								</p:selectOneMenu>
+								
+								<h:panelGroup>
+									<h:panelGrid columns="2">
+										<p:selectBooleanCheckbox value="#{familiar_controller.familiar.declaracaoMoradia}"/>
+										<p:outputLabel value="Declaração de moradia?" style="padding-left:20px"/>
+									</h:panelGrid>
+								</h:panelGroup>
+								<h:outputText value=""/>
+								
+								<p:outputLabel value="Financeiramente ativo: " />
+								<p:selectOneMenu value="#{familiar_controller.familiar.financeiramenteAtivo}" >
+									<f:selectItem itemLabel="Selecione um status" itemValue=""/>
+									<f:selectItems value="#{familiar_controller.tiposFinanceiramenteAtivo}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+									<p:ajax listener="#{familiar_controller.alterarStatusCartao}" update="panelProtocolo"/>
+								</p:selectOneMenu>
+								
+								<h:panelGroup>
+									<h:panelGrid columns="2">
+										<p:selectBooleanCheckbox value="#{familiar_controller.familiar.solicitarNovaViaCartao}"/>
+										<p:outputLabel value="Solicitar nova via de cartão?" style="padding-left:20px"/>
+									</h:panelGrid>
+								</h:panelGroup>
+								<h:outputText value=""/>
+								
+								<h:panelGroup>
+									<h:panelGrid columns="2">
+										<p:selectBooleanCheckbox value="#{familiar_controller.familiar.solicitarAtualizacaoDados}"/>
+										<p:outputLabel value="Solicitar atualização de dados?" style="padding-left:20px"/>
+									</h:panelGrid>
+								</h:panelGroup>
+								<h:outputText value=""/>
+								
+								<p:outputLabel value="Identificação bancária: " />
+								<p:selectOneMenu value="#{familiar_controller.familiar.identificacaoBancaria}" >
+									<f:selectItem itemLabel="Selecione uma identificação" itemValue=""/>
+									<f:selectItems value="#{familiar_controller.identificacoesBancarias}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+								</p:selectOneMenu>
+								
+								<p:outputLabel value="Desbloqueio de recurso: " />
+								<p:inputText
+									onkeypress="return formatarNumero(this,event,19,2);"
+									placeholder="Valor"
+									value="#{familiar_controller.familiar.creditoAdicional}">
+									<f:convertNumber minFractionDigits="2"
+										maxFractionDigits="2" locale="pt_BR" />
+
+								</p:inputText>
+								
+								<p:outputLabel value="Tipo de desbloqueio de recurso: " />
+								<p:selectOneMenu value="#{familiar_controller.familiar.tipoDesbloqueioRecurso}" >
+									<f:selectItem itemLabel="Selecione um tipo" itemValue=""/>
+									<f:selectItems value="#{familiar_controller.tiposDesbloqueioRecurso}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+								</p:selectOneMenu>
+								
+								<p:outputLabel value="Data de validade do cartão: " />
+								<p:calendar
+									value="#{familiar_controller.familiar.dataValidadeCartao}"
+									timeZone="America/Manaus" navigator="true"
+									pattern="dd/MM/yyyy" />
+								
+								<p:outputLabel value="Motivo do desligamento: " />
+								<p:selectOneMenu value="#{familiar_controller.familiar.tipoDesligamento}" >
+									<f:selectItem itemLabel="Selecione um motivo" itemValue=""/>
+									<f:selectItems value="#{familiar_controller.tiposDesligamento}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+								</p:selectOneMenu>
+									
+								<p:outputLabel value="Data de desligamento: " />
+								<p:calendar
+									value="#{familiar_controller.familiar.dataDesligamento}"
+									timeZone="America/Manaus" navigator="true"
+									pattern="dd/MM/yyyy" />
+									
+								<p:outputLabel value="Observações: " />
+								<p:inputTextarea cols="50" rows="5"/>
+							</p:panelGrid>
+							
+						</p:tab>
+						<p:tab >
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Dinâmica Populacional</span>
+								</p:commandLink>
+							</f:facet>
+							
+							<p:commandLink
+								styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+								title="Adicionar membro"
+								oncomplete="PF('dlg_cadastro_dinamica').show()"
+								update=":form-cadastro-dinamica"
+								action="#{familiar_controller.prepararCadastroDinamica}"
+								style="color:#fff; margin: 8px 2px;">
+								<span style="font-family: Arial"> Adicionar Novo</span>
+							</p:commandLink>
+							
+							<p:dataTable id="dinamicas" 
+								value="#{familiar_controller.familiar.dinamicas}" var="item"
+								paginator="true" rows="5">
+								
+								<f:facet name="header">
+									<h:outputText value="Membros" />
+							    </f:facet>
+								
+								<p:column filterBy="#{item.membro.nome}"
+									filterStyle="display:none" headerText="Nome">
+									<h:outputText value="#{item.membro.nome}" />
+								</p:column>
+								
+								<p:column filterBy="#{item.comunidade.nome}"
+									filterStyle="display:none" headerText="Comunidade">
+									<h:outputText value="#{item.comunidade.nome}" />
+								</p:column>
+								
+								<p:column filterBy="#{item.comunidade.municipio.nome}"
+									filterStyle="display:none" headerText="Município">
+									<h:outputText value="#{item.comunidade.municipio.nome}" />
+								</p:column>
+								
+								<p:column filterBy="#{item.uc.nome}"
+									filterStyle="display:none" headerText="UC">
+									<h:outputText value="#{item.uc.nome}" />
+								</p:column>
+								
+								<p:column headerText="Ação" style="width:10%;text-align: center;">
+									<p:commandLink title="Excluir" rendered="true" update="dinamicas"
+										value="Excluir" oncomplete="PF('confirmacaoDeleteDinamica').show()" >
+										<f:setPropertyActionListener target="#{familiar_controller.dinamicaPopulacional}"
+											value="#{item}" />
+									</p:commandLink>
+									<p:spacer width="10px" />
+									
+									<p:commandLink value="Editar" action="#{familiar_controller.prepararEditarDinamica}" oncomplete="PF('dlg_cadastro_dinamica').show()" update=":form-cadastro-dinamica">
+										<f:setPropertyActionListener target="#{familiar_controller.dinamicaPopulacional}"
+											value="#{item}" />
+									</p:commandLink>
+								
+								</p:column>
+							</p:dataTable>
+						</p:tab>
+						
+						<p:tab >
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Organização Social do Núcleo Familiar</span>
+								</p:commandLink>
+							</f:facet>
+							<p:outputLabel value="Participa de alguma organização ou grupo social? De que natureza?" />
+							<h:panelGroup>
+								<p:panelGrid columns="2" styleClass="panelColumnsTop">
+									<p:fieldset legend="Formais">
+										<p:dataTable var="item" value="#{familiar_controller.organizacoesFormais}" style="width:400px">
+											<p:column style="width:10%">
+												<p:selectBooleanCheckbox
+													value="#{item.selecionado}" 
+													style="margin-left:4px">
+												</p:selectBooleanCheckbox>
+											</p:column>
+											<p:column style="width:40%">
+												<p:outputLabel value="#{item.tipo.descricao}:" />
+											</p:column>
+											<p:column style="width:50%" >
+												<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+											</p:column>
+										</p:dataTable>
+									</p:fieldset>
+									
+									<h:panelGroup>
+										<h:panelGrid >
+											<p:fieldset legend="Informais">
+												<p:dataTable var="item" value="#{familiar_controller.organizacoesInformais}" style="width:400px">
+													<p:column style="width:10%">
+														<p:selectBooleanCheckbox
+															value="#{item.selecionado}" 
+															style="margin-left:4px">
+														</p:selectBooleanCheckbox>
+													</p:column>
+													<p:column style="width:30%">
+														<p:outputLabel value="#{item.tipo.descricao}:" />
+													</p:column>
+													<p:column style="width:60%" >
+														<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+													</p:column>
+												</p:dataTable>
+											</p:fieldset>
+											
+											<p:spacer height="20"/>
+											
+											<p:fieldset legend="Participação social qualificada">
+												<h:panelGroup>
+													<p:panelGrid columns="2">
+														<p:selectBooleanCheckbox value="#{familiar_controller.familiar.ocupaCargoDirecao}"/>
+														<p:outputLabel value="Ocupa algum cargo de direção? " />
+														<p:outputLabel value="Qual? " />
+														<p:inputText value="#{familiar_controller.familiar.cargoDirecao}" style="width:300px"/>
+													</p:panelGrid>
+												</h:panelGroup>
+											</p:fieldset>
+										</h:panelGrid>
+									</h:panelGroup>
+								</p:panelGrid>	
+							</h:panelGroup>
+						</p:tab>
+						<p:tab>
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Orientação religiosa</span>
+								</p:commandLink>
+							</f:facet>
+							<p:dataTable var="item" value="#{familiar_controller.orientacoesReligiosas}" style="width:400px">
+								<p:column style="width:10%">
+									<p:selectBooleanCheckbox
+										value="#{item.selecionado}" 
+										style="margin-left:4px">
+									</p:selectBooleanCheckbox>
+								</p:column>
+								<p:column style="width:30%">
+									<p:outputLabel value="#{item.tipo.descricao}:" />
+								</p:column>
+								<p:column style="width:60%" >
+									<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+								</p:column>
+							</p:dataTable>
+						</p:tab>
+						<p:tab >
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Habitação</span>
+								</p:commandLink>
+							</f:facet>
+							
+							<p:panelGrid columns="4">
+								<p:outputLabel value="Ambiente: " />
+								<p:selectOneMenu value="#{familiar_controller.familiar.tipoAmbiente}" >
+									<f:selectItem itemLabel="Selecione um tipo de ambiente" itemValue=""/>
+									<f:selectItems value="#{familiar_controller.tiposAmbiente}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+								</p:selectOneMenu>
+								
+								<p:outputLabel value="Tipo: " />
+								<p:selectOneMenu value="#{familiar_controller.familiar.tipoHabitacao}" >
+									<f:selectItem itemLabel="Selecione um tipo de habitação" itemValue=""/>
+									<f:selectItems value="#{familiar_controller.tiposHabitacao}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+								</p:selectOneMenu>
+								
+								<p:outputLabel value="Estrutura: " />
+								<p:selectOneMenu value="#{familiar_controller.familiar.tipoEstruturaHabitacao}" >
+									<f:selectItem itemLabel="Selecione um tipo de estrutura" itemValue=""/>
+									<f:selectItems value="#{familiar_controller.tiposEstrutura}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+								</p:selectOneMenu>
+								
+								<p:outputLabel value="Piso: " />
+								<p:selectOneMenu value="#{familiar_controller.familiar.tipoPisoHabitacao}" >
+									<f:selectItem itemLabel="Selecione um tipo de piso" itemValue=""/>
+									<f:selectItems value="#{familiar_controller.tiposPiso}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+								</p:selectOneMenu>
+								
+								<p:outputLabel value="Material: " />
+								<p:selectOneMenu value="#{familiar_controller.familiar.tipoMaterialHabitacao}" >
+									<f:selectItem itemLabel="Selecione um tipo de material" itemValue=""/>
+									<f:selectItems value="#{familiar_controller.tiposMaterial}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+								</p:selectOneMenu>
+								
+								<p:outputLabel value="Cobertura: " />
+								<p:selectOneMenu value="#{familiar_controller.familiar.tipoCoberturaHabitacao}" >
+									<f:selectItem itemLabel="Selecione um tipo de cobertura" itemValue=""/>
+									<f:selectItems value="#{familiar_controller.tiposCobertura}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+								</p:selectOneMenu>
+								
+								<p:outputLabel value="Número de cômodos: " />
+								<p:inputText
+									onkeypress="return somenteNumeros(event);"
+									placeholder="Número"
+									value="#{familiar_controller.familiar.numeroComodos}">
+								</p:inputText>
+								
+								<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiTelaMosquistos}"/>
+								<p:outputLabel value="Possui tela-mosquitos (prevenção contra malária)? " />
+								
+							</p:panelGrid>
+						</p:tab>
+						<p:tab >
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Energia e equipamentos</span>
+								</p:commandLink>
+							</f:facet>
+							<p:panelGrid columns="2">
+								<p:outputLabel value="Tipo de iluminação: " />
+								<p:selectOneMenu value="#{familiar_controller.familiar.tipoIluminacao}" >
+									<f:selectItem itemLabel="Selecione um tipo de iluminação" itemValue=""/>
+									<f:selectItems value="#{familiar_controller.tiposIluminacao}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+								</p:selectOneMenu>
+								
+								<p:outputLabel value="Quantas lâmpadas há na casa?" />
+								<p:inputText
+									onkeypress="return somenteNumeros(event);"
+									placeholder="Quantidade"
+									value="#{familiar_controller.familiar.quantidadeLampadas}">
+								</p:inputText>
+								
+								<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiPagamentoMensal}"/>
+								<p:outputLabel value="Há pagamento mensal? " />
+							</p:panelGrid>
+							<p:panelGrid columns="2">	
+								<h:panelGroup>
+									<p:panelGrid columns="6">
+										<p:outputLabel value="Em dinheiro?" />
+										<p:inputText
+											onkeypress="return formatarNumero(this,event,19,2);"
+											placeholder="Valor"
+											value="#{familiar_controller.familiar.pagamentoMensalDinheiro}">
+											<f:convertNumber minFractionDigits="2"
+												maxFractionDigits="2" locale="pt_BR" />
+			
+										</p:inputText>
+										
+										<p:outputLabel value="Em diesel?" />
+										<h:panelGroup>
+											<p:panelGrid columns="4">
+												<p:outputLabel value="R$" />
+												<p:inputText
+													onkeypress="return formatarNumero(this,event,19,2);"
+													placeholder="Valor"
+													value="#{familiar_controller.familiar.pagamentoMensalDiesel}">
+													<f:convertNumber minFractionDigits="2"
+														maxFractionDigits="2" locale="pt_BR" />
+					
+												</p:inputText>
+												
+												<p:outputLabel value="Litro" />
+												<p:inputText
+													onkeypress="return formatarNumero(this,event,19,2);"
+													placeholder="Quantidade"
+													value="#{familiar_controller.familiar.quantidadeLitroDiesel}">
+													<f:convertNumber minFractionDigits="2"
+														maxFractionDigits="2" locale="pt_BR" />
+					
+												</p:inputText>
+											</p:panelGrid>
+										</h:panelGroup>
+										
+										<p:outputLabel value="Em gasolina?" />
+										<h:panelGroup>
+											<p:panelGrid columns="4">
+												<p:outputLabel value="R$" />
+												<p:inputText
+													onkeypress="return formatarNumero(this,event,19,2);"
+													placeholder="Valor"
+													value="#{familiar_controller.familiar.pagamentoMensalGasolina}">
+													<f:convertNumber minFractionDigits="2"
+														maxFractionDigits="2" locale="pt_BR" />
+					
+												</p:inputText>
+												
+												<p:outputLabel value="Litro" />
+												<p:inputText
+													onkeypress="return formatarNumero(this,event,19,2);"
+													placeholder="Quantidade"
+													value="#{familiar_controller.familiar.quantidadeLitroGasolina}">
+													<f:convertNumber minFractionDigits="2"
+														maxFractionDigits="2" locale="pt_BR" />
+					
+												</p:inputText>
+											</p:panelGrid>
+										</h:panelGroup>
+									</p:panelGrid>
+								</h:panelGroup>
+							</p:panelGrid>
+						</p:tab>
+						<p:tab >
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Eletrodomésticos</span>
+								</p:commandLink>
+							</f:facet>
+							<p:panelGrid columns="2">
+								<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiRadio}"/>
+								<p:outputLabel value="Tem rádio? " />
+							</p:panelGrid>
+							<p:panelGrid columns="2">
+								
+								<p:outputLabel value="Qual a rádio mais ouvida?" />
+								<p:inputText value="#{familiar_controller.familiar.radioMaisOuvida}" style="width:200px"/>
+								
+								<p:outputLabel value="Qual o nome e horário do programa mais ouvido?" />
+								<p:inputText value="#{familiar_controller.familiar.programaMaisOuvido}" style="width:200px"/>
+							</p:panelGrid>
+							<p:panelGrid columns="4">
+								<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiTelevisao}"/>
+								<p:outputLabel value="Tem Televisão? " />
+								
+								<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiAntenaParabolica}"/>
+								<p:outputLabel value="Tem Antena Parabólica? " />
+								
+								<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiSky}"/>
+								<p:outputLabel value="Tem Sky (satélite)? " />
+								
+								<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiFreezer}"/>
+								<p:outputLabel value="Tem Freezer? " />
+								
+								<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiGeladeira}"/>
+								<p:outputLabel value="Tem Geladeira? " />
+							</p:panelGrid>
+							<p:panelGrid columns="2">
+								<p:outputLabel value="Outros:" />
+								<p:inputText value="#{familiar_controller.familiar.outrosEletrodomesticos}" style="width:200px"/>
+							</p:panelGrid>
+						</p:tab>
+						<p:tab >
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Equipamentos e infraestrutura</span>
+								</p:commandLink>
+							</f:facet>
+							
+							<p:panelGrid columns="2" styleClass="panelColumnsTop">
+								<p:dataTable var="item" value="#{familiar_controller.equipamentos}" style="width:500px">
+									<p:column style="width:10%">
+										<p:selectBooleanCheckbox
+											value="#{item.selecionado}" 
+											style="margin-left:4px">
+										</p:selectBooleanCheckbox>
+									</p:column>
+									<p:column style="width:40%">
+										<p:outputLabel value="#{item.tipo.descricao}:" />
+									</p:column>
+									<p:column style="width:50%" >
+										<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+									</p:column>
+								</p:dataTable>
+							</p:panelGrid>
+						</p:tab>
+						<p:tab >
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Transporte</span>
+								</p:commandLink>
+							</f:facet>
+							
+							<p:panelGrid columns="2" >
+								<p:dataTable var="item" value="#{familiar_controller.transportes}" style="width:500px">
+									<p:column style="width:10%">
+										<p:selectBooleanCheckbox
+											value="#{item.selecionado}" 
+											style="margin-left:4px">
+										</p:selectBooleanCheckbox>
+									</p:column>
+									<p:column style="width:40%">
+										<p:outputLabel value="#{item.tipo.descricao}:" />
+									</p:column>
+									<p:column style="width:50%" >
+										<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+									</p:column>
+								</p:dataTable>
+							</p:panelGrid>
+							<p:panelGrid columns="2">
+								<p:outputLabel value="Tamanho: " />
+								<p:inputText value="#{familiar_controller.familiar.tamanhoTransporte}" style="width:100px">
+								</p:inputText>
+								
+								<p:outputLabel value="Capacidade (pessoas): " />
+								<p:inputText
+									onkeypress="return somenteNumeros(event);"
+									placeholder="Número de pessoas"
+									value="#{familiar_controller.familiar.capacidade}">
+								</p:inputText>
+							</p:panelGrid>
+						</p:tab>
+						<p:tab >
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Saneamento básico</span>
+								</p:commandLink>
+							</f:facet>
+							
+							<p:panelGrid columns="1" styleClass="panelColumnsTop">
+								<p:fieldset legend="Abastecimento de água">
+									<p:dataTable var="item" value="#{familiar_controller.abastecimentos}" style="width:500px">
+										<p:column style="width:10%">
+											<p:selectBooleanCheckbox
+												value="#{item.selecionado}" 
+												style="margin-left:4px">
+											</p:selectBooleanCheckbox>
+										</p:column>
+										<p:column style="width:40%">
+											<p:outputLabel value="#{item.tipo.descricao}:" />
+										</p:column>
+										<p:column style="width:50%" >
+											<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+										</p:column>
+									</p:dataTable>
+								</p:fieldset>
+								
+								<h:panelGroup>
+									<p:panelGrid columns="2">
+										<p:outputLabel value="Água para consumo: " />
+										<p:selectOneMenu value="#{familiar_controller.familiar.tipoConsumoAgua}" >
+											<f:selectItems value="#{familiar_controller.tiposAguaConsumo}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+										</p:selectOneMenu>
+									</p:panelGrid>
+								</h:panelGroup>
+								
+								<p:fieldset legend="Tipo do Tramento">
+									<p:dataTable var="item" value="#{familiar_controller.tratamentos}" style="width:500px">
+										<p:column style="width:10%">
+											<p:selectBooleanCheckbox
+												value="#{item.selecionado}" 
+												style="margin-left:4px">
+											</p:selectBooleanCheckbox>
+										</p:column>
+										<p:column style="width:40%">
+											<p:outputLabel value="#{item.tipo.descricao}:" />
+										</p:column>
+										<p:column style="width:50%" >
+											<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+										</p:column>
+									</p:dataTable>
+								</p:fieldset>	
+							</p:panelGrid>
+							
+							<br />
+							
+							<p:panelGrid columns="1">
+								<h:panelGroup>
+									<h:panelGrid columns="2">
+										<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiCriterioUtilizacaoCloro}"/>
+										<p:outputLabel value="Usa algum critério para utilização do cloro?" style="padding-left: 20px"/>
+									</h:panelGrid>
+								</h:panelGroup>
+								
+								<p:outputLabel value="No caso de usar cloro, especifique:"/>
+								
+								<h:panelGroup>
+									<p:panelGrid columns="2">
+										<p:outputLabel value="O tamanho do recipiente utilizado para colocar a água para beber (litros)?"/>
+										<p:inputText value="#{familiar_controller.familiar.tamanhoRecipienteAgua}" style="width:70px">
+										</p:inputText>
+									</p:panelGrid>
+								</h:panelGroup>
+								
+								<h:panelGroup>
+									<p:panelGrid columns="2">
+										<p:outputLabel value="Total de gotas de cloro utilizados?"/>
+										<p:inputText
+											onkeypress="return somenteNumeros(event);"
+											placeholder="Quantidade"
+											value="#{familiar_controller.familiar.totalGotasCloro}">
+										</p:inputText>
+									</p:panelGrid>
+								</h:panelGroup>
+								
+								<h:panelGroup>
+									<h:panelGrid columns="2">
+										<p:selectBooleanCheckbox value="#{familiar_controller.familiar.deixaAguaDescansar}"/>
+										<p:outputLabel value="Deixa a água descansar?" style="padding-left: 20px"/>
+									</h:panelGrid>
+								</h:panelGroup>
+								
+								<h:panelGroup>
+									<p:panelGrid columns="2">
+										<p:outputLabel value="Quanto tempo?"/>
+										<p:inputText value="#{familiar_controller.familiar.tempoDescansoAgua}" style="width:100px">
+										</p:inputText>
+									</p:panelGrid>
+								</h:panelGroup>
+							</p:panelGrid>
+							
+							<br /><br />
+							
+							<p:panelGrid columns="1">
+								<h:panelGroup>
+									<p:panelGrid columns="3">
+										<h:panelGroup>
+											<h:panelGrid columns="2">
+												<p:selectBooleanCheckbox value="#{familiar_controller.familiar.temSanitario}"/>
+												<p:outputLabel value="Tem sanitário?" style="padding-left: 20px"/>
+											</h:panelGrid>
+										</h:panelGroup>
+										<p:outputLabel value="Onde fica? " />
+										<p:selectOneMenu value="#{familiar_controller.familiar.tipoLocalSanitario}" >
+											<f:selectItem itemLabel="Selecione um local" itemValue=""/>
+											<f:selectItems value="#{familiar_controller.tiposLocalSanitario}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+										</p:selectOneMenu>
+									</p:panelGrid>
+								</h:panelGroup>
+								
+								<br />
+								
+								<p:fieldset legend="Destino do esgoto">
+									<p:dataTable var="item" value="#{familiar_controller.destinosEsgoto}" style="width:400px">
+										<p:column style="width:10%">
+											<p:selectBooleanCheckbox
+												value="#{item.selecionado}" 
+												style="margin-left:4px">
+											</p:selectBooleanCheckbox>
+										</p:column>
+										<p:column style="width:40%">
+											<p:outputLabel value="#{item.tipo.descricao}:" />
+										</p:column>
+										<p:column style="width:50%" >
+											<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+										</p:column>
+									</p:dataTable>
+								</p:fieldset>	
+								
+								<br />
+								
+								<p:panelGrid columns="2">
+									<p:outputLabel value="Terreno acima ou abaixo da casa? " />
+									<p:selectOneMenu value="#{familiar_controller.familiar.tipoTerreno}" >
+										<f:selectItem itemLabel="Selecione um tipo de terreno" itemValue=""/>
+										<f:selectItems value="#{familiar_controller.tiposTerreno}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+									</p:selectOneMenu>
+								</p:panelGrid>
+								
+								<br />
+								
+								<p:fieldset legend="Destino do lixo">
+									<p:dataTable var="item" value="#{familiar_controller.destinosLixo}" style="width:400px">
+										<p:column style="width:10%">
+											<p:selectBooleanCheckbox
+												value="#{item.selecionado}" 
+												style="margin-left:4px">
+											</p:selectBooleanCheckbox>
+										</p:column>
+										<p:column style="width:40%">
+											<p:outputLabel value="#{item.tipo.descricao}:" />
+										</p:column>
+										<p:column style="width:50%" >
+											<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+										</p:column>
+									</p:dataTable>
+								</p:fieldset>
+							</p:panelGrid>
+						</p:tab>
+						<p:tab >
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Informações sobre saúde</span>
+								</p:commandLink>
+							</f:facet>
+							
+							<p:commandLink
+								styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+								title="Adicionar sintoma"
+								oncomplete="PF('dlg_cadastro_sintoma').show()"
+								update=":form-cadastro-sintoma"
+								action="#{familiar_controller.prepararCadastroSintoma}"
+								style="color:#fff; margin: 8px 2px;">
+								<span style="font-family: Arial"> Adicionar Novo</span>
+							</p:commandLink>
+							
+							<p:dataTable id="sintomas" 
+								value="#{familiar_controller.familiar.sintomasSaude}" var="item"
+								paginator="true" rows="5" style="width:70%">
+								
+								<f:facet name="header">
+									<h:outputText value="Sintomas" />
+							    </f:facet>
+								
+								<p:column filterBy="#{item.nivel}"
+									filterStyle="display:none" headerText="Nível" style="width:10%">
+									<h:outputText value="#{item.nivel}" style="float: right;"/>
+								</p:column>
+								
+								<p:column filterBy="#{item.sintoma.descricao}"
+									filterStyle="display:none" headerText="Descrição" style="width:35%;">
+									<h:outputText value="#{item.sintoma.descricao}" />
+								</p:column>
+								
+								<p:column filterBy="#{item.sintoma.respotaa}"
+									filterStyle="display:none" headerText="Outros" style="width:35%;">
+									<h:outputText value="#{item.resposta}" />
+								</p:column>
+								
+								<p:column headerText="Ação" style="width:20%;text-align: center;">
+									<p:commandLink title="Excluir" rendered="true" update="sintomas"
+										value="Excluir" oncomplete="PF('confirmacaoDeleteSintoma').show()" >
+										<f:setPropertyActionListener target="#{familiar_controller.sintoma}"
+											value="#{item}" />
+									</p:commandLink>
+									<p:spacer width="10px" />
+									
+									<p:commandLink value="Editar" action="#{familiar_controller.prepararEditarSintoma}" oncomplete="PF('dlg_cadastro_sintoma').show()" update=":form-cadastro-sintoma">
+										<f:setPropertyActionListener target="#{familiar_controller.sintoma}"
+											value="#{item}" />
+									</p:commandLink>
+								
+								</p:column>
+							</p:dataTable>
+						</p:tab>
+						<p:tab >
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Renda - Atividades econômicas</span>
+								</p:commandLink>
+							</f:facet>
+							
+							<p:outputLabel value="Quais as atividades que fornecem mais renda para a sua família? (enumerar em ordem decrescente, sendo o número 1 a atividade que mais fornece renda)" />
+							
+							<br />
+							<br />
+							
+							<h:panelGroup>
+								<p:panelGrid columns="2">
+									<p:selectBooleanCheckbox value="#{familiar_controller.familiar.temTrabalhoAssalariado}"/>
+									<p:outputLabel value="Trabalho assalariado? " />
+									<p:outputLabel value="Qual? " />
+									<p:inputText value="#{familiar_controller.familiar.trabalhoAssalariado}" style="width:300px"/>
+									<p:selectBooleanCheckbox value="#{familiar_controller.familiar.carteiraDeTrabalhoAssinada}"/>
+									<p:outputLabel value="Carteira de trabalho assinada? " />
+								</p:panelGrid>
+							</h:panelGroup>
+							
+							<p:commandLink
+								styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+								title="Adicionar cadeia produtiva"
+								oncomplete="PF('dlg_cadastro_cadeia').show()"
+								update=":form-cadastro-cadeia"
+								action="#{familiar_controller.prepararCadastroCadeia}"
+								style="color:#fff; margin: 8px 2px;">
+								<span style="font-family: Arial"> Adicionar Novo</span>
+							</p:commandLink>
+							
+							<p:dataTable id="cadeias" 
+								value="#{familiar_controller.familiar.cadeiasProdutivas}" var="item"
+								paginator="true" rows="5" style="width:70%">
+								
+								<f:facet name="header">
+									<h:outputText value="Cadeias produtivas" />
+							    </f:facet>
+								
+								<p:column filterBy="#{item.nivel}"
+									filterStyle="display:none" headerText="Nível" style="width:10%">
+									<h:outputText value="#{item.nivel}" style="float: right;"/>
+								</p:column>
+								
+								<p:column filterBy="#{item.cadeia.descricao}"
+									filterStyle="display:none" headerText="Descrição" style="width:35%;">
+									<h:outputText value="#{item.cadeia.descricao}" />
+								</p:column>
+								
+								<p:column filterBy="#{item.cadeia.respotaa}"
+									filterStyle="display:none" headerText="Outros" style="width:35%;">
+									<h:outputText value="#{item.resposta}" />
+								</p:column>
+								
+								<p:column headerText="Ação" style="width:20%;text-align: center;">
+									<p:commandLink title="Excluir" rendered="true" update="cadeias"
+										value="Excluir" oncomplete="PF('confirmacaoDeleteCadeia').show()" >
+										<f:setPropertyActionListener target="#{familiar_controller.cadeia}"
+											value="#{item}" />
+									</p:commandLink>
+									<p:spacer width="10px" />
+									
+									<p:commandLink value="Editar" action="#{familiar_controller.prepararEditarCadeia}" oncomplete="PF('dlg_cadastro_cadeia').show()" update=":form-cadastro-cadeia">
+										<f:setPropertyActionListener target="#{familiar_controller.cadeia}"
+											value="#{item}" />
+									</p:commandLink>
+								
+								</p:column>
+							</p:dataTable>
+							
+							<br />
+							
+							<p:panelGrid columns="2">
+								<p:outputLabel value="Somando a renda de todos que moram na sua casa qual a renda mensal em dinheiro"/>
+								<p:inputText
+									onkeypress="return formatarNumero(this,event,19,2);"
+									placeholder="Valor"
+									value="#{familiar_controller.familiar.rendaMensal}">
+									<f:convertNumber minFractionDigits="2"
+										maxFractionDigits="2" locale="pt_BR" />
+
+								</p:inputText>
+							</p:panelGrid>
+							
+							<br />
+							
+							<p:fieldset legend="Agricultura">
+								<p:commandLink
+									styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+									title="Adicionar produto de agricultura"
+									oncomplete="PF('dlg_cadastro_produto_agricultura').show()"
+									update=":form-cadastro-produto-agricultura"
+									action="#{familiar_controller.prepararCadastroProdutoAgricultura}"
+									style="color:#fff; margin: 8px 2px;">
+									<span style="font-family: Arial"> Adicionar Novo</span>
+								</p:commandLink>
+								
+								<p:dataTable id="produtosAgricultura" 
+									value="#{familiar_controller.familiar.produtosAgricultura}" var="item"
+									paginator="true" rows="5" style="width:100%">
+									
+									<f:facet name="header">
+										<h:outputText value="Produtos" />
+								    </f:facet>
+									
+									<p:column filterBy="#{item.produto.descricao}"
+										filterStyle="display:none" headerText="Descrição" style="width:30%;">
+										<h:outputText value="#{item.produto.descricao}" />
+									</p:column>
+									
+									<p:column headerText="Ambiente" style="width:15%;">
+										<p:outputLabel value="Várzea:"/>
+										<h:outputText value="Sim" rendered="#{item.varzea}" style="padding-left: 10px"/>
+										<h:outputText value="Não" rendered="#{!item.varzea}" style="padding-left: 10px"/>
+										
+										<br/>
+										
+										<p:outputLabel value="Terra firme:"/>
+										<h:outputText value="Sim" rendered="#{item.terraFirme}" style="padding-left: 10px"/>
+										<h:outputText value="Não" rendered="#{!item.terraFirme}" style="padding-left: 10px"/>
+									</p:column>
+									
+									<p:column headerText="Uso" style="width:15%;">
+										<p:outputLabel value="Consumo:"/>
+										<h:outputText value="Sim" rendered="#{item.consumo}" style="padding-left: 10px"/>
+										<h:outputText value="Não" rendered="#{!item.consumo}" style="padding-left: 10px"/>
+										
+										<br/>
+										
+										<p:outputLabel value="Venda:"/>
+										<h:outputText value="Sim" rendered="#{item.venda}" style="padding-left: 10px"/>
+										<h:outputText value="Não" rendered="#{!item.venda}" style="padding-left: 10px"/>
+									</p:column>
+									
+									<p:column filterBy="#{item.cliente}"
+										filterStyle="display:none" headerText="Pra quem constuma vender?" style="width:20%;">
+										<h:outputText value="#{item.cliente}" />
+									</p:column>
+									
+									<p:column headerText="Venda em conjunto?" style="width:10%;">
+										<p:outputLabel value="Sim" rendered="#{item.vendidoEmConjunto}"/>
+										<p:outputLabel value="Não" rendered="#{!item.vendidoEmConjunto}"/>
+									</p:column>
+									
+									<p:column headerText="Ação" style="width:20%;text-align: center;">
+										<p:commandLink title="Excluir" rendered="true" update="produtosAgricultura"
+											value="Excluir" oncomplete="PF('confirmacaoDeleteProdutoAgricultura').show()" >
+											<f:setPropertyActionListener target="#{familiar_controller.produtoAgricultura}"
+												value="#{item}" />
+										</p:commandLink>
+										<p:spacer width="10px" />
+										
+										<p:commandLink value="Editar" action="#{familiar_controller.prepararEditarProdutoAgricultura}" oncomplete="PF('dlg_cadastro_produto_agricultura').show()" update=":form-cadastro-produto-agricultura">
+											<f:setPropertyActionListener target="#{familiar_controller.produtoAgricultura}"
+												value="#{item}" />
+										</p:commandLink>
+									
+									</p:column>
+								</p:dataTable>
+							</p:fieldset>
+							
+							<br />
+							
+							<p:panelGrid columns="3">
+								<h:panelGroup>
+									<h:panelGrid columns="2">
+										<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiAssistenciaTecnica}"/>
+										<p:outputLabel value="Possui assistência técnica?" style="padding-left: 20px"/>
+									</h:panelGrid>
+								</h:panelGroup>
+								
+								<p:outputLabel value="Tipo de ATER"/>
+								<p:inputText value="#{familiar_controller.familiar.tipoATER}" style="width:300px">
+								</p:inputText>
+							</p:panelGrid>
+							
+							<br />
+							
+							<p:fieldset legend="Pescado">
+								<p:commandLink
+									styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+									title="Adicionar produto de pescado"
+									oncomplete="PF('dlg_cadastro_produto_pescado').show()"
+									update=":form-cadastro-produto-pescado"
+									action="#{familiar_controller.prepararCadastroProdutoPescado}"
+									style="color:#fff; margin: 8px 2px;">
+									<span style="font-family: Arial"> Adicionar Novo</span>
+								</p:commandLink>
+								
+								<p:dataTable id="produtosPescado" 
+									value="#{familiar_controller.familiar.produtosPescado}" var="item"
+									paginator="true" rows="5" style="width:100%">
+									
+									<f:facet name="header">
+										<h:outputText value="Produtos" />
+								    </f:facet>
+									
+									<p:column filterBy="#{item.produto.descricao}"
+										filterStyle="display:none" headerText="Descrição" style="width:30%;">
+										<h:outputText value="#{item.produto.descricao}" />
+									</p:column>
+									
+									<p:column headerText="Uso" style="width:15%;">
+										<p:outputLabel value="Consumo:"/>
+										<h:outputText value="Sim" rendered="#{item.consumo}" style="padding-left: 10px"/>
+										<h:outputText value="Não" rendered="#{!item.consumo}" style="padding-left: 10px"/>
+										
+										<br/>
+										
+										<p:outputLabel value="Venda:"/>
+										<h:outputText value="Sim" rendered="#{item.venda}" style="padding-left: 10px"/>
+										<h:outputText value="Não" rendered="#{!item.venda}" style="padding-left: 10px"/>
+									</p:column>
+									
+									<p:column filterBy="#{item.cliente}"
+										filterStyle="display:none" headerText="Pra quem constuma vender?" style="width:20%;">
+										<h:outputText value="#{item.cliente}" />
+									</p:column>
+									
+									<p:column headerText="Evita pescar em alguma época?" style="width:18%;">
+										<h:outputText value="#{item.dataInicio}" rendered="#{item.dataInicio != null}">
+											<f:convertDateTime pattern="dd/MM/yyyy"
+												timeZone="America/Manaus" />
+										</h:outputText>
+										<h:outputText value="a" rendered="#{item.dataInicio != null and item.dataFim != null}" style="padding-left: 10px; padding-right: 10px;"/>
+										<h:outputText value="#{item.dataFim}" rendered="#{item.dataFim != null}">
+											<f:convertDateTime pattern="dd/MM/yyyy"
+												timeZone="America/Manaus" />
+										</h:outputText>
+									</p:column>
+									
+									<p:column headerText="Venda em conjunto?" style="width:8%;">
+										<p:outputLabel value="Sim" rendered="#{item.vendidoEmConjunto}"/>
+										<p:outputLabel value="Não" rendered="#{!item.vendidoEmConjunto}"/>
+									</p:column>
+									
+									<p:column headerText="Ação" style="width:10%;text-align: center;">
+										<p:commandLink title="Excluir" rendered="true" update="produtosPescado"
+											value="Excluir" oncomplete="PF('confirmacaoDeleteProdutoPescado').show()" >
+											<f:setPropertyActionListener target="#{familiar_controller.produtoPescado}"
+												value="#{item}" />
+										</p:commandLink>
+										<p:spacer width="10px" />
+										
+										<p:commandLink value="Editar" action="#{familiar_controller.prepararEditarProdutoPescado}" oncomplete="PF('dlg_cadastro_produto_pescado').show()" update=":form-cadastro-produto-pescado">
+											<f:setPropertyActionListener target="#{familiar_controller.produtoPescado}"
+												value="#{item}" />
+										</p:commandLink>
+									
+									</p:column>
+								</p:dataTable>
+							</p:fieldset>
+							
+							<br />
+							
+							<p:panelGrid columns="3">
+								<h:panelGroup>
+									<h:panelGrid columns="2">
+										<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiPeixeProcessado}"/>
+										<p:outputLabel value="Algum peixe é processado?" style="padding-left: 20px"/>
+									</h:panelGrid>
+								</h:panelGroup>
+								
+								<p:outputLabel value="Tipo de processamento:"/>
+								<p:inputText value="#{familiar_controller.familiar.tipoProcessamentoPescado}" style="width:300px">
+								</p:inputText>
+								
+								<h:panelGroup>
+									<h:panelGrid columns="2">
+										<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiCarteiraPescador}"/>
+										<p:outputLabel value="Possui carteira de pescador?" style="padding-left: 20px"/>
+									</h:panelGrid>
+								</h:panelGroup>
+								
+								<h:panelGroup>
+									<h:panelGrid columns="2">
+										<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiContratoVendaPescado}"/>
+										<p:outputLabel value="Possui algum tipo de contrato para venda de pescados?" style="padding-left: 20px"/>
+									</h:panelGrid>
+								</h:panelGroup>
+								
+								<h:outputText value=""/>
+								
+								<p:outputLabel value="Como conserva o peixe?"/>
+								<p:selectOneMenu value="#{familiar_controller.familiar.tipoConservamentoPescado}" >
+									<f:selectItem itemLabel="Selecione um tipo" itemValue=""/>
+									<f:selectItems value="#{familiar_controller.tiposConservamento}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+								</p:selectOneMenu>
+							</p:panelGrid>
+							
+							<br />
+							
+							<p:fieldset legend="Criação animal">
+								<p:commandLink
+									styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+									title="Adicionar criação animal"
+									oncomplete="PF('dlg_cadastro_criacao_animal').show()"
+									update=":form-cadastro-criacao-animal"
+									action="#{familiar_controller.prepararCadastroCriacaoAnimal}"
+									style="color:#fff; margin: 8px 2px;">
+									<span style="font-family: Arial"> Adicionar Novo</span>
+								</p:commandLink>
+								
+								<p:dataTable id="criacoes" 
+									value="#{familiar_controller.familiar.criacoesAnimais}" var="item"
+									paginator="true" rows="5" style="width:100%">
+									
+									<f:facet name="header">
+										<h:outputText value="Criações" />
+								    </f:facet>
+									
+									<p:column filterBy="#{item.criacao.descricao}"
+										filterStyle="display:none" headerText="Descrição" style="width:30%;">
+										<h:outputText value="#{item.criacao.descricao}" />
+									</p:column>
+									
+									<p:column filterBy="#{item.quantidade}"
+										filterStyle="display:none" headerText="Quantidade" style="width:10%;">
+										<h:outputText value="#{item.quantidade}" />
+									</p:column>
+									
+									<p:column headerText="Uso" style="width:15%;">
+										<p:outputLabel value="Consumo:"/>
+										<h:outputText value="Sim" rendered="#{item.consumo}" style="padding-left: 10px"/>
+										<h:outputText value="Não" rendered="#{!item.consumo}" style="padding-left: 10px"/>
+										
+										<br/>
+										
+										<p:outputLabel value="Venda:"/>
+										<h:outputText value="Sim" rendered="#{item.venda}" style="padding-left: 10px"/>
+										<h:outputText value="Não" rendered="#{!item.venda}" style="padding-left: 10px"/>
+									</p:column>
+									
+									<p:column filterBy="#{item.cliente}"
+										filterStyle="display:none" headerText="Pra quem constuma vender?" style="width:20%;">
+										<h:outputText value="#{item.cliente}" />
+									</p:column>
+									
+									<p:column headerText="Venda em conjunto?" style="width:8%;">
+										<p:outputLabel value="Sim" rendered="#{item.vendidoEmConjunto}"/>
+										<p:outputLabel value="Não" rendered="#{!item.vendidoEmConjunto}"/>
+									</p:column>
+									
+									<p:column headerText="Ação" style="width:10%;text-align: center;">
+										<p:commandLink title="Excluir" rendered="true" update="criacoes"
+											value="Excluir" oncomplete="PF('confirmacaoDeleteProdutoPescado').show()" >
+											<f:setPropertyActionListener target="#{familiar_controller.criacao}"
+												value="#{item}" />
+										</p:commandLink>
+										<p:spacer width="10px" />
+										
+										<p:commandLink value="Editar" action="#{familiar_controller.prepararEditarCriacaoAnimal}" oncomplete="PF('dlg_cadastro_criacao_animal').show()" update=":form-cadastro-criacao-animal">
+											<f:setPropertyActionListener target="#{familiar_controller.criacao}"
+												value="#{item}" />
+										</p:commandLink>
+									
+									</p:column>
+								</p:dataTable>
+							</p:fieldset>
+							
+							<br />
+							
+							<p:panelGrid columns="3">
+								<h:panelGroup>
+									<h:panelGrid columns="2">
+										<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiAnimalBeneficiado}"/>
+										<p:outputLabel value="Algum animal é beneficiado?" style="padding-left: 20px"/>
+									</h:panelGrid>
+								</h:panelGroup>
+								
+								<p:outputLabel value="Tipo de beneficiamento:"/>
+								<p:inputText value="#{familiar_controller.familiar.tipoBeneficiamento}" style="width:300px">
+								</p:inputText>
+								
+								<h:panelGroup>
+									<h:panelGrid columns="2">
+										<p:selectBooleanCheckbox value="#{familiar_controller.familiar.possuiAssistenciaTecnicaAnimal}"/>
+										<p:outputLabel value="Possui assistência técnica?" style="padding-left: 20px"/>
+									</h:panelGrid>
+								</h:panelGroup>
+								
+								<p:outputLabel value="Tipo de ATER"/>
+								<p:inputText value="#{familiar_controller.familiar.tipoAterAnimal}" style="width:300px">
+								</p:inputText>
+							</p:panelGrid>
+							
+							<br />
+							
+							<p:fieldset legend="Produtos Florestais">
+								<p:commandLink
+									styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+									title="Adicionar produto florestal madeireiro"
+									oncomplete="PF('dlg_cadastro_produto_madeireiro').show()"
+									update=":form-cadastro-produto-madeireiro"
+									action="#{familiar_controller.prepararCadastroProdutoFlorestalMadeireiro}"
+									style="color:#fff; margin: 8px 2px;">
+									<span style="font-family: Arial"> Adicionar Novo</span>
+								</p:commandLink>
+								
+								<p:dataTable id="produtosMadeireiros" 
+									value="#{familiar_controller.familiar.produtosFlorestaisMadeireiros}" var="item"
+									paginator="true" rows="5" style="width:100%">
+									
+									<f:facet name="header">
+										<h:outputText value="Produtos Madeireiros" />
+								    </f:facet>
+									
+									<p:column filterBy="#{item.produto.descricao}"
+										filterStyle="display:none" headerText="Descrição" style="width:30%;">
+										<h:outputText value="#{item.produto.descricao}" />
+									</p:column>
+									
+									<p:column headerText="Uso" style="width:15%;">
+										<p:outputLabel value="Consumo:"/>
+										<h:outputText value="Sim" rendered="#{item.consumo}" style="padding-left: 10px"/>
+										<h:outputText value="Não" rendered="#{!item.consumo}" style="padding-left: 10px"/>
+										
+										<br/>
+										
+										<p:outputLabel value="Venda:"/>
+										<h:outputText value="Sim" rendered="#{item.venda}" style="padding-left: 10px"/>
+										<h:outputText value="Não" rendered="#{!item.venda}" style="padding-left: 10px"/>
+									</p:column>
+									
+									<p:column filterBy="#{item.cliente}"
+										filterStyle="display:none" headerText="Pra quem constuma vender?" style="width:20%;">
+										<h:outputText value="#{item.cliente}" />
+									</p:column>
+									
+									<p:column headerText="Venda em conjunto?" style="width:8%;">
+										<p:outputLabel value="Sim" rendered="#{item.vendidoEmConjunto}"/>
+										<p:outputLabel value="Não" rendered="#{!item.vendidoEmConjunto}"/>
+									</p:column>
+									
+									<p:column headerText="Ação" style="width:10%;text-align: center;">
+										<p:commandLink title="Excluir" rendered="true" update="produtosMadeireiros"
+											value="Excluir" oncomplete="PF('confirmacaoDeleteProdutoMadeireiro').show()" >
+											<f:setPropertyActionListener target="#{familiar_controller.produtoMadeireiro}"
+												value="#{item}" />
+										</p:commandLink>
+										<p:spacer width="10px" />
+										
+										<p:commandLink value="Editar" action="#{familiar_controller.prepararEditarProdutoFlorestalMadeireiro}" oncomplete="PF('dlg_cadastro_produto_madeireiro').show()" update=":form-cadastro-produto-madeireiro">
+											<f:setPropertyActionListener target="#{familiar_controller.produtoMadeireiro}"
+												value="#{item}" />
+										</p:commandLink>
+									
+									</p:column>
+								</p:dataTable>
+								
+								<br />
+								
+								<p:commandLink
+									styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+									title="Adicionar produto florestal não madeireiro"
+									oncomplete="PF('dlg_cadastro_produto_nao_madeireiro').show()"
+									update=":form-cadastro-produto-nao-madeireiro"
+									action="#{familiar_controller.prepararCadastroProdutoFlorestalNaoMadeireiro}"
+									style="color:#fff; margin: 8px 2px;">
+									<span style="font-family: Arial"> Adicionar Novo</span>
+								</p:commandLink>
+								
+								<p:dataTable id="produtosNaoMadeireiros" 
+									value="#{familiar_controller.familiar.produtosFlorestaisNaoMadeireiros}" var="item"
+									paginator="true" rows="5" style="width:100%">
+									
+									<f:facet name="header">
+										<h:outputText value="Produtos Não Madeireiros" />
+								    </f:facet>
+									
+									<p:column filterBy="#{item.produto.descricao}"
+										filterStyle="display:none" headerText="Descrição" style="width:30%;">
+										<h:outputText value="#{item.produto.descricao}" />
+									</p:column>
+									
+									<p:column headerText="Uso" style="width:15%;">
+										<p:outputLabel value="Consumo:"/>
+										<h:outputText value="Sim" rendered="#{item.consumo}" style="padding-left: 10px"/>
+										<h:outputText value="Não" rendered="#{!item.consumo}" style="padding-left: 10px"/>
+										
+										<br/>
+										
+										<p:outputLabel value="Venda:"/>
+										<h:outputText value="Sim" rendered="#{item.venda}" style="padding-left: 10px"/>
+										<h:outputText value="Não" rendered="#{!item.venda}" style="padding-left: 10px"/>
+									</p:column>
+									
+									<p:column filterBy="#{item.cliente}"
+										filterStyle="display:none" headerText="Pra quem constuma vender?" style="width:20%;">
+										<h:outputText value="#{item.cliente}" />
+									</p:column>
+									
+									<p:column headerText="Venda em conjunto?" style="width:8%;">
+										<p:outputLabel value="Sim" rendered="#{item.vendidoEmConjunto}"/>
+										<p:outputLabel value="Não" rendered="#{!item.vendidoEmConjunto}"/>
+									</p:column>
+									
+									<p:column headerText="Ação" style="width:10%;text-align: center;">
+										<p:commandLink title="Excluir" rendered="true" update="produtosNaoMadeireiros"
+											value="Excluir" oncomplete="PF('confirmacaoDeleteProdutoNaoMadeireiro').show()" >
+											<f:setPropertyActionListener target="#{familiar_controller.produtoNaoMadeireiro}"
+												value="#{item}" />
+										</p:commandLink>
+										<p:spacer width="10px" />
+										
+										<p:commandLink value="Editar" action="#{familiar_controller.prepararEditarProdutoFlorestalNaoMadeireiro}" oncomplete="PF('dlg_cadastro_produto_nao_madeireiro').show()" update=":form-cadastro-produto-nao-madeireiro">
+											<f:setPropertyActionListener target="#{familiar_controller.produtoNaoMadeireiro}"
+												value="#{item}" />
+										</p:commandLink>
+									
+									</p:column>
+								</p:dataTable>
+							</p:fieldset>
+							
+							<br />
+							
+							<p:panelGrid columns="2">
+								<p:outputLabel value="Informações adicionais de relevância:"/>
+								<p:inputText value="#{familiar_controller.familiar.informacoesAdicionais}" style="width:300px">
+								</p:inputText>
+							</p:panelGrid>
+						</p:tab>
+					</p:accordionPanel>
+				</p:tab>
+			</p:tabView>
+		</h:form>
+	</ui:define>
+	
+	<ui:define name="adicionais">
+		<p:dialog id="dlg-identificacao" header="Cadastro de membro"
+			widgetVar="dlg_cadastro_membro" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="90%">
+			<h:form id="form-cadastro-membro" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{familiar_controller.adicionarIdentificacao}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formFamiliar:identificacoes msgs"/>
+					<p:commandLink action="#{familiar_controller.prepararCadastroIdentificacao}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_membro').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+				
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Tipo: " />
+						<p:selectOneMenu value="#{familiar_controller.identificacao.tipoIdentificacao}" >
+							<f:selectItems value="#{familiar_controller.tiposIdentificacao}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+							<p:ajax update="panelRGCPF panelComplemento"/>
+						</p:selectOneMenu>
+					</p:panelGrid>
+					<p:panelGrid columns="4">
+						
+						<p:outputLabel value="Nome: " />
+						<p:inputText value="#{familiar_controller.identificacao.nome}" style="width:300px">
+						</p:inputText>
+						
+						<p:outputLabel value="Data de nascimento: " />
+						<p:calendar
+								value="#{familiar_controller.identificacao.dataNascimento}"
+								timeZone="America/Manaus" navigator="true"
+								pattern="dd/MM/yyyy" mask="true"/>
+								
+					</p:panelGrid>
+					
+					<h:panelGrid id="panelRGCPF">
+						<p:panelGrid columns="4" rendered="#{familiar_controller.identificacao.tipoIdentificacao.toString() != 'OUTRO'}">
+							<p:outputLabel value="RG: " />
+							<p:inputMask value="#{familiar_controller.identificacao.rg}" style="width:100px" mask="9999999-9">
+							</p:inputMask>	
+							
+							<p:outputLabel value="CPF: " />
+							<p:inputMask value="#{familiar_controller.identificacao.cpf}" style="width:150px" mask="999.999.999-99">
+							</p:inputMask>
+						</p:panelGrid>
+						
+						<p:panelGrid columns="2" rendered="#{familiar_controller.identificacao.tipoIdentificacao.toString() == 'OUTRO'}">
+							<h:panelGroup>
+								<h:panelGrid columns="2">
+									<p:selectBooleanCheckbox value="#{familiar_controller.identificacao.temRG}"/>
+									<p:outputLabel value="Tem RG? " style="padding-left: 20px"/>
+								</h:panelGrid>
+							</h:panelGroup>
+							
+							<h:panelGroup>
+								<h:panelGrid columns="2">
+									<p:selectBooleanCheckbox value="#{familiar_controller.identificacao.temCPF}"/>
+									<p:outputLabel value="Tem CPF? " style="padding-left: 20px"/>
+								</h:panelGrid>
+							</h:panelGroup>
+						</p:panelGrid>
+					</h:panelGrid>
+					
+					<h:panelGrid id="panelComplemento" >
+						<p:panelGrid columns="6" rendered="#{familiar_controller.identificacao.tipoIdentificacao.toString() != 'OUTRO'}">
+							<p:outputLabel value="Apelido: " />
+							<p:inputText value="#{familiar_controller.identificacao.apelido}" style="width:300px">
+							</p:inputText>
+							
+							<p:outputLabel value="Município de nascimento:" />
+							<p:autoComplete styleClass="font12-vi" 
+								panelStyle="width:180px"
+								value="#{familiar_controller.identificacao.municipio}"
+								completeMethod="#{familiar_controller.completeMunicipio}"
+								var="municipio" itemLabel="#{municipio.nome}"
+								itemValue="#{municipio}" converter="municipioConverter"
+								minQueryLength="3" />
+								
+							<p:selectBooleanCheckbox value="#{familiar_controller.identificacao.sempreMorouNesteLugar}"/>
+							<p:outputLabel value="Sempre morou neste lugar?" />
+							
+							<p:outputLabel value="Há quantos anos mora neste lugar?" />
+							<p:spinner value="#{familiar_controller.identificacao.quantidadeAnosMoradia}" size="10"/>	
+							
+							<p:outputLabel value="Último local que morou:" />
+							<p:inputText value="#{familiar_controller.identificacao.ultimoLugarMorou}" style="width:300px">
+							</p:inputText>
+							
+						</p:panelGrid>
+						<p:panelGrid columns="2" rendered="#{familiar_controller.identificacao.tipoIdentificacao.toString() == 'OUTRO'}">
+							<p:outputLabel value="Parentesco: " />
+							<p:selectOneMenu value="#{familiar_controller.identificacao.tipoParentesco}" >
+								<f:selectItem itemLabel="Selecione um parentesco" itemValue=""/>
+								<f:selectItems value="#{familiar_controller.tiposParentesco}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+							</p:selectOneMenu>	
+						</p:panelGrid>
+					</h:panelGrid>
+					
+					<p:panelGrid columns="6">
+					
+						<p:outputLabel value="Gênero: " />		
+						<p:selectOneMenu value="#{familiar_controller.identificacao.tipoGenero}" >
+						<f:selectItems value="#{familiar_controller.generos}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+						</p:selectOneMenu>
+						
+						<p:outputLabel value="Profissão/Atividade: " />
+						<p:inputText value="#{familiar_controller.identificacao.profissaoAtividade}" style="width:300px">
+						</p:inputText>
+						
+						<p:outputLabel value="Escolaridade: " />		
+						<p:selectOneMenu value="#{familiar_controller.identificacao.tipoEscolaridade}" >
+						<f:selectItems value="#{familiar_controller.escolaridades}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+						</p:selectOneMenu>
+						
+						<p:outputLabel value="Ano de Escolaridade: " />		
+						<p:selectOneMenu value="#{familiar_controller.identificacao.tipoAnoEscolaridade}" >
+						<f:selectItems value="#{familiar_controller.anosEscolaridade}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+						</p:selectOneMenu>
+						
+						<h:panelGroup>
+							<h:panelGrid columns="2">
+								<p:selectBooleanCheckbox value="#{familiar_controller.identificacao.atualmenteEstuda}"/>
+								<p:outputLabel value="Atualmente estuda?" style="padding-left:20px"/>
+							</h:panelGrid>
+						</h:panelGroup>
+						
+						<p:outputLabel value="" />
+						<p:outputLabel value="" />
+						<p:outputLabel value="" />	
+						
+						<h:panelGroup>
+							<h:panelGrid columns="2">
+								<p:selectBooleanCheckbox value="#{familiar_controller.identificacao.temCertidaoNascimento}"/>
+								<p:outputLabel value="Tem Certidão de nascimento? " style="padding-left: 20px"/>
+							</h:panelGrid>
+						</h:panelGroup>
+						
+						<h:panelGroup>
+							<h:panelGrid columns="2">
+								<p:selectBooleanCheckbox value="#{familiar_controller.identificacao.temCertidaoCasamento}"/>
+								<p:outputLabel value="Tem Certidão de casamento? " style="padding-left: 20px"/>
+							</h:panelGrid>
+						</h:panelGroup>
+						
+						<h:panelGroup>
+							<h:panelGrid columns="2">
+								<p:selectBooleanCheckbox value="#{familiar_controller.identificacao.temTituloEleitor}"/>
+								<p:outputLabel value="Tem Titulo de eleitor? " style="padding-left: 20px"/>
+							</h:panelGrid>
+						</h:panelGroup>
+						
+						<h:panelGroup>
+							<h:panelGrid columns="2">
+								<p:selectBooleanCheckbox value="#{familiar_controller.identificacao.temRegMilitar}"/>
+								<p:outputLabel value="Tem Reg. Militar? " style="padding-left: 20px"/>
+							</h:panelGrid>
+						</h:panelGroup>
+						
+						<h:panelGroup>
+							<h:panelGrid columns="2">
+								<p:selectBooleanCheckbox value="#{familiar_controller.identificacao.temCarteiraTrabalho}"/>
+								<p:outputLabel value="Tem Carteira de Trabalho? " style="padding-left: 20px"/>
+							</h:panelGrid>
+						</h:panelGroup>
+					</p:panelGrid>
+					
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteIdentificacao" header="Confirmação" message="Confirma a exclusão do membro?">
+			<h:form id="formConfirmacao">
+				<p:commandButton value="Sim" action="#{familiar_controller.deleteIdentificacao}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formFamiliar:identificacoes :formFamiliar:msgs"
+					onsuccess="PF('confirmacaoDeleteIdentificacao').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteIdentificacao').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<p:dialog id="dlg-dinamica" header="Cadastro de dinâmica populacional"
+			widgetVar="dlg_cadastro_dinamica" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="90%">
+			<h:form id="form-cadastro-dinamica" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{familiar_controller.adicionarDinamica}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formFamiliar:dinamicas :formFamiliar:msgs"
+						onsuccess="PF('dlg_cadastro_dinamica').hide()"/>
+					<p:commandLink action="#{familiar_controller.prepararCadastroDinamica}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_dinamica').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+					<p:panelGrid columns="2">
+						
+						<p:outputLabel value="Membro: " />
+						<p:selectOneMenu value="#{familiar_controller.dinamicaPopulacional.membro}" converter="identificacaoFamiliarConverter">
+							<f:selectItem itemLabel="Selecione um membro"/>
+							<f:selectItems value="#{familiar_controller.familiar.identificacoes}" var="membro" itemLabel="#{membro.nome}" itemValue="#{membro}"/>
+						</p:selectOneMenu>
+						
+						<p:outputLabel value="Em que ano saiu da comunidade? " />
+						<p:inputText value="#{familiar_controller.dinamicaPopulacional.ano}" style="width:50px">
+						</p:inputText>
+						
+						<p:outputLabel value="Por que saiu da comunidade? " />
+						<p:selectOneMenu value="#{familiar_controller.dinamicaPopulacional.tipoSaida}" >
+							<f:selectItem itemLabel="Selecione um motivo" itemValue=""/>
+							<f:selectItems value="#{familiar_controller.tiposSaida}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+						</p:selectOneMenu>
+						
+						<p:outputLabel value="Onde Trabalha? " />
+						<p:inputText value="#{familiar_controller.dinamicaPopulacional.localTrabalho}" style="width:300px">
+						</p:inputText>
+						
+						<p:outputLabel value="Comunidade: " />
+						<p:autoComplete style="width:500px"
+							panelStyle="width:300px"
+							value="#{familiar_controller.dinamicaPopulacional.comunidade}"
+							completeMethod="#{familiar_controller.completeComunidade}"
+							var="comunidade" itemLabel="#{comunidade.descricaoComMunicipio}"
+							itemValue="#{comunidade}" converter="comunidadeConverter"
+							minQueryLength="3" forceSelection="true"/>
+							
+						<p:outputLabel value="Cidade/UF: " />
+						<p:autoComplete style="width:500px"
+							panelStyle="width:300px"
+							value="#{familiar_controller.dinamicaPopulacional.cidade}"
+							completeMethod="#{familiar_controller.completeMunicipio}"
+							var="municipio" itemLabel="#{municipio.nome}"
+							itemValue="#{municipio}" converter="municipioConverter"
+							minQueryLength="3" />
+							
+						<p:outputLabel value="Unidade de Conservação: " />
+						<p:autoComplete style="width:500px"
+							panelStyle="width:300px"
+							value="#{familiar_controller.dinamicaPopulacional.uc}"
+							completeMethod="#{familiar_controller.completeUnidadeConservacao}"
+							var="uc" itemLabel="#{uc.mascara}"
+							itemValue="#{uc}" converter="unidadeConservacaoConverter"
+							minQueryLength="3" forceSelection="true"/>		
+					</p:panelGrid>
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteDinamica" header="Confirmação" message="Confirma a exclusão da dinâmica populacional?">
+			<h:form id="formConfirmacaoDinamica">
+				<p:commandButton value="Sim" action="#{familiar_controller.deleteDinamica}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formFamiliar:dinamicas :formFamiliar:msgs"
+					onsuccess="PF('confirmacaoDeleteDinamica').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteDinamica').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<p:dialog id="dlg-sintoma" header="Cadastro de sintomas"
+			widgetVar="dlg_cadastro_sintoma" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="50%">
+			<h:form id="form-cadastro-sintoma" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{familiar_controller.adicionarSintoma}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formFamiliar:sintomas :formFamiliar:msgs"
+						onsuccess="PF('dlg_cadastro_sintoma').hide()"/>
+					<p:commandLink action="#{familiar_controller.prepararCadastroSintoma}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_sintoma').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+					<p:panelGrid columns="4">
+						
+						<p:outputLabel value="Nível: " />
+						<p:inputText value="#{familiar_controller.sintoma.nivel}" style="width:50px">
+						</p:inputText>
+						
+						<p:outputLabel value="Sintoma: " />
+						<p:autoComplete style="width: 300px"
+							value="#{familiar_controller.sintoma.sintoma}"
+							completeMethod="#{familiar_controller.completeSintomas}"
+							var="sintoma" itemLabel="#{sintoma.descricao}"
+							itemValue="#{sintoma}" converter="sintomaConverter"
+							minQueryLength="3" forceSelection="true">
+							<p:ajax event="itemSelect" update="panelOutros" />
+						</p:autoComplete>	
+					</p:panelGrid>
+					<h:panelGrid id="panelOutros">
+						<p:panelGrid columns="2" rendered="#{familiar_controller.sintoma.sintoma.temResposta}">
+							<p:outputLabel value="Outros: "/>
+							<p:inputText value="#{familiar_controller.sintoma.resposta}" style="width:300px">
+							</p:inputText>
+						</p:panelGrid>
+					</h:panelGrid>	
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteSintoma" header="Confirmação" message="Confirma a exclusão do sintoma?">
+			<h:form id="formConfirmacaoSintoma">
+				<p:commandButton value="Sim" action="#{familiar_controller.deleteSintoma}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formFamiliar:sintomas :formFamiliar:msgs"
+					onsuccess="PF('confirmacaoDeleteSintoma').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteSintoma').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<p:dialog id="dlg-cadeia" header="Cadastro de cadeia produtiva"
+			widgetVar="dlg_cadastro_cadeia" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="50%">
+			<h:form id="form-cadastro-cadeia" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{familiar_controller.adicionarCadeia}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formFamiliar:cadeias :formFamiliar:msgs"
+						onsuccess="PF('dlg_cadastro_cadeia').hide()"/>
+					<p:commandLink action="#{familiar_controller.prepararCadastroCadeia}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_cadeia').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+					<p:panelGrid columns="4">
+						
+						<p:outputLabel value="Nível: " />
+						<p:inputText value="#{familiar_controller.cadeia.nivel}" style="width:50px">
+						</p:inputText>
+						
+						<p:outputLabel value="Cadeia: " />
+						<p:autoComplete style="width: 300px"
+							value="#{familiar_controller.cadeia.cadeia}"
+							completeMethod="#{familiar_controller.completeCadeias}"
+							var="cadeia" itemLabel="#{cadeia.descricao}"
+							itemValue="#{cadeia}" converter="cadeiaProdutivaConverter"
+							minQueryLength="3" forceSelection="true">
+							<p:ajax event="itemSelect" update="panelOutros" />
+						</p:autoComplete>	
+					</p:panelGrid>
+					<h:panelGrid id="panelOutros">
+						<p:panelGrid columns="2" rendered="#{familiar_controller.cadeia.cadeia.temResposta}">
+							<p:outputLabel value="Outros: "/>
+							<p:inputText value="#{familiar_controller.cadeia.resposta}" style="width:300px">
+							</p:inputText>
+						</p:panelGrid>
+					</h:panelGrid>	
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteCadeia" header="Confirmação" message="Confirma a exclusão da cadeia produtiva?">
+			<h:form id="formConfirmacaoCadeia">
+				<p:commandButton value="Sim" action="#{familiar_controller.deleteCadeia}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formFamiliar:cadeias :formFamiliar:msgs"
+					onsuccess="PF('confirmacaoDeleteCadeia').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteCadeia').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<p:dialog id="dlg-produto-agricultura" header="Cadastro de produto de agricultura"
+			widgetVar="dlg_cadastro_produto_agricultura" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="50%">
+			<h:form id="form-cadastro-produto-agricultura" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{familiar_controller.adicionarProdutoAgricultura}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formFamiliar:produtosAgricultura :formFamiliar:msgs"
+						onsuccess="PF('dlg_cadastro_produto_agricultura').hide()"/>
+					<p:commandLink action="#{familiar_controller.prepararCadastroProdutoAgricultura}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_produto_agricultura').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+					<p:panelGrid columns="2">
+						
+						<p:outputLabel value="Produto: " />
+						<p:autoComplete style="width: 300px"
+							value="#{familiar_controller.produtoAgricultura.produto}"
+							completeMethod="#{familiar_controller.completeProdutosAgricultura}"
+							var="produto" itemLabel="#{produto.descricao}"
+							itemValue="#{produto}" converter="produtoAgriculturaConverter"
+							minQueryLength="3" forceSelection="true">
+						</p:autoComplete>
+						
+						<p:outputLabel value="Ambiente: " />
+						<p:panelGrid columns="2">
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.produtoAgricultura.varzea}"/>
+								<p:outputLabel value="Várzea" style="padding-left: 10px;" />
+							</h:panelGroup>	
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.produtoAgricultura.terraFirme}"/>
+								<p:outputLabel value="Terra firme" style="padding-left: 10px;" />
+							</h:panelGroup>
+						</p:panelGrid>	
+						
+						<p:outputLabel value="Uso: " />
+						<p:panelGrid columns="2">
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.produtoAgricultura.consumo}"/>
+								<p:outputLabel value="Consumo" style="padding-left: 10px;" />
+							</h:panelGroup>	
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.produtoAgricultura.venda}"/>
+								<p:outputLabel value="Venda" style="padding-left: 10px;" />
+							</h:panelGroup>
+						</p:panelGrid>
+						
+						<p:outputLabel value="Pra quem costuma vender? " />
+						<p:inputText value="#{familiar_controller.produtoAgricultura.cliente}" style="width:300px">
+						</p:inputText>
+						
+						<h:panelGroup>
+							<p:selectBooleanCheckbox value="#{familiar_controller.produtoAgricultura.vendidoEmConjunto}"/>
+							<p:outputLabel value="Vendido em conjunto?" style="padding-left: 10px;" />
+						</h:panelGroup>
+					</p:panelGrid>
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteProdutoAgricultura" header="Confirmação" message="Confirma a exclusão do produto?">
+			<h:form id="formConfirmacaoProdutoAgricultura">
+				<p:commandButton value="Sim" action="#{familiar_controller.deleteProdutoAgricultura}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formFamiliar:produtosAgricultura :formFamiliar:msgs"
+					onsuccess="PF('confirmacaoDeleteProdutoAgricultura').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteProdutoAgricultura').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<p:dialog id="dlg-produto-pescado" header="Cadastro de produto de pescado"
+			widgetVar="dlg_cadastro_produto_pescado" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="50%">
+			<h:form id="form-cadastro-produto-pescado" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{familiar_controller.adicionarProdutoPescado}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formFamiliar:produtosPescado :formFamiliar:msgs"
+						onsuccess="PF('dlg_cadastro_produto_pescado').hide()"/>
+					<p:commandLink action="#{familiar_controller.prepararCadastroProdutoPescado}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_produto_pescado').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+					<p:panelGrid columns="2">
+						
+						<p:outputLabel value="Produto: " />
+						<p:autoComplete style="width: 300px"
+							value="#{familiar_controller.produtoPescado.produto}"
+							completeMethod="#{familiar_controller.completeProdutosPescado}"
+							var="produto" itemLabel="#{produto.descricao}"
+							itemValue="#{produto}" converter="produtoPescadoConverter"
+							minQueryLength="3" forceSelection="true">
+						</p:autoComplete>
+						
+						<p:outputLabel value="Uso: " />
+						<p:panelGrid columns="2">
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.produtoPescado.consumo}"/>
+								<p:outputLabel value="Consumo" style="padding-left: 10px;" />
+							</h:panelGroup>	
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.produtoPescado.venda}"/>
+								<p:outputLabel value="Venda" style="padding-left: 10px;" />
+							</h:panelGroup>
+						</p:panelGrid>
+						
+						<p:outputLabel value="Pra quem costuma vender? " />
+						<p:inputText value="#{familiar_controller.produtoPescado.cliente}" style="width:300px">
+						</p:inputText>
+						
+						<h:panelGroup>
+							<p:selectBooleanCheckbox value="#{familiar_controller.produtoPescado.evitaPescar}"/>
+							<p:outputLabel value="Evita pescar em alguma época do ano?" style="padding-left: 10px;" />
+						</h:panelGroup>
+						
+						<h:panelGroup>
+							<h:panelGrid columns="4">
+							<p:outputLabel value="De " />
+							<p:calendar
+									value="#{familiar_controller.produtoPescado.dataInicio}"
+									timeZone="America/Manaus" navigator="true"
+									pattern="dd/MM/yyyy" style="padding-left: 10px"/>
+									
+							<p:outputLabel value="Até " style="padding-left: 10px"/>
+							<p:calendar
+									value="#{familiar_controller.produtoPescado.dataFim}"
+									timeZone="America/Manaus" navigator="true"
+									pattern="dd/MM/yyyy" style="padding-left: 10px"/>
+							</h:panelGrid>
+						</h:panelGroup>	
+						
+						<h:panelGroup>
+							<p:selectBooleanCheckbox value="#{familiar_controller.produtoPescado.vendidoEmConjunto}"/>
+							<p:outputLabel value="Vendido em conjunto?" style="padding-left: 10px;" />
+						</h:panelGroup>
+					</p:panelGrid>
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteProdutoPescado" header="Confirmação" message="Confirma a exclusão do produto?">
+			<h:form id="formConfirmacaoProdutoPescado">
+				<p:commandButton value="Sim" action="#{familiar_controller.deleteProdutoPescado}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formFamiliar:produtosPescado :formFamiliar:msgs"
+					onsuccess="PF('confirmacaoDeleteProdutoPescado').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteProdutoPescado').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<p:dialog id="dlg-criacao-animal" header="Cadastro de criação animal"
+			widgetVar="dlg_cadastro_criacao_animal" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="50%">
+			<h:form id="form-cadastro-criacao-animal" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{familiar_controller.adicionarCriacaoAnimal}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formFamiliar:criacoes :formFamiliar:msgs"
+						onsuccess="PF('dlg_cadastro_criacao_animal').hide()"/>
+					<p:commandLink action="#{familiar_controller.prepararCadastroCriacaoAnimal}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_criacao_animal').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+					<p:panelGrid columns="2">
+						
+						<p:outputLabel value="Criação: " />
+						<p:autoComplete style="width: 300px"
+							value="#{familiar_controller.criacao.criacao}"
+							completeMethod="#{familiar_controller.completeCriacoesAnimais}"
+							var="criacao" itemLabel="#{criacao.descricao}"
+							itemValue="#{criacao}" converter="criacaoAnimalConverter"
+							minQueryLength="3" forceSelection="true">
+						</p:autoComplete>
+						
+						<p:outputLabel value="Quantidade: " />
+						<p:inputText value="#{familiar_controller.criacao.quantidade}" style="width:50px">
+						</p:inputText>
+						
+						<p:outputLabel value="Ambiente: " />
+						<p:panelGrid columns="2">
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.criacao.varzea}"/>
+								<p:outputLabel value="Várzea" style="padding-left: 10px;" />
+							</h:panelGroup>	
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.criacao.terraFirme}"/>
+								<p:outputLabel value="Terra firme" style="padding-left: 10px;" />
+							</h:panelGroup>
+						</p:panelGrid>	
+						
+						<p:outputLabel value="Uso: " />
+						<p:panelGrid columns="2">
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.criacao.consumo}"/>
+								<p:outputLabel value="Consumo" style="padding-left: 10px;" />
+							</h:panelGroup>	
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.criacao.venda}"/>
+								<p:outputLabel value="Venda" style="padding-left: 10px;" />
+							</h:panelGroup>
+						</p:panelGrid>
+						
+						<p:outputLabel value="Pra quem costuma vender? " />
+						<p:inputText value="#{familiar_controller.criacao.cliente}" style="width:300px">
+						</p:inputText>
+						
+						<h:panelGroup>
+							<p:selectBooleanCheckbox value="#{familiar_controller.criacao.vendidoEmConjunto}"/>
+							<p:outputLabel value="Vendido em conjunto?" style="padding-left: 10px;" />
+						</h:panelGroup>
+					</p:panelGrid>
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteCriacaoAnimal" header="Confirmação" message="Confirma a exclusão da criação animal?">
+			<h:form id="formConfirmacaoCriacaoAnimal">
+				<p:commandButton value="Sim" action="#{familiar_controller.deleteCriacaoAnimal}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formFamiliar:criacoes :formFamiliar:msgs"
+					onsuccess="PF('confirmacaoDeleteCriacaoAnimal').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteCriacaoAnimal').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<p:dialog id="dlg-produto-madeireiro" header="Cadastro de produto florestal madeireiro"
+			widgetVar="dlg_cadastro_produto_madeireiro" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="50%">
+			<h:form id="form-cadastro-produto-madeireiro" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{familiar_controller.adicionarProdutoFlorestalMadeireiro}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formFamiliar:produtosMadeireiros :formFamiliar:msgs"
+						onsuccess="PF('dlg_cadastro_produto_madeireiro').hide()"/>
+					<p:commandLink action="#{familiar_controller.prepararCadastroProdutoFlorestalMadeireiro}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_produto_madeireiro').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+					<p:panelGrid columns="2">
+						
+						<p:outputLabel value="Produto: " />
+						<p:autoComplete style="width: 300px"
+							value="#{familiar_controller.produtoMadeireiro.produto}"
+							completeMethod="#{familiar_controller.completeProdutosMadeireiros}"
+							var="produto" itemLabel="#{produto.descricao}"
+							itemValue="#{produto}" converter="produtoMadeireiroConverter"
+							minQueryLength="3" forceSelection="true">
+						</p:autoComplete>
+						
+						<p:outputLabel value="Ambiente: " />
+						<p:panelGrid columns="2">
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.produtoMadeireiro.varzea}"/>
+								<p:outputLabel value="Várzea" style="padding-left: 10px;" />
+							</h:panelGroup>	
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.produtoMadeireiro.terraFirme}"/>
+								<p:outputLabel value="Terra firme" style="padding-left: 10px;" />
+							</h:panelGroup>
+						</p:panelGrid>	
+						
+						<p:outputLabel value="Uso: " />
+						<p:panelGrid columns="2">
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.produtoMadeireiro.consumo}"/>
+								<p:outputLabel value="Consumo" style="padding-left: 10px;" />
+							</h:panelGroup>	
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.produtoMadeireiro.venda}"/>
+								<p:outputLabel value="Venda" style="padding-left: 10px;" />
+							</h:panelGroup>
+						</p:panelGrid>
+						
+						<p:outputLabel value="Pra quem costuma vender? " />
+						<p:inputText value="#{familiar_controller.produtoMadeireiro.cliente}" style="width:300px">
+						</p:inputText>
+						
+						<h:panelGroup>
+							<p:selectBooleanCheckbox value="#{familiar_controller.produtoMadeireiro.vendidoEmConjunto}"/>
+							<p:outputLabel value="Vendido em conjunto?" style="padding-left: 10px;" />
+						</h:panelGroup>
+					</p:panelGrid>
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteProdutoMadeireiro" header="Confirmação" message="Confirma a exclusão do produto florestal madeireiro?">
+			<h:form id="formConfirmacaoProdutoMadeireiro">
+				<p:commandButton value="Sim" action="#{familiar_controller.deleteProdutoFlorestalMadeireiro}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formFamiliar:produtosMadeireiros :formFamiliar:msgs"
+					onsuccess="PF('confirmacaoDeleteProdutoMadeireiro').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteProdutoMadeireiro').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<p:dialog id="dlg-produto-nao-madeireiro" header="Cadastro de produto florestal não madeireiro"
+			widgetVar="dlg_cadastro_produto_nao_madeireiro" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="50%">
+			<h:form id="form-cadastro-produto-nao-madeireiro" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{familiar_controller.adicionarProdutoFlorestalNaoMadeireiro}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formFamiliar:produtosNaoMadeireiros :formFamiliar:msgs"
+						onsuccess="PF('dlg_cadastro_produto_nao_madeireiro').hide()"/>
+					<p:commandLink action="#{familiar_controller.prepararCadastroProdutoFlorestalNaoMadeireiro}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_produto_nao_madeireiro').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+					<p:panelGrid columns="2">
+						
+						<p:outputLabel value="Produto: " />
+						<p:autoComplete style="width: 300px"
+							value="#{familiar_controller.produtoNaoMadeireiro.produto}"
+							completeMethod="#{familiar_controller.completeProdutosNaoMadeireiros}"
+							var="produto" itemLabel="#{produto.descricao}"
+							itemValue="#{produto}" converter="produtoNaoMadeireiroConverter"
+							minQueryLength="3" forceSelection="true">
+						</p:autoComplete>
+						
+						<p:outputLabel value="Ambiente: " />
+						<p:panelGrid columns="2">
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.produtoNaoMadeireiro.varzea}"/>
+								<p:outputLabel value="Várzea" style="padding-left: 10px;" />
+							</h:panelGroup>	
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.produtoNaoMadeireiro.terraFirme}"/>
+								<p:outputLabel value="Terra firme" style="padding-left: 10px;" />
+							</h:panelGroup>
+						</p:panelGrid>	
+						
+						<p:outputLabel value="Uso: " />
+						<p:panelGrid columns="2">
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.produtoNaoMadeireiro.consumo}"/>
+								<p:outputLabel value="Consumo" style="padding-left: 10px;" />
+							</h:panelGroup>	
+							<h:panelGroup>
+								<p:selectBooleanCheckbox value="#{familiar_controller.produtoNaoMadeireiro.venda}"/>
+								<p:outputLabel value="Venda" style="padding-left: 10px;" />
+							</h:panelGroup>
+						</p:panelGrid>
+						
+						<p:outputLabel value="Pra quem costuma vender? " />
+						<p:inputText value="#{familiar_controller.produtoNaoMadeireiro.cliente}" style="width:300px">
+						</p:inputText>
+						
+						<h:panelGroup>
+							<p:selectBooleanCheckbox value="#{familiar_controller.produtoNaoMadeireiro.vendidoEmConjunto}"/>
+							<p:outputLabel value="Vendido em conjunto?" style="padding-left: 10px;" />
+						</h:panelGroup>
+					</p:panelGrid>
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteProdutoNaoMadeireiro" header="Confirmação" message="Confirma a exclusão do produto florestal não madeireiro?">
+			<h:form id="formConfirmacaoProdutoNaoMadeireiro">
+				<p:commandButton value="Sim" action="#{familiar_controller.deleteProdutoFlorestalNaoMadeireiro}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formFamiliar:produtosNaoMadeireiros :formFamiliar:msgs"
+					onsuccess="PF('confirmacaoDeleteProdutoNaoMadeireiro').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteProdutoNaoMadeireiro').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+		
+	</ui:define>
+</ui:composition>

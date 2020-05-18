@@ -1,0 +1,51 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<p:panel id="ranking">
+
+		<div class="ui-g ui-fluid">
+			<div class="ui-g-12">
+
+				<p:dataTable binding="#{escolhaCotacao.tableRank}"
+					rowIndexVar="indexRow" value="#{escolhaCotacao.cotacoesAuxiliares}"
+					var="fornecedoress">
+
+
+					<p:column headerText="#" style="width:38px">
+						<h:outputText value="#{indexRow + 1}º" />
+					</p:column>
+
+					<p:column headerText="Fornecedor">
+						<h:outputText value="#{fornecedoress.fornecedor}" />
+					</p:column>
+
+					<p:column style="width:186px" headerText="Valor total">
+						<h:outputText style="" value="#{fornecedoress.totalValor}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+
+					<p:column style="width:186px" headerText="Valor total c/ desconto">
+						<h:outputText value="#{fornecedoress.totalDesconto}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+
+			</div>
+		</div>
+	</p:panel>
+
+
+
+
+</ui:fragment>

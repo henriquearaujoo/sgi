@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="menu_lateral">
+
+		<h:form id="tabela_menu">
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{familiar_controller.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{familiar_controller.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{familiar_controller.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right; color: #849A39"
+						class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="content">
+	
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+		 
+			function stop() {
+		    	PF('statusDialog').hide();
+			}
+		</script>
+		
+		<h:form id="formFamiliar">
+			<p:panel header="Filtros" >
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+				<p:panelGrid id="panelFiltro" columns="2" styleClass="ui-noborder" >
+			 		
+			 		<p:outputLabel value="Protocolo: " />
+					<p:inputText value="#{familiar_controller.filtroProtocolo}" style="width:200px">
+					</p:inputText>
+								
+			 		<p:outputLabel value="Unidade de Conservação: " />
+					<p:autoComplete style="width:500px"
+						panelStyle="width:500px"
+						value="#{familiar_controller.filtroUnidadeConservacao}"
+						completeMethod="#{familiar_controller.completeUnidadeConservacao}"
+						var="uc" itemLabel="#{uc.mascara}"
+						itemValue="#{uc}" converter="unidadeConservacaoConverter"
+						minQueryLength="3" forceSelection="true">
+						<p:ajax event="itemSelect" update="panelFiltro" listener="#{familiar_controller.limparComunidade}"/>
+					</p:autoComplete>	
+			 		
+			 		<p:outputLabel value="Comunidade:" />
+					<p:autoComplete styleClass="font12-vi" 
+						panelStyle="width:500px"
+						value="#{familiar_controller.filtroComunidade}"
+						completeMethod="#{familiar_controller.completeLocalidadePorUcFiltro}"
+						var="comunidade" itemLabel="#{comunidade.nome}"
+						itemValue="#{comunidade}" converter="comunidadeConverter"
+						minQueryLength="3"/>
+			 		
+			 		<h:panelGroup>
+			 			<p:commandLink styleClass="btn btn-success btn-sm fa fa-trash"
+							action="#{familiar_controller.limparFiltros()}"
+							update="panelFiltro"
+							style="color:#fff; margin: 8px 2px;">
+							<span style="font-family: Arial;">Limpar</span>
+						</p:commandLink>
+						
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							action="#{familiar_controller.findListaFamiliar()}"
+							onclick="start()" onsuccess="stop()" onerror="stop()"
+							update="list"
+							style="color:#fff; margin: 8px 2px;">
+							<span class="glyphicon glyphicon-search" ></span><span  style="margin: 3px;">Procurar</span>
+						</p:commandLink>
+					</h:panelGroup>
+		 		</p:panelGrid>
+			</p:panel>
+			<p:dataTable id="list" 
+				value="#{familiar_controller.listaFamiliar}" var="bean"
+				paginator="true" widgetVar="filteredFamiliar">
+				
+				<f:facet name="header">
+				
+					<p:inputText id="globalFilter"
+						onkeyup="PF('filteredFamiliar').filter()" placeholder="Busque..." />
+
+					<p:commandLink id="add"  style="margin-left:5px"
+						action="#{familiar_controller.novo()}" rendered="#{usuario_controller.poderEditar()}" title="Adicionar Familiar">
+						<span style="color: green; font-size: 25px;" class="icon-plus-alt">
+						</span>
+					</p:commandLink>
+
+			    </f:facet>
+				
+				<p:column filterBy="#{bean.protocolo}"
+					filterStyle="display:none" headerText="Protocolo">
+					<h:outputText value="#{bean.protocolo}" />
+				</p:column>
+				
+				<p:column filterBy="#{bean.titular}"
+					filterStyle="display:none" headerText="Titular">
+					<h:outputText value="#{bean.titular}" />
+				</p:column>
+				
+				<p:column filterBy="#{bean.conjuge}"
+					filterStyle="display:none" headerText="Cônjuge">
+					<h:outputText value="#{bean.conjuge}" />
+				</p:column>
+				
+				<p:column filterBy="#{bean.comunidade.nome}"
+					filterStyle="display:none" headerText="Comunidade">
+					<h:outputText value="#{bean.comunidade.nome}" />
+				</p:column>
+				
+				<p:column filterBy="#{bean.qtdeMembros}"
+					filterStyle="display:none" headerText="Pessoas">
+					<h:outputText value="#{bean.qtdeMembros}" />
+				</p:column>
+				
+				
+				<p:column headerText="Ação" style="width:10%;text-align: center;">
+					<p:commandLink title="Excluir" rendered="true" update="list"
+						value="Excluir" action="#{familiar_controller.delete(bean)}" />
+					<p:spacer width="10px" />
+					
+					<p:link value="Editar" outcome="/main/cadastro_familiar_edit">
+						<f:param name="idFamiliar" value="#{bean.id}" />
+					</p:link>
+				
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+	<ui:define name="adicionais">
+		
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+		
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="menu_lateral">
+
+		<style type="text/css">
+.ui-panelgrid .ui-panelgrid-cell-alter {
+	border-width: 1px;
+	border-style: solid;
+	border-color: inherit;
+	padding: 0px 0px !important;
+}
+</style>
+		<script type="javascript">
+    
+  	
+      
+ 
+   </script>
+
+		<f:metadata>
+			<f:viewAction action="#{projetoBean.carregarProjetos()}" />
+		</f:metadata>
+
+		<h:form id="tabela_projeto">
+
+
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+			</p:dialog>
+
+			<p:dataTable id="tabela-projeto" scrollable="true"
+				emptyMessage="Sem projetos" selectionMode="single"
+				selection="#{projetoBean.projeto}" rowKey="#{pj.id}"
+				scrollHeight="600" styleClass="table table-hover"
+				value="#{projetoBean.projetos}" var="pj">
+				<f:facet name="header">
+					<p:panelGrid id="grid_filtro_projeto" styleClass="ui-fluid">
+
+						<p:row>
+							<p:column colspan="2">
+								<p:selectOneMenu id="tipo_gestao_filtro"
+									value="#{projetoBean.projeto.tipoGestao}">
+									<p:ajax listener="#{projetoBean.onTipoGestaoChange()}"
+										process="@this" update="grid_filtro_projeto" />
+									<f:selectItem noSelectionOption="true" />
+									<f:selectItems value="#{projetoBean.tiposGestao}"
+										var="tipoGestao" itemLabel="#{tipoGestao.nome}"
+										itemValue="#{tipoGestao}" />
+								</p:selectOneMenu>
+
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column colspan="2">
+								<p:selectOneMenu id="sup_projeto_filtro" filter="true"
+									filterMatchMode="contains"
+									value="#{projetoBean.filtro.gestaoID}"
+									rendered="#{projetoBean.tipoGestao.equals('Superintendencia')}"
+									required="true"
+									requiredMessage="Campo 'Superintendencia' obrigatório">
+
+									<p:ajax listener="#{projetoBean.carregarProjetos()}"
+										process="@this" update="tabela-projeto" />
+
+									<f:selectItem itemLabel="" itemValue="0" />
+									<f:selectItems value="#{projetoBean.gestoes}" var="gest"
+										itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+								</p:selectOneMenu>
+
+								<p:selectOneMenu id="coord_projeto_filtro" filter="true"
+									filterMatchMode="contains"
+									value="#{projetoBean.filtro.gestaoID}"
+									rendered="#{projetoBean.tipoGestao.equals('Coordenadoria')}"
+									required="true"
+									requiredMessage="Campo 'Coordenadoria' obrigatório">
+									<p:ajax listener="#{projetoBean.carregarProjetos()}"
+										process="@this" update="tabela-projeto" />
+									<f:selectItem itemLabel="" itemValue="0" />
+									<f:selectItems value="#{projetoBean.gestoes}" var="gest"
+										itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+								</p:selectOneMenu>
+
+								<p:selectOneMenu id="reg_projeto_filtro" filter="true"
+									filterMatchMode="contains"
+									value="#{projetoBean.filtro.gestaoID}"
+									rendered="#{projetoBean.tipoGestao.equals('Regional')}"
+									required="true" requiredMessage="Campo 'Regional' obrigatório">
+									<p:ajax listener="#{projetoBean.carregarProjetos()}"
+										process="@this" update="tabela-projeto" />
+									<f:selectItem itemLabel="" itemValue="0" />
+									<f:selectItems value="#{projetoBean.gestoes}" var="gest"
+										itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+								</p:selectOneMenu>
+
+
+
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column>
+								<span>Projetos</span>
+							</p:column>
+
+							<p:column width="35px">
+								<p:commandLink id="add_projeto"
+									update=":form-cadastro-projeto:panel-cadastro-projeto :form-cadastro-projeto:msg-central-projeto"
+									oncomplete="PF('dlg_cadastro_projeto').show()" process="@this"
+									action="#{projetoBean.novoProjeto}" style="float:right"
+									styleClass="link-content" title="Adicionar Projeto">
+									<span style="color: green; font-size: 25px"
+										class="icon-plus-alt"></span>
+									<p:resetInput
+										target=":form-cadastro-projeto:panel-cadastro-projeto :form-cadastro-projeto:msg-central-projeto" />
+								</p:commandLink>
+								<p:tooltip id="toolTipGrowAddProjeto" for="add_projeto"
+									value="Crie um novo projeto." showEffect="clip"
+									hideEffect="explode" />
+							</p:column>
+
+						</p:row>
+
+					</p:panelGrid>
+
+
+				</f:facet>
+				<p:ajax event="rowSelect" listener="#{projetoBean.definirTab()}"
+					update=":content_projeto:tab_projeto" />
+
+				<p:column filterBy="#{pj.nome}" filterMatchMode="contains">
+					<h:outputText style="font-size:0.8em" value="#{pj.nome}" />
+				</p:column>
+
+				<p:column style="width:65px;">
+					<p:commandLink style="float:right" title="Liberar projeto"
+						update=":form-liberacao-projeto"
+						oncomplete="PF('dlg_liberar_projeto').show()"
+						action="#{projetoBean.buscarAutorizacoes()}">
+						<span class="fa fa-users" style="font-size: 14px;"></span>
+						<p:resetInput
+							target=":form-liberacao-projeto :form-liberacao-projeto:msg-liberacao-projeto" />
+
+					</p:commandLink>
+
+					<p:commandLink style="float:left" process="@this" title="Editar"
+						action="#{projetoBean.editar()}"
+						oncomplete="PF('dlg_cadastro_projeto').show()"
+						update=":form-cadastro-projeto:panel-cadastro-projeto :form-cadastro-projeto:msg-central-projeto">
+						<span class="fa fa-cogs" style="font-size: 14px;" />
+						<p:resetInput
+							target=":form-cadastro-projeto:panel-cadastro-projeto :form-cadastro-projeto:msg-central-projeto" />
+						<f:setPropertyActionListener value="#{pj}"
+							target="#{projetoBean.projeto}" />
+					</p:commandLink>
+
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+
+		<div>
+
+			<div class="ui-fluid">
+				<h:form id="content_projeto">
+					<style type="text/css">
+</style>
+
+					<p:tabView id="tab_projeto" binding="#{projetoBean.tabview}">
+
+						<p:ajax event="tabChange" listener="#{projetoBean.definirTab()}"
+							update=":content_projeto:tab_projeto" />
+
+						<p:tab title="Ações">
+
+							<h:panelGrid cellpadding="10">
+								<p:dataTable id="treetab"
+									emptyMessage="Não existe ações cadastradas para esse projeto"
+									value="#{projetoBean.acoes}" var="ativ" style="margin-top:0"
+									paginator="true" rows="10">
+
+									<f:facet name="header">
+										<span>Ações</span>
+										<p:commandLink id="add" styleClass="link-content"
+											action="#{projetoBean.iniciarNovaAcao()}"
+											update=":form-cadastro-acao:grid-cadastro-acao :form-cadastro-acao:msg-frontal"
+											oncomplete="PF('dlg_cadastro_acao').show()"
+											title="Adicionar ação">
+											<span style="color: green; font-size: 25px;"
+												class="icon-plus-alt"></span>
+											<p:resetInput
+												target=":form-cadastro-acao:grid-cadastro-acao :form-cadastro-acao:msg-frontal" />
+										</p:commandLink>
+
+									</f:facet>
+
+									<p:column headerText="Descrição/Nome">
+										<h:outputText value="#{ativ.descricao}" />
+									</p:column>
+
+									<p:column style="width:105px" headerText="Orçado">
+										<p:outputLabel value="#{ativ.orcado}"
+											style="font-size:12px; float:right">
+											<f:convertNumber type="currency" locale="pt_BR" />
+										</p:outputLabel>
+									</p:column>
+
+
+									<p:column style="width:105px" headerText="Entrada">
+										<p:outputLabel value="#{ativ.receita}"
+											style="font-size:12px; float:right; width:120px">
+											<f:convertNumber type="currency" locale="pt_BR" />
+										</p:outputLabel>
+									</p:column>
+
+
+									<p:column style="width:105px" headerText="Saída">
+										<p:outputLabel value="#{ativ.executado}"
+											style="font-size:12px; float:right; width:120px">
+											<f:convertNumber type="currency" locale="pt_BR" />
+										</p:outputLabel>
+									</p:column>
+
+									<p:column style="width:105px" headerText="Saldo">
+										<p:outputLabel value="#{ativ.saldo}"
+											style="font-size:12px; float:right; width:120px">
+											<f:convertNumber type="currency" locale="pt_BR" />
+										</p:outputLabel>
+									</p:column>
+
+									<p:column style="width:105px" headerText="Lançamentos">
+
+										<p:commandButton title="Lancamentos"
+											action="#{projetoBean.buscarLancamentoPorAcao()}"
+											value="Lançamentos" icon="ui-icon-star"
+											style="font-size:9px;"
+											oncomplete="PF('dlg_lancamento').show();"
+											update=":form-lancamento">
+											<f:setPropertyActionListener value="#{ativ}"
+												target="#{projetoBean.acao}" />
+										</p:commandButton>
+
+									</p:column>
+
+									<p:column style="width:40px">
+										<p:commandLink title="Editar"
+											rendered="#{ativ.tipo.equals('acao')}"
+											styleClass="fa fa-pencil-square-o" style="font-size:14px;"
+											update=":form-cadastro-acao:grid-cadastro-acao :form-cadastro-acao:msg-frontal"
+											action="#{projetoBean.editarAcao()}"
+											oncomplete="PF('dlg_cadastro_acao').show()">
+											<p:resetInput
+												target=":form-cadastro-acao:grid-cadastro-acao :form-cadastro-acao:msg-frontal" />
+											<f:setPropertyActionListener value="#{ativ}"
+												target="#{projetoBean.object}" />
+										</p:commandLink>
+
+
+									</p:column>
+								</p:dataTable>
+							</h:panelGrid>
+						</p:tab>
+
+						<p:tab title="Atividades">
+							<h:panelGrid cellpadding="10" styleClass="ui-fluid">
+								<p:dataTable id="tabela_atividade"
+									value="#{projetoBean.atividades}" var="atividade"
+									paginator="true" rows="10">
+
+									<f:facet name="header">
+										<span>Atividades</span>
+										<p:commandLink id="add" styleClass="link-content"
+											action="#{projetoBean.iniciarNovaAtividade()}"
+											update=":form-cadastro-atividade:grid-cadastro-atividade :form-cadastro-atividade:msg-frontal-atividade"
+											oncomplete="PF('dlg_cadastro_atividade').show()"
+											title="Adicionar atividade">
+											<span style="color: green; font-size: 25px;"
+												class="icon-plus-alt"></span>
+											<p:resetInput
+												target=":form-cadastro-atividade:grid-cadastro-atividade :form-cadastro-atividade:msg-frontal-atividade" />
+										</p:commandLink>
+
+									</f:facet>
+									<p:column headerText="Descrição"
+										filterBy="#{atividade.descricao}" filterMatchMode="contains">
+										<h:outputText value="#{atividade.descricao}" />
+									</p:column>
+
+									<p:column headerText="Inicio" style="width:120px;">
+										<h:outputText value="#{atividade.dataInicio}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+
+									<p:column headerText="Término" style="width:120px;">
+										<h:outputText value="#{atividade.dataFim}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+
+									<p:column headerText="Concluído" style="width:120px;">
+										<h:outputText value="#{atividade.dataConclusao}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+
+									<p:column style="width:105px" headerText="Status">
+										<h:panelGroup rendered="#{atividade.tipo.equals('atividade')}">
+											<h:outputText styleClass="status-verde"
+												value="#{atividade.status.nome}"
+												rendered="#{atividade.status.nome.equals('Concluído')}" />
+											<h:outputText styleClass="status-vermelho"
+												value="#{atividade.status.nome}"
+												rendered="#{atividade.status.nome.equals('Pendente')}" />
+											<h:outputText styleClass="status-azul"
+												value="#{atividade.status.nome}"
+												rendered="#{atividade.status.nome.equals('Fazendo')}" />
+										</h:panelGroup>
+									</p:column>
+
+									<p:column id="colum_mudanca" style="width:90px">
+										<p:commandLink title="Editar" style="color:#849A39"
+											styleClass="fa fa-pencil-square-o"
+											action="#{projetoBean.editarAtividade()}"
+											update=":form-cadastro-atividade:grid-cadastro-atividade :form-cadastro-atividade:msg-frontal-atividade"
+											oncomplete="PF('dlg_cadastro_atividade').show()">
+											<p:resetInput
+												target=":form-cadastro-atividade:grid-cadastro-atividade :form-cadastro-atividade:msg-frontal-atividade" />
+											<f:setPropertyActionListener value="#{atividade}"
+												target="#{projetoBean.atividadeAcao}" />
+										</p:commandLink>
+
+										<p:commandLink title="Aceitar"
+											style="margin-left:10px;color:#849A39"
+											rendered="#{!atividade.aceito}"
+											styleClass="fa fa-check-square-o"
+											action="#{projetoBean.aceitarAtividade()}"
+											update="tabela_atividade">
+											<f:setPropertyActionListener value="#{atividade}"
+												target="#{projetoBean.atividadeAcao}" />
+										</p:commandLink>
+
+										<p:commandLink title="Recusar"
+											style="margin-left:10px;color:#849A39"
+											rendered="#{atividade.aceito}" styleClass="fa fa-times"
+											action="#{projetoBean.recusarAtividade()}"
+											update="tabela_atividade">
+											<f:setPropertyActionListener value="#{atividade}"
+												target="#{projetoBean.atividadeAcao}" />
+										</p:commandLink>
+
+										<p:commandLink title="Mudar status" styleClass="fa fa-cog"
+											style="margin-left:10px;color:#849A39"
+											update=":form-mudanca-status-page-atividade:panel-mudanca-status-page-atividade :form-mudanca-status-page-atividade:msg-mudanca-status-page-atividade"
+											action="#{projetoBean.editarStatusAtividadePageAtividade()}"
+											oncomplete="PF('dlg_mudanca_status_page_atividade').show()">
+											<p:resetInput
+												target=":form-mudanca-status-page-atividade:panel-mudanca-status-page-atividade :form-mudanca-status-page-atividade:msg-mudanca-status-page-atividade" />
+											<f:setPropertyActionListener value="#{atividade}"
+												target="#{projetoBean.atividadeAcao}" />
+										</p:commandLink>
+
+									</p:column>
+
+
+								</p:dataTable>
+
+
+							</h:panelGrid>
+						</p:tab>
+
+
+
+						<p:tab title="Lançamentos">
+							<h:form id="form-lancamento-by-projeto">
+								<h:panelGrid cellpadding="10" styleClass="ui-fluid">
+									<p:dataTable value="#{projetoBean.lancamentos}"
+										var="lancamento" paginator="true" rows="10">
+
+										<p:column headerText="Lançamento">
+											<h:outputText value="#{lancamento.id}" />
+										</p:column>
+
+										<p:column headerText="Descrição">
+											<h:outputText value="#{lancamento.descricao}" />
+										</p:column>
+
+										<p:column headerText="Fonte de recurso">
+											<h:outputText value="#{lancamento.fonte}" />
+										</p:column>
+
+										<p:column headerText="Ação">
+											<h:outputText value="#{lancamento.codigo}" />
+										</p:column>
+
+										<p:column headerText="Valor pago">
+											<h:outputText value="#{lancamento.valorPagoAcao}">
+												<f:convertNumber type="currency" locale="pt_BR" />
+											</h:outputText>
+										</p:column>
+
+										<p:column headerText="Valor lançamento">
+											<h:outputText value="#{lancamento.valorLancamento}">
+												<f:convertNumber type="currency" locale="pt_BR" />
+											</h:outputText>
+										</p:column>
+
+										<p:column headerText="Emissão">
+											<h:outputText value="#{lancamento.dataEmissao}">
+												<f:convertDateTime pattern="dd/MM/yyyy"
+													timeZone="America/Manaus" />
+											</h:outputText>
+										</p:column>
+
+
+										<p:column headerText="Pagamento">
+											<h:outputText value="#{lancamento.dataPagamento}">
+												<f:convertDateTime pattern="dd/MM/yyyy"
+													timeZone="America/Manaus" />
+											</h:outputText>
+										</p:column>
+
+									</p:dataTable>
+								</h:panelGrid>
+								<p:separator />
+								<h:panelGrid style="width:100%" columns="2" cellpadding="10"
+									cellspacing="20" styleClass="ui-fluid">
+
+									<h:panelGrid style="text-align:center">
+										<p:selectOneMenu value="#{projetoBean.echoYAcao}">
+											<f:selectItem itemLabel="100" itemValue="100" />
+											<f:selectItem itemLabel="500" itemValue="500" />
+											<f:selectItem itemLabel="1000" itemValue="1000" />
+											<f:selectItem itemLabel="2000" itemValue="2000" />
+											<f:selectItem itemLabel="4000" itemValue="4000" />
+											<f:selectItem itemLabel="8000" itemValue="8000" />
+											<f:selectItem itemLabel="16000" itemValue="16000" />
+											<p:ajax listener="#{projetoBean.setEchoYbYAcao()}"
+												update="chartBarLanc"></p:ajax>
+										</p:selectOneMenu>
+
+
+										<p:chart id="chartBarLanc" type="bar"
+											model="#{projetoBean.lancamentoAnimatedModelByAcao}"
+											style="width:100%;height:400px"
+											widgetVar="chart_lancamento_acao" />
+
+										<p:commandButton type="button" style="width:400px"
+											value="Export" icon="ui-icon-extlink"
+											onclick="exportPieChartLancamentoAcao()" />
+
+									</h:panelGrid>
+
+									<h:panelGrid>
+										<p:selectOneMenu value="#{projetoBean.echoYFonte}">
+											<f:selectItem itemLabel="100" itemValue="100" />
+											<f:selectItem itemLabel="500" itemValue="500" />
+											<f:selectItem itemLabel="1000" itemValue="1000" />
+											<f:selectItem itemLabel="2000" itemValue="2000" />
+											<f:selectItem itemLabel="4000" itemValue="4000" />
+											<f:selectItem itemLabel="8000" itemValue="8000" />
+											<f:selectItem itemLabel="16000" itemValue="16000" />
+											<p:ajax listener="#{projetoBean.setEchoYbYFonte()}"
+												update="chartBarLancFonte"></p:ajax>
+										</p:selectOneMenu>
+
+
+										<p:chart id="chartBarLancFonte" type="bar"
+											model="#{projetoBean.lancamentoAnimatedModelByFonte}"
+											style="width:100%;height:400px"
+											widgetVar="chart_lancamento_fonte" />
+
+										<p:commandButton type="button" style="width:400px"
+											value="Export" icon="ui-icon-extlink"
+											onclick="exportBarChartLancamentoFonte()" />
+
+									</h:panelGrid>
+
+								</h:panelGrid>
+
+							</h:form>
+						</p:tab>
+
+						<p:tab title="Relatórios">
+
+							<h:panelGrid columns="3" cellpadding="10">
+								<h:outputText value="Relatórios:" />
+								<p:selectOneMenu value="#{projetoBean.tipoRelatorio}"
+									style="width:170px;margin-left:4px;font-size:11px">
+									<f:selectItems value="#{projetoBean.tipoRelatorios}"
+										var="relatorio" itemLabel="#{relatorio.nome}"
+										itemValue="#{relatorio}">
+									</f:selectItems>
+								</p:selectOneMenu>
+
+								<p:commandLink styleClass="btn btn-primary btn-xs fa fa-search"
+									action="#{projetoBean.carregarFiltroRelatorio()}"
+									style="color:#fff;margin-left:4px" />
+
+							</h:panelGrid>
+
+						</p:tab>
+
+
+						<p:tab title="Gráficos">
+
+							<p:panelGrid columns="2">
+								<h:panelGroup>
+									<p:chart type="pie" model="#{projetoBean.pieModel}"
+										style="width:600px;height:500px"
+										widgetVar="pieChartLancamento" />
+
+									<p:commandButton type="button" value="Export"
+										icon="ui-icon-extlink" onclick="exportPieChartLancamento()" />
+								</h:panelGroup>
+
+								<h:panelGroup>
+									<p:chart type="bar" model="#{projetoBean.animatedModel}"
+										style="width:600px;height:500px"
+										widgetVar="barChartLancamento" />
+									<p:commandButton type="button" value="Export"
+										icon="ui-icon-extlink" onclick="exportBarChartLancamento()" />
+								</h:panelGroup>
+							</p:panelGrid>
+
+
+
+
+						</p:tab>
+
+						<p:tab title="Fotos">
+							<h:panelGrid columns="2" cellpadding="10">
+								<h:outputText value="Página em desenvolvimento" />
+							</h:panelGrid>
+						</p:tab>
+
+						<p:tab title="Lista de ações" rendered="false">
+							<h:panelGrid columns="2" cellpadding="10">
+								<p:dataTable id="lista_acao"
+									emptyMessage="Não existe ações cadastradas para esse projeto"
+									value="#{projetoBean.acoes}" var="acao" style="margin-top:0"
+									paginator="true" rows="10">
+
+									<p:column headerText="Ação" filterBy="#{acao.codigo}"
+										filterMatchMode="contains">
+										<h:outputText value="#{acao.codigo}" />
+									</p:column>
+
+									<p:column headerText="Projeto" filterBy="#{acao.projeto.nome}"
+										filterMatchMode="contains">
+										<h:outputText value="#{acao.projeto.nome}" />
+									</p:column>
+
+								</p:dataTable>
+							</h:panelGrid>
+						</p:tab>
+
+
+					</p:tabView>
+				</h:form>
+			</div>
+		</div>
+
+
+		<script type="text/javascript">
+			function exportPieChartLancamento() {
+	    		//export image
+	    		$('#output_chart').empty().append(PF('pieChartLancamento').exportAsImage());
+	 
+	    		//show the dialog
+	    		PF('dlg_chart').show();
+			}
+
+			function exportBarChartLancamento() {
+	    		//export image
+	    		$('#output_chart').empty().append(PF('barChartLancamento').exportAsImage());
+	 
+	    		//show the dialog
+	    		PF('dlg_chart').show();
+			}
+
+			function exportBarChartLancamentoFonte() {
+	    		//export image
+	    		$('#output_chart').empty().append(PF('chart_lancamento_fonte').exportAsImage());
+	 
+	    		//show the dialog
+	    		PF('dlg_chart').show();
+			}
+
+			function exportPieChartLancamentoAcao() {
+	    		//export image
+	    		$('#output_chart').empty().append(PF('chart_lancamento_acao').exportAsImage());
+	 
+	    		//show the dialog
+	    		PF('dlg_chart').show();
+			}
+	
+			
+			
+		</script>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog widgetVar="dlg_chart" showEffect="fade" modal="true"
+			header="Chart" resizable="true">
+			<p:outputPanel id="output_chart" layout="block"
+				style="width:700px;height:700px" />
+		</p:dialog>
+
+		<p:dialog id="dlg-lancamento" header="Lancamentos" closable="true"
+			widgetVar="dlg_lancamento" modal="true" showEffect="clip"
+			hideEffect="clip" height="50%" width="50%">
+
+			<h:form id="form-lancamento">
+
+				<h:panelGrid columns="5">
+
+					<h:outputLabel value="Data:" />
+					<p:calendar id="dt_inicio_lancamento" pattern="dd/MM/yyyy"
+						value="#{projetoBean.filtro.dataInicio}" style="width:50px"
+						required="true" requiredMessage="As datas são obrigatórias" />
+
+					<h:outputLabel value="-" />
+					<p:calendar id="dt_final_lancamento" pattern="dd/MM/yyyy"
+						value="#{projetoBean.filtro.dataFinal}" style="width:50px"
+						required="true" requiredMessage="As datas são obrigatórias" />
+
+					<p:commandButton icon="ui-icon-search" title="Pesquisa"></p:commandButton>
+
+				</h:panelGrid>
+
+				<p:dataTable value="#{projetoBean.lancamentos}" var="lancamento"
+					paginator="true" rows="10">
+
+					<p:column headerText="Lançamento">
+						<h:outputText value="#{lancamento.id}" />
+					</p:column>
+
+					<p:column headerText="Descrição">
+						<h:outputText value="#{lancamento.descricao}" />
+					</p:column>
+
+					<p:column headerText="Fonte de recurso">
+						<h:outputText value="#{lancamento.fonte}" />
+					</p:column>
+
+					<p:column headerText="Ação">
+						<h:outputText value="#{lancamento.codigo}" />
+					</p:column>
+
+					<p:column headerText="Valor pago">
+						<h:outputText value="#{lancamento.valorPagoAcao}">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Valor lançamento">
+						<h:outputText value="#{lancamento.valorLancamento}">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+
+
+					<p:column headerText="Emissão">
+						<h:outputText value="#{lancamento.dataEmissao}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+
+					<p:column headerText="Pagamento">
+						<h:outputText value="#{lancamento.dataPagamento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog id="dlg-atividade" header="Cadastrar atividade"
+			widgetVar="dlg_cadastro_atividade" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="70%">
+
+			<h:form id="form-cadastro-atividade">
+
+				<p:confirmDialog global="true">
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				</p:confirmDialog>
+
+
+				<p:messages id="msg-frontal-atividade" 
+					showSummary="false" showDetail="true" closable="true" />
+
+				<div class="botao_central" align="left">
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						action="#{projetoBean.salvarAtividade()}"
+						update="@form :tabela_projeto :content_projeto:tab_projeto:tabela_atividade"
+						style="color:#fff; margin: 8px 2px;" value="Salvar" />
+					<p:commandLink id="bt-excluir" styleClass="btn btn-danger btn-sm"
+						process="@this"
+						update="@form :tabela_projeto :content_projeto:tab_projeto:tabela_atividade"
+						action="#{projetoBean.removerAtividade()}"
+						style="color:#fff; margin: 8px 2px;" value="Excluir">
+						<p:confirm header="Confirmation" message="Excluir ação?"
+							icon="ui-icon-alert" />
+					</p:commandLink>
+
+				</div>
+
+				<div class="cadastro-atividade"
+					style="margin-right: auto; margin-left: auto;">
+
+					<div class="ui-fluid">
+						<h:panelGroup id="grid-cadastro-atividade">
+							<p:panelGrid columns="2" layout="grid" id="gridi"
+								columnClasses="ui-grid-col-2,ui-grid-col-10">
+
+								<p:outputLabel value="Descrição:" for="descricao_atividade" />
+								<p:inputText id="descricao_atividade"
+									value="#{projetoBean.atividadeAcao.descricao}" />
+
+								<p:outputLabel value="Projeto:" for="projeto_atividade" />
+								<p:selectOneMenu id="projeto_atividade"
+									value="#{projetoBean.projeto}" converter="projetoConverter"
+									required="true" requiredMessage="Campo 'Projeto' obrigatório">
+									<p:ajax listener="#{projetoBean.onChangeProjetoAtividade()}"
+										update="acao_atividade" />
+									<f:selectItem noSelectionOption="true" />
+									<f:selectItems value="#{projetoBean.projetos}" var="project"
+										itemLabel="#{project.nome}" itemValue="#{project}"></f:selectItems>
+								</p:selectOneMenu>
+
+								<p:outputLabel value="Status:" for="status_atividade_inserir" />
+								<p:selectOneMenu id="status_atividade_inserir"
+									value="#{projetoBean.atividadeAcao.status}" required="true"
+									requiredMessage="Campo 'Status' obrigatório">
+									<f:selectItems value="#{projetoBean.statusAtividade}" var="stt"
+										itemLabel="#{stt.nome}" itemValue="#{stt}" />
+								</p:selectOneMenu>
+
+								<p:outputLabel value="Inicio:" for="dt_inicio" />
+								<p:calendar id="dt_inicio" pattern="dd/MM/yyyy"
+									value="#{projetoBean.atividadeAcao.dataInicio}"
+									style="width:50px" required="true"
+									requiredMessage="Campo 'Data inicio' é obrigatório" />
+
+								<p:outputLabel value="Fim:" for="dt_fim" />
+								<p:calendar id="dt_fim" pattern="dd/MM/yyyy"
+									value="#{projetoBean.atividadeAcao.dataFim}" style="width:50px"
+									required="true"
+									requiredMessage="Campo 'Data fim' é obrigatório" />
+
+								<p:outputLabel value="Data conclusão:" for="dt_conclusao" />
+								<p:calendar id="dt_conclusao" pattern="dd/MM/yyyy"
+									value="#{projetoBean.atividadeAcao.dataConclusao}"
+									style="width:50px" />
+
+								<p:outputLabel value="Obs.:" />
+								<p:inputTextarea cols="30" rows="5"
+									value="#{projetoBean.atividadeAcao.observacao}" />
+
+
+							</p:panelGrid>
+						</h:panelGroup>
+					</div>
+
+
+				</div>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog header="Mudar status" showEffect="clip" hideEffect="clip"
+			widgetVar="dlg_mudanca_status" modal="true" height="200" width="600">
+			<h:form id="form-mudanca-status" style="padding:5px;">
+				<div class="ui-fluid">
+					<p:messages  closable="true" showDetail="true"
+						showSummary="false" id="msg-mudanca-status" />
+
+					<div align="left">
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							action="#{projetoBean.mudarStatus()}" process="@form"
+							update="@form :tabela_projeto :content_projeto"
+							style="color:#fff; margin: 8px 2px;" value="Salvar"
+							oncomplete="if (!args.validationFailed) PF('dlg_mudanca_status').hide()" />
+						<p:commandLink styleClass="btn btn-danger btn-sm" process="@this"
+							style="color:#fff; margin: 8px 2px;"
+							onclick="PF('dlg_mudanca_status').hide()" value="Cancelar" />
+
+					</div>
+
+					<h:panelGroup id="panel-mudanca-status">
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-grid-col-3, ui-grid-col-9">
+
+							<p:outputLabel value="Descrição:" />
+							<p:outputLabel value="#{projetoBean.atividadeAcao.descricao}" />
+
+							<p:outputLabel value="Status:" for="status_atividade" />
+							<p:selectOneMenu id="status_atividade"
+								value="#{projetoBean.atividadeAcao.status}">
+								<p:ajax update="panel-mudanca-status" />
+								<f:selectItems value="#{projetoBean.statusAtividade}" var="stt"
+									itemLabel="#{stt.nome}" itemValue="#{stt}" />
+							</p:selectOneMenu>
+
+							<p:outputLabel value="Data:"
+								rendered="#{projetoBean.atividadeAcao.status.nome.equals('Concluído')}" />
+							<p:calendar id="data" pattern="dd/MM/yyyy"
+								rendered="#{projetoBean.atividadeAcao.status.nome.equals('Concluído')}"
+								value="#{projetoBean.atividadeAcao.dataConclusao}"
+								style="width:50px" required="true"
+								requiredMessage="Campo 'Data conclusão' é obrigatório" />
+
+
+						</p:panelGrid>
+					</h:panelGroup>
+
+				</div>
+			</h:form>
+		</p:dialog>
+
+
+		<p:dialog header="Mudar status" showEffect="clip" hideEffect="clip"
+			widgetVar="dlg_mudanca_status_page_atividade" modal="true"
+			height="200" width="600">
+			<h:form id="form-mudanca-status-page-atividade" style="padding:5px;">
+				<div class="ui-fluid">
+					<p:messages  closable="true" showDetail="true"
+						showSummary="false" id="msg-mudanca-status-page-atividade" />
+
+					<div align="left">
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							action="#{projetoBean.mudarStatusPageAtividade()}"
+							process="@form" update="@form :content_projeto"
+							style="color:#fff; margin: 8px 2px;" value="Salvar"
+							oncomplete="if (!args.validationFailed) PF('dlg_mudanca_status_page_atividade').hide()" />
+						<p:commandLink styleClass="btn btn-danger btn-sm" process="@this"
+							style="color:#fff; margin: 8px 2px;"
+							onclick="PF('dlg_mudanca_status_page_atividade').hide()"
+							value="Cancelar" />
+
+					</div>
+
+					<h:panelGroup id="panel-mudanca-status-page-atividade">
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-grid-col-3, ui-grid-col-9">
+
+							<p:outputLabel value="Descrição:" />
+							<p:outputLabel value="#{projetoBean.atividadeAcao.descricao}" />
+
+							<p:outputLabel value="Status:"
+								for="status_atividade_page_atividade" />
+							<p:selectOneMenu id="status_atividade_page_atividade"
+								value="#{projetoBean.atividadeAcao.status}">
+								<p:ajax update="panel-mudanca-status-page-atividade" />
+								<f:selectItems value="#{projetoBean.statusAtividade}" var="stt"
+									itemLabel="#{stt.nome}" itemValue="#{stt}" />
+							</p:selectOneMenu>
+
+
+							<p:outputLabel value="Data:"
+								rendered="#{projetoBean.atividadeAcao.status.nome.equals('Concluído')}" />
+							<p:calendar id="data-page-atividade" pattern="dd/MM/yyyy"
+								rendered="#{projetoBean.atividadeAcao.status.nome.equals('Concluído')}"
+								value="#{projetoBean.atividadeAcao.dataConclusao}"
+								style="width:50px" required="true"
+								requiredMessage="Campo 'Data planejada' é obrigatório" />
+
+
+						</p:panelGrid>
+					</h:panelGroup>
+
+				</div>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog header="item-acao" id="dlg-item-acao"
+			widgetVar="dlg_item_acao" modal="true" showEffect="clicp"
+			hideEffect="clip" height="80%" width="80%">
+
+			<h:form id="form-itens-acao">
+				<p:messages  showSummary="false" showDetail="true"
+					showIcon="true" />
+				<p:dataTable id="tab-item-acao" value="#{projetoBean.acao.itens}"
+					var="item" paginator="true" rows="8">
+
+					<f:facet name="header">
+						<p:panelGrid columns="4" styleClass="ui-fluid">
+							<p:autoComplete id="item_acao" required="true"
+								placeholder="Produto" requiredMessage="Preencha o campo Produto"
+								size="40" value="#{projetoBean.acaoProduto.produto}"
+								completeMethod="#{projetoBean.completeProduto}" var="produto"
+								itemLabel="#{produto.descricao}" itemValue="#{produto}"
+								converter="produtoConverter" forceSelection="true" />
+							<p:inputText placeholder="Quantidade"
+								value="#{projetoBean.acaoProduto.quantidade}" />
+
+							<p:commandLink style="color:#fff" value="Salvar"
+								action="#{projetoBean.addItem()}" update="form-itens-acao"
+								process="form-itens-acao" styleClass="btn btn-primary btn-sm" />
+
+						</p:panelGrid>
+					</f:facet>
+
+					<p:column>
+						<h:outputText value="#{item.produto.descricao}" />
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{item.quantidade}" />
+					</p:column>
+
+					<p:column>
+						<p:commandLink action="#{projetoBean.removerItem()}"
+							update="form-itens-acao" process="@this">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{projetoBean.acaoProduto}" />
+							<span class="fa fa-times"></span>
+						</p:commandLink>
+
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+
+		</p:dialog>
+
+
+		<p:dialog header="Cadastrar ação" id="dlg-acao"
+			widgetVar="dlg_cadastro_acao" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="92%">
+			<h:form id="form-cadastro-acao">
+
+				<p:confirmDialog global="true">
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				</p:confirmDialog>
+
+				<p:messages id="msg-frontal"  showSummary="false"
+					showDetail="true" closable="true" />
+
+				<div class="botao_central" align="left">
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						action="#{projetoBean.salvarAcao()}"
+						update="@form :tabela_projeto :content_projeto"
+						style="color:#fff; margin: 8px 2px;" value="Salvar" />
+
+					<p:commandLink id="bt-excluir" styleClass="btn btn-danger btn-sm"
+						process="@this" update="@form"
+						action="#{projetoBean.removerAcao()}"
+						style="color:#fff; margin: 8px 2px;" value="Excluir">
+						<p:confirm header="Confirmation" message="Excluir ação?"
+							icon="ui-icon-alert" />
+					</p:commandLink>
+
+					<p:commandLink id="bt-item" styleClass="btn btn-primary	 btn-sm"
+						process="@this" update=":form-itens-acao"
+						action="#{projetoBean.carregarItens()}"
+						oncomplete="PF('dlg_item_acao').show()"
+						style="color:#fff; margin: 8px 2px;" value="Itens">
+					</p:commandLink>
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" process="@this"
+						style="color:#fff; margin: 8px 2px; float:right"
+						action="#{projetoBean.iniciarNovaFonte()}"
+						update=":form-cadastro-fonte:panel-cadastro-fonte :form-cadastro-fonte:msg-cadastro-fonte"
+						oncomplete="PF('dlg_cadastro_fonte').show()" value="Nova fonte">
+						<p:resetInput
+							target=":form-cadastro-fonte:panel-cadastro-fonte :form-cadastro-fonte:msg-cadastro-fonte" />
+					</p:commandLink>
+
+
+				</div>
+				<div class="cadastro-acao"
+					style="margin-right: auto; margin-left: auto;">
+					<div class="ui-fluid">
+
+						<h:panelGroup id="grid-cadastro-acao">
+
+							<p:panelGrid styleClass="ui-fluid" columns="1" layout="grid"
+								id="grido">
+
+
+								<p:scrollPanel mode="native" style="width:100%;height:400px">
+
+									<p:panelGrid columns="4" id="gridi" styleClass="semBorda">
+
+										<h:panelGrid columns="1" styleClass="width-100-vi">
+											<p:outputLabel value="Código:" />
+											<p:inputText id="codigo_acao" styleClass="font11-vi"
+												value="#{projetoBean.acao.codigo}" required="true"
+												requiredMessage="Campo 'Código' obrigatório">
+											</p:inputText>
+										</h:panelGrid>
+
+										<h:panelGrid columns="1" styleClass="width-100-vi">
+											<p:outputLabel value="Projeto:" />
+											<p:autoComplete styleClass="font11-vi"
+												panelStyle="width:180px"
+												requiredMessage="Projeto é obrigatório" rendered="true"
+												placeholder="Projeto" required="true"
+												value="#{projetoBean.acao.projeto}"
+												completeMethod="#{projetoBean.completeProjeto}"
+												var="projeto" itemLabel="#{projeto.nome}"
+												itemValue="#{projeto}" converter="projetoConverter"
+												minQueryLength="3" forceSelection="true" />
+										</h:panelGrid>
+
+
+										<h:panelGrid columns="1" styleClass="width-100-vi">
+											<p:outputLabel value="Despesa:" />
+											<p:autoComplete styleClass="font11-vi"
+												panelStyle="width:180px" placeholder="Despesa"
+												value="#{projetoBean.acao.categoriaDespesaClass}"
+												completeMethod="#{projetoBean.completeCategoria}"
+												var="categoria" itemLabel="#{categoria.nome}"
+												itemValue="#{categoria}" converter="categoriaConverter"
+												minQueryLength="3" />
+										</h:panelGrid>
+
+										<h:panelGrid columns="1" styleClass="width-100-vi">
+											<p:outputLabel value="Localização:" />
+											<p:autoComplete styleClass="font11-vi"
+												panelStyle="width:180px"
+												requiredMessage="Destino é obrigatório" rendered="true"
+												placeholder="Destino" required="true"
+												value="#{projetoBean.acao.localidade}"
+												completeMethod="#{fornecedor_controller.completeLocalidade}"
+												var="cidade" itemLabel="#{cidade.nome}"
+												itemValue="#{cidade}" converter="localConverterVI"
+												minQueryLength="3" forceSelection="true" />
+
+										</h:panelGrid>
+
+
+										<h:panelGrid columns="1" styleClass="width-100-vi">
+											<p:outputLabel value="Componente:" for="componente" />
+											<p:selectOneMenu id="componente" styleClass="font11-vi"
+												style="max-width: 200px;"
+												value="#{projetoBean.acao.componente}">
+												<f:selectItem itemLabel="Selecione um"
+													noSelectionOption="true" />
+												<f:selectItems value="#{projetoBean.componentes}" var="comp"
+													itemLabel="#{comp.nome}" itemValue="#{comp}" />
+											</p:selectOneMenu>
+										</h:panelGrid>
+
+										<h:panelGrid columns="1" styleClass="width-100-vi">
+											<p:outputLabel value="Cadeias:" for="cadeia" />
+											<p:selectOneMenu id="cadeia" filter="true"
+												styleClass="font11-vi"
+												value="#{projetoBean.acao.projArranjosInfra}"
+												converter="cadeiaConverter" filterMatchMode="startsWith"
+												panelStyle="width:180px">
+												<f:selectItem noSelectionOption="true" />
+												<f:selectItems value="#{projetoBean.cadeias}" var="cad"
+													itemLabel="#{cad.nome}" itemValue="#{cad}">
+												</f:selectItems>
+											</p:selectOneMenu>
+										</h:panelGrid>
+
+										<h:panelGrid columns="1" styleClass="width-100-vi">
+											<p:outputLabel value="Grupo de investimento:"
+												for="grupo_investimento" />
+
+											<p:selectOneMenu id="grupo_investimento"
+												styleClass="font11-vi"
+												value="#{projetoBean.acao.grupoInvestimento}" filter="true"
+												filterMatchMode="startsWith" panelStyle="width:180px">
+												<f:selectItem itemLabel="Selecione um"
+													noSelectionOption="true" />
+												<f:selectItems value="#{projetoBean.gruposDeInvestimentos}"
+													var="group" itemLabel="#{group.nome}" itemValue="#{group}" />
+											</p:selectOneMenu>
+
+										</h:panelGrid>
+
+										<h:panelGrid columns="1" styleClass="width-100-vi">
+											<p:outputLabel value="ED/RR:" for="repasse" />
+											<p:selectOneMenu id="repasse" styleClass="font11-vi"
+												panelStyle="width:180px" value="#{projetoBean.acao.repasse}">
+												<f:selectItem itemLabel="Selecione um"
+													noSelectionOption="true" />
+												<f:selectItem itemLabel="ED" itemValue="ED" />
+												<f:selectItem itemLabel="RR" itemValue="RR" />
+											</p:selectOneMenu>
+										</h:panelGrid>
+
+
+										<h:panelGrid columns="1" styleClass="width-100-vi">
+											<p:outputLabel value="Responsável:" for="resp" />
+											<p:selectOneMenu id="resp" styleClass="font11-vi"
+												value="#{projetoBean.acao.responsavel}">
+												<f:selectItem itemLabel="Selecione um"
+													noSelectionOption="true" />
+												<f:selectItem itemLabel="Associação de moradores"
+													itemValue="AM" />
+												<f:selectItem itemLabel="FAS" itemValue="FAS" />
+											</p:selectOneMenu>
+
+										</h:panelGrid>
+
+
+										<h:panelGrid columns="1" styleClass="width-100-vi">
+											<p:outputLabel value="Quantidade:" />
+											<p:inputText value="#{projetoBean.acao.quantidade}"
+												styleClass="font11-vi" />
+										</h:panelGrid>
+										<h:panelGrid columns="1">
+											<p:outputLabel value="Investimentos/Produtos/Serviços:" />
+											<p:inputText value="#{projetoBean.acao.ips}"
+												styleClass="font11-vi" />
+										</h:panelGrid>
+
+					
+
+									</p:panelGrid>
+
+									<p:panelGrid columns="2" styleClass="width-100-vi"
+										columnClasses="ui-grid-col-2, ui-grid-col-10">
+										<p:outputLabel value="Objetivo:" for="obj" style="float:right" />
+										<p:inputText id="obj" value="#{projetoBean.acao.objetivo}"
+											style="width:100%;font-size:11px" />
+
+										<p:outputLabel value="Observações:" for="obs"
+											style="float:right" />
+										<p:inputText id="obs" style="width:100%;font-size:11px"
+											value="#{projetoBean.acao.observacao}" />
+
+
+									</p:panelGrid>
+
+									<p:panelGrid id="grid-tabela-fonte" columns="1" layout="grid">
+										<p:dataTable id="tabela-fonte"
+											value="#{projetoBean.acao.acaoFontes}" var="acFonte">
+
+											<p:column headerText="Fonte" style="text-align: right;">
+												<h:outputText style="float:right"
+													value="#{acFonte.fonte.nome}">
+
+												</h:outputText>
+											</p:column>
+
+											<p:column headerText="Valor" style="width:150px">
+												<h:outputText value="#{acFonte.valor}">
+													<f:convertNumber type="currency" />
+												</h:outputText>
+											</p:column>
+
+											<p:column style="width:80px">
+												<p:commandLink action="#{projetoBean.removerFonte()}"
+													update=":form-cadastro-acao:tabela-fonte form-cadastro-fonte:panel-cadastro-fonte">
+													<f:setPropertyActionListener value="#{acFonte}"
+														target="#{projetoBean.acaoFonte}" />
+													<span class="fa fa-times"></span>
+												</p:commandLink>
+
+
+											</p:column>
+
+										</p:dataTable>
+									</p:panelGrid>
+
+
+								</p:scrollPanel>
+
+
+							</p:panelGrid>
+						</h:panelGroup>
+					</div>
+				</div>
+			</h:form>
+		</p:dialog>
+
+
+		<p:dialog header="Inserir fonte de recurso"
+			widgetVar="dlg_cadastro_fonte" modal="true" height="200" width="400/">
+			<h:form id="form-cadastro-fonte" style="padding:5px;">
+
+
+				<div class="ui-fluid">
+					<p:messages  closable="true" showDetail="true"
+						showSummary="false" id="msg-cadastro-fonte" />
+
+					<h:panelGroup id="panel-cadastro-fonte">
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-grid-col-3, ui-grid-col-9">
+							<p:outputLabel value="Fonte:" for="fonte-recurso" />
+							<p:selectOneMenu id="fonte-recurso" filter="true"
+								filterMatchMode="startsWith"
+								value="#{projetoBean.acaoFonte.fonte}"
+								converter="fontePagadoraConverter" required="true"
+								requiredMessage="Campo 'Fonte' obrigatório">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.fontes}" var="font"
+									itemLabel="#{font.nome}" itemValue="#{font}" />
+							</p:selectOneMenu>
+
+							<p:outputLabel value="Valor:" for="valor-recurso" />
+							<p:inputText id="valor-recurso"
+								value="#{projetoBean.acaoFonte.valor}"
+								onkeydown="mascaraMoeda(this,moeda)" required="true"
+								requiredMessage="Valor é um campo obrigatório">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" />
+							</p:inputText>
+						</p:panelGrid>
+
+					</h:panelGroup>
+
+					<div align="left">
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							action="#{projetoBean.inserirNovaFonte()}" process="@form"
+							update=":form-cadastro-acao:tabela-fonte form-cadastro-fonte:panel-cadastro-fonte"
+							style="color:#fff; margin: 8px 2px;" value="Salvar" />
+						<p:commandLink styleClass="btn btn-danger btn-sm" process="@this"
+							style="color:#fff; margin: 8px 2px;"
+							onclick="PF('dlg_cadastro_fonte').hide()" value="Cancelar" />
+
+					</div>
+
+				</div>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog header="Cadastrar projeto" widgetVar="dlg_cadastro_projeto"
+			modal="true" height="80%" width="90%" showEffect="clip"
+			hideEffect="clip">
+
+			<h:form id="form-cadastro-projeto">
+			
+				<p:confirmDialog global="true">
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				</p:confirmDialog>
+				
+
+				<p:messages id="msg-central-projeto" 
+					showSummary="false" showDetail="true" closable="true" />
+
+
+				<div class="botao_central" align="left">
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						action="#{projetoBean.salvar()}"
+						oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg_cadastro_projeto').hide()"
+						update=":tabela_projeto:tabela-projeto form-cadastro-projeto"
+						style="color:#fff; margin: 8px 2px;" value="Salvar" />
+					<p:commandLink styleClass="btn btn-danger btn-sm" process="@this"
+						style="color:#fff; margin: 8px 2px;"
+						onclick="PF('dlg_cadastro_projeto').hide()" value="Sair" />
+						
+						
+					<p:commandLink styleClass="btn btn-danger btn-sm" process="@this"
+						style="color:#fff; margin: 8px 2px;"
+						action="#{projetoBean.desativarAcoes()}"
+						 value="Desativar projeto">
+					 <p:confirm header="Confirmation" message="Desativar todas as ações desse projeto?"
+							icon="ui-icon-alert" />	 
+						 
+				   </p:commandLink>	
+
+					<p:commandLink styleClass="btn btn-default btn-sm" process="@this"
+						style="color:#000; margin: 8px 2px;" value="Imprimir Plano"
+						target="_blank" action="#{projetoBean.imprimirProjeto()}"
+						ajax="false" />
+						
+					<p:commandLink styleClass="btn btn-default btn-sm" process="@this"
+						style="color:#000; margin: 8px 2px;" value="Imprimir termo do Plano"
+						target="_blank" action="#{projetoBean.imprimirTermoProjeto()}"
+						ajax="false" />	
+				</div>
+
+				<div class="cadastro-projeto"
+					style="margin-right: auto; margin-left: auto;">
+					<div>
+
+						<h:panelGroup id="panel-cadastro-projeto">
+							<p:scrollPanel mode="native" style="width:100%;height:350px">
+								<p:panelGrid columns="4" styleClass="semBorda" style="width:80%">
+
+									<h:panelGrid styleClass="width-100-vi" columns="1">
+										<p:outputLabel value="Titulo:" for="nome_projeto" />
+										<p:inputText id="nome_projeto"
+											value="#{projetoBean.projeto.nome}" required="true"
+											requiredMessage="Nome é um campo obrigatório" />
+									</h:panelGrid>
+
+									<h:panelGrid styleClass="width-100-vi" columns="1">
+										<p:outputLabel value="Responsável:" />
+										<p:inputText value="#{projetoBean.projeto.responsavel}"
+											styleClass="font11-vi" />
+									</h:panelGrid>
+
+
+
+									<h:panelGrid styleClass="width-100-vi" columns="1">
+										<p:outputLabel value="Gestão:" />
+										<p:autoComplete styleClass="font11-vi"
+											panelStyle="width:180px"
+											requiredMessage="Gestão é obrigatório" rendered="true"
+											placeholder="Superintendencia/Coordenadoria/Regional"
+											required="true" value="#{projetoBean.projeto.gestao}"
+											completeMethod="#{projetoBean.completeGestao}" var="gestao"
+											itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+											converter="gestaoConverterVI" minQueryLength="3"
+											forceSelection="true" />
+
+									</h:panelGrid>
+
+									<h:panelGrid styleClass="width-100-vi" columns="1">
+										<p:outputLabel value="Destino/Localização:" />
+										<p:autoComplete styleClass="font11-vi"
+											panelStyle="width:180px"
+											requiredMessage="Destino é obrigatório" rendered="true"
+											placeholder="Destino" required="true"
+											value="#{projetoBean.projeto.localidade}"
+											completeMethod="#{fornecedor_controller.completeLocalidade}"
+											var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+											converter="localConverterVI" minQueryLength="3"
+											forceSelection="true" />
+									</h:panelGrid>
+
+									<h:panelGrid styleClass="width-100-vi" columns="1">
+										<p:outputLabel value="Programa:" />
+										<p:selectOneMenu id="programa_projeto" styleClass="font11-vi"
+											value="#{projetoBean.projeto.programa}">
+											<f:selectItem noSelectionOption="true" />
+											<f:selectItems value="#{projetoBean.programas}"
+												var="programa" itemLabel="#{programa.nome}"
+												itemValue="#{programa}" />
+										</p:selectOneMenu>
+									</h:panelGrid>
+
+									<h:panelGrid styleClass="width-100-vi" columns="1">
+										<p:outputLabel value="Data inicio:" for="data_inicio" />
+										<p:calendar id="data_inicio" pattern="dd/MM/yyyy"
+											value="#{projetoBean.projeto.dataInicio}" required="true"
+											style="font-size:11px"
+											requiredMessage="Data inicio é um campo obrigatório" />
+									</h:panelGrid>
+
+									<h:panelGrid styleClass="width-100-vi" columns="1">
+										<p:outputLabel value="Data final:" for="data_final" />
+										<p:calendar id="data_final" pattern="dd/MM/yyyy"
+											value="#{projetoBean.projeto.dataFinal}" required="true"
+											style="font-size:11px"
+											requiredMessage="Data final é um campo obrigatório" />
+									</h:panelGrid>
+
+									<h:panelGrid columns="1"></h:panelGrid>
+
+									<h:panelGrid styleClass="width-100-vi" columns="1">
+										<p:outputLabel value="Contextualização:" for="context_projeto" />
+										<p:inputTextarea id="context_projeto" autoResize="false"
+											styleClass="font11-vi"
+											value="#{projetoBean.projeto.contextualizacao}"
+											required="true"
+											requiredMessage="Contextualização é um campo obrigatório" />
+									</h:panelGrid>
+
+									<h:panelGrid styleClass="width-100-vi" columns="1">
+										<p:outputLabel value="Objetivo geral:" for="objetivo_projeto" />
+										<p:inputTextarea id="objetivo_projeto" autoResize="false"
+											styleClass="font11-vi"
+											value="#{projetoBean.projeto.objetivo}" required="true"
+											requiredMessage="Objetivo geral é um campo obrigatório" />
+									</h:panelGrid>
+
+									<h:panelGrid styleClass="width-100-vi" columns="1">
+										<p:outputLabel value="Objetivo específico:"
+											for="objetivo_especifico" />
+										<p:inputTextarea id="objetivo_especifico" autoResize="false"
+											value="#{projetoBean.projeto.objetivoEspecifico}"
+											required="true" styleClass="font11-vi"
+											requiredMessage="Objetivo específico é um campo obrigatório" />
+									</h:panelGrid>
+									
+									<h:panelGrid styleClass="width-100-vi" columns="1">
+										<p:outputLabel value="Estratégia de execução:"
+											for="extrat_exec" />
+										<p:inputTextarea id="extrat_exec" autoResize="false"
+											value="#{projetoBean.projeto.extrategiaExecucao}"
+											required="true" styleClass="font11-vi"
+											requiredMessage="Extratégia de execução é um campo obrigatório" />
+									</h:panelGrid>
+
+								</p:panelGrid>
+
+							</p:scrollPanel>
+						</h:panelGroup>
+					</div>
+				</div>
+
+
+			</h:form>
+
+
+		</p:dialog>
+
+
+		<p:dialog header="Liberar projeto" widgetVar="dlg_liberar_projeto"
+			modal="true" showEffect="clip" hideEffect="clip" width="70%">
+			<h:form id="form-liberacao-projeto" styleClass="ui-fluid">
+				<p:messages id="msg-liberacao-projeto" 
+					showSummary="false" showDetail="true" closable="true" />
+
+
+				<p:outputPanel>
+
+					<p:dataTable id="tabela_autorizacao"
+						value="#{projetoBean.autorizacoes}" var="autorizacao">
+
+						<f:facet name="header">
+							<p:panelGrid columns="6">
+								<p:outputLabel value="Usuário" for="usuario_liberacao" />
+								<p:autoComplete id="usuario_liberacao" required="true"
+									requiredMessage="Preencha o campo usuário" size="40"
+									value="#{projetoBean.userProjeto.user}"
+									completeMethod="#{projetoBean.completeUsuario}" var="usuario"
+									itemLabel="#{usuario.nomeUsuario}" itemValue="#{usuario}"
+									converter="usuarioConverter" forceSelection="true" />
+
+								<p:outputLabel value="Tipo:" for="projeto_liberacao" />
+								<p:selectOneMenu id="projeto_liberacao"
+									value="#{projetoBean.userProjeto.tipo}">
+									<f:selectItems value="#{projetoBean.tiposAdministrativos}"
+										var="tipoAdminstrativo" itemLabel="#{tipoAdminstrativo.nome}"
+										itemValue="#{tipoAdminstrativo}"></f:selectItems>
+								</p:selectOneMenu>
+								<p:commandLink styleClass="btn btn-primary btn-sm"
+									action="#{projetoBean.salvarUsuarioNoProjeto()}"
+									update="form-liberacao-projeto form-liberacao-projeto:tabela_autorizacao"
+									style="color:#fff; margin: 8px 2px;" value="Salvar" />
+
+							</p:panelGrid>
+
+						</f:facet>
+
+						<p:column headerText="Usuário">
+							<p:outputLabel value="#{autorizacao.user.nomeUsuario}" />
+						</p:column>
+
+						<p:column headerText="Tipo">
+							<p:outputLabel value="#{autorizacao.tipo.nome}" />
+						</p:column>
+
+
+						<p:column style="width:70px">
+							<p:commandLink process="@this"
+								action="#{projetoBean.excluirUsuarioDoProjeto()}"
+								update="tabela_autorizacao">
+								<f:setPropertyActionListener value="#{autorizacao}"
+									target="#{projetoBean.userProjeto}" />
+								<span class="fa fa-times"></span>
+							</p:commandLink>
+
+							<p:commandLink title="Editar" styleClass="fa fa-pencil-square-o"
+								style="font-size:14px;margin-left:15px;"
+								update="form-liberacao-projeto" process="@this"
+								action="#{projetoBean.editarUsuarioNoProjeto()}">
+								<f:setPropertyActionListener value="#{autorizacao}"
+									target="#{projetoBean.userProjeto}" />
+							</p:commandLink>
+
+
+						</p:column>
+
+
+
+
+					</p:dataTable>
+
+				</p:outputPanel>
+
+			</h:form>
+
+
+		</p:dialog>
+
+
+
+	</ui:define>
+
+
+</ui:composition>

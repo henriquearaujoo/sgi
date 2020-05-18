@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+
+
+	<ui:define name="content">
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+			function stopDlgfilter() {
+			    PF('dlg_filtro_compra').hide();
+			}
+		</script>
+
+		<style type="text/css">
+table.jqplot-table-legend, table.jqplot-cursor-legend {
+	background-color: rgba(255, 255, 255, 0.6);
+	border: 0px solid #cccccc;
+	position: absolute;
+	font-size: 1.15em;
+}
+
+.jqplot-point-label {
+	font-size: 1.0em;
+	z-index: 2;
+}
+</style>
+
+		<f:metadata>
+			<o:viewParam name="plano"
+				value="#{plano_trabalho_controller.planoDeTrabalho}" />
+			<f:viewAction action="#{plano_trabalho_controller.initCadastro()}" />
+		</f:metadata>
+
+
+		<h:form id="form-cadastro-plano-trabalho">
+
+			<p:tabView binding="#{plano_trabalho_controller.tabviewPlano}">
+
+				<p:ajax event="tabChange"
+					listener="#{plano_trabalho_controller.definirTabPlano()}"
+					update="form-cadastro-plano-trabalho" />
+
+				<p:tab id="cadastro_plano" title="Informações gerais">
+					<ui:include src="/main/plano_trabalho_tab01.xhtml" />
+				</p:tab>
+
+				<p:tab id="lista_projeto" title="Dashboard">
+					<ui:include src="/main/plano_trabalho_tab02.xhtml" />
+				</p:tab>
+
+			</p:tabView>
+
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog header="Cadastro de projeto" widgetVar="dlg_cad_projeto"
+			showEffect="clip" hideEffect="clip">
+
+
+			<h:form id="form_cad_projeto">
+
+				<p:messages id="msg_cad_projeto" showIcon="true" showDetail="true"
+					showSummary="false" closable="true" />
+
+				<p:panelGrid columns="4">
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Código:" for="cod_projeto" />
+						<p:inputText id="cod_projeto" style="width:100px"
+							value="#{plano_trabalho_controller.projeto.codigo}"
+							required="true" requiredMessage="Preencha o campo 'Código'." />
+					</p:panelGrid>
+
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Titulo:" for="nome_projeto" />
+						<p:inputText id="nome_projeto" style="width:400px"
+							value="#{plano_trabalho_controller.projeto.nome}" required="true"
+							requiredMessage="Preencha o campo 'Titulo'." />
+					</p:panelGrid>
+
+				</p:panelGrid>
+
+				<p:panelGrid columns="4">
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Componente" for="componente" />
+						<p:selectOneMenu id="componente" required="true"
+							requiredMessage="Preencha o campo 'Componente'."
+							value="#{plano_trabalho_controller.projeto.componente}"
+							converter="componenteConverter">
+							<p:ajax
+								listener="#{plano_trabalho_controller.carregarSubComponentes()}"
+								process="@this" update="sub_componente" />
+							<f:selectItem noSelectionOption="true" />
+							<f:selectItems
+								value="#{plano_trabalho_controller.componentesClass}"
+								var="componente" itemLabel="#{componente.nome}"
+								itemValue="#{componente}" />
+						</p:selectOneMenu>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2">
+
+						<p:outputLabel value="Subcomponente:" for="sub_componente" />
+						<p:selectOneMenu id="sub_componente" style="width:150px"
+							required="true"
+							requiredMessage="Preencha o campo 'Subcomponente'."
+							value="#{plano_trabalho_controller.projeto.subComponente}"
+							converter="subcomponenteConverter">
+							<f:selectItems
+								value="#{plano_trabalho_controller.subComponentes}"
+								var="subcomponente" itemLabel="#{subcomponente.nome}"
+								itemValue="#{subcomponente}" />
+						</p:selectOneMenu>
+
+					</p:panelGrid>
+
+
+				</p:panelGrid>
+				<p:panelGrid columns="4">
+					<p:panelGrid columns="2">
+
+						<p:outputLabel value="Cadeia:" for="cadeia_proj" />
+						<p:selectOneMenu id="cadeia_proj" style="width:150px"
+							filter="true" styleClass="font11-vi" required="true"
+							requiredMessage="Preencha o campo 'Cadeia'."
+							value="#{plano_trabalho_controller.projeto.cadeia}"
+							converter="cadeiaConverter" filterMatchMode="startsWith">
+							<f:selectItem noSelectionOption="true" />
+							<f:selectItems value="#{plano_trabalho_controller.cadeias}"
+								var="cad" itemLabel="#{cad.nome}" itemValue="#{cad}">
+							</f:selectItems>
+						</p:selectOneMenu>
+
+					</p:panelGrid>
+
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Destino/Localização:" for="destino_loc" />
+						<p:autoComplete id="destino_loc" styleClass="font11-vi"
+							inputStyle="width:550px" panelStyle="width:180px"
+							requiredMessage="Preencha o campo 'Destino/Localização'."
+							rendered="true" placeholder="Destino" required="true"
+							value="#{plano_trabalho_controller.projeto.localidade}"
+							completeMethod="#{fornecedor_controller.completeLocalidade}"
+							var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+							converter="localConverterVI" minQueryLength="3"
+							forceSelection="true" />
+
+					</p:panelGrid>
+
+
+				</p:panelGrid>
+
+				<p:panelGrid columns="3">
+					<p:panelGrid columns="2">
+						<p:outputLabel value="ED/RR:" for="resp_eder" />
+						<p:selectOneMenu id="resp_eder" required="true"
+							requiredMessage="Preencha o campo 'ED/RR'."
+							styleClass="font11-vi" panelStyle="width:180px"
+							value="#{plano_trabalho_controller.projeto.repasse}">
+							<f:selectItem itemLabel="Selecione um" noSelectionOption="true" />
+							<f:selectItem itemLabel="ED" itemValue="ED" />
+							<f:selectItem itemLabel="RR" itemValue="RR" />
+						</p:selectOneMenu>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Quantidade:" for="qtd" />
+						<p:inputText id="qtd" required="true"
+							requiredMessage="Preencha o campo 'Quantidade'."
+							value="#{plano_trabalho_controller.projeto.quantidade}"
+							styleClass="font11-vi" style="width:50px" />
+
+					</p:panelGrid>
+
+					<p:panelGrid columns="4">
+						<p:outputLabel value="Valor:" for="valor_projeto" />
+						<p:inputText id="valor_projeto"
+							value="#{plano_trabalho_controller.projeto.valor}"
+							onkeydown="mascaraMoeda(this,moeda)" required="true"
+							requiredMessage="Preencha o campo 'Valor'">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+								locale="pt_BR" />
+						</p:inputText>
+						<h:panelGroup>
+							<h:outputText value="Estrutura: " />
+							<p:selectBooleanCheckbox
+								value="#{plano_trabalho_controller.projeto.estrutura}" />
+						</h:panelGroup>
+
+					</p:panelGrid>
+					
+				</p:panelGrid>
+				
+				<p:panelGrid columns="2">
+						<p:outputLabel value="Detalhamento:" for="Detalhamento" />
+						<p:inputTextarea id="Detalhamento" rows="5" cols="50"
+							autoResize="false" value="#{plano_trabalho_controller.projeto.observacao}"
+							required="true" styleClass="font11-vi"
+							requiredMessage="Campo 'Detalhamento' obrigatório" />
+					</p:panelGrid>
+
+				<p:commandLink styleClass="btn btn-primary btn-sm"
+					action="#{plano_trabalho_controller.salvarProjeto()}"
+					process="form_cad_projeto"
+					oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg_cad_projeto').hide()"
+					update=":form-cadastro-plano-trabalho :form_cad_projeto:msg_cad_projeto"
+					style="color:#fff; margin: 8px 2px;" value="Salvar"
+					onstart="start();" onsuccess="stop();" onerror="stop();" />
+
+
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog header="Liberar projeto" widgetVar="dlg_liberar_projeto"
+			modal="true" showEffect="clip" hideEffect="clip" width="70%">
+			<h:form id="form-liberacao-projeto" styleClass="ui-fluid">
+				<p:messages id="msg-liberacao-projeto" 
+					showSummary="false" showDetail="true" closable="true" />
+
+				<p:outputPanel>
+					<p:dataTable id="tabela_autorizacao"
+						value="#{plano_trabalho_controller.autorizacoes}"
+						var="autorizacao">
+
+						<f:facet name="header">
+							<p:panelGrid columns="6">
+								<p:outputLabel value="Usuário" for="usuario_liberacao" />
+								<p:autoComplete id="usuario_liberacao" required="true"
+									requiredMessage="Preencha o campo usuário" size="40"
+									value="#{plano_trabalho_controller.userPlano.user}"
+									completeMethod="#{plano_trabalho_controller.completeUsuario}"
+									var="usuario" itemLabel="#{usuario.nomeUsuario}"
+									itemValue="#{usuario}" converter="usuarioConverter"
+									forceSelection="true" />
+
+								<p:outputLabel value="Tipo:" for="projeto_liberacao" />
+								<p:selectOneMenu id="projeto_liberacao"
+									value="#{plano_trabalho_controller.userPlano.tipo}">
+									<f:selectItems
+										value="#{plano_trabalho_controller.tiposAdministrativos}"
+										var="tipoAdminstrativo" itemLabel="#{tipoAdminstrativo.nome}"
+										itemValue="#{tipoAdminstrativo}"></f:selectItems>
+								</p:selectOneMenu>
+								<p:commandLink styleClass="btn btn-primary btn-sm"
+									action="#{plano_trabalho_controller.salvarUsuarioNoPlano()}"
+									update="form-liberacao-projeto form-liberacao-projeto:tabela_autorizacao"
+									style="color:#fff; margin: 8px 2px;" value="Salvar" />
+
+							</p:panelGrid>
+
+						</f:facet>
+
+						<p:column headerText="Usuário">
+							<p:outputLabel value="#{autorizacao.user.nomeUsuario}" />
+						</p:column>
+
+						<p:column headerText="Tipo">
+							<p:outputLabel value="#{autorizacao.tipo.nome}" />
+						</p:column>
+
+
+						<p:column style="width:70px">
+							<p:commandLink process="@this"
+								action="#{plano_trabalho_controller.excluirUsuarioDoPlano()}"
+								update="tabela_autorizacao">
+								<f:setPropertyActionListener value="#{autorizacao}"
+									target="#{projetoBean.userProjeto}" />
+								<span class="fa fa-times"></span>
+							</p:commandLink>
+
+							<p:commandLink title="Editar" styleClass="fa fa-pencil-square-o"
+								style="font-size:14px;margin-left:15px;"
+								update="form-liberacao-projeto" process="@this">
+								<f:setPropertyActionListener value="#{autorizacao}"
+									target="#{plano_trabalho_controller.userPlano}" />
+							</p:commandLink>
+
+
+						</p:column>
+
+					</p:dataTable>
+
+				</p:outputPanel>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</h:form>
+
+
+		</p:dialog>
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+
+
+
+	</ui:define>
+
+
+</ui:composition>

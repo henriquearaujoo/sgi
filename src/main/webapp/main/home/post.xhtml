@@ -1,0 +1,95 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<p:outputPanel id="post-panel">
+
+		<div class="ui-g ui-fluid"
+			style="width: 90%; margin-left: auto; margin-right: auto">
+			<div class="ui-g-11">
+				<p:inputTextarea rows="2" value="#{home_controller.post.texto}" />
+			</div>
+			<div class="ui-g-1">
+				<p:commandLink value="Enviar"
+					action="#{home_controller.salvarPost()}" onclick="start();"
+					oncomplete="stop();" onerror="stop();"
+					styleClass="btn btn-primary btn-sm" update="post-panel">
+					<span class="fa fa-fw fa-send"></span>
+				</p:commandLink>
+			</div>
+		</div>
+
+
+		<div class="comments-container">
+
+			<ul id="comments-list" class="comments-list">
+
+				<ui:repeat var="post" value="#{home_controller.posts}">
+					<li>
+						<div class="comment-main-level">
+
+							<div class="comment-avatar">
+								<img src="../resources/image/logofas2020.jpg" alt="" />
+
+							</div>
+
+							<div class="comment-box">
+								<div class="comment-head">
+									<h6 class="comment-name">
+										<a>#{post.usuario.nomeUsuario}</a>
+									</h6>
+									<i class="fa fa-reply"></i> <i class="fa fa-heart"></i>
+
+									<h:outputText styleClass="label-date"
+										value="#{post.dataPublicacao}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+									</h:outputText>
+
+
+								</div>
+								<div class="comment-content" style="font-style: 'Tahoma'">#{post.texto}</div>
+							</div>
+						</div>
+
+						<ul style="display: none;" class="comments-list reply-list">
+							<li>
+								<!-- Avatar -->
+								<div class="comment-avatar">
+									<img
+										src="http://i9.photobucket.com/albums/a88/creaticode/avatar_2_zps7de12f8b.jpg"
+										alt="" />
+								</div> <!-- Contenedor del Comentario -->
+								<div class="comment-box">
+									<div class="comment-head">
+										<h6 class="comment-name">
+											<a href="http://creaticode.com/blog">Lorena Rojero</a>
+										</h6>
+										<span>hace 10 minutos</span> <i class="fa fa-reply"></i> <i
+											class="fa fa-heart"></i>
+									</div>
+									<div class="comment-content">Lorem ipsum dolor sit amet,
+										consectetur adipisicing elit. Velit omnis animi et iure
+										laudantium vitae, praesentium optio, sapiente distinctio illo?
+									</div>
+								</div>
+							</li>
+
+						</ul>
+
+					</li>
+				</ui:repeat>
+			</ul>
+		</div>
+
+	</p:outputPanel>
+
+
+
+
+
+</ui:fragment>

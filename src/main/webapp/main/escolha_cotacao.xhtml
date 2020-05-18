@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<o:viewParam name="comp" value="#{escolhaCotacao.compra}" />
+			<f:viewAction action="#{escolhaCotacao.carregarCotacoes()}" />
+		</f:metadata>
+
+		<f:view>
+			<script>
+		function goBack() {
+		    window.history.back();
+		}
+
+</script>
+
+
+			<h:form id="form-cotacao-escolha" prependId="false">
+
+				<p:messages id="msg-cotacao" showSummary="false"
+					style="margin-top:10px" showDetail="true" closable="true"
+					showIcon="true">
+					<p:autoUpdate></p:autoUpdate>
+				</p:messages>
+
+				<p:breadCrumb>
+					<p:menuitem value="Categories" url="home_new.xhtml" />
+					<p:menuitem value="Solicitações de Compras" url="compras.xhtml" />
+					<p:menuitem value="Escolha da Cotação" />
+				</p:breadCrumb>
+
+				<div id="desc-subtitle" class="ui-g">
+
+					<label for="code-sc" class="label-subtitle">Código:</label> <small
+						id="code-sc" class="form-text text-muted"
+						style="margin-left: 5px;">#{escolhaCotacao.compra.id}</small> <label
+						for="code-date" class="label-subtitle">Emissão:</label> <small
+						id="code-date" class="form-text text-muted"
+						style="margin-left: 5px;">#{escolhaCotacao.compra.dataEmissao}</small>
+
+					<label for="code-solic" class="label-subtitle">Solicitante:</label>
+					<small id="code-solic" class="form-text text-muted"
+						style="margin-left: 5px;">#{escolhaCotacao.compra.solicitante.nome}</small>
+
+					<label for="code-status" class="label-subtitle">Status:</label> <small
+						id="code-status" class="form-text text-muted"
+						style="margin-left: 5px;">#{escolhaCotacao.compra.statusCompra.nome}</small>
+
+
+
+				</div>
+
+				<p:tabView id="tab-map" prependId="false">
+				
+					<p:ajax event="tabChange" onstart="start();" onsuccess="stop();"
+					onerror="stop();"
+					update="tab-map" />
+				
+					<p:tab title="Mapa comparativo">
+						<ui:include src="/main/escolhacotacao/mapa_tab.xhtml" />
+					</p:tab>
+
+					<p:tab title="Pedidos">
+						<ui:include src="/main/escolhacotacao/pedido_mapa_tab.xhtml" />
+					</p:tab>
+
+					<p:tab title="Ranking">
+						<ui:include src="/main/escolhacotacao/ranking_mapa_tab.xhtml" />
+					</p:tab>
+				</p:tabView>
+
+				<div class="fixed-btn">
+
+					<p:panel id="btn-panel-p">
+
+						<div id="btn-panel-wizard" class="ui-g ui-fluid"
+							style="margin-bottom: 10px">
+
+							<div class="ui-g-6"></div>
+
+							<div class="ui-g-6 text-right">
+
+								<p:commandLink
+									title="Justificar quando não escolher o fornecedor com menor preço"
+									styleClass="btn btn-outline-secondary" process="@this"
+									value="Justificativa/Observação"
+									onclick="start();setarWidthHeight('form-justificativa');PF('justif-choose').show();"
+									oncomplete="stop()" onerror="stop()" />
+
+							</div>
+
+						</div>
+
+					</p:panel>
+				</div>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+
+					<div align="center">
+						<p:commandButton value="Sim" type="button"
+							styleClass="ui-confirmdialog-yes " icon="ui-icon-check" />
+						<p:commandButton value="Não" type="button"
+							styleClass="ui-confirmdialog-no " icon="ui-icon-close" />
+					</div>
+				</p:confirmDialog>
+
+
+			</h:form>
+
+		</f:view>
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<script type="text/javascript">
+			function setarWidthHeight(id) {
+				var htmlTag = document.getElementById(id);
+				htmlTag.style.height = Math.floor(window.innerHeight*0.98)+"px";	
+				htmlTag.style.width = Math.floor(window.innerWidth*0.98)+"px";	
+				
+			}
+		</script>
+
+		<p:dialog header="Justificar escolha" widgetVar="justif-choose"
+			modal="true" closable="true" width="100%" height="100%" draggable="false"
+			closeOnEscape="true" showEffect="clip" hideEffect="clip"
+			resizable="false">
+
+			<h:form id="form-justificativa">
+
+				<div class="ui-g ui-fluid"
+					style="width: 680px; height: 280px; margin-left: auto; margin-right: auto; margin-top: 150px;">
+
+					<div class="ui-g-12 form-group">
+						<p:outputLabel styleClass="form-label"
+							value="Digite sua justificativa/observação nesse campo e clique em salvar,sua observação será impressa no mapa comparativo!"></p:outputLabel>
+						<p:inputText value="#{escolhaCotacao.observacaoMC.texto}"></p:inputText>
+
+					</div>
+
+					<div class="ui-g-12">
+						<p:commandButton icon="fa fa-fw fa-edit"
+							action="#{escolhaCotacao.salvarObservacao()}" value="Salvar"></p:commandButton>
+
+					</div>
+				</div>
+
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog header="Determinar recursos"
+			widgetVar="determinar_recursoMODE01" modal="true" closable="true"
+			closeOnEscape="true" showEffect="clip" hideEffect="clip"
+			resizable="false">
+
+			<ui:include src="/main/dialog/escolhacotacao/recursos.xhtml" />
+		
+		</p:dialog>
+
+		<p:dialog widgetVar="prepara_aprovacao" modal="true" closable="true"
+			width="100%" height="100%" responsive="true" resizable="false"
+			header="Enviar Para Aprovação" closeOnEscape="true" showHeader="true"
+			showEffect="clip" hideEffect="clip">
+
+			<h:form id="preparacao-aprovacao" prependId="false">
+
+				<p:panel id="panel-preparacao">
+
+
+					<div id="div-preparacao" class="ui-g ui-fluid"
+						style="position: relative">
+
+						<div class="ui-g-12">
+							<p:messages closable="true" showDetail="true" showIcon="true"
+								showSummary="false">
+								<p:autoUpdate></p:autoUpdate>
+							</p:messages>
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<p:outputLabel for="input-fm-pgto" styleClass="form-label"
+								value="Forma de pagamento" />
+							<p:selectOneMenu id="input-fm-pgto"
+								value="#{escolhaCotacao.pedido.condicaoPagamentoEnum}">
+								<f:selectItems value="#{escolhaCotacao.condicoes}"
+									var="condicao" itemLabel="#{condicao.nome}"
+									itemValue="#{condicao}" />
+							</p:selectOneMenu>
+							
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<p:outputLabel for="input-parcelamento" styleClass="form-label"
+								value="Parcelamento" />
+							<p:selectOneMenu id="input-parcelamento"
+								value="#{escolhaCotacao.pedido.tipoParcelamento}">
+								<f:selectItems value="#{escolhaCotacao.tiposParcelas}"
+									var="parcela" itemLabel="#{parcela.nome}"
+									itemValue="#{parcela}" />
+							</p:selectOneMenu>
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<p:outputLabel for="input-parcela" styleClass="form-label"
+								value="Quantidade de parcelas" />
+							<p:inputText id="input-parcela"
+								value="#{escolhaCotacao.pedido.quantidadeParcela}" />
+						</div>
+
+
+						<div class="ui-g-3 form-group">
+							<p:outputLabel for="input-dt-pgto" styleClass="form-label"
+								value="Dt 1º pagamento" />
+							<p:calendar id="input-dt-pgto"
+								value="#{escolhaCotacao.pedido.dataPagamento}"
+								timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<p:outputLabel for="input-gt-resp" styleClass="form-label"
+								value="Setor Responsável:" />
+							<p:selectOneMenu id="input-gt-resp" autoWidth="false"
+								value="#{escolhaCotacao.controleExpedicao.gestaoResponsavel}"
+								converter="gestaoConverter" filter="true"
+								filterMatchMode="contains">
+								<f:selectItems value="#{escolhaCotacao.listGestao}" var="gestao"
+									itemValue="#{gestao}" itemLabel="#{gestao.nome}" />
+							</p:selectOneMenu>
+
+						</div>
+
+						<div class="ui-g-3 form-group">
+
+							<p:outputLabel for="input-resp" styleClass="form-label"
+								value="Nome responsável:" />
+							<p:inputText id="input-resp"
+								value="#{escolhaCotacao.controleExpedicao.nomeResponsavel}" />
+
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<p:outputLabel for="input-dt-entrega" styleClass="form-label"
+								value="Data de entrega:" />
+							<p:calendar id="input-dt-entrega"
+								value="#{escolhaCotacao.pedido.dataEntrega}"
+								timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+						</div>
+
+						<div class="ui-g-12 form-group">
+							<p:outputLabel for="input-obs" styleClass="form-label"
+								value="Observações" />
+							<p:inputText id="input-obs"
+								value="#{escolhaCotacao.pedido.observacao}" />
+
+						</div>
+
+						<div class="ui-g-6">
+							<p:commandLink styleClass="btn btn-success btn-block"
+								onsuccess="stop();" oncomplete="stop();" onerror="stop();"
+								onclick="start();" process="preparacao-aprovacao"
+								action="#{escolhaCotacao.salvarPedido()}"
+								style="color:#FFF; float:right" value="Salvar">
+								
+							</p:commandLink>
+
+						</div>
+
+						<div class="ui-g-6">
+
+							<p:commandLink styleClass="btn btn-danger btn-block"
+								onclick="PF('prepara_aprovacao').hide()"
+								style="color:#FFF;float:left" value="Fechar" />
+
+						</div>
+
+
+
+					</div>
+				</p:panel>
+
+			</h:form>
+
+
+
+		</p:dialog>
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

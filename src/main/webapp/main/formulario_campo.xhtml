@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="menu_lateral">
+
+		<style type="text/css">
+.ui-widget {
+	font-size: 100%;
+}
+
+.semBorda tr, .semBorda td {
+	border: none !important;
+}
+</style>
+
+
+
+
+
+
+		<h:form id="tabela_projeto">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{relatorioCampo.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{pagamentoController.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{pagamentoController.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right;" class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+
+
+		<h:panelGroup id="panel-content">
+
+			<h:panelGroup id="panel-listagem"
+				rendered="#{relatorioCampo.panelListagem}">
+
+				<h:form id="form-listagem">
+
+
+					<p:messages id="msg-pagamento" showSummary="false"
+						showDetail="true" showIcon="true" />
+
+					<p:dataTable emptyMessage="Não há Relatorios de Campo"
+						id="table-compras" value="#{relatorioCampo.relatorios}"
+						var="relatorio" paginator="ture" widget="comprasTable" rows="15">
+
+
+						<f:facet name="header">
+
+							<p:outputLabel>
+
+								<h:outputText value="Procura:" />
+								<p:inputText id="globalFilter"
+									onkeyup="PF('viagemsTable').filter()" style="width:150px"
+									placeholder="palavra-chave" />
+
+								<p:commandLink id="add" styleClass="link-content"
+									action="#{relatorioCampo.iniciarNovoRelatorio()}"
+									update="panel-content" title="Adicionar Relatorio">
+									<span style="color: green; font-size: 25px;"
+										class="icon-plus-alt"> </span>
+								</p:commandLink>
+
+								<p:commandLink id="buscar" styleClass="link-content-search"
+									oncomplete="PF('dlg_filtro_compra').show();"
+									action="#{viagemController.iniciarFiltro()}"
+									style="margin-bottom:5px;" title="Buscar">
+									<span style="font-size: 25px;" class="fa fa-filter"></span>
+								</p:commandLink>
+
+
+							</p:outputLabel>
+
+
+						</f:facet>
+
+
+						<p:column headerText="Codigo" filterBy="#{relatorio.id}"
+							filterMatchMode="contains">
+
+							<p:commandLink value="RC#{relatorio.id}"
+								action="#{relatorioCampo.editarFormulario()}"
+								update="panel-content">
+								<f:setPropertyActionListener value="#{relatorio}"
+									target="#{relatorioCampo.relatorio}" />
+							</p:commandLink>
+						</p:column>
+
+						<p:column headerText="Coordenador">
+							<h:outputText value="#{relatorio.coordenador.nome}" />
+						</p:column>
+						
+						<p:column headerText="Preenchimento">
+							<h:outputText value="#{relatorio.preenchimento.nome}" />
+						</p:column>
+						
+						<p:column headerText="Data Inicio ">
+							<h:outputText value="#{relatorio.inicio.date}/#{relatorio.inicio.day}/2016" />
+						</p:column>
+						
+
+
+
+
+					</p:dataTable>
+
+
+
+
+				</h:form>
+
+
+			</h:panelGroup>
+
+			<h:panelGroup id="panel-cadastro"
+				rendered="#{relatorioCampo.panelCadastro}">
+
+				<h:form style="float:right;" id="options">
+					<p:growl id="messages" showDetail="true" />
+
+					<p:menuButton value="+">
+
+						<p:menuitem value="Indicadores"
+							onclick="PF('indicadores').show();" update="messages" />
+
+					</p:menuButton>
+				</h:form>
+
+
+
+				<h:form id="form-cadastro" prependId="false" >
+
+					<p:messages id="msgs"  showSummary="false"
+						showDetail="true" showIcon="true" closable="true" />
+
+					<div class="botao_central" align="left"
+						style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+						<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+							action="#{relatorioCampo.salvarRelatorio()}"
+							update="panel-content" style="color:#fff; margin: 2px 2px;"
+							value="Salvar" />
+
+						<p:commandLink action="#{relatorioCampo.voltarListagem()}"
+							value="voltar" update="panel-content" process="@this"
+							styleClass="btn btn-info btn-sm" />
+
+
+
+					</div>
+
+
+
+
+
+					<p:tabView scrollable="true">
+						<p:tab title="Informações Gerais">
+							<h:panelGrid columns="2" layout="grid" id="grid-if"
+								cellpadding="100" style="width:100%;">
+
+								<p:row>
+									<p:column>
+										<h:outputLabel value="Nº do Relatorio" />
+										<br />
+										<p:inputText
+											value="#{relatorioCampo.relatorio.numeroRelatorio}" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column>
+										<h:outputLabel value="Nº da Solicitação de viagem" />
+										<br />
+										<p:selectOneMenu id="viagem"
+											value="#{relatorioCampo.relatorio.solicitacaoViagem}"
+											filter="true">
+
+											<f:selectItems value="#{relatorioCampo.viagems}" var="viagem"
+												itemLabel="#{viagem.codigo}" itemValue="#{viagem}" />
+										</p:selectOneMenu>
+
+									</p:column>
+								</p:row>
+
+
+
+								<p:row>
+									<p:column>
+										<h:outputLabel value="Cordenador" />
+										<br />
+										<p:selectOneMenu id="coordenador"
+											value="#{relatorioCampo.relatorio.coordenador}" filter="true">
+
+											<f:selectItems value="#{relatorioCampo.colaborador}"
+												var="coord" itemLabel="#{coord.nome}" itemValue="#{coord}" />
+										</p:selectOneMenu>
+
+									</p:column>
+								</p:row>
+
+
+								<p:row>
+									<p:column>
+										<h:outputLabel value="Preenchimento" />
+										<br />
+										<p:selectOneMenu id="preenchimento"
+											value="#{relatorioCampo.relatorio.preenchimento}"
+											filter="true">
+
+											<f:selectItems value="#{relatorioCampo.colaborador}"
+												var="coord" itemLabel="#{coord.nome}" itemValue="#{coord}" />
+										</p:selectOneMenu>
+
+									</p:column>
+								</p:row>
+
+
+								<p:row>
+									<p:column>
+										<h:outputLabel value="Regional" />
+										<br />
+										<p:selectOneMenu id="regional" converter="gestaoConverter"
+											value="#{relatorioCampo.relatorio.regional}" filter="true">
+
+											<f:selectItems value="#{relatorioCampo.regionais}"
+												var="coord" itemLabel="#{coord.nome}" itemValue="#{coord}" />
+										</p:selectOneMenu>
+
+									</p:column>
+								</p:row>
+
+
+								<p:row>
+									<p:column>
+										<h:outputLabel value="Unidade de Conservação" />
+										<br />
+										<p:selectOneMenu id="uc" converter="localConverter"
+											value="#{relatorioCampo.relatorio.uc}" filter="true">
+
+											<f:selectItems value="#{relatorioCampo.ucs}" var="coord"
+												itemLabel="#{coord.nome}" itemValue="#{coord}" />
+										</p:selectOneMenu>
+
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column>
+
+										<p:outputLabel value="Inicio" />
+										<br />
+										<p:calendar id="inicio"
+											value="#{relatorioCampo.relatorio.inicio}"
+											pattern="MM/dd/yyyy HH:mm:ss" />
+
+
+									</p:column>
+
+
+								</p:row>
+
+
+								<p:row>
+									<p:column>
+
+										<p:outputLabel value="Termino" />
+										<br />
+										<p:calendar id="fim"
+											value="#{relatorioCampo.relatorio.termino}"
+											pattern="MM/dd/yyyy HH:mm:ss" />
+
+									</p:column>
+
+
+								</p:row>
+
+
+
+
+							</h:panelGrid>
+							<br />
+
+
+
+
+
+							<p:fieldset legend="municipios" toggleable="true"
+								style="width:80%" styleClass="semBorda">
+								<p:dataTable id="tab_municipio" var="municipio"
+									value="#{relatorioCampo.relatorio.municipio}" style="width:80%">
+
+									<f:facet name="header">
+										<p:outputPanel id="municipio">
+											<h:panelGrid columns="2" layout="grid"
+												id="grid-cadastro-trecho" style="width:100%"
+												styleClass="semBorda">
+
+												<p:row>
+													<p:column>
+
+
+														<p:outputLabel value="Selecione um municipio" />
+														<br />
+														<p:selectOneMenu id="estado"
+															value="#{relatorioCampo.idEstado}" style="width:150px">
+															<p:ajax listener="#{relatorioCampo.onEstadoChange}"
+																update="teste" />
+															<f:selectItem itemLabel="Select Estado" itemValue=""
+																noSelectionOption="true" />
+															<f:selectItems value="#{relatorioCampo.estados}"
+																var="estado" itemLabel="#{estado.nome}"
+																itemValue="#{estado.id}" />
+														</p:selectOneMenu>
+
+
+
+														<p:selectOneMenu id="teste" filter="true"
+															filterMatchMode="contains"
+															value="#{relatorioCampo.municipio}"
+															converter="localConverter" 
+															 style="margin-left:5px;">
+															<f:selectItems value="#{relatorioCampo.municipios}"
+																var="locDestino" itemLabel="#{locDestino.mascara}"
+																itemValue="#{locDestino}" />
+														</p:selectOneMenu>
+
+
+													</p:column>
+													<p:column>
+
+														<p:commandLink styleClass="btn btn-primary btn-sm"
+															process="municipio" type="button" update="tab_municipio"
+															action="#{relatorioCampo.addMunicipio()}"
+															style="color:#fff; margin-left: 10px; margin-top: -20px"
+															value="Adicionar" />
+
+
+													</p:column>
+
+
+												</p:row>
+
+
+											</h:panelGrid>
+
+										</p:outputPanel>
+									</f:facet>
+
+									<p:column headerText="Municipio">
+										<h:outputText value="#{municipio.nome}" />
+									</p:column>
+
+									<p:column headerText="Municipio">
+										<p:commandLink styeClass="btn btn-primary btn-sm"
+											actionListener="#{relatorioCampo.excluirMunicipio(municipio)}"
+											update="tab_municipio">
+											<span style="font-size: 20px;" class="fa fa-trash"> </span>
+										</p:commandLink>
+
+									</p:column>
+
+
+
+									<!-- 	<p:column headerText="menu">
+									 -->
+									<!-- 
+										<p:commandButton value="" icon="fa fa-times" style=""	
+										actionListener="#{relatorioCampo.excluirMunicipio(municipio)}" update="tab_municipio" />
+										 -->
+									<!--  
+										<p:commandLink styeClass="btn btn-primary btn-sm" 
+											actionListener="#{relatorioCampo.excluirMunicipio(municipio)}" update="tab_municipio"  >
+											<span style="font-size: 20px;"
+															class="fa fa-trash"> </span>
+										</p:commandLink>
+										 -->
+
+
+									<!-- 
+									 </p:column> 
+									  -->
+
+
+
+								</p:dataTable>
+							</p:fieldset>
+
+						</p:tab>
+
+						<p:tab title="Equipe">
+
+
+							<p:fieldset legend="Colaboradores FAS" toggleable="true"
+								style="width:80%" styleClass="semBorda">
+								<p:dataTable id="tab_eqp" var="colaboradores"
+									value="#{relatorioCampo.relatorio.colaboradores}"
+									style="width:80%">
+
+									<f:facet name="header">
+										<p:outputPanel id="eqp">
+											<!-- 
+											<h:panelGrid columns="2" layout="grid" id="grid-cadastro-eqp"
+												style="width:100%" styleClass="semBorda">
+ 											-->
+											<p:row>
+
+												<p:column>
+													<h4>Colaborador</h4>
+						
+													<p:selectOneMenu id="colaborador"
+														value="#{relatorioCampo.colaboradoresCampo.colaborador}"
+														filter="true">
+
+														<f:selectItems value="#{relatorioCampo.colaborador}"
+															var="colaborador" itemLabel="#{colaborador.nome}"
+															itemValue="#{colaborador}" />
+													</p:selectOneMenu>
+												</p:column>
+
+												<br />
+												<h4>Dias em Campo</h4>
+												
+												<p:column>
+													<p:inputText id="ndias"
+														value="#{relatorioCampo.colaboradoresCampo.diasEmCampo}"
+														placeholder="dias em campo" />
+												</p:column>
+
+												<p:commandLink styleClass="btn btn-primary btn-sm"
+													process="eqp" type="button" update="tab_eqp"
+													action="#{relatorioCampo.addColaboradores()}"
+													style="color:#fff; margin-left: 30px;  " value="Adicionar">
+													<span style="color: green; font-size: 25px;"
+														class="icon-plus-alt"> </span>
+												</p:commandLink>
+
+
+
+											</p:row>
+
+											<!-- 
+											</h:panelGrid>
+ -->
+										</p:outputPanel>
+									</f:facet>
+
+									<p:column headerText="Nome">
+										<h:outputText value="#{colaboradores.colaborador.nome}" />
+									</p:column>
+									<p:column headerText="Dias em Campo">
+										<h:outputText value="#{colaboradores.diasEmCampo}" />
+									</p:column>
+
+
+								</p:dataTable>
+
+							</p:fieldset>
+
+							<p:fieldset legend="Parceiros" toggleable="true"
+								style="width:80%" styleClass="semBorda">	
+
+								<p:dataTable id="tab_parceiro" var="representante"
+									value="#{relatorioCampo.relatorio.representantes}"
+									style="width:80%">
+
+									<f:facet name="header" >
+
+										<p:outputPanel id="representante">
+
+											<h4>Instituição Parceira</h4>
+											
+											<p:inputText
+												value="#{relatorioCampo.representante.instituicao}" />
+
+											<h4>Representante</h4>
+											
+											<p:inputText value="#{relatorioCampo.representante.nome}" />
+
+
+											<p:commandLink styleClass="btn btn-primary btn-sm"
+												process="representante" type="button" update="tab_parceiro"
+												action="#{relatorioCampo.addRepresentante()}"
+												style="color:#fff; margin-left: 30px;  " value="Adicionar">
+												<span style="color: green; font-size: 25px;"
+													class="icon-plus-alt"> </span>
+											</p:commandLink>
+
+										</p:outputPanel>
+
+									</f:facet>
+
+									<p:column headerText="Representante">
+										<h:outputText value="#{representante.nome}" />
+									</p:column>
+									<p:column headerText="Instituição Parceira">
+										<h:outputText value="#{representante.instituicao}" />
+									</p:column>
+
+
+
+								</p:dataTable>
+
+
+							</p:fieldset>
+
+
+
+						</p:tab>
+
+						<p:tab title="Comunidades">
+							<h:panelGrid columns="2" layout="grid" id="grid-comunidades">
+
+								<p:dataTable id="comunidade_tab"
+									value="#{relatorioCampo.relatorio.comunidades}"
+									var="comunidade" style="width:80%">
+
+									<f:facet name="header">
+										<p:outputPanel id="comunidade">
+
+											<p:selectOneMenu id="comunidade_compra"
+												value="#{relatorioCampo.relatorioComunidade.comunidade}"
+												filter="true" filterMatchMode="contains"
+												converter="localConverter">
+												
+												/*required="true"
+												requiredMessage="Campo 'Comunidade' obrigatório"
+												*/
+												
+												<f:selectItems value="#{relatorioCampo.comunidades}"
+													var="loc" itemLabel="#{loc.nome}" itemValue="#{loc}" />
+											</p:selectOneMenu>
+
+
+											<p:commandLink styleClass="btn btn-primary btn-sm"
+												process="comunidade" type="button" update="comunidade_tab"
+												action="#{relatorioCampo.addComunidades()}"
+												style="color:#fff; margin-left: 30px;  " value="Adicionar">
+												<span style="color: green; font-size: 25px;"
+													class="icon-plus-alt"> </span>
+											</p:commandLink>
+
+										</p:outputPanel>
+
+
+									</f:facet>
+
+									<p:column headerText="Nome">
+										<h:outputText value="#{comunidade.comunidade.nome}" />
+									</p:column>
+
+
+								</p:dataTable>
+
+
+
+							</h:panelGrid>
+						</p:tab>
+
+						<p:tab title="Atividades">
+							<h:panelGrid columns="2" layout="grid" id="grid-atividades">
+
+								<p:dataTable id="atividade_tab"
+									value="#{relatorioCampo.relatorio.atividades}" var="atividade"
+									style="width:80%">
+
+
+									<f:facet name="header">
+
+										<p:outputPanel id="atividade">
+
+											<h:panelGroup id="panel-atividade">
+
+												<p:selectOneMenu id="tipo-atividade"
+													value="#{relatorioCampo.relatorio.tipoAtividade}"
+													size="200" style="width:200px; margin-right:5px;" >
+													<p:ajax
+														listener="#{relatorioCampo.onTipoAtividadeChange()}"
+														process="@this" update="panel-atividade" />
+													<f:selectItem noSelectionOption="true" />
+													<f:selectItems value="#{relatorioCampo.tipoAtividades}"
+														var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}" />
+
+												</p:selectOneMenu>
+
+
+
+												<p:selectOneMenu id="oficina"
+													value="#{relatorioCampo.atividade}" required="true"
+													rendered="#{relatorioCampo.tipoAtividade.equals('Oficina')}"
+													 >
+													<f:selectItems value="#{relatorioCampo.atividades}"
+														var="atividade" itemLabel="#{atividade.nome}"
+														itemValue="#{atividade}" />
+												</p:selectOneMenu>
+
+
+
+												<p:selectOneMenu id="vt" value="#{relatorioCampo.atividade}"
+													required="true"
+													rendered="#{relatorioCampo.tipoAtividade.equals('Visitas Tecnicas')}"
+													requiredMessage="Campo 'Superintendencia' obrigatório">
+													<f:selectItems value="#{relatorioCampo.atividades}"
+														var="atividade" itemLabel="#{atividade.nome}"
+														itemValue="#{atividade}" />
+												</p:selectOneMenu>
+
+												<p:selectOneMenu id="entrega"
+													value="#{relatorioCampo.atividade}" required="true"
+													rendered="#{relatorioCampo.tipoAtividade.equals('entregas')}"
+													requiredMessage="Campo 'Superintendencia' obrigatório">
+													<f:selectItems value="#{relatorioCampo.atividades}"
+														var="atividade" itemLabel="#{atividade.nome}"
+														itemValue="#{atividade}" />
+												</p:selectOneMenu>
+
+												<p:selectOneMenu id="capacitacao"
+													value="#{relatorioCampo.atividade}" required="true"
+													rendered="#{relatorioCampo.tipoAtividade.equals('Capacitações')}"
+													requiredMessage="Campo 'Superintendencia' obrigatório">
+													<f:selectItems value="#{relatorioCampo.atividades}"
+														var="atividade" itemLabel="#{atividade.nome}"
+														itemValue="#{atividade}" />
+												</p:selectOneMenu>
+
+												<p:selectOneMenu id="evento"
+													value="#{relatorioCampo.atividade}" required="true"
+													rendered="#{relatorioCampo.tipoAtividade.equals('Evento')}"
+													requiredMessage="Campo 'Superintendencia' obrigatório">
+													<f:selectItems value="#{relatorioCampo.atividades}"
+														var="atividade" itemLabel="#{atividade.nome}"
+														itemValue="#{atividade}" />
+												</p:selectOneMenu>
+												<br />
+												<p:outputLabel value="Nº homens:" />
+												<p:inputText value="#{relatorioCampo.atividade.nHomens}"
+													style="width:5%" />
+
+												<p:outputLabel value="Nº mulheres:"
+													style="margin-left:10px;" />
+												<p:inputText value="#{relatorioCampo.atividade.nMulheres}"
+													style="width:5%" />
+
+
+
+
+												<p:commandLink styleClass="btn btn-primary btn-sm"
+													process="atividade" type="button" update="atividade_tab"
+													action="#{relatorioCampo.addAtividades()}"
+													style="color:#fff; margin-left: 30px;  " value="Adicionar">
+													<span style="color: green; font-size: 25px;"
+														class="icon-plus-alt"> </span>
+												</p:commandLink>
+
+
+
+											</h:panelGroup>
+
+
+
+
+
+										</p:outputPanel>
+
+
+
+									</f:facet>
+
+									<p:column headerText="Atividade Realizadas">
+										<h:outputLabel value="#{atividade.nome}" />
+									</p:column>
+
+									<p:column headerText="Nº Homens ">
+										<h:outputLabel value="#{atividade.nHomens}" />
+									</p:column>
+
+									<p:column headerText="Nº Mulheres">
+										<h:outputLabel value="#{atividade.nMulheres}" />
+									</p:column>
+
+
+
+								</p:dataTable>
+
+
+
+
+							</h:panelGrid>
+						</p:tab>
+
+						<p:tab title="Deliberações e Recomendações">
+
+							<p:panelGrid columns="2" layout="grid" id="grid-deliberaco">
+
+								<p:row>
+									<p:column>
+										<h4>Deliberações</h4>
+
+										<p:inputTextarea
+											value="#{relatorioCampo.relatorio.deliberacoes}" rows="10"
+											cols="50">
+										</p:inputTextarea>
+
+
+									</p:column>
+								</p:row>
+
+								<p:row>
+
+									<p:column>
+										<h4>Recomendações</h4>
+
+										<p:inputTextarea
+											value="#{relatorioCampo.relatorio.recomendacoes}" rows="10"
+											cols="50">
+										</p:inputTextarea>
+
+									</p:column>
+
+
+								</p:row>
+
+							</p:panelGrid>
+
+
+						</p:tab>
+
+						<p:tab title="Coleta de Informações">
+
+							<p:fieldset toggleable="true" legend="Instrumento de Coleta">
+
+								<p:dataTable id="coleta_tab"
+									value="#{relatorioCampo.relatorio.instrumentoColeta}"
+									var="coleta" style="width:100%">
+
+									<f:facet name="header">
+										<p:outputPanel id="coleta">
+											<h:panelGroup id="panel-coleta">
+
+												<p:selectOneMenu id="tipo-coleta"
+													value="#{relatorioCampo.coleta.tipoColeta}" size="200"
+													style="width:200px">
+
+													<f:selectItem noSelectionOption="true" />
+													<f:selectItems value="#{relatorioCampo.tipoColeta}"
+														var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}" />
+
+												</p:selectOneMenu>
+
+												<h5>Nº de Formularios</h5>
+												<p:inputText value="#{relatorioCampo.coleta.nFormularios}" />
+
+												<h5>Nº de Comunidades</h5>
+												<p:inputText value="#{relatorioCampo.coleta.nComunidade}" />
+
+												<p:commandLink styleClass="btn btn-primary btn-sm"
+													process="coleta" type="button" update="coleta_tab"
+													action="#{relatorioCampo.addColeta()}"
+													style="color:#fff; margin-left: 30px;  " value="Adicionar">
+													<span style="color: green; font-size: 25px;"
+														class="icon-plus-alt"> </span>
+												</p:commandLink>
+
+											</h:panelGroup>
+
+										</p:outputPanel>
+
+
+									</f:facet>
+
+									<p:column headerText="Intrumento de Coleta">
+										<h:outputLabel value="#{coleta.tipoColeta.nome}" />
+									</p:column>
+
+									<p:column headerText="Nº de Formularios">
+										<h:outputLabel value="#{coleta.nFormularios}" />
+									</p:column>
+
+									<p:column headerText="Nº de Comunidades">
+										<h:outputLabel value="#{coleta.nComunidade}" />
+									</p:column>
+
+								</p:dataTable>
+
+
+
+							</p:fieldset>
+
+							<p:fieldset toggleable="true" legend="Avaliaçao de Bens"
+								styleClass="semBorda">
+
+								<p:dataTable id="avaliacao_tab"
+									value="#{relatorioCampo.relatorio.avaliacaoBens}"
+									var="avaliacao" style="width:100%">
+
+									<f:facet name="header">
+										<p:outputPanel id="avaliacao">
+											<h:panelGroup id="panel-avaliacao">
+
+
+												<p:panelGrid columns="2">
+													<h5>Bem Avaliado:</h5>
+													<p:selectOneMenu id="tipo-avaliacao"
+														value="#{relatorioCampo.avaliacaoBens.tipoBemAvaliado}"
+														size="200" style="width:200px">
+
+														<f:selectItem noSelectionOption="true" />
+														<f:selectItems value="#{relatorioCampo.tipoBemAvaliado}"
+															var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}" />
+
+													</p:selectOneMenu>
+
+													<h5>nº de Itens Funcionando</h5>
+													<p:inputText
+														value="#{relatorioCampo.avaliacaoBens.nFuncionando}" />
+
+													<h5>nº de Itens em Manuntenção</h5>
+													<p:inputText
+														value="#{relatorioCampo.avaliacaoBens.nManuntencao}" />
+
+													<h5>nº de Itens Defeituosos</h5>
+													<p:inputText
+														value="#{relatorioCampo.avaliacaoBens.nDefeito}" />
+
+													<h5>nº de Items sem uso</h5>
+													<p:inputText
+														value="#{relatorioCampo.avaliacaoBens.nSemUso}" />
+
+													<h5>nº de Itens com uso Divergente</h5>
+													<p:inputText
+														value="#{relatorioCampo.avaliacaoBens.nDivergentes}" />
+
+													<h5>Comunidades</h5>
+													<p:inputText
+														value="#{relatorioCampo.avaliacaoBens.comunidades}" />
+
+													<h5>Observação</h5>
+													<p:inputTextarea
+														value="#{relatorioCampo.avaliacaoBens.observação}" />
+
+												</p:panelGrid>
+
+
+
+
+
+												<p:commandLink styleClass="btn btn-primary btn-sm"
+													process="avaliacao" type="button" update="avaliacao_tab"
+													action="#{relatorioCampo.addAvaliacaoBens()}"
+													style="color:#fff; margin-right: 50px;  " value="Adicionar">
+													<span style="color: green; font-size: 25px;"
+														class="icon-plus-alt"> </span>
+												</p:commandLink>
+
+											</h:panelGroup>
+
+										</p:outputPanel>
+
+
+									</f:facet>
+
+									<p:column headerText="Bem Avaliado">
+										<h:outputLabel value="#{avaliacao.tipoBemAvaliado.nome}" />
+									</p:column>
+
+									<p:column headerText="Nº funcionando">
+										<h:outputLabel value="#{avaliacao.nFuncionando}" />
+									</p:column>
+
+									<p:column headerText="Nº Defeito">
+										<h:outputLabel value="#{avaliacao.nDefeito}" />
+									</p:column>
+
+
+
+								</p:dataTable>
+
+
+
+							</p:fieldset>
+
+
+						</p:tab>
+
+						<p:tab title="Problemas e Soluções">
+
+							<p:panelGrid columns="2" layout="grid" id="grid-deliberacoes">
+
+								<p:row>
+									<p:column>
+										<h4>Pontos Positivos</h4>
+
+										<p:inputTextarea
+											value="#{relatorioCampo.relatorio.pontosPositivos}" rows="10"
+											cols="50">
+										</p:inputTextarea>
+
+
+									</p:column>
+								</p:row>
+
+								<p:row>
+
+									<p:column>
+										<h4>Pontos Negativos</h4>
+
+										<p:inputTextarea
+											value="#{relatorioCampo.relatorio.pontosNegativos}" rows="10"
+											cols="50">
+										</p:inputTextarea>
+
+									</p:column>
+
+
+								</p:row>
+
+							</p:panelGrid>
+
+						</p:tab>
+
+						<p:tab title="Avaliação da Missão">
+
+
+							<p:panelGrid columns="2" layout="grid" id="grid-avaliacao">
+
+								<p:row>
+
+									<p:column>
+										<h4>Problemas Indentificados na Missão</h4>
+									</p:column>
+
+									<p:column>
+										<p:inputTextarea rows="10" cols="50"
+											value="#{relatorioCampo.relatorio.problemasIndentificados}" />
+									</p:column>
+
+
+								</p:row>
+
+								<p:row>
+
+									<p:column>
+										<h4>Soluções Recomendadas</h4>
+									</p:column>
+
+									<p:column>
+										<p:inputTextarea rows="10" cols="50"
+											value="#{relatorioCampo.relatorio.problemasIndentificados}" />
+									</p:column>
+
+								</p:row>
+								<p:column>
+									<h4>Nivel do Conflito</h4>
+									<p:inputText value="#{relatorioCampo.relatorio.nivelConflito}" />
+								</p:column>
+
+								<p:column>
+									<h4>Nivel de Envolvimento</h4>
+									<p:inputText value="#{relatorioCampo.relatorio.nivelConflito}" />
+								</p:column>
+
+								<p:column>
+
+									<h4>Descricão do Conflito</h4>
+									<p:inputTextarea rows="10" cols="50"
+										value="#{relatorioCampo.relatorio.nivelConflito}" />
+
+								</p:column>
+
+							</p:panelGrid>
+
+						</p:tab>
+
+					</p:tabView>
+
+					<p:dialog header="Indicadores" widgetVar="indicadores" modal="true"
+						showEffect="clip" hideEffect="clip" height="100%" width="92%">
+
+
+
+						<p:tab title="Indicadores">
+
+
+							<p:tabView>
+
+								<p:tab title="Publico Geral">
+
+
+
+									<p:panelGrid columns="2" layout="grid" id="grid-publico">
+
+										<h4>Convidados:</h4>
+										<p:inputText value="#{relatorioCampo.relatorio.convidados}" />
+
+
+
+
+										<h4>Participantes:</h4>
+										<p:inputText value="#{relatorioCampo.relatorio.participantes}" />
+
+										
+
+									</p:panelGrid>
+
+									<p:dataTable id="publico_tab"
+										value="#{relatorioCampo.relatorio.publico}" var="publico"
+										style="width:100%">
+
+
+										<f:facet name="header">
+
+											<h4>Genêro:</h4>
+											<p:outputPanel id="publico">
+												<h:panelGroup id="panel-publico">
+
+													<p:selectOneMenu id="tipo-publico"
+														value="#{relatorioCampo.publico.tipoPublico}" size="200"
+														style="width:200px">
+
+														<f:selectItem noSelectionOption="true" />
+														<f:selectItems value="#{relatorioCampo.tipoPublico}"
+															var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}" />
+
+													</p:selectOneMenu>
+
+													<h4>Quantidade:</h4>
+													<p:inputText value="#{relatorioCampo.publico.quantidade}" />
+
+
+
+													<p:commandLink styleClass="btn btn-primary btn-sm"
+														process="publico" type="button" update="publico_tab"
+														action="#{relatorioCampo.addPublico()}"
+														style="color:#fff; margin-left: 30px;  " value="Adicionar">
+														<span style="color: green; font-size: 25px;"
+															class="icon-plus-alt"> </span>
+													</p:commandLink>
+
+												</h:panelGroup>
+											</p:outputPanel>
+
+										</f:facet>
+
+
+										<p:column headerText="Genero">
+											<h:outputLabel value="#{publico.tipoPublico}" />
+										</p:column>
+
+										<p:column headerText="Quantidade">
+											<h:outputLabel value="#{publico.quantidade}" />
+										</p:column>
+
+
+
+									</p:dataTable>
+
+
+
+
+
+								</p:tab>
+
+
+
+
+
+								<p:tab title="Entregas Realizadas">
+
+									<p:dataTable id="entrega_tab"
+										value="#{relatorioCampo.relatorio.entregas}" var="entrega"
+										style="width:100%">
+
+										<f:facet name="header">
+
+											<p:outputPanel id="entrega">
+
+												<h:panelGroup id="panel-entrega">
+													<h4>Tipo da Entrega</h4>
+													<p:selectOneMenu id="tipo-entrega"
+														value="#{relatorioCampo.entregas.tipo}" size="200"
+														style="width:200px">
+
+														<f:selectItem noSelectionOption="true" />
+														<f:selectItems value="#{relatorioCampo.tipoEntrega}"
+															var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}" />
+
+													</p:selectOneMenu>
+
+													<h4>Previstos</h4>
+													<p:inputText value="#{relatorioCampo.entregas.pevistos}" />
+
+
+
+													<h4>Entregues</h4>
+													<p:inputText value="#{relatorioCampo.entregas.entregues}" />
+
+													<p:commandLink styleClass="btn btn-primary btn-sm"
+														process="entrega" type="button" update="entrega_tab"
+														action="#{relatorioCampo.addEntregas()}"
+														style="color:#fff; margin-left: 30px;  " value="Adicionar">
+														<span style="color: green; font-size: 25px;"
+															class="icon-plus-alt"> </span>
+													</p:commandLink>
+
+
+												</h:panelGroup>
+
+
+											</p:outputPanel>
+
+
+
+
+										</f:facet>
+
+										<p:column headerText="">
+											<h:outputLabel value="#{entrega.tipo.nome}" />
+										</p:column>
+
+										<p:column headerText="Previstos">
+											<h:outputLabel value="#{entrega.pevistos}" />
+										</p:column>
+
+										<p:column headerText="Entregues">
+											<h:outputLabel value="#{entrega.entregues}" />
+										</p:column>
+
+
+									</p:dataTable>
+
+
+
+
+								</p:tab>
+
+								<p:tab title="Comunicação">
+
+									<h4>Fotos</h4>
+									<p:inputText value="#{relatorioCampo.relatorio.numFotos}" />
+
+									<h4>Videos</h4>
+									<p:inputText value="#{relatorioCampo.relatorio.numVideos}" />
+
+									<h4>Audios</h4>
+									<p:inputText value="#{relatorioCampo.relatorio.numAudios}" />
+
+									<h4>Matériais para divulgar</h4>
+									<p:inputText
+										value="#{relatorioCampo.relatorio.numMaterialDivulgacao}" />
+
+									<h4>Matériais Publicados</h4>
+									<p:inputText
+										value="#{relatorioCampo.relatorio.numMaterialPublicado}" />
+
+
+
+								</p:tab>
+
+								<p:tab title="Indicadores de Público">
+
+									<p:panelGrid columns="2" layout="grid" id="grid-idPublico">
+
+										<h4>Comparecimento</h4>
+
+										<p:outputLabel value="#{relatorioCampo.comparecimento()}%" />
+
+										<h4>Proporção de homens</h4>
+
+										<p:outputLabel value="#{relatorioCampo.PrctHomens()}%" />
+
+										<h4>Proporção de Mulheres</h4>
+
+										<p:outputLabel value="#{relatorioCampo.PrctMulheres()}%" />
+
+
+
+									</p:panelGrid>
+
+
+								</p:tab>
+
+
+
+
+
+								<p:tab title="Indicadores de Custos" styleClass="semBorda" id="indicadorTab">
+
+									<p:panelGrid columns="2" layout="grid" id="grid-idCusto" styleClass="semBorda">
+
+										<h4>Custo Total por Atividade(R$/Atividade)</h4>
+
+										<p:outputLabel
+											value="#{relatorioCampo.custoTotalPorAtividades()}"  id="totalAtivade"/>
+
+										<h4>Custo de mobilização por atividade (R$/atividade)</h4>
+
+										<p:outputLabel
+											value="#{relatorioCampo.custoTotalMobilPorAtividades()}" />
+
+										<h4>Custo por participante (R$/participante)</h4>
+
+										<p:outputLabel
+											value="#{relatorioCampo.custoTotalPorParticipantes()}" />
+
+									</p:panelGrid>
+
+
+
+								</p:tab>
+
+
+
+
+								<p:tab title="Custos">
+
+
+									<p:panelGrid columns="1" layout="grid" id="grid-custo" styleClass="semBorda">
+
+
+
+										<p:dataTable id="custo_tab"
+											value="#{relatorioCampo.relatorio.custos}" var="custo"
+											style="width:100%" styleClass="semBorda">
+
+
+
+											<f:facet name="header">
+												<p:outputPanel id="custo" styleClass="semBorda">
+
+													<h:panelGroup id="panel-custo">
+
+														<p:panelGrid columns="2" layout="grid" id="grid-custo">
+															<p:outputLabel value="Tipo do Custo:" />
+															<p:selectOneMenu id="tipo-custo"
+																value="#{relatorioCampo.custoMissao.tipoCusto}"
+																size="200" style="width:200px">
+
+																<f:selectItem noSelectionOption="true" />
+																<f:selectItems value="#{relatorioCampo.tipoCustoMissao}"
+																	var="tipo" itemLabel="#{tipo.nome}" itemValue="#{tipo}" />
+
+															</p:selectOneMenu>
+
+															<p:outputLabel value="Previsto" />
+															<p:inputText id="previsto"
+																value="#{relatorioCampo.custoMissao.previsto}"  >
+															
+			
+															<f:ajax event="keyup"
+																listener="#{relatorioCampo.economizado()}"
+																render="economizado" />		
+															</p:inputText>	
+
+															<p:outputLabel value="realizado" />
+															
+															<p:inputText id="realizado"
+																value="#{relatorioCampo.custoMissao.realizado}" >
+															
+															<f:ajax event="keyup"
+																listener="#{relatorioCampo.economizado()}"
+																render="economizado" />		
+															
+															</p:inputText>
+
+															<p:outputLabel value="economizado" />
+
+															<p:inputText id="economizado"
+																value="#{relatorioCampo.custoMissao.economizado}" />
+															
+															
+																			
+															<p:commandLink styleClass="btn btn-primary btn-sm"
+																process="custo" type="button" update="custo_tab"
+																actionListener="#{relatorioCampo.addCusto()}"
+																style="color:#fff; margin-left: 30px;  "
+																value="Adicionar">
+																<span style="color: green; font-size: 25px;"
+																	class="icon-plus-alt"> </span>	
+																	
+																	
+															</p:commandLink>
+
+														</p:panelGrid>
+
+													</h:panelGroup>
+
+
+												</p:outputPanel>
+											</f:facet>
+
+
+											<p:column headerText="Custo">
+												<h:outputLabel value="#{custo.tipoCusto.nome}" />
+											</p:column>
+
+											<p:column headerText="Previsto">
+												<h:outputLabel value="#{custo.previsto}" />
+											</p:column>
+
+
+											<p:column headerText="Realizado">
+												<h:outputLabel value="#{custo.realizado}" />
+											</p:column>
+
+
+											<p:column headerText="Economizado">
+												<h:outputLabel value="#{custo.economizado}" />
+											</p:column>
+
+											<p:columnGroup type="footer">
+
+												<p:row>
+													<p:column footerText="Custos Totais da viagem" />
+													<p:column colspan="1" style="text-align:right"
+														footerText="#{relatorioCampo.TotalPrevisto()}" />
+													<p:column footerText="#{relatorioCampo.TotalRealizado()}"
+														style="text-align:right" />
+													<p:column footerText="#{relatorioCampo.TotalEconomizado()}"
+														style="text-align:right" />
+												</p:row>
+
+											</p:columnGroup>
+
+
+
+
+										</p:dataTable>
+
+
+
+									</p:panelGrid>
+
+
+
+
+
+
+								</p:tab>
+
+
+
+							</p:tabView>
+
+
+						</p:tab>
+
+
+
+
+
+
+					</p:dialog>
+
+
+
+				</h:form>
+
+
+
+
+
+			</h:panelGroup>
+
+
+		</h:panelGroup>
+
+
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+
+
+
+
+</ui:composition>

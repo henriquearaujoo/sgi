@@ -1,0 +1,348 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+
+	<div style="padding: 2px 2px">
+
+		<p:panel rendered="false">
+
+			<p:commandLink styleClass="btn  btn-primary btn-sm" type="button"
+				action="#{sv_cadastro_controller.salvarDiaria()}" onclick="start()"
+				onsuccess="stop()" onerror="stop()"
+				rendered="#{sv_cadastro_controller.podeEditar}"
+				style="color:#fff; margin: 2px 2px;">
+				<span class="glyphicon glyphicon-floppy-disk"></span>
+				<span style="margin: 3px;">Salvar</span>
+			</p:commandLink>
+
+
+			<p:commandLink styleClass="btn btn-info btn-sm" type="button"
+				oncomplete="PF('dlg_trechos').show();" onclick="start()"
+				onsuccess="stop()" onerror="stop()"
+				rendered="#{sv_cadastro_controller.podeEditar}"
+				action="#{sv_cadastro_controller.carregarTrechosDeDiaria()
+					}"
+				process="@this" style="color:#fff; margin: 2px 2px;">
+				<span class="glyphicon glyphicon-plane"></span>
+				<span style="margin: 3px;">Trechos</span>
+			</p:commandLink>
+
+			<p:commandLink styleClass="btn  btn-success btn-sm" type="button"
+				oncomplete="PF('dlg_lanc_acao').show();" onclick="start()"
+				onsuccess="stop()" onerror="stop()" process="@this"
+				rendered="#{sv_cadastro_controller.podeEditar}"
+				action="#{sv_cadastro_controller.prepararLancamentoAcoes()}"
+				style="color:#fff; margin: 2px 2px;">
+				<span class="glyphicon glyphicon-usd"></span>
+				<span style="margin: 3px;">Recurso</span>
+			</p:commandLink>
+
+			<p:commandLink styleClass="btn btn-danger btn-sm" type="button"
+				action="#{sv_cadastro_controller.limparDiaria()}" onclick="start()"
+				onsuccess="stop()" onerror="stop()" process="@this"
+				style="color:#fff; margin: 2px 2px;">
+				<span class="glyphicon glyphicon-trash"></span>
+				<span style="margin: 3px;">Limpar</span>
+			</p:commandLink>
+
+
+
+			<br />
+
+
+			<p:panelGrid columns="8">
+				<h:outputText value="Profissional:" />
+				<p:autoComplete id="fornecedor_diaria" placeholder="Colaborador"
+					size="50" value="#{sv_cadastro_controller.diaria.contaRecebedor}"
+					completeMethod="#{sv_cadastro_controller.completeContaColaborador}"
+					var="fornecedor" itemLabel="#{fornecedor.nomeConta}"
+					itemValue="#{fornecedor}" converter="contaConverter"
+					forceSelection="true" />
+
+				<h:outputText value="Data de vencimento: " style="font-size:12px" />
+				<p:calendar value="#{sv_cadastro_controller.diaria.dataVencimento}"
+					size="10" style="font-size:12px" timeZone="America/Manaus"
+					navigator="true" pattern="dd/MM/yyyy" />
+
+				<h:outputText value="Dias em campo: " style="font-size:12px" />
+				<p:inputText value="#{sv_cadastro_controller.diaria.diasnocampo}"
+					style="font-size:12px;width:30px" />
+
+				<h:outputText value="Hospedagem Custeada pela FAS ?"
+					style="font-size:12px" />
+				<p:selectOneRadio id="hospedagem"
+					value="#{sv_cadastro_controller.diaria.hospedagem}">
+					<f:selectItem itemLabel="Sim" itemValue="true" />
+					<f:selectItem itemLabel="Não" itemValue="false" />
+					<p:ajax listener="#{sv_cadastro_controller.limpaValoresDiaria()}" />
+				</p:selectOneRadio>
+
+
+			</p:panelGrid>
+
+
+			<p:panelGrid columns="2" id="teste">
+				<p:panelGrid columns="7" styleClass="ui-noborder">
+
+					<p:outputLabel value="DIÁRIA:" />
+					<h:outputText value="Quantidade:" style="font-size:12px" />
+					<p:inputText disabled="#{sv_cadastro_controller.diaria.hospedagem}"
+						value="#{sv_cadastro_controller.diaria.quantidadeIntegral}"
+						style="font-size:12px;width:40px">
+						<f:convertNumber minFractionDigits="0" />
+						<f:ajax event="blur"
+							listener="#{sv_cadastro_controller.atualizaTotalIntegral()}"
+							render="totalIntegral" />
+					</p:inputText>
+
+					<h:outputText value="Valor: R$" style="font-size:12px"/>
+					<p:inputText disabled="#{sv_cadastro_controller.diaria.hospedagem}"
+						value="#{sv_cadastro_controller.diaria.valorIntegral1}"
+						style="font-size:12px;width:85px"
+						onkeydown="mascaraMoeda(this,moeda);">
+						<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+							locale="pt_BR" />
+						<f:ajax event="blur"
+							listener="#{sv_cadastro_controller.atualizaTotalIntegral()}"
+							render="totalIntegral" />
+					</p:inputText>
+
+					<h:outputText value="Total: R$" style="font-size:12px" />
+					<p:inputText id="totalIntegral" style="font-size:12px;width:85px"
+						onkeydown="mascaraMoeda(this,moeda);"
+						disabled="#{sv_cadastro_controller.diaria.hospedagem}"
+						value="#{sv_cadastro_controller.diaria.totalIntegral1}">
+						<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+							locale="pt_BR" />
+
+					</p:inputText>
+
+				</p:panelGrid>
+
+				<p:panelGrid columns="7" styleClass="ui-noborder" id="diaria_meia">
+					<p:outputLabel value="MEIA DIÁRIA:" />
+					<h:outputText style="font-size:12px;" value="Quantidade: " />
+					<p:inputText style="font-size:12px;width:40px"
+						value="#{sv_cadastro_controller.diaria.quantidadeParcial}">
+						<f:convertNumber minFractionDigits="0" />
+						<f:ajax event="blur"
+							listener="#{sv_cadastro_controller.atualizaTotalParcial()}"
+							render="totalParcial" />
+					</p:inputText>
+
+					<h:outputText value="Valor: R$" style="font-size:12px;" />
+					<p:inputText style="font-size:12px;width:85px"
+						value="#{sv_cadastro_controller.diaria.valorParcial1}"
+						onkeydown="mascaraMoeda(this,moeda);">
+						<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+							locale="pt_BR" />
+						<f:ajax event="blur"
+							listener="#{sv_cadastro_controller.atualizaTotalParcial()}"
+							render="totalParcial" />
+					</p:inputText>
+
+					<h:outputText value="Total: R$" style="font-size:12px" />
+					<p:inputText id="totalParcial" style="font-size:12px;width:85px"
+						onkeydown="mascaraMoeda(this,moeda);"
+						value="#{sv_cadastro_controller.diaria.totalParcial1}">
+						<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+							locale="pt_BR" />
+
+					</p:inputText>
+				</p:panelGrid>
+			</p:panelGrid>
+
+			<p:panelGrid columns="2">
+				<h:outputText value="Motivo/Descrição:" />
+				<p:inputTextarea cols="60" rows="3"
+					value="#{sv_cadastro_controller.diaria.descricao}" />
+
+			</p:panelGrid>
+
+		</p:panel>
+
+
+		<div class="ui-g-12">
+			<p:commandLink style="color:#fff; margin: 2px 2px;" value="Autorizar"
+				rendered="#{sv_cadastro_controller.usuarioSessao.usuario.perfil.id == 1 or sv_cadastro_controller.usuarioSessao.usuario.perfil.id == 5}"
+				onclick="start()" onsuccess="stop()" onerror="stop()"
+				styleClass="btn  btn-success btn-sm fa "
+				action="#{sv_cadastro_controller.autorizarDiaria()}">
+				<p:confirm header="Confirmação" message="Autorizar diária?"
+					icon="ui-icon-alert" />
+			</p:commandLink>
+		</div>
+
+		<div class="ui-g-12">
+			<p:dataTable id="table-diaria" rowKey="#{diaria}"
+				style="font-size:12px;margin-top:5px; width:100%;"
+				value="#{sv_cadastro_controller.diarias}" var="diaria"
+				selection="#{sv_cadastro_controller.diariasSelecionadas}">
+
+
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column rowspan="3" headerText="Selecione" />
+						<p:column rowspan="3" headerText="Codigo" />
+						<p:column style="width:320px" rowspan="3" headerText="colaborador" />
+					</p:row>
+					<p:row>
+						<p:column colspan="3" headerText="Diária Integral"
+							style="width:120px" />
+						<p:column colspan="3" headerText="Diária Parcial" />
+						<p:column rowspan="3" colspan="2" headerText="Opções" />
+					</p:row>
+					<p:row>
+
+						<p:column headerText="Qtde." />
+						<p:column headerText="Valor" />
+						<p:column headerText="Total" />
+						<p:column headerText="Qtde." />
+						<p:column headerText="Valor" />
+						<p:column headerText="Total" style="width:90px" />
+					</p:row>
+
+
+
+
+				</p:columnGroup>
+
+				<p:column
+					rendered="#{!diaria.statusCompra.nome.equals('Concluído')}"
+					selectionMode="multiple" style="width:10px;text-align:center" />
+				<p:column rendered="#{diaria.statusCompra.nome.equals('Concluído')}"
+					style="width:10px;text-align:center">
+					*
+				</p:column>
+				<p:column headerText="Código">
+					<h:outputText style="font-size:12px" value="#{diaria.id}" />
+				</p:column>
+
+				<p:column headerText="Beneficiado">
+					<h:outputText style="font-size:12px"
+						value="#{diaria.contaRecebedor.nomeConta}" />
+				</p:column>
+
+				<p:column>
+					<h:outputText value="#{diaria.quantidadeIntegral}">
+					</h:outputText>
+				</p:column>
+
+				<p:column>
+					<h:outputText value="#{diaria.valorIntegral1}">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+							currencySymbol="R$" />
+					</h:outputText>
+				</p:column>
+
+				<p:column>
+					<h:outputText value="#{diaria.totalIntegral1}">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+							currencySymbol="R$" />
+					</h:outputText>
+				</p:column>
+
+				<p:column>
+					<h:outputText value="#{diaria.quantidadeParcial}">
+					</h:outputText>
+				</p:column>
+
+				<p:column>
+					<h:outputText value="#{diaria.valorParcial1}">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+							currencySymbol="R$" />
+					</h:outputText>
+				</p:column>
+
+				<p:column style="width:90px">
+					<h:outputText value="#{diaria.totalParcial1}">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+							currencySymbol="R$" />
+					</h:outputText>
+				</p:column>
+
+				<p:column colspan="2">
+
+
+					<p:commandLink
+						rendered="#{!diaria.statusCompra.nome.equals('Concluído') or sv_cadastro_controller.podeEditar }"
+						action="#{sv_cadastro_controller.prepararEdicaoDiaria()}"
+						styleClass="btn btn-default btn-xs" process="@this"
+						onclick="start()" onerror="stop()" onsuccess="stop()">
+						<span class=" glyphicon glyphicon-edit"></span>
+						<f:setPropertyActionListener value="#{diaria}"
+							target="#{sv_cadastro_controller.diaria}" />
+					</p:commandLink>
+
+					<p:commandLink title="Excluir" onclick="start()" onsuccess="stop()"
+						onerror="stop()"
+						rendered="#{!diaria.statusCompra.nome.equals('Concluído') or sv_cadastro_controller.podeEditar }"
+						styleClass="btn btn-danger btn-xs"
+						style="color:#fff;margin-left:9px"
+						action="#{sv_cadastro_controller.removerDiaria()}" process="@this">
+						<span class=" glyphicon glyphicon-remove-circle"></span>
+						<p:confirm header="Confirmação" message="Excluir diária?"
+							icon="ui-icon-alert" />
+						<f:setPropertyActionListener value="#{diaria}"
+							target="#{sv_cadastro_controller.diaria}" />
+					</p:commandLink>
+
+					<p:commandLink title="Imprimir" styleClass="btn btn-default btn-xs"
+						target="_blank" ajax="false" process="@this"
+						style="margin-left:9px;color:#000"
+						action="#{sv_cadastro_controller.geraRelatorioDiaria()}">
+						<span class=" glyphicon glyphicon-print"></span>
+						<f:setPropertyActionListener value="#{diaria}"
+							target="#{sv_cadastro_controller.diaria}" />
+					</p:commandLink>
+
+					<p:commandLink title="Mudar Status" style="margin-left:9px;"
+						rendered="#{sv_cadastro_controller.usuarioSessao.usuario.perfil.descricao == 'admin'}"
+						oncomplete="PF('dialogAlterarStatus').show()">
+						<span class="glyphicon glyphicon-cog"></span>
+						<f:setPropertyActionListener value="#{diaria}"
+							target="#{sv_cadastro_controller.diaria}" />
+					</p:commandLink>
+
+
+				</p:column>
+
+				<p:columnGroup type="footer">
+
+					<p:row>
+						<p:column />
+						<p:column />
+						<p:column />
+						<p:column colspan="2" style="text-align:right"
+							footerText="Total integral:" />
+						<p:column
+							footerText="#{sv_cadastro_controller.totalDiariaIntegral()}" />
+						<p:column colspan="2" style="text-align:right"
+							footerText="Total parcial:" />
+						<p:column
+							footerText="#{sv_cadastro_controller.totalDiariaParcial()}" />
+						<p:column footerText="Opções" colspan="2" />
+
+					</p:row>
+				</p:columnGroup>
+
+
+
+			</p:dataTable>
+		</div>
+
+	</div>
+
+	<style type="text/css">
+.fonte_sv {
+	font-size: 12px;
+}
+</style>
+</ui:fragment>

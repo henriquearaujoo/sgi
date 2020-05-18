@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="content">
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+			function stopDlgfilter() {
+			    PF('dlg_filtro_compra').hide();
+			}
+		</script>
+		
+		<br/>	
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Lista de Lançamentos" url="lancamentosV2.xhtml" />
+				<p:menuitem value="Guias de impostos" />
+			</p:breadCrumb>
+		</h:form>
+
+		<h:form id="form-geracao-imposto">
+
+			<style type="text/css">
+				.ui-button-icon-only .ui-button-text {
+					padding: 0;
+					text-indent: -9999999px;
+					font-size: 18px
+				}
+				</style>
+			<p:messages id="msg-guia-p"  showSummary="false"
+				showDetail="true" showIcon="true" closable="true" />
+
+			<div class="ui-g ui-fluid">
+
+				<div class="ui-g-2">
+					<p:selectOneMenu value="#{imposto_guia.idConta}" filter="true"
+						filterMatchMode="contains">
+						<f:selectItem noSelectionOption="true" />
+						<f:selectItems var="conta" value="#{imposto_guia.contaForaFas}"
+							itemValue="#{conta.id}" itemLabel="#{conta.nomeConta}">
+						</f:selectItems>
+					</p:selectOneMenu>
+				</div>
+
+				<div class="ui-g-2">
+					<p:selectOneMenu value="#{imposto_guia.tipoImposto}" filter="true"
+						filterMatchMode="contains">
+						<f:selectItem noSelectionOption="true" />
+						<f:selectItems var="tipo" value="#{imposto_guia.valuesImposto()}"
+							itemValue="#{tipo}" itemLabel="#{tipo.nome}">
+
+						</f:selectItems>
+					</p:selectOneMenu>
+
+				</div>
+
+				<div class="ui-g-2">
+					<p:commandLink style="color:#000" update="PojoPickList"
+						styleClass="btn btn-default btn-sm" value="Pesquisar"
+						action="#{imposto_guia.filtrar()}" onclick="start();"
+						oncomplete="stop();" onerror="stop();">
+					</p:commandLink>
+				</div>
+
+				<div class="ui-g-12">
+					<p:pickList id="PojoPickList" value="#{imposto_guia.impostos}"
+						addLabel="Inserir" addAllLabel="-" removeAllLabel="-"
+						removeLabel="Retirar" labelDisplay="inline" var="imposto"
+						itemValue="#{imposto}"
+						itemLabel="#{imposto.pagamentoLancamento.lancamentoAcao.lancamento.id}"
+						showSourceControls="false" showTargetControls="false"
+						showCheckbox="true" showSourceFilter="true"
+						showTargetFilter="true" filterMatchMode="contains"
+						converter="impostoPickList" responsive="true">
+
+
+						<p:column style="font-size:16px;width:90px;text-align:left">
+							<h:outputText
+								value="#{imposto.pagamentoLancamento.lancamentoAcao.lancamento.id}" />
+						</p:column>
+
+						<p:column style="font-size:16px;width:90px;text-align:left">
+							<h:outputText
+								value="#{imposto.pagamentoLancamento.lancamentoAcao.lancamento.notaFiscal}" />
+						</p:column>
+
+						<p:column style="font-size:16px;width:90px;text-align:left">
+							<h:outputText
+								value="#{imposto.pagamentoLancamento.contaRecebedor.nomeConta}" />
+						</p:column>
+
+						<p:column headerText="Tipo" style="font-size:16px;width:90px">
+							<h:outputText value="#{imposto.tipo.nome}" />
+						</p:column>
+
+						<p:column headerText="Valor" style="font-size:16px;width:90px">
+							<h:outputText value="#{imposto.valor}">
+								<f:convertNumber type="currency" currencySymbol="R$" />
+							</h:outputText>
+						</p:column>
+
+
+
+					</p:pickList>
+
+				</div>
+
+				<div class="ui-g-12 ui-fluid" style="text-align: center">
+					<p:commandLink style="color:#fff"
+						update=":form-guia :form-guia:table-guia msg-guia-p"
+						styleClass="btn btn-primary btn-sm" value="Gerar guia"
+						action="#{imposto_guia.gerarGuia()}" onclick="start();"
+						oncomplete="stop();" onerror="stop();">
+
+					</p:commandLink>
+				</div>
+
+				<div class="ui-g-12 ui-fluid">
+					<p:dataTable value="#{imposto_guia.guias}" var="guia">
+
+						<p:column headerText="Nº Lanc">
+
+							<h:outputText value="#{guia.id}" />
+
+						</p:column>
+
+						<p:column headerText="Pagador">
+
+							<h:outputText value="#{guia.contaPagador.nomeConta}" />
+
+						</p:column>
+
+						<p:column headerText="Recebedor">
+
+							<h:outputText value="#{guia.contaRecebedor.nomeConta}" />
+
+						</p:column>
+
+						<p:column headerText="Data de pagamento">
+
+							<h:outputText value="#{guia.dataPagamento}">
+								<f:convertDateTime pattern="dd/MM/yyyy"
+									timeZone="America/Manaus" />
+							</h:outputText>
+
+						</p:column>
+
+						<p:column headerText="Valor">
+
+							<h:outputText value="#{guia.valorTotalComDesconto}">
+								<f:convertNumber type="currency" locale="pt_BR" />
+							</h:outputText>
+
+						</p:column>
+
+						<p:column>
+							<p:commandLink style="color:#000;margin-left:5px"
+								styleClass="btn btn-default btn-xs glyphicon glyphicon-edit"
+								onclick="start()" oncomplete="stop()" onerror="stop()"
+								action="#{imposto_guia.prepararEdicaoGuia()}" process="@this"
+								update="form-geracao-imposto">
+								<f:setPropertyActionListener value="#{guia}"
+									target="#{imposto_guia.guia}" />
+							</p:commandLink>
+						</p:column>
+
+					</p:dataTable>
+
+				</div>
+
+			</div>
+
+
+
+		</h:form>
+		<p:separator />
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog widgetVar="guia-dlg" closable="true" modal="true"
+			width="70%">
+			<h:form id="form-guia">
+
+				<p:messages id="msg" showDetail="true" showSummary="false"
+					showIcon="true"  closable="true"></p:messages>
+
+
+				<div class="ui-g">
+
+
+					<div class="ui-g-4 ui-fluid">
+
+						<p:outputLabel value="Pagador" />
+						<p:selectOneMenu value="#{imposto_guia.guia.contaPagador}"
+							filter="true" filterMatchMode="contains"
+							converter="contaConverter" required="true"
+							requiredMessage="Preencha o campo 'Pagador'">
+
+							<f:selectItem noSelectionOption="true" />
+							<f:selectItems value="#{imposto_guia.contaFas}" var="conta"
+								itemLabel="#{conta.nomeConta}" itemValue="#{conta}">
+							</f:selectItems>
+
+						</p:selectOneMenu>
+					</div>
+
+					<div class="ui-g-4 ui-fluid">
+						<p:outputLabel value="Recebedor" />
+						<p:selectOneMenu value="#{imposto_guia.guia.contaRecebedor}"
+							autoWidth="true" filter="true" filterMatchMode="contains"
+							converter="contaConverter" required="true"
+							requiredMessage="Preencha o campo 'Recebedor'">
+
+							<f:selectItem noSelectionOption="true" />
+							<f:selectItems value="#{imposto_guia.contaForaFas}" var="conta"
+								itemLabel="#{conta.nomeConta}" itemValue="#{conta}">
+							</f:selectItems>
+
+						</p:selectOneMenu>
+					</div>
+
+					<div class="ui-g-2 ui-fluid">
+						<p:outputLabel value="Data de pagamento" />
+						<p:calendar value="#{imposto_guia.guia.dataPagamento}"
+							required="true"
+							requiredMessage="Preencha o campo 'Data de pagamento'"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+					</div>
+
+					<div class="ui-g-2 ui-fluid">
+						<p:outputLabel value="Valor do guia" />
+						<p:inputText style="font-size:16px;" disabled="true"
+							value="#{imposto_guia.guia.valorTotalComDesconto}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</p:inputText>
+
+					</div>
+
+
+					<div class="ui-g-12">
+
+						<p:dataTable id="table-guia"
+							value="#{imposto_guia.guia.impostoGuias}" var="imposto"
+							paginator="true" rows="5">
+
+							<p:column headerText="Lançamento">
+								<h:outputText
+									value="#{imposto.pagamentoLancamento.lancamentoAcao.lancamento.id}" />
+							</p:column>
+
+							<p:column headerText="Projeto">
+								<h:outputText
+									value="#{imposto.pagamentoLancamento.lancamentoAcao.projetoRubrica.projeto.nome}" />
+							</p:column>
+
+							<p:column headerText="Projeto">
+								<h:outputText
+									value="#{imposto.pagamentoLancamento.lancamentoAcao.projetoRubrica.rubricaOrcamento.rubrica.nome}" />
+							</p:column>
+
+							<p:column headerText="Tipo" style="width:120px;">
+								<h:outputText value="#{imposto.tipo.nome}" />
+							</p:column>
+
+							<p:column headerText="Valor" style="width:90px;text-align:right">
+								<h:outputText value="#{imposto.valor}">
+									<f:convertNumber type="currency" currencySymbol="R$" />
+								</h:outputText>
+							</p:column>
+
+						</p:dataTable>
+
+					</div>
+
+					<div class="ui-g-12 ui-fluid" style="text-align: center">
+						<p:commandLink style="color:#fff"
+							update="msg :form-geracao-imposto :form-geracao-imposto:PojoPickList"
+							onclick="start();" process="form-guia" oncomplete="stop();"
+							onerror="stop();" styleClass="btn btn-primary btn-sm"
+							value="Gerar guia" action="#{imposto_guia.salvarGuia()}">
+						</p:commandLink>
+					</div>
+
+				</div>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+
+
+	</ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+
+	<ui:define name="content">
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+			function stopDlgfilter() {
+			    PF('dlg_filtro_compra').hide();
+			}
+		</script>
+
+
+		<h:form id="form_rel_contas">
+
+			<p:panel>
+
+
+				<p:panelGrid columns="8" cellpadding="5" cellspacing="5">
+
+					<p:outputLabel value="Período de Pgto:" style="float:right" />
+					<h:panelGroup>
+						<p:calendar size="10"
+							value="#{report_financ_controller.filtro.dataInicio}"
+							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+						-
+						<p:calendar size="10"
+							value="#{report_financ_controller.filtro.dataFinal}"
+							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+					</h:panelGroup>
+
+					<p:selectCheckboxMenu id="menu"
+						value="#{report_financ_controller.filtro.contas}"
+						label="Contas Bancárias" filter="true" filterMatchMode="contains"
+						style="width:150px">
+						<f:selectItems value="#{report_financ_controller.contas}"
+							var="conta" itemLabel="#{conta.nomeConta}"
+							itemValue="#{conta.id}" />
+					</p:selectCheckboxMenu>
+
+
+					<p:selectCheckboxMenu id="fonte" style="width:120px"
+						value="#{report_financ_controller.filtro.fontes}"
+						label="Fonte/Parceiro" filter="true" filterMatchMode="contains">
+						<f:selectItems value="#{report_financ_controller.fontes}"
+							var="fonte" itemLabel="#{fonte.nome}" itemValue="#{fonte.id}" />
+
+						<p:ajax update="doacoes"
+							listener="#{report_financ_controller.atualizarDoacoes()}"></p:ajax>
+					</p:selectCheckboxMenu>
+
+					<p:selectCheckboxMenu id="doacoes" style="width:150px"
+						panelStyle="width:350px"
+						value="#{report_financ_controller.filtro.doacoes}" label="Doações"
+						filter="true" filterMatchMode="contains">
+						<f:selectItems value="#{report_financ_controller.orcamentos}"
+							var="orc" itemLabel="#{orc.titulo}" itemValue="#{orc.id}" />
+					</p:selectCheckboxMenu>
+
+
+					<p:selectCheckboxMenu id="projeto" style="width:150px"
+						panelStyle="width:350px"
+						value="#{report_financ_controller.filtro.projetos}"
+						label="Projetos" filter="true" filterMatchMode="contains">
+						<f:selectItems value="#{report_financ_controller.projetos}"
+							var="projeto" itemLabel="#{projeto.nome}"
+							itemValue="#{projeto.id}" />
+					</p:selectCheckboxMenu>
+
+				</p:panelGrid>
+
+				<p:commandLink styleClass="btn btn-primary btn-sm fa fa-search"
+					onstart="start()" onsuccess="stop()" onerror="stop()" ajax="false"
+					action="#{report_financ_controller.gerarConferenciaDeLancamentosMODE01()}"
+					style="color:#fff; margin: 8px 2px;">
+					<span style="width: 40px; font-family: Arial">Gerar
+						relatório</span>
+				</p:commandLink>
+
+				<p:commandLink styleClass="btn btn-primary btn-sm fa fa-search"
+					onstart="start()" onsuccess="stop()" onerror="stop()"
+					update="tbl_exec_financeira"
+					action="#{report_financ_controller.filtrar()}"
+					style="color:#fff; margin: 8px 2px;">
+					<span style="width: 40px; font-family: Arial">Visualizar</span>
+				</p:commandLink>
+			</p:panel>
+
+			<p:dataTable id="tbl_exec_financeira" sortBy="#{lancamento.fonte}"
+				expandableRowGroups="true" 
+				value="#{report_financ_controller.lancamentos}" var="lancamento">
+
+				<f:facet name="header">
+ 
+ 	 			Execução
+       				 <p:commandButton id="toggler" type="button" value="Columns"
+						style="float:right" icon="ui-icon-calculator" />
+					<p:columnToggler datasource="tbl_exec_financeira" trigger="toggler" />
+				</f:facet>
+
+				<p:headerRow>
+					<p:column colspan="8">
+						<h:outputText style="padding:8px;font-size:11px" value="#{lancamento.fonte}" />
+					</p:column>
+				</p:headerRow>
+
+
+				<p:column headerText="Dt. de Pagamento" sortBy="#{lancamento.dataPagamento}">
+					<h:outputText value="#{lancamento.dataPagamento}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Dt. de Emissão" sortBy="#{lancamento.dataEmissao}">
+					<h:outputText value="#{lancamento.dataEmissao}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Nº de documento">
+					<h:outputText value="#{lancamento.numeroDocumento}" />
+				</p:column>
+
+				<p:column headerText="Nº de lançamento">
+					<h:outputText value="#{lancamento.id}" />
+				</p:column>
+
+				<p:column headerText="Nota fiscal">
+					<h:outputText value="#{lancamento.notaFiscal}" />
+				</p:column>
+
+				<p:column headerText="Pagador" style="width:15%" sortBy="#{lancamento.contaPagadorLbl}">
+					<h:outputText value="#{lancamento.contaPagadorLbl}" />
+				</p:column>
+
+				<p:column headerText="Recebedor" style="width:15%" sortBy="#{lancamento.contaRecebedorLbl}">
+					<h:outputText value="#{lancamento.contaRecebedorLbl}" />
+				</p:column>
+
+				<p:column headerText="Descrição" style="width:15%">
+					<h:outputText value="#{lancamento.descricao}" />
+				</p:column>
+
+				<p:column headerText="Código">
+					<h:outputText value="#{lancamento.codigo}" />
+				</p:column>
+
+				<p:column headerText="Projeto">
+					<h:outputText value="#{lancamento.nomeProjeto}" />
+				</p:column>
+				<p:column headerText="Fonte">
+					<h:outputText value="#{lancamento.fonte}" />
+				</p:column>
+
+				<p:column headerText="Status" style="text-align:center">
+					<h:outputText value="P"
+						rendered="#{lancamento.status.equals('PROVISIONADO')}" />
+					<h:outputText value="E"
+						rendered="#{lancamento.status.equals('EFETIVADO')}" />
+				</p:column>
+
+				<p:column headerText="Entrada">
+					<h:outputText value="#{lancamento.entrada}">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+							currencySymbol="R$" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Saída">
+					<h:outputText value="#{lancamento.saida}">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+							currencySymbol="R$" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+
+
+
+		</h:form>
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

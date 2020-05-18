@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rendimentos" pageWidth="1150" pageHeight="595" orientation="Landscape" columnWidth="1110" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f6b36266-b4cd-4e5a-be9c-a1260863e01f">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="355"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="FAS" uuid="ce43a9ca-72a8-4cb1-90f5-00705487af7a">
+		<queryString language="SQL">
+			<![CDATA[select f.nome_fantasia, f.razao_social,
+case when f.tipo = 'juridica' then f.cnpj else f.cpf end as cpfcnpj,
+case when f.tipo = 'juridica' then 'Jurídica' else 'Física' end as tipopessoa,
+f.endereco, f.telefone, f.email, f.contato, l.nome,
+(select max(pl.datapagamento) from pagamento_lancamento pl where contarecebedor_id in
+(select cont.id from conta_bancaria cont where cont.fornecedor_id = f.id)) as ultimopag
+from fornecedor f, localidade l
+where f.cidade_id = l.id]]>
+		</queryString>
+		<field name="nome_fantasia" class="java.lang.String"/>
+		<field name="razao_social" class="java.lang.String"/>
+		<field name="cpfcnpj" class="java.lang.String"/>
+		<field name="tipopessoa" class="java.lang.String"/>
+		<field name="endereco" class="java.lang.String"/>
+		<field name="telefone" class="java.lang.String"/>
+		<field name="email" class="java.lang.String"/>
+		<field name="contato" class="java.lang.String"/>
+		<field name="nome" class="java.lang.String"/>
+		<field name="ultimopag" class="java.sql.Date"/>
+	</subDataset>
+	<queryString>
+		<![CDATA[select
+l.tipo  as tipo
+, to_char(pl.dataemissao,'dd/MM/yyyy') as emissao
+, CASE when la.rubricaorcamento_id is not null then (select font.nome from fonte_pagadora font where id =(select orc.fonte_id from  orcamento orc where id = (select rub.orcamento_id from rubrica_orcamento rub where rub.id = la.rubricaorcamento_id))) else (select font.nome from fonte_pagadora font where id = (select orc.fonte_id from  orcamento orc where id = (select rub.orcamento_id from rubrica_orcamento rub where rub.id = (select pr.rubricaorcamento_id from projeto_rubrica pr where pr.id = la.projetorubrica_id)))) end as fonte
+,(select cb.nome_conta from conta_bancaria cb where cb.id = pl.conta_id) as pagador
+, (select cb.nome_conta from conta_bancaria cb where cb.id = pl.contarecebedor_id) as recebedor
+,pl.valor as valor
+from pagamento_lancamento pl join lancamento_acao la on pl.lancamentoacao_id = la.id join lancamento l on l.id = la.lancamento_id left join localidade loc on l.localidade_id = loc.id
+where (pl.conta_id = 1 or pl.contarecebedor_id = 1) and l.versionlancamento = 'MODE01'
+and pl.datapagamento between '2019-04-01' and '2019-06-30'
+and  la.rubricaorcamento_id in (select rub.id from rubrica_orcamento rub where rub.orcamento_id = 23)
+or  la.projetorubrica_id in (select pr.id from projeto_rubrica pr where pr.rubricaorcamento_id in (select rub.id from rubrica_orcamento rub where rub.orcamento_id = 23))]]>
+	</queryString>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="emissao" class="java.lang.String"/>
+	<field name="fonte" class="java.lang.String"/>
+	<field name="pagador" class="java.lang.String"/>
+	<field name="recebedor" class="java.lang.String"/>
+	<field name="valor" class="java.math.BigDecimal"/>
+	<field name="despesaReceita" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="31">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="100" height="30" backcolor="#CCCCCC" uuid="7edb1aa2-d5d5-42a4-b818-572c1b07d245"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Tipo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="191" y="0" width="144" height="30" backcolor="#CCCCCC" uuid="abdae0f3-640d-45f2-8abb-cafca29293c1"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Fonte/Doação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="335" y="0" width="255" height="30" backcolor="#CCCCCC" uuid="ca306116-5e63-44bb-a197-9517837c32af"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Pagador]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="986" y="0" width="124" height="30" backcolor="#CCCCCC" uuid="01c3ef73-97db-471b-8cc5-5e2c7afc28da"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Valor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="100" y="0" width="91" height="31" backcolor="#CCCCCC" uuid="b9ce98f6-bfea-4840-b3bc-9732975e544a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Data do pagamento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="590" y="0" width="246" height="30" backcolor="#CCCCCC" uuid="eb1d10b0-393c-4aee-90e8-fd64a5d5af81"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Recebedor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="836" y="0" width="150" height="30" backcolor="#CCCCCC" uuid="9a9a7389-4e02-43e5-ab23-cf2cdea9212a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Despesa/Receita]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="100" y="1" width="91" height="20" uuid="93abd4f1-2d56-49f3-9dbf-ed054c823b5c"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single" leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{emissao}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="986" y="1" width="124" height="20" uuid="b672e712-e55c-4c97-99d2-6f3b4ae19bf4"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph leftIndent="2" spacingAfter="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="1" width="100" height="20" uuid="b1aa2b6f-7413-4677-be82-7161a367aab5"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2" spacingAfter="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="191" y="1" width="144" height="20" uuid="a62a865f-b48e-4c7a-a02e-33bc5b434d0e"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2" spacingAfter="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fonte}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="335" y="0" width="255" height="20" uuid="5b5ddf5c-e3bd-41b0-bca0-3977f24f6cdf"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2" spacingAfter="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pagador}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="590" y="1" width="246" height="20" uuid="fa10329c-c0bd-4b58-8b0a-1df5384bedc4"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2" spacingAfter="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{recebedor}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="836" y="0" width="150" height="20" uuid="4b79e29c-afb8-411f-8172-4998d9b7a99d"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="2" spacingAfter="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{despesaReceita}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

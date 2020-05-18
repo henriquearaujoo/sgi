@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:viewAction action="#{versaoController.init()}"></f:viewAction>
+			<o:viewParam name="id" value="#{versaoController.idVersao}" />
+		</f:metadata>
+		
+		<style type="text/css">
+		    .ui-row-editor .ui-row-editor-pencil {
+		        margin-left:8px;
+		    }
+		</style>
+		<style type="text/css">
+    			.ui-row-editor .ui-row-editor-pencil {
+     				   margin-left:8px;
+   				 }
+			</style>
+		
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+			function stopDlgfilter() {
+			    PF('dlg_filtro_compra').hide();
+			}
+		</script>
+		
+		<p:breadCrumb>
+			<p:menuitem value="Home" url="home_new.xhtml" />
+			<p:menuitem value="Listagem de Versões" url="versao.xhtml" />
+			<p:menuitem value="Cadastro de Versão" url="#" />
+		</p:breadCrumb>
+		<p:panel header="Versão" >
+			<h:form id="form-cadastro-versao"  >
+					
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						action="#{versaoController.salvar()}"
+						onclick="start()" onsuccess="stop()" onerror="stop()"
+						update="form-cadastro-versao"
+						style="color:#fff; margin: 8px 2px;" value="Salvar"  />
+						
+					<p:link styleClass="btn btn-default btn-sm"
+						style="color:#000;margin: 8px 2px;"
+						outcome="/main/versao" title="Volar">
+						<span style="font-family: Arial">Voltar</span>
+					</p:link>
+					
+					<p:panelGrid columns="3" styleClass="ui-noborder" >
+							
+						<p:outputLabel value="Nome:" for="nome" style="text-align:center"/>
+						<p:inputText id="nome" value="#{versaoController.versao.nome}" style="text-align:center" requiredMessage="Preencha o campo Nome!" required="true"/>
+						<p:message for="nome" />
+						
+					
+						<p:outputLabel value="Data da Versão:" for="data_versao" style="text-align:center"/>
+						<p:calendar id="data_versao" locale="pt_BR" pattern="dd/MM/yyyy"
+							value="#{versaoController.versao.dataVersao}" required="true"
+							style="width:50px" /> 
+						<p:message for="data_versao" />
+						
+						<p:outputLabel value="descricao" for="descricao" style="text-align:center" />
+						<p:textEditor id="descricao"  required="true"	value="#{versaoController.versao.descricao}"  />
+						<p:message for="descricao" />
+						
+     				</p:panelGrid>
+			 
+			<p:panelGrid columns="1" >
+			  <p:dataTable  id="list_requisito" var="bean" value="#{versaoController.listaRequisito}" editable="true" style="margin-bottom:20px;width:95%;margin-left:auto;margin-right:auto;">
+ 
+			        <f:facet name="header">
+			          <p:commandButton actionListener="#{versaoController.addRequisito()}" value="Adicionar Requisito"  update="list_requisito"/>
+			        </f:facet>
+			 
+			  		 <p:column   style="width:35px">
+            			<p:rowEditor  />
+       				 </p:column>
+       		
+			 
+			        <p:column headerText="Nome" style="text-align:center"	 >
+			            <p:cellEditor>
+			                <f:facet name="output"><h:outputText value="#{bean.nomeRequisito}" /></f:facet>
+			                <f:facet name="input"><p:inputText  value="#{bean.nomeRequisito}"  style="width:100%"/></f:facet>
+			            </p:cellEditor>
+			        </p:column>
+			         <p:column headerText="Descrição" style="text-align:left" >
+			            <p:cellEditor>
+			                <f:facet name="output"><h:outputText value="#{bean.descricaoRequisito}"  /></f:facet>
+			                <f:facet name="input"><p:inputText value="#{bean.descricaoRequisito}"  style="width:100%"/></f:facet>
+			            </p:cellEditor>
+			        </p:column>
+			        
+			        <p:column  style="width:57px"   headerText="Opção" > 
+            			<p:commandLink value="excluir" update="list_requisito" action="#{versaoController.deleteRequisito(bean)}">>
+						<span></span></p:commandLink>
+       				 </p:column>
+			    </p:dataTable>
+		   </p:panelGrid>
+		</h:form>
+		</p:panel>
+		
+	</ui:define>
+	<ui:define name="adicionais">
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+	</ui:define>
+		
+</ui:composition>
+			
+			

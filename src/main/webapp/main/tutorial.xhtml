@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="content">
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+		
+		</script>
+
+		<h:form>
+		
+			<br />
+		
+			<p:breadCrumb style="font-size:13px">
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Tutoriais" url="tutorial.xhtml" />
+			</p:breadCrumb>
+		</h:form>
+		<h:form id="form_tutorial" style="margin-left:auto;maegin-right:auto;">
+
+			<p:dataTable value="#{tutorial_controller.listTutorial}"
+				rendered="#{!tutorial_controller.showTutorial}" var="tutorial">
+
+				<p:column style="width:42px;text-align: center">
+					<p:commandButton icon="pi pi-search" update="form_tutorial"
+						onstart="start()" onerror="stop()" onsuccess="stop()"
+						action="#{tutorial_controller.redirecionarPDF()}" title="View">
+						<f:setPropertyActionListener value="#{tutorial}"
+							target="#{tutorial_controller.tutorial}" />
+					</p:commandButton>
+				</p:column>
+
+				<p:column filterBy="#{tutorial.label}" filterMatchMode="contains">
+					<h:outputText style="font-size:13px" value="#{tutorial.label}" />
+				</p:column>
+
+			</p:dataTable>
+
+			<p:panel rendered="#{tutorial_controller.showTutorial}">
+				<object type="application/pdf"
+					data="#{tutorial_controller.tutorial.path}"
+					height="800px" width="100%" internalinstanceid="25"></object>
+			</p:panel>
+
+
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+
+	</ui:define>
+
+
+</ui:composition>

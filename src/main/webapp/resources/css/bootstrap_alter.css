@@ -1,0 +1,21 @@
+.botao_central{
+    /** Top Right Bottom Left*/
+    margin: 2px auto;    	
+}
+
+ol, ul {
+    margin: 0; 
+}
+
+
+legend {
+    display: block !important;
+    width: auto;
+    padding: 0;
+    /* margin-bottom: 20px; */
+    font-size: 12px;
+    line-height: inherit;
+    color: #333;
+    border: 0;
+    border-bottom: 1px solid #e5e5e5;
+}

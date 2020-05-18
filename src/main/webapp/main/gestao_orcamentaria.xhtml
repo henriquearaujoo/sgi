@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+
+
+	<ui:define name="content">
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+		</script>
+
+		<style type="text/css">
+</style>
+
+		<f:metadata>
+			<o:viewParam name="gid"
+				value="#{dist_orcamentaria_controller.idGestao}" />
+			<f:viewAction action="#{dist_orcamentaria_controller.initCadastro()}" />
+		</f:metadata>
+
+		<h:form id="form_gestao_orcamentaria">
+
+			<div class="ui-g">
+
+				<div class="ui-g-12">
+					<p:breadCrumb>
+						<p:menuitem value="Categories" url="home_new.xhtml" />
+						<p:menuitem 
+							value="Gerências e Coordenadorias" url="gestao_orcamentaria_listagem.xhtml" />
+						<p:menuitem 
+							value="Gestão orçamentária"  />	
+					</p:breadCrumb>
+				</div>
+
+				<div class="ui-g-12">
+					<p:tabView prependId="false">
+
+						<p:tab title="Distribuição orçamentária">
+							<ui:include src="/WEB-INF/gestao01.xhtml" />
+						</p:tab>
+
+					</p:tabView>
+
+				</div>
+
+			</div>
+
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+		<p:dialog widgetVar="dlg_orcamento_aprovado" modal="true" width="25%"
+			closable="true" closeOnEscape="true" showHeader="true"
+			header="Valor de orçamento" showEffect="clip" hideEffect="clip">
+
+
+
+			<h:form id="form-orc-aprovado">
+
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-12">
+						<p:messages  closable="true" escape="true"
+							showIcon="false" showSummary="false" showDetail="true" />
+
+					</div>
+
+					<div class="ui-g-12">
+						<p:outputLabel value="Valor orçamento:" />
+						<p:inputText required="true" requiredMessage="Preencha o valor"
+							value="#{dist_orcamentaria_controller.gestaoOrcamento.valor}"
+							onkeydown="mascaraMoeda(this,moeda)" style="text-align:left;">
+
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+								locale="pt_BR" />
+						</p:inputText>
+					</div>
+
+					<div class="ui-g-12">
+						<p:outputLabel value="Ano:" />
+						<p:selectOneMenu required="true" requiredMessage="Preencha o ano"
+							value="#{dist_orcamentaria_controller.gestaoOrcamento.ano}">
+							<f:selectItem itemLabel="Selecione o ano" />
+							<f:selectItem itemLabel="2019" itemValue="2019" />
+							<f:selectItem itemLabel="2020" itemValue="2020" />
+							<f:selectItem itemLabel="2021" itemValue="2021" />
+							<f:selectItem itemLabel="2022" itemValue="2022" />
+							<f:selectItem itemLabel="2023" itemValue="2023" />
+							<f:selectItem itemLabel="2024" itemValue="2024" />
+							<f:selectItem itemLabel="2025" itemValue="2025" />
+
+						</p:selectOneMenu>
+					</div>
+
+					<div class="ui-g-12">
+						<p:commandLink styleClass="btn btn-primary btn-block btn-sm"
+							update=":form_gestao_orcamentaria:panel_totais form-orc-aprovado"
+							process=":form-orc-aprovado"
+							action="#{dist_orcamentaria_controller.salvarOrcamentoAprovado()}"
+							style="color:#fff" value="Salvar" onclick="start();"
+							onsuccess="stop();"
+							oncomplete="if (!args.validationFailed) PF('dlg_orcamento_aprovado').hide();">
+						</p:commandLink>
+
+					</div>
+				</div>
+
+			</h:form>
+
+		</p:dialog>
+
+
+		<p:dialog widgetVar="dlg_cadastro_recurso" modal="true" width="50%"
+			closable="true" closeOnEscape="true" showHeader="true"
+			header="Valor de orçamento" showEffect="clip" hideEffect="clip">
+
+			<h:form id="form-cadastro-recurso">
+
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-12">
+						<p:messages  closable="true" escape="true"
+							showIcon="false" showSummary="false" showDetail="true" />
+
+					</div>
+
+					<div class="ui-g-12">
+						<p:outputLabel value="Doação:" />
+						<p:selectOneMenu value="#{dist_orcamentaria_controller.idDoacao}"
+							panelStyle="width:10px" filter="true" filterMatchMode="contains">
+							<f:selectItem noSelectionOption="true" />
+							<f:selectItems value="#{dist_orcamentaria_controller.doacoes}"
+								var="doacao" itemLabel="#{doacao.titulo}"
+								itemValue="#{doacao.id}">
+
+							</f:selectItems>
+
+							<p:ajax update="linha_orcamentaria" onstart="start()"
+								onerror="stop()" onsuccess="stop()"
+								listener="#{dist_orcamentaria_controller.carregarRubricasDeOrcamento()}" />
+
+						</p:selectOneMenu>
+
+					</div>
+
+					<div class="ui-g-12">
+
+						<p:outputLabel value="Linha orçamentária:" />
+						<p:selectOneMenu id="linha_orcamentaria" filter="true"
+							filterMatchMode="contains" required="true" requiredMessage="Preencha a linha orçamentária"
+							value="#{dist_orcamentaria_controller.gestaoRecurso.rubricaOrcamento}"
+							var="rb" converter="rubricaOrcamentoConverter">
+
+							<f:selectItems
+								value="#{dist_orcamentaria_controller.linhasOrcamentarias}"
+								var="rubrica" itemLabel="#{rubrica.rubrica.nome}"
+								itemValue="#{rubrica}" />
+
+							<p:column>
+								<h:outputText value="#{rb.orcamento.titulo}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{rb.componente.nome}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{rb.subComponente.nome}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{rb.rubrica.nome}" />
+							</p:column>
+
+						</p:selectOneMenu>
+
+
+					</div>
+
+					<div class="ui-g-12">
+						<p:outputLabel value="Valor:" />
+						<p:inputText required="true" requiredMessage="Preencha o valor"
+							value="#{dist_orcamentaria_controller.gestaoRecurso.valor}"
+							onkeydown="mascaraMoeda(this,moeda)" style="text-align:left;">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+								locale="pt_BR" />
+						</p:inputText>
+					</div>
+
+					<div class="ui-g-12"></div>
+
+					<div class="ui-g-12">
+						<p:commandLink styleClass="btn btn-primary btn-block btn-sm"
+							update=":form_gestao_orcamentaria:panel_totais 
+							:form_gestao_orcamentaria:table-recursos form-cadastro-recurso"
+							process=":form-cadastro-recurso"
+							action="#{dist_orcamentaria_controller.salvarRecurso()}"
+							style="color:#fff" value="Salvar" onclick="start();"
+							onsuccess="stop();"
+							oncomplete="if (!args.validationFailed) PF('dlg_cadastro_recurso').hide();">
+						</p:commandLink>
+
+					</div>
+				</div>
+
+			</h:form>
+
+		</p:dialog>
+
+
+	</ui:define>
+
+
+</ui:composition>

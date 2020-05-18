@@ -1,0 +1,144 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<style type="text/css">
+.valorPropaganda {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(80, 80, 80, 0.79);
+}
+
+.valorPropagandaRED {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(234, 15, 15, 0.79);
+}
+
+.ui-progressbar .ui-progressbar-label {
+	text-align: center;
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	display: none;
+	font-weight: bold;
+	font-size: 14px;
+}
+</style>
+
+	<div style="padding: 2px 2px">
+
+		<p:fieldset legend="Geração automática de prestações">
+			
+			<p:panelGrid id="panelPrestacao" columns="7">
+				<h:outputText value="Data de início da prestação:" />
+				<p:calendar id="dt_inicio_prest" styleClass="font12-vi"
+							placeholder="Data início" size="12"
+							value="#{orcamento_controller.orcamento.dataPrestacao}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+				<h:outputText value="Tipo de Parcelamento: " />
+				<p:selectOneMenu value="#{orcamento_controller.orcamento.tipoParcelamento}">
+					<f:selectItem itemLabel="Selecione um tipo de parcelamento" itemValue=""/>
+					<f:selectItems value="#{orcamento_controller.tiposParcelamento}" var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
+				</p:selectOneMenu>
+
+				<h:outputText value="Número de parcelas: " />
+				<p:inputMask mask="9?9" size="5" value="#{orcamento_controller.orcamento.quantidadeParcelas}"/>
+
+				<p:commandLink styleClass="btn btn-default btn-sm"
+							   style="margin-left:5px" title="Gerar Parcelas"
+							   update="prestacoes" process="panelPrestacao"
+							   action="#{orcamento_controller.gerarPrestacoes()}">
+				<span class="glyphicon glyphicon-plus"></span><span style="margin: 3px;">Gerar Parcelas</span>
+				</p:commandLink>
+			</p:panelGrid>
+		</p:fieldset>
+
+		<p:separator/>
+
+		<p:fieldset legend="Adicionar nova prestação">
+			<p:messages id="msgParcela"  showDetail="true" showSummary="false"></p:messages>
+			<p:panelGrid id="panelAddPrestacao" columns="7">
+				<h:outputText value="Data da prestação:" />
+				<p:calendar id="dt_prest" styleClass="font12-vi"
+							placeholder="Data da prestação" size="12"
+							value="#{orcamento_controller.prestacaoOrcamento.data}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+				<h:outputText value="Valor: R$" />
+				<p:inputText value="#{orcamento_controller.prestacaoOrcamento.valor}"
+							 onkeydown="mascaraMoeda(this,moeda)" style="text-align: right;">
+					<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									 locale="pt_BR" />
+				</p:inputText>
+
+				<p:commandLink styleClass="btn btn-default btn-sm"
+							   style="margin-left:5px" title="Adicionar prestação"
+							   update="panelAddPrestacao prestacoes msgParcela" process="panelAddPrestacao"
+							   action="#{orcamento_controller.adicionarPrestacao()}">
+					<span class="glyphicon glyphicon-plus"></span><span style="margin: 3px;">Adicionar</span>
+				</p:commandLink>
+			</p:panelGrid>
+		</p:fieldset>
+
+		<p:separator/>
+
+		<p:dataTable id="prestacoes" value="#{orcamento_controller.orcamento.prestacoes}"
+					 var="prestacao" style="width: 400px">
+			<f:facet name="header">
+				Lista de prestações
+			</f:facet>
+
+			<p:column headerText="Nro." width="30" style="text-align:right">
+				<h:outputText value="#{prestacao.numero}" />
+			</p:column>
+
+			<p:column headerText="Data" width="130">
+				<p:calendar styleClass="font12-vi"
+							size="12"
+							value="#{prestacao.data}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+			</p:column>
+
+			<p:column headerText="Valor" style="text-align:right" width="130">
+				<p:inputText value="#{prestacao.valor}"
+							 onkeydown="mascaraMoeda(this,moeda)" style="text-align: right;">
+					<p:ajax event="blur" update="prestacoes" listener="#{orcamento_controller.recalcularPrestacoes(prestacao)}"/>
+					<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									 locale="pt_BR" />
+				</p:inputText>
+			</p:column>
+
+			<p:column style="width:40px;text-align:center">
+				<p:commandLink style="color:#FFF;margin-left:5px"
+							   styleClass="btn btn-danger btn-xs "
+							   action="#{orcamento_controller.removerPrestacao()}" process="@this"
+							   update="prestacoes" title="Excluir prestação">
+							   <span class="glyphicon glyphicon-remove-circle"></span>
+					<f:setPropertyActionListener value="#{prestacao}"
+												 target="#{orcamento_controller.prestacaoOrcamento}" />
+				</p:commandLink>
+			</p:column>
+
+			<p:columnGroup type="footer">
+				<p:row>
+					<p:column colspan="2" footerText="TOTAL: "
+							  style="text-align:right" />
+					<p:column style="text-align:right"
+							  footerText="#{orcamento_controller.totalPrestacoes}" />
+				</p:row>
+			</p:columnGroup>
+		</p:dataTable>
+	</div>
+
+
+
+</ui:fragment>

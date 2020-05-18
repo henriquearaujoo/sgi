@@ -1,0 +1,33 @@
+body {
+    background-color: white;
+	}
+
+	.iconmelon {
+    display: block;
+    margin: auto;
+	}
+
+	.iconmelon,
+	.im {
+  	position: relative;
+  	width: 230px;
+  	height: 150px;
+  	display: block;
+  	fill: #525151;
+	}
+
+	.iconmelon:after,
+	.im:after {
+  	content: '';
+  	position: absolute;
+  	top: 0;
+  	left: 0;
+  	width: 100%;
+  	height: 100%;
+	}
+  
+ .panel-info .panel-heading{
+ 	    color: #318F46;
+    background-color: rgba(0, 10, 2, 0.96);
+    border-color: #bce8f1;
+ }

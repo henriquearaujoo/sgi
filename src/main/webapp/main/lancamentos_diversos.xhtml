@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:viewAction action="#{diversos_coontroller.init()}" />
+
+		</f:metadata>
+		
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+			function stopDlgfilter() {
+			    PF('dlg_filtro_compra').hide();
+			}
+		</script>
+
+		<p:breadCrumb>
+			<p:menuitem value="Categories" url="home_new.xhtml" />
+			<p:menuitem value="Lancamentos diversos" url="#" />
+
+		</p:breadCrumb>
+
+		<h:form id="form_cadastro_diversos" style="width:100%">
+			<p:panel header="Filtros" toggleable="true" >
+			<p:panelGrid columns="4" styleClass="ui-noborder"  >
+					
+					<h:outputText value="Lançamento:" />	
+					<p:inputText placeholder="Nº lançamento" value="#{diversos_coontroller.filtro.lancamentoID}" size="40" />
+					
+					<h:outputText value="Nº Documento Fiscal:" />
+					<p:inputText placeholder="Nº documento Fiscal" value="#{diversos_coontroller.filtro.numeroDocumento}" size="40" />
+					
+					<h:outputText value="Projeto:" />
+					<p:autoComplete placeholder="Nome Projeto"  value="#{diversos_coontroller.filtro.projeto}" size="40"
+						completeMethod="#{diversos_coontroller.completeProjetos}" var="projeto" itemLabel="#{projeto.nome}" 
+						itemValue="#{projeto}" converter="projetoConverter">
+						<p:column>
+							<h:outputText value="#{projeto.codigo}" />
+						</p:column>
+	
+						<p:column>
+							<h:outputText value="#{projeto.nome}" />
+						</p:column>
+	
+					</p:autoComplete>
+					
+					<h:outputText value="Descrição:" />
+					<p:inputText placeholder="Descrição" value="#{diversos_coontroller.filtro.descricao}" size="40" />
+					
+					<h:outputText value="Pagador:" />
+					<p:autoComplete size="40"
+						value="#{diversos_coontroller.filtro.pagador}" placeholder="Conta Pagador"
+						completeMethod="#{diversos_coontroller.completeConta}" var="conta"
+						itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+						converter="contaConverter" />	
+					
+					<h:outputText value="Fornecedor:" />
+					<p:autoComplete size="40"
+						value="#{diversos_coontroller.filtro.fornecedor}" placeholder="Conta Fornecedor"
+						completeMethod="#{diversos_coontroller.completeConta}" var="conta"
+						itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+						converter="contaConverter" />
+					
+					<h:outputText value="Período de Pgto:  "  />
+					<h:panelGroup>
+						
+						<p:calendar size="10" value="#{diversos_coontroller.filtro.dataInicio}" navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+						-
+						<p:calendar size="10" value="#{diversos_coontroller.filtro.dataFinal}" navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+					</h:panelGroup>
+				</p:panelGrid>
+				<h:panelGroup>
+					
+
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							action="#{diversos_coontroller.filtrar()}" onclick="start()"
+							onsuccess="stop()" onerror="stop()" update="table-lancav"
+							style="color:#fff; margin: 8px 2px;">
+							<span class="glyphicon glyphicon-search" ></span><span  style="margin: 3px;">Procurar</span>
+						</p:commandLink>
+
+						<p:link styleClass="btn btn-success btn-sm fa fa-cart-plus"
+							style="color:#fff;margin: 8px 2px;"
+							outcome="/main/lancamentos_diversos_cadastro"
+							title="Adicionar novo">
+							<span style="font-family: Arial">Novo</span>
+						</p:link>
+						
+						<p:commandLink styleClass="btn btn-danger btn-sm fa fa-remove"
+							title="Limpar" process="@this" onstart="start()"
+							onsuccess="stop()" onerror="stop()"
+							action="#{diversos_coontroller.limpar()}"
+							update=":form_cadastro_diversos"
+							style="color:#fff; margin: 8px 2px;">
+							<span style="width: 40px; font-family: Arial">Limpar</span>
+						</p:commandLink>
+
+
+				</h:panelGroup>
+			</p:panel>
+
+			<p:dataTable id="table-lancav" paginator="true" rows="10"
+				rowIndexVar="indexRow" value="#{diversos_coontroller.lancamentos}"
+				selection="#{diversos_coontroller.selectedLancamentos}"
+				rowKey="#{lanc.id}" var="lanc" style="margin-bottom:0">
+
+				
+				
+				<p:column headerText="Codigo Lançamento">
+					<h:outputText value="#{lanc.codigo}" />
+				</p:column>
+				
+				<p:column headerText="Documento">
+					<h:outputText value="#{lanc.notaFiscal}" />
+				</p:column>
+
+				<p:column headerText="Descrição">
+					<h:outputText value="#{lanc.descricao}" />
+				</p:column>
+				
+				<p:column headerText="Status">
+					<h:outputText value="#{lanc.statusCompra.nome}" />
+				</p:column>
+
+				<p:column headerText="Dt. pagamento">
+					<h:outputText value="#{lanc.dataPagamento}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Pagador">
+					<h:outputText
+						value="#{lanc.contaPagadorStr  != null and !lanc.contaPagadorStr.equals('') ? lanc.contaPagadorStr : 'FAS'}" />
+				</p:column>
+
+				<p:column headerText="Fornecedor">
+					<h:outputText value="#{lanc.contaRecebedorStr}" />
+				</p:column>
+
+				<p:column headerText="Valor">
+					<h:outputText value="#{lanc.valorTotalComDesconto}">
+						<f:convertNumber type="currency" locale="pt_BR" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Ação" style="width:100px;" >
+
+					<p:link
+						styleClass="btn btn-default btn-xs glyphicon glyphicon-edit"
+						outcome="/main/lancamentos_diversos_cadastro"
+						style="font-size:10px;color:#000">
+						<f:param name="lanc" value="#{lanc.id}" />
+					</p:link>
+
+					<p:commandLink title="excluir" style="color:#fff;margin-left:5px"
+						styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove-circle"
+						action="#{diversos_coontroller.excluirLancamentoAvulso(indexRow)}"
+						process="@this" update="table-lancav" onclick="start()"
+						onsuccess="stop()" onerror="stop()">
+						<p:confirm message="Excluir lançamento?" />
+						<f:setPropertyActionListener value="#{lanc}"
+							target="#{diversos_coontroller.lancamentoAux}" />
+
+					</p:commandLink>
+					
+					<p:commandLink title="Mudar Status"
+						styleClass="btn btn-primary btn-xs glyphicon glyphicon-cog" 
+						style="margin-left:5px;" update="formDialogAlterarStatus"
+						 oncomplete="PF('dialogAlterarStatus').show()" rendered="#{diversos_coontroller.usuarioSessao.usuario.perfil.descricao == 'admin'}" >
+						<f:setPropertyActionListener value="#{lanc}"
+							target="#{diversos_coontroller.lancamentoAux}" />
+					</p:commandLink>
+
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog global="true" showEffect="clip" hideEffect="clip"
+				icon="ui-icon-alert">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+			
+			
+		
+
+
+		</h:form>
+		
+			<p:dialog header="Mudança de Status" widgetVar="dialogAlterarStatus" modal="false" resizable="false"
+			 showEffect="clip" hideEffect="clip">
+			<div class="ui-fluid">
+				<h:form id="formDialogAlterarStatus">
+					
+					<p:panelGrid columns="1" layout="grid">
+					
+
+							<p:selectOneMenu 
+								value="#{diversos_coontroller.lancamentoAux.statusCompra}"
+								filter="true" filterMatchMode="contains">
+								<f:selectItems value="#{diversos_coontroller.status}"
+									var="status" itemLabel="#{status.nome}" itemValue="#{status}" />
+							</p:selectOneMenu>
+
+
+
+					</p:panelGrid>
+					<center>
+						<div class="botao_central" align="left">
+							<p:commandLink styleClass="btn btn-primary btn-sm" ajax="false"
+								action="#{diversos_coontroller.mudarStatusLancamento()}" onclick="start()"
+								onsuccess="stop()" onerror="stop()"
+								oncomplete="PF('dialogAlterarStatus').hide()"
+								style="color:#fff; margin: 8px 2px;">
+								Salvar
+							</p:commandLink>
+	
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								action="#{diversos_coontroller.filtrar()}"
+								onclick="PF('dialogAlterarStatus').hide()" ajax="false"
+								process="@this"
+								style="color:#fff; margin: 8px 2px;">
+							Cancelar
+							</p:commandLink>
+	
+						</div>
+					</center>
+				</h:form>
+			</div>
+		</p:dialog>
+		
+
+
+		<p:separator />
+	</ui:define>
+
+	<ui:define name="adicionais">
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

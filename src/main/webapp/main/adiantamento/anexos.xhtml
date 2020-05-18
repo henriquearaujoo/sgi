@@ -1,0 +1,81 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+	<div id="main-div-anexo" class="ui-g ui-fluid">
+
+		<div class="ui-g-12">
+			<p:messages id="msg_aprouve" autoUpdate="false" showIcon="true"
+				showSummary="false" showDetail="true" closable="true" />
+
+			<p:remoteCommand name="salvar" onerror="stop();steping(2)"
+				oncomplete="stop();steping(2)"
+				action="#{adiantamentoController.adicionarArquivo()}"
+				process="panel-info-anexo" update="panel-info-anexo" />
+
+		</div>
+
+		<div class="ui-g-12 form-group">
+			<p:fileUpload label="Anexar" cancelLabel="Cancelar" auto="true"
+				uploadLabel="Salvar" oncomplete="salvar()" onstart="start()"
+				update="panel-info-anexo" process="panel-info-anexo"
+				fileUploadListener="#{adiantamentoController.handleFileUpload}"
+				mode="advanced" skinSimple="true" dragDropSupport="false"
+				sizeLimit="100000000" allowTypes="/(\.|\/)(pdf)$/">
+
+				<table class="table table-hover table-bordered">
+					<thead>
+						<tr>
+							<th scope="col">Descrição</th>
+							<th scope="col" style="width: 60px; text-align: center">#</th>
+							<th scope="col" style="width: 60px; text-align: center">#</th>
+						</tr>
+					</thead>
+					<tbody>
+
+						<ui:repeat var="path" value="#{adiantamentoController.pagamento.arquivos}">
+
+							<tr>
+								<td>#{path.nome}</td>
+
+								<td style="width: 60px; text-align: center"><p:commandLink
+										id="btn_visualizar" style="color:#000" update="form-arq"
+										onclick="PF('dlg_arq').show()" process="@this">
+										<span class="pi pi-search"></span>
+										<f:setPropertyActionListener value="#{path}"
+											target="#{adiantamentoController.arqAuxiliar}" />
+									</p:commandLink></td>
+
+								<td style="width: 60px; text-align: center"><p:commandLink
+										id="btn_excluir" style="color:#000;margin-left:9px"
+										onclick="start()" onerror="stop()"
+										oncomplete="stop(); steping(2)"
+										action="#{adiantamentoController.removerArquivo()}" process="@this"
+										update="panel-info-anexo">
+										<span class="pi pi-times"></span>
+										<f:setPropertyActionListener value="#{path}"
+											target="#{adiantamentoController.arqAuxiliar}" />
+										<p:confirm header="Confirmação" icon="ui-icon-alert"
+											message="Desejar excluir documento?" />
+									</p:commandLink></td>
+
+							</tr>
+						</ui:repeat>
+
+					</tbody>
+				</table>
+
+			</p:fileUpload>
+
+		</div>
+
+	</div>
+
+
+</ui:fragment>

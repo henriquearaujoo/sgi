@@ -1,0 +1,80 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<div id="btn-panel-wizard" class="ui-g ui-fluid"
+		style="margin-bottom: 10px">
+
+
+		<div class="ui-g-6">
+			<p:commandLink styleClass="btn btn-primary btn-sm"
+				rendered="#{pagamentoController.poderEditar()}"
+				oncomplete="steping(#{pagamentoController.stepIndex}); setarFocused('info-geral');setarFocused('info-document'); stop();
+								if (args &amp;&amp; !args.validationFailed) PF('dlg_salvar').show();"
+				style="color:#fff;" start="start()" onerror="stop()"
+				process="@this, panel-info-geral, panel-info-doc, btn-save-panel"
+				update="@this, panel-info-geral, panel-info-doc , messages, btn-save-panel">
+				<span style="font-family: Arial;">Salvar</span>
+			</p:commandLink>
+
+
+			<p:commandLink rendered="false" styleClass="btn btn-success btn-sm"
+				action="#{pagamentoController.aprovar()}" style="color:#fff;"
+				onstart="start()" onerror="stop()" oncomplete="stop()">
+				<span style="font-family: Arial;">Baixar</span>
+			</p:commandLink>
+
+			<p:commandLink rendered="#{pagamentoController.poderEditar()}"
+				styleClass="btn btn-danger btn-sm"
+				action="#{pagamentoController.suspender()}" style="color:#fff;"
+				onstart="start()" onerror="stop()" oncomplete="stop()">
+				<span style="font-family: Arial;">Suspender</span>
+			</p:commandLink>
+
+			<p:commandLink styleClass="btn btn-primary btn-sm"
+				style="color:#fff;" onstart="start()" onerror="stop()"
+				oncomplete="stop()">
+				<span style="font-family: Arial;">Ajuda</span>
+			</p:commandLink>
+
+			<p:commandLink action="#{pagamentoController.voltarListagem()}"
+				process="@this" styleClass="btn btn-danger btn-sm" onstart="start()"
+				onerror="stop()" oncomplete="stop()">
+				<span style="font-family: Arial;">Sair</span>
+			</p:commandLink>
+
+
+		</div>
+
+		<div class="ui-g-6" style="text-align: right">
+
+			<p:commandLink id="btn-back" styleClass="btn btn-primary"
+				update="step,  btn-back, btn-next, btn-panel-p" value="Voltar"
+				process="@this"
+				onclick="steping(#{pagamentoController.stepIndex - 1}) ; start()"
+				onerror="stop()" oncomplete="stop()"
+				action="#{pagamentoController.steping('back')}"></p:commandLink>
+
+			<p:commandLink id="btn-next" styleClass="btn btn-primary"
+				update="step, btn-back, btn-next, btn-panel-p" value="Próximo"
+				onclick="steping(#{pagamentoController.stepIndex + 1}); start();"
+				onerror="stop()" oncomplete="stop()" process="@this"
+				action="#{pagamentoController.steping('next')}"></p:commandLink>
+
+
+		</div>
+
+		<div id="actions-button" class="ui-g-12" style="display: none">
+
+			<div class="ui-g-12" style="text-align: right;"></div>
+		</div>
+
+	</div>
+
+
+
+</ui:fragment>

@@ -1,0 +1,447 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+
+	<div style="padding: 2px 2px">
+
+		<div class="cadastro-projeto"
+			style="margin-right: auto; margin-left: auto;">
+			<div>
+
+				<h:panelGroup id="panel-cadastro-plano-trabalho">
+
+
+					<div class="botao_central" align="left">
+
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							action="#{plano_trabalho_controller.salvar()}"
+							process="panel-cadastro-plano-trabalho"
+							update="panel-cadastro-plano-trabalho"
+							style="color:#fff; margin: 8px 2px;" value="Salvar"
+							onstart="start();" onsuccess="stop();" onerror="stop();" />
+
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							style="color:#fff" title="Liberar projeto"
+							update=":form-liberacao-projeto" value="Liberar usuário"
+							process="panel-cadastro-plano-trabalho"
+							oncomplete="PF('dlg_liberar_projeto').show()"
+							action="#{plano_trabalho_controller.buscarAutorizacoes()}">
+
+							<p:resetInput
+								target=":form-liberacao-projeto :form-liberacao-projeto:msg-liberacao-projeto" />
+
+						</p:commandLink>
+
+						<p:link styleClass="btn btn-danger btn-sm" outcome="/main/planos"
+							style="color:#fff; margin: 8px 2px;">
+							<span style="font-family: Arial">Sair</span>
+						</p:link>
+
+						<p:commandLink styleClass="btn btn-default btn-sm" process="@this"
+							style="color:#000; margin: 8px 2px;" value="Imprimir Plano"
+							target="_blank"
+							action="#{plano_trabalho_controller.imprimirPlano()}"
+							ajax="false" />
+
+						<p:commandLink styleClass="btn btn-default btn-sm" process="@this"
+							style="color:#000; margin: 8px 2px;"
+							value="Imprimir termo do Plano" target="_blank"
+							action="#{plano_trabalho_controller.imprimirTermoPlano()}"
+							ajax="false" />
+
+					</div>
+
+
+					<p:panelGrid style="width:100%" columns="4">
+						<p:outputLabel value="Titulo:" for="nome_plano" style="width:100%" />
+						<p:inputText id="nome_plano" style="width:850px"
+							value="#{plano_trabalho_controller.planoDeTrabalho.titulo}"
+							required="true" requiredMessage="Campo obrigatório" />
+
+						<p:outputLabel value="Programa:" for="programa_plano" />
+						<p:selectOneMenu id="programa_plano" styleClass="font11-vi"
+							value="#{plano_trabalho_controller.planoDeTrabalho.programa}">
+							<f:selectItem noSelectionOption="true" />
+							<f:selectItems value="#{plano_trabalho_controller.programas}"
+								var="programa" itemLabel="#{programa.nome}"
+								itemValue="#{programa}" />
+						</p:selectOneMenu>
+
+					</p:panelGrid>
+
+					<p:panelGrid style="width:100%" columns="4">
+
+						<p:outputLabel value="Destino/Localização:" for="destino_loc" />
+						<p:autoComplete id="destino_loc" styleClass="font11-vi"
+							panelStyle="width:180px" requiredMessage="Campo obrigatório"
+							inputStyle="width:450px" rendered="true" placeholder="Destino"
+							required="true"
+							value="#{plano_trabalho_controller.planoDeTrabalho.uc}"
+							completeMethod="#{plano_trabalho_controller.completeUC}" var="uc"
+							itemLabel="#{uc.nome}" itemValue="#{uc}" converter="uc_converter"
+							minQueryLength="3" forceSelection="true">
+							<p:ajax event="blur" update="panel_info" />
+						</p:autoComplete>
+
+
+						<p:outputLabel value="Gestão:" for="gestao" />
+						<p:autoComplete id="gestao" styleClass="font11-vi"
+							inputStyle="width:450px" requiredMessage="Campo obrigatório"
+							rendered="true"
+							placeholder="Superintendencia/Coordenadoria/Regional"
+							required="true"
+							value="#{plano_trabalho_controller.planoDeTrabalho.gestao}"
+							completeMethod="#{plano_trabalho_controller.completeGestao}"
+							var="gestao" itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+							converter="gestaoConverterVI" minQueryLength="3"
+							forceSelection="true" />
+					</p:panelGrid>
+
+					<p:outputPanel id="panel_info">
+
+						<p:panelGrid style="width:100%" columns="8">
+							<p:outputLabel value="Nome da instituição:"
+								for="nome_instituicao" />
+							<p:inputText id="nome_instituicao"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.nomeAssociacao}"
+								style="width:450px" />
+
+							<p:outputLabel value="CNPJ:" for="cnpj" />
+							<p:inputText id="cnpj"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.cnpjassociacao}"
+								style="width:120px" />
+
+
+							<p:outputLabel value="Data inicio:" for="data_inicio" />
+							<p:calendar id="data_inicio" pattern="dd/MM/yyyy"
+								value="#{plano_trabalho_controller.planoDeTrabalho.dataInicio}"
+								required="true" style="font-size:11px" size="9"
+								requiredMessage="Campo obrigatório" />
+
+							<p:outputLabel value="Data final:" for="data_final" />
+							<p:calendar id="data_final" pattern="dd/MM/yyyy"
+								value="#{plano_trabalho_controller.planoDeTrabalho.dataFinal}"
+								required="true" style="font-size:11px" size="9"
+								requiredMessage="Campo obrigatório" />
+						</p:panelGrid>
+
+						<p:panelGrid style="width:100%" columns="2">
+							<p:outputLabel value="Endereço da instituição:"
+								for="end_completo" />
+							<p:inputText id="end_completo"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.enderecoAssociacao}"
+								style="width:700px" />
+						</p:panelGrid>
+
+						<p:panelGrid style="width:100%" columns="8">
+							<p:outputLabel value="Cidade:" for="cidade_inst" />
+							<p:inputText id="cidade_inst"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.cidadeAssosiacao}"
+								style="width:150px" />
+
+							<p:outputLabel value="UF:" for="uf" />
+							<p:inputText id="uf" value="AM" style="width:50px"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}" />
+
+							<p:outputLabel value="CEP:" for="cep" />
+							<p:inputText id="cep"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.cepAssociacao}"
+								style="width:150px" />
+
+							<p:outputLabel value="Telefone:" for="telefone" />
+							<p:inputText id="telefone"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.telefoneAssociacao}"
+								style="width:150px" />
+						</p:panelGrid>
+
+						<p:panelGrid style="width:100%" columns="6">
+							<p:outputLabel value="Banco:" for="banco" />
+							<p:inputText id="banco"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.bancoAssociacao}"
+								style="width:350px" />
+
+							<p:outputLabel value="Agencia:" for="agencia" />
+							<p:inputText id="agencia"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.agenciaAssociacao}"
+								style="width:150px" />
+
+							<p:outputLabel value="Conta corrente:" for="conta_c" />
+							<p:inputText id="conta_c"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.contaAssociacao}"
+								style="width:150px" />
+
+						</p:panelGrid>
+
+						<p:panelGrid style="width:100%" columns="8">
+							<p:outputLabel value="Nome Responsável pela Instituição:"
+								for="nome_resp" />
+							<p:inputText id="nome_resp"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.presidenteAssociacao}"
+								style="width:350px" />
+
+							<p:outputLabel value="Cargo/Função:" for="cargo" />
+							<p:inputText id="cargo"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.cargoPresidente}"
+								style="width:150px" />
+
+							<p:outputLabel value="RG/Expedidor:" for="rg" />
+							<p:inputText id="rg"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.rgPresidente}"
+								style="width:100px" />
+
+							<p:outputLabel value="C.P.F.:" for="cpf" />
+							<p:inputText id="cpf"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.cpfPresidente}"
+								style="width:100px" />
+
+						</p:panelGrid>
+
+
+						<p:panelGrid style="width:100%" columns="2">
+							<p:outputLabel value="Endereço do responsável:" for="end_resp" />
+							<p:inputText id="end_resp"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.enderecoPresidente}"
+								style="width:700px" />
+						</p:panelGrid>
+
+						<p:panelGrid style="width:100%" columns="8">
+							<p:outputLabel value="Cidade:" for="cidade_resp" />
+							<p:inputText id="cidade_resp"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.cidadePresidente}"
+								style="width:150px" />
+
+							<p:outputLabel value="UF:" for="uf_resp" />
+							<p:inputText id="uf_resp" value="AM" style="width:50px"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}" />
+
+							<p:outputLabel value="CEP:" for="cep_resp" />
+							<p:inputText id="cep_resp"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.cepAssociacao}"
+								style="width:150px" />
+
+							<p:outputLabel value="Telefone:" for="telefone_resp" />
+							<p:inputText id="telefone_resp"
+								disabled="#{plano_trabalho_controller.planoDeTrabalho.uc == null}"
+								value="#{plano_trabalho_controller.planoDeTrabalho.uc.telefonePresidente}"
+								style="width:150px" />
+						</p:panelGrid>
+					</p:outputPanel>
+					<p:panelGrid style="width:100%" columns="6">
+						<p:outputLabel value="Contextualização:" for="context_plano" />
+						<p:inputTextarea id="context_plano" rows="10" autoResize="false"
+							styleClass="font11-vi" style="width:280px"
+							value="#{plano_trabalho_controller.planoDeTrabalho.contextualizacao}"
+							required="true" requiredMessage="Campo obrigatório" />
+
+						<p:outputLabel value="Objetivo geral:" for="objetivo_plano" />
+						<p:inputTextarea id="objetivo_plano" rows="10" autoResize="false"
+							styleClass="font11-vi" style="width:280px"
+							value="#{plano_trabalho_controller.planoDeTrabalho.objetivo}"
+							required="true" requiredMessage="Campo obrigatório" />
+
+						<p:outputLabel value="Objetivo específico:"
+							for="objetivo_especifico" />
+						<p:inputTextarea id="objetivo_especifico" rows="10"
+							autoResize="false" style="width:280px"
+							value="#{plano_trabalho_controller.planoDeTrabalho.objetivoEspecifico}"
+							required="true" styleClass="font11-vi"
+							requiredMessage="Campo obrigatório" />
+
+					</p:panelGrid>
+
+					<p:panelGrid columns="6">
+						<p:outputLabel value="Valor:" for="valor_plano"
+							style="float:right" />
+						<p:inputText id="valor_plano"
+							value="#{plano_trabalho_controller.planoDeTrabalho.valor}"
+							onkeydown="mascaraMoeda(this,moeda)" required="true"
+							requiredMessage="Campo obrigatório">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+								locale="pt_BR" />
+						</p:inputText>
+
+						<p:outputLabel value="Responsável:" for="resp" style="float:right" />
+
+						<p:inputText id="resp"
+							value="#{plano_trabalho_controller.planoDeTrabalho.responsavel}" />
+							
+						<p:outputLabel value="Extratégia:" for="extrategia" style="float:right" />
+						<p:inputText id="extrategia" style="width:300px"
+							value="#{plano_trabalho_controller.planoDeTrabalho.extrategiaExecucao}"/>	
+
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" style="width:100%">
+						
+					</p:panelGrid>
+
+				</h:panelGroup>
+
+				<p:separator></p:separator>
+
+				<h:panelGroup id="panel-lista-projetos"
+					rendered="#{plano_trabalho_controller.planoDeTrabalho.id != null}">
+
+
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						action="#{plano_trabalho_controller.iniciarNovoProjeto()}"
+						update=":form_cad_projeto"
+						oncomplete="PF('dlg_cad_projeto').show();"
+						style="color:#fff; margin: 8px 2px;" value="Novo projeto"
+						onstart="start();" onsuccess="stop();" onerror="stop();" />
+
+
+
+					<p:dataTable id="table_projeto_plano"
+						value="#{plano_trabalho_controller.listProjetos}" var="projeto"
+						paginator="true" rows="10">
+
+						<f:facet name="header">
+
+							<p:panelGrid>
+								<f:facet name="header">
+									<p:row>
+										<p:column colspan="3">Totais</p:column>
+									</p:row>
+									<p:row>
+										<p:column styleClass="col_panel">VALOR A SER REPASSADO</p:column>
+										<p:column styleClass="col_panel">VALOR DA EXECUÇÃO DIRETA</p:column>
+										<p:column styleClass="col_panel">VALOR TOTAL PLANEJADO</p:column>
+									</p:row>
+
+								</f:facet>
+
+								<p:row>
+									<p:column styleClass="label_panel" style="text-align:center">
+										<h:outputText
+											value="#{plano_trabalho_controller.totalRepasse}">
+											<f:convertNumber type="currency" locale="pt_BR" />
+										</h:outputText>
+									</p:column>
+									<p:column styleClass="label_panel" style="text-align:center">
+										<h:outputText
+											value="#{plano_trabalho_controller.totalExecucaoDireta}">
+											<f:convertNumber type="currency" locale="pt_BR" />
+										</h:outputText>
+									</p:column>
+									<p:column styleClass="label_panel" style="text-align:center">
+										<h:outputText
+											value="#{plano_trabalho_controller.totalDoPlano}">
+											<f:convertNumber type="currency" locale="pt_BR" />
+										</h:outputText>
+									</p:column>
+								</p:row>
+
+							</p:panelGrid>
+
+
+						</f:facet>
+
+						<p:column headerText="Código"
+							style="width:100px;text-align:center">
+							<h:outputText value="#{projeto.codigo}" />
+						</p:column>
+
+						<p:column headerText="Titúlo"
+							style="width:200px;text-align:center">
+							<h:outputText value="#{projeto.nome}" />
+						</p:column>
+
+						<p:column headerText="Objetivo" style="text-align:center">
+							<h:outputText value="#{projeto.objetivo}" />
+						</p:column>
+
+						<p:column headerText="Componente" style="text-align:center">
+							<h:outputText value="#{projeto.nomeComponente}" />
+						</p:column>
+
+						<p:column headerText="Localização" style="text-align:center">
+							<h:outputText value="#{projeto.nomeLocalidade}" />
+						</p:column>
+
+						<p:column headerText="Cadeias" style="text-align:center">
+							<h:outputText value="#{projeto.nomeCadeia}" />
+						</p:column>
+
+						<p:column headerText="Execução"
+							style="width:65px;text-align:center">
+							<h:outputText value="#{projeto.repasse}" style="float:right" />
+						</p:column>
+
+						<p:column headerText="Qtd." style="width:50px;text-align:center">
+							<h:outputText value="#{projeto.quantidade}" style="float:right" />
+						</p:column>
+
+						<p:column headerText="Valor" style="text-align:center;width:130px">
+							<h:outputText value="#{projeto.valor}" style="float:right">
+								<f:convertNumber type="currency" locale="pt_BR" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Fonte" style="text-align:center">
+							<h:outputText value="#{projeto.nomeFonte}" />
+						</p:column>
+
+						<p:column headerText="Opções">
+
+							<p:commandLink style="margin-left:5px"
+								styleClass="btn btn-default btn-xs glyphicon glyphicon-edit"
+								action="#{plano_trabalho_controller.editarProjeto()}"
+								update=":form_cad_projeto"
+								oncomplete="PF('dlg_cad_projeto').show();" onstart="start();"
+								onsuccess="stop();" onerror="stop();">
+								<f:setPropertyActionListener value="#{projeto}"
+									target="#{plano_trabalho_controller.projeto}" />
+							</p:commandLink>
+
+							<p:commandLink style="color:#FFF;margin-left:5px"
+								styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove-circle"
+								action="#{plano_trabalho_controller.removerProjeto()}"
+								process="@this" update="table_projeto_plano" onstart="start();"
+								onsuccess="stop();" onerror="stop();">
+								<p:confirm header="Confirmar exclusão" icon="ui-icon-alert"
+									message="Excluir projeto?" />
+								<f:setPropertyActionListener value="#{projeto}"
+									target="#{plano_trabalho_controller.projeto}" />
+							</p:commandLink>
+
+						</p:column>
+
+					</p:dataTable>
+
+				</h:panelGroup>
+
+
+			</div>
+		</div>
+
+
+
+	</div>
+
+
+
+</ui:fragment>

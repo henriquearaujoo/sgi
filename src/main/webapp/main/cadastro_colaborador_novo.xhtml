@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:viewAction action="#{colaboradorController.init()}" />
+			<o:viewParam name="id" value="#{colaboradorController.idInitColaborador}" />
+		</f:metadata>
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+			function stopDlgfilter() {
+			    PF('dlg_filtro_compra').hide();
+			}
+		</script>
+		
+		<p:breadCrumb>
+			<p:menuitem value="Home" url="home_new.xhtml" />
+			<p:menuitem value="Listagem de Colaboradores" url="cadastro_colaborador.xhtml" />
+			<p:menuitem value="Cadastro de Colaborador" url="cadastro_colaborador_novo.xhtml" />
+		</p:breadCrumb>
+		
+		
+		<p:panel header="Colaboradores" >
+			
+			
+			<h:form id="form-cadastro-colaborador" prependId="false"  enctype="multipart/form-data">
+		
+		
+					
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						action="#{colaboradorController.salvar()}" 
+						onclick="start()" onsuccess="stop()" onerror="stop()"
+						update=":form-cadastro-colaborador"
+						style="color:#fff; margin: 8px 2px;" value="Salvar"  />
+					
+					
+					<p:link styleClass="btn btn-default btn-sm"
+						style="color:#000;margin: 8px 2px;"
+						outcome="/main/cadastro_colaborador" title="Volar">
+						<span style="font-family: Arial">Voltar</span>
+					</p:link>
+					
+					<p:panelGrid columns="6" styleClass="ui-noborder" >
+							
+						<p:outputLabel value="Nome:" for="nome" />
+						<p:inputText id="nome" value="#{colaboradorController.colaborador.nome}"  required="true" requiredMessage="Preencha o campo Nome!" />
+						<p:message for="nome" />
+						
+						<p:outputLabel value="CPF:" for="cpf" />
+						<p:inputMask id="cpf" value="#{colaboradorController.colaborador.cpf}" required="true" mask="999.999.999-99"/>
+						<p:message for="cpf" />
+						
+						<p:outputLabel value="RG:" for="rg" />
+						<p:inputText id="rg" value="#{colaboradorController.colaborador.rg}" required="true" />
+						<p:message for="rg" />
+						
+						<p:outputLabel value="Email:" for="email" />
+						<p:inputText id="email" value="#{colaboradorController.colaborador.email}" />
+						<p:message for="email" />
+						
+						<p:outputLabel value="Telefone:" for="telefone" />
+						<p:inputMask id="telefone" value="#{colaboradorController.colaborador.telefone}" mask="(99) 9999-9999"/>
+						<p:message for="telefone" />
+						
+						<p:outputLabel value="Celular:" for="celular" />
+						<p:inputMask id="celular" value="#{colaboradorController.colaborador.celular}" mask="(99) 99999-9999"/>
+						<p:message for="celular" />
+						
+						<p:outputLabel value="Escolaridade:" for="escolaridade" />
+						<p:inputText id="escolaridade" value="#{colaboradorController.colaborador.ensinoFundamentalMedio}" />
+						<p:message for="escolaridade" />
+						
+						<p:outputLabel value="Data de Nascimento:"
+							for="data_nascimento" />
+						<p:calendar id="data_nascimento" pattern="dd/MM/yyyy" required="true"
+							value="#{colaboradorController.colaborador.dataDeNascimento}"
+							style="width:50px" />
+						<p:message for="data_nascimento" />
+						
+						<p:outputLabel for="sexo" value="Sexo:" />
+						<p:selectOneRadio id="sexo" value="#{colaboradorController.colaborador.sexo}" required="true">
+							<f:selectItem itemLabel="Masculino" itemValue="Masculino" />
+							<f:selectItem itemLabel="Feminino" itemValue="Feminino" />
+							
+						</p:selectOneRadio>
+						<p:message for="sexo" />
+						
+						<p:outputLabel value="Estado Civil:" for="estadoCivil" />	
+						<p:selectOneMenu id="estadoCivil" value="#{colaboradorController.colaborador.estadoCivil}" required="true" >
+							<f:selectItems value="#{colaboradorController.listarEstadosCivis()}"
+								var="action" itemLabel="#{action}" itemValue="#{action}" />
+						</p:selectOneMenu>
+						<p:message for="estadoCivil" />				
+						
+						<p:outputLabel value="Cep:" for="cep" />
+						<p:inputMask id="cep" required="true" value="#{colaboradorController.colaborador.cep}" mask="99999-999"/>
+						<p:message for="cep" />
+	
+						<p:outputLabel value="Logradouro:" for="logradouro" />
+						<p:inputText id="logradouro" value="#{colaboradorController.colaborador.logradouro}" />
+						<p:message for="logradouro" />
+							
+						<p:outputLabel value="Bairro:" for="bairro" />
+						<p:inputText id="bairro" value="#{colaboradorController.colaborador.bairro}" />	
+						<p:message for="bairro" />	
+	
+						<p:outputLabel value="Data de Admisão:" for="data_admissao" />
+						<p:calendar id="data_admissao" pattern="dd/MM/yyyy"
+							value="#{colaboradorController.colaborador.dataDeAdmissao}"
+							style="width:50px" required="true"
+							requiredMessage="Campo 'Data de Admissão' é obrigatório" />
+						<p:message for="data_admissao" />
+						
+						<p:outputLabel value="Cargo:" for="cargo" />
+						<p:inputText id="cargo" value="#{colaboradorController.colaborador.cargo}" required="true" />
+						<p:message for="cargo" />
+						
+						<p:outputLabel value="Gestão:" for="gestao" />
+						<p:selectOneMenu id="gestao" filter="true" filterMatchMode="startsWith"
+							value="#{colaboradorController.colaborador.gestao}"
+							converter="gestaoConverter" required="true"
+							requiredMessage="Campo 'Gestão' obrigatório">
+							<f:selectItems value="#{colaboradorController.listaGestao()}"
+								var="action" itemLabel="#{action.nome}" itemValue="#{action}" />
+						</p:selectOneMenu>
+						<p:message for="gestao" />
+						
+						<p:outputLabel value="Localidade:" for="localidade" />
+						<p:selectOneMenu id="localidade" filter="true" filterMatchMode="startsWith"
+							value="#{colaboradorController.colaborador.lotacao}"
+							converter="localConverterVI" required="true"
+							requiredMessage="Campo 'Localidade' obrigatório">
+							<f:selectItem noSelectionOption="true" />
+							<f:selectItems value="#{colaboradorController.listaLocalidade()}"
+								var="action" itemLabel="#{action.nome}" itemValue="#{action}" />
+						</p:selectOneMenu>
+						<p:message for="localidade" />
+						
+						<p:outputLabel value="Controla Ponto ?" for="ponto" />
+						<p:inputSwitch value="#{colaboradorController.colaborador.controlaPonto}" id="ponto" offLabel="Não" onLabel="Sim" />
+						<p:message for="ponto" />
+						
+						<p:outputLabel value="CTPS/SERIE/UF:" for="ctps" />
+						<p:inputText id="ctps" value="#{colaboradorController.colaborador.ctpsSerieUf}" required="true" />
+						<p:message for="ctps" />
+						
+						<p:outputLabel value="PIS:" for="pis" />
+						<p:inputMask id="pis" required="true" value="#{colaboradorController.colaborador.pis}" mask="999.99999.99-9"/>
+						<p:message for="pis" />
+						
+						<p:outputLabel value="Título:" for="titulo" />
+						<p:inputMask id="titulo" required="true" value="#{colaboradorController.colaborador.titulo}" mask="999.999.999-999"/>
+						<p:message for="titulo" />
+						
+						<p:outputLabel value="Matricula:" for="matricula" />
+						<p:inputText id="matricula" value="#{colaboradorController.colaborador.matricula}"  required="true"/>
+						<p:message for="matricula" />
+						
+				</p:panelGrid>
+			</h:form>
+		</p:panel>
+	</ui:define>
+	<ui:define name="adicionais">
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+	</ui:define>
+		
+</ui:composition>
+			
+			

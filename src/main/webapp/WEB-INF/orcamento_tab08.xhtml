@@ -1,0 +1,453 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<style type="text/css">
+.valorPropaganda {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(80, 80, 80, 0.79);
+}
+
+.valorPropagandaRED {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(234, 15, 15, 0.79);
+}
+
+.ui-progressbar .ui-progressbar-label {
+	text-align: center;
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	display: none;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+body .ui-steps .ui-steps-item {
+	width: 25%;
+}
+
+body .ui-state-highlight {
+	text-shadow: none !important;
+}
+
+body .ui-steps.custom {
+	margin-bottom: 30px;
+}
+
+body .ui-steps.custom .ui-steps-item .ui-menuitem-link {
+	height: 0px;
+	padding: 0 1em;
+	overflow: visible;
+	border: 1px solid #c8c8c8;
+	display: block;
+	background-color: #FFFFFF;
+}
+
+body .ui-steps.custom .ui-steps-item .ui-menuitem-link .ui-steps-number
+	{
+	background-color: #0081c2;
+	color: #FFFFFF;
+	display: inline-block;
+	width: 30px;
+	border-radius: 15px;
+	margin-top: -10px;
+	margin-bottom: 10px;
+	position: relative;
+	top: -3px;
+	font-weight: normal;
+}
+
+body .ui-steps.custom .ui-steps-item .ui-menuitem-link .ui-steps-title {
+	margin-top: -6px;
+}
+
+body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-steps-title
+	{
+	color: #555;
+}
+
+.font-label-panel {
+	font-size: 15px !important;
+}
+
+#panel_planejado label {
+	font-size: 14px !important;
+}
+
+#panel_executado label {
+	font-size: 14px !important;
+}
+
+#panel_geral label {
+	font-size: 14px !important;
+}
+
+#panel_geral .ui-g-4 {
+	border-style: solid !important;
+	border-color: red !important;
+}
+
+.jqplot-table-legend {
+	vertical-align: middle;
+	font-size: 18px !important;
+}
+
+.jqplot-title {
+	top: 0;
+	left: 0;
+	font-size: 14px;
+	background: #4b5b35;
+	color: #fff;
+	font-family: 'Open Sans', sans-serif;
+}
+
+#panel_geral .ui-widget-header {
+	border: 1px solid #eeeeee;
+	background: #4b5b35;
+	color: #fff;
+	font-weight: normal;
+	font-size: 15px;
+	font-family: 'Open Sans', sans-serif;
+}
+
+
+</style>
+
+	<div style="padding: 2px 2px">
+
+		<p:panel id="panel_comp">
+			<f:facet name="header">
+			  Composição de orçamento
+			</f:facet>
+
+			<div id="panel_geral" class="ui-g"
+				style="width: 100%; margin-left: auto; margin-right: auto;">
+
+
+
+				<div id="panel_planejado" class="ui-g-6">
+
+					<p:panelGrid style="width:100%;margin-top:1px">
+
+						<f:facet name="header">
+
+							<p:row>
+								<p:column colspan="3">Totais</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column colspan="1">Composição</p:column>
+								<p:column colspan="1">Planejado</p:column>
+								<p:column colspan="1">Recebido</p:column>
+							</p:row>
+
+
+						</f:facet>
+
+						<f:facet name="footer">
+							<p:row>
+								<p:column colspan="3">
+									<p:commandLink value="Salvar" process="panel_comp"
+										update="form_tab_orcamento:panel_comp"
+										styleClass="btn btn-default btn-sm" onclick="start()"
+										oncomplete="stop()" onerror="stop();"
+										action="#{orcamento_controller.salvarOrcamentoPainel()}"
+										style="color:#000;float:left"></p:commandLink>
+
+								</p:column>
+							</p:row>
+
+						</f:facet>
+
+
+						<p:row>
+							<p:column colspan="1">
+								<p:outputLabel value="Doação:" style="float:right" />
+							</p:column>
+
+							<p:column colspan="1">
+
+								<p:inputText value="#{orcamento_controller.orcamento.valor}"
+									onkeydown="mascaraMoeda(this,moeda)"
+									style="font-size:13px;text-align: left;">
+
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+										locale="pt_BR" />
+
+
+								</p:inputText>
+
+
+							</p:column>
+
+							<p:column colspan="1">
+
+								<p:outputLabel
+									value="#{orcamento_controller.saldoRealOrcamento}"
+									style="font-size:15px;text-align:left;width:100%">
+									<f:convertNumber type="currency" maxFractionDigits="2"
+										currencySymbol="R$" />
+								</p:outputLabel>
+
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column colspan="1">
+								<p:outputLabel value="Overhead:" style="float:right" />
+							</p:column>
+
+							<p:column colspan="1">
+
+								<p:inputText onkeydown="mascaraMoeda(this,moeda)"
+									value="#{orcamento_controller.orcamento.valorOverhead}"
+									style="font-size:13px;text-align: left;">
+
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+										locale="pt_BR" />
+
+								</p:inputText>
+
+
+							</p:column>
+
+							<p:column colspan="1">
+
+								<p:outputLabel
+									value="#{orcamento_controller.orcamento.valorOverheadExec}"
+									style="font-size:15px;text-align:left;width:100%">
+									<f:convertNumber type="currency" maxFractionDigits="2"
+										currencySymbol="R$" />
+								</p:outputLabel>
+
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column colspan="1">
+								<p:outputLabel value="Overhead indireto:" style="float:right" />
+							</p:column>
+
+							<p:column colspan="1">
+
+								<p:inputText onkeydown="mascaraMoeda(this,moeda)"
+									value="#{orcamento_controller.orcamento.valorOverheadIndireto}"
+									style="font-size:13px;text-align: left;">
+
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+										locale="pt_BR" />
+
+								</p:inputText>
+
+
+							</p:column>
+
+							<p:column colspan="1">
+
+								<p:outputLabel
+									value="#{orcamento_controller.orcamento.valorOverheadIndiretoExec}"
+									style="font-size:15px;text-align:left;width:100%">
+									<f:convertNumber type="currency" maxFractionDigits="2"
+										currencySymbol="R$" />
+								</p:outputLabel>
+
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column colspan="1">
+								<p:outputLabel styleClass="font-label-panel"
+									value="Rendimentos:" style="float:right" />
+							</p:column>
+
+							<p:column colspan="1">
+
+								<p:inputText onkeydown="mascaraMoeda(this,moeda)"
+									value="#{orcamento_controller.orcamento.valorRendimento}"
+									style="font-size:13px;text-align: left;">
+
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+										locale="pt_BR" />
+
+								</p:inputText>
+
+
+							</p:column>
+
+							<p:column colspan="1">
+
+								<p:outputLabel
+									value="#{orcamento_controller.orcamento.valorRendimentoExec}"
+									style="font-size:15px;text-align:left;width:100%">
+									<f:convertNumber type="currency" maxFractionDigits="2"
+										currencySymbol="R$" />
+								</p:outputLabel>
+
+							</p:column>
+						</p:row>
+
+
+
+
+					</p:panelGrid>
+
+
+
+
+				</div>
+
+
+				<div id="panel_chart" class="ui-g-6">
+
+					<p:chart type="bar"
+						model="#{orcamento_controller.horizontalBarModel}"
+						style="height:300px;width:100%" />
+
+				</div>
+
+			</div>
+
+			<div id="panel_geral" class="ui-g"
+				style="width: 100%; margin-left: auto; margin-right: auto;">
+
+				<div class="ui-g-3">
+
+					<p:dataTable value="#{orcamento_controller.doacoesEfetivadas}"
+						var="lancamento">
+						<f:facet name="header">
+							Caixa
+						</f:facet>
+
+						<p:column headerText="Data">
+							<h:outputText value="#{lancamento.dataPagamento}">
+								<f:convertDateTime pattern="dd/MM/yyyy"
+									timeZone="America/Manaus" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Valor">
+							<h:outputText style="float:right"
+								value="#{lancamento.valorPagoAcao}">
+								<f:convertNumber type="currency" locale="pt_BR" />
+							</h:outputText>
+						</p:column>
+
+					</p:dataTable>
+
+				</div>
+
+				<div class="ui-g-3">
+
+					<p:dataTable value="#{orcamento_controller.rendimentos}"
+						var="rendimento">
+						<f:facet name="header">
+							Rendimentos
+						</f:facet>
+
+						<p:column headerText="Conta">
+							<h:outputText value="#{rendimento.conta.nomeConta}" />
+						</p:column>
+						<p:column headerText="Valor">
+							<h:outputText value="#{rendimento.valor}">
+								<f:convertNumber type="currency" maxFractionDigits="2"
+									currencySymbol="R$" />
+							</h:outputText>
+						</p:column>
+
+					</p:dataTable>
+
+				</div>
+
+				<div class="ui-g-3">
+
+					<p:dataTable value="#{orcamento_controller.listaOverHead}"
+						var="overhead">
+						<f:facet name="header">
+							Overhead
+						</f:facet>
+
+						<p:column headerText="Doação">
+							<h:outputText value="#{overhead.doacaoPagadora.titulo}" />
+						</p:column>
+
+						<p:column headerText="Data">
+							<h:outputText value="#{overhead.dataPrevisaoPagamento}">
+								<f:convertDateTime pattern="dd/MM/yyyy"
+									timeZone="America/Manaus" />
+							</h:outputText>
+
+						</p:column>
+
+						<p:column headerText="Valor">
+							<h:outputText value="#{overhead.valor}">
+								<f:convertNumber type="currency" maxFractionDigits="2"
+									currencySymbol="R$" />
+							</h:outputText>
+						</p:column>
+
+
+					</p:dataTable>
+
+				</div>
+
+
+				<div class="ui-g-3">
+
+					<p:dataTable value="#{orcamento_controller.listaOverHeadIndireto}"
+						var="overhead">
+						<f:facet name="header">
+							Overhead Indireto
+						</f:facet>
+
+						<p:column headerText="Doação">
+							<h:outputText value="#{overhead.doacaoPagadora.titulo}" />
+						</p:column>
+
+						<p:column headerText="Data">
+							<h:outputText value="#{overhead.dataPrevisaoPagamento}">
+								<f:convertDateTime pattern="dd/MM/yyyy"
+									timeZone="America/Manaus" />
+							</h:outputText>
+
+						</p:column>
+
+						<p:column headerText="Valor">
+							<h:outputText value="#{overhead.valor}">
+								<f:convertNumber type="currency" maxFractionDigits="2"
+									currencySymbol="R$" />
+							</h:outputText>
+						</p:column>
+
+
+					</p:dataTable>
+
+				</div>
+
+
+			</div>
+
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+
+		</p:panel>
+
+
+	</div>
+
+
+</ui:fragment>

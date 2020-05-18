@@ -1,0 +1,210 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<div id="info-recurso" class="ui-g ui-fluid">
+
+		<div class="ui-g-10">
+
+			<div class="ui-g-2 form-group">
+
+				<p:outputLabel value="Projeto" styleClass="form-label" />
+				<p:selectOneMenu id="input-project" autoWidth="false"
+					value="#{adiantamentoController.projetoAux}" filter="true"
+					filterMatchMode="contains" converter="projetoConverter">
+					<f:selectItem noSelectionOption="true" />
+					<f:selectItems value="#{adiantamentoController.projetos}"
+						var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}" />
+					<p:ajax update="input-line-budget" event="itemSelect"
+						onstart="start()" oncomplete="stop()" onerror="stop()"
+						listener="#{adiantamentoController.listaRubricasAndAtividades()}" />
+				</p:selectOneMenu>
+			</div>
+
+			<div id="line-budget-div" class="ui-g-2 form-group">
+
+				<p:outputLabel value="Linha orçamentária" styleClass="form-label" />
+
+				<p:selectOneMenu id="input-line-budget" autoWidth="false"
+					value="#{adiantamentoController.lancamentoAcao.projetoRubrica}"
+					filter="true" filterMatchMode="contains" var="categoria"
+					converter="projetoRubricaConverter">
+
+					<f:selectItems
+						value="#{adiantamentoController.listaDeRubricasProjeto}" var="ru"
+						itemLabel="#{ru.nomeCategoria}" itemValue="#{ru}" />
+
+
+					<p:column headerText="Código">
+						<h:outputText value="#{categoria.codigo}" />
+					</p:column>
+
+					<p:column headerText="Fonte">
+						<h:outputText value="#{categoria.nomeFonte}" />
+					</p:column>
+
+					<p:column headerText="Projeto">
+						<h:outputText value="#{categoria.nomeProjeto}" />
+					</p:column>
+
+					<p:column headerText="Componente">
+						<h:outputText value="#{categoria.nomeComponente}" />
+					</p:column>
+
+					<p:column headerText="SubComponente">
+						<h:outputText value="#{categoria.nomeSubComponente}" />
+					</p:column>
+
+					<p:column headerText="Linha orçamentária">
+						<h:outputText value="#{categoria.nomeCategoria}" />
+					</p:column>
+
+					<p:column headerText="Saldo">
+						<h:outputText value="#{categoria.valorSaldo}">
+							<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+								maxFractionDigits="2" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+
+				</p:selectOneMenu>
+
+
+			</div>
+
+			<div class="ui-g-2" style="display: none">
+				<p:outputLabel value="Atividades:  " />
+
+				<p:selectOneMenu id="input-activite-project" style="width:180px"
+					converter="atividadeProjetoConverter"
+					value="#{adiantamentoController.lancamentoAcao.atividade}"
+					filter="true" filterMatchMode="contains" var="atividade">
+
+					<f:selectItems value="#{adiantamentoController.listaAtividades}"
+						var="at" itemLabel="#{at.nome}" itemValue="#{at}" />
+
+
+					<p:column headerText="Nome">
+						<p:outputLabel value="#{atividade.nome}" />
+					</p:column>
+
+					<p:column headerText="Total">
+						<p:outputLabel value="#{atividade.valor}">
+							<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+								maxFractionDigits="2" locale="pt_BR" />
+						</p:outputLabel>
+					</p:column>
+
+					<p:column headerText="Saldo">
+						<p:outputLabel value="#{atividade.saldo}">
+							<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+								maxFractionDigits="2" locale="pt_BR" />
+						</p:outputLabel>
+					</p:column>
+
+
+
+				</p:selectOneMenu>
+
+			</div>
+
+			<div class="ui-g-2 form-group">
+
+				<p:outputLabel for="input-value-project" value="Valor"
+					styleClass="form-label" />
+				<p:inputText id="input-value-project"
+					onkeypress="return formatarNumero(this,event,19,2);"
+					value="#{adiantamentoController.lancamentoAcao.valor}">
+					<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+						locale="pt_BR" />
+
+				</p:inputText>
+
+
+			</div>
+
+			<div class="ui-g-2">
+				<br />
+				<p:commandLink styleClass="btn btn-primary btn-sm"
+					process="info-recurso-panel-pf" update="info-recurso-panel-pf"
+					onclick="start();" onerror="stop();"
+					action="#{adiantamentoController.adicionarNovaAcao()}"
+					oncomplete="steping(1); stop();"
+					style="color:#fff; margin: 2px 2px;" value="Adicionar" />
+
+
+			</div>
+
+		</div>
+
+		<div class="ui-g-2" style="text-align: right">
+
+			<p:outputLabel style="font-size:38px"
+				value="#{adiantamentoController.pagamento.valorTotalComDesconto}">
+				<f:convertNumber type="currency" maxFractionDigits="2"
+					currencySymbol="R$" />
+			</p:outputLabel>
+
+		</div>
+
+		<div id="list-recurso" class="ui-g-12">
+			<p:dataTable id="table" var="recurso" rowIndexVar="indexRow"
+				value="#{adiantamentoController.pagamento.lancamentosAcoes}">
+				<f:facet name="header">
+
+				</f:facet>
+
+				<p:column headerText="Codigo">
+					<h:outputText value="#{recurso.projetoRubrica.projeto.codigo}" />
+				</p:column>
+
+				<p:column headerText="Projeto">
+					<h:outputText value="#{recurso.projetoRubrica.projeto.nome}" />
+				</p:column>
+
+				<p:column headerText="Doação">
+					<h:outputText
+						value="#{recurso.projetoRubrica.rubricaOrcamento.orcamento.titulo}" />
+				</p:column>
+
+				<p:column headerText="Categoria">
+					<h:outputText
+						value="#{recurso.projetoRubrica.rubricaOrcamento.rubrica.nome}" />
+				</p:column>
+				<p:column headerText="Atividade">
+					<h:outputText value="#{recurso.atividade.nome}" />
+				</p:column>
+
+				<p:column headerText="">
+					<h:outputText value="#{recurso.valor}">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+							currencySymbol="R$" />
+					</h:outputText>
+				</p:column>
+
+
+				<p:column style="width:50px;">
+					<p:commandLink update="table info-recurso-panel-pf"
+						action="#{adiantamentoController.removerAcao(recurso)}"
+						rendered="#{adiantamentoController.poderEditar()}" process="@this"
+						onclick="start();" onerror="stop();"
+						oncomplete="steping(2); stop();">
+						<span class="fa fa-times"></span>
+					</p:commandLink>
+				</p:column>
+
+			</p:dataTable>
+		</div>
+
+	</div>
+
+
+
+
+
+</ui:fragment>

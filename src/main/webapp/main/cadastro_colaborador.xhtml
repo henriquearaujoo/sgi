@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+
+
+
+
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:viewAction action="#{colaboradorController.filtrar()}" />
+		</f:metadata>
+
+		<script type="text/javascript">
+				function start() {
+				    PF('statusDialog').show();
+				}
+				 
+				function stop() {
+				    PF('statusDialog').hide();
+				}
+				
+				function stopDlgfilter() {
+				    PF('dlg_filtro_compra').hide();
+				}
+			</script>
+
+		<p:breadCrumb>
+			<p:menuitem value="Home" url="home_new.xhtml" />
+			<p:menuitem value="Listagem de Colaboradores"
+				url="cadastro_colaborador.xhtml" />
+		</p:breadCrumb>
+
+
+		<h:form id="content_colaborador">
+
+			<p:panel header="Filtros" toggleable="true">
+				<p:panelGrid columns="4" styleClass="ui-noborder">
+
+					<h:outputText value="Nome" />
+					<p:inputText placeholder="Nome do Colaborador"
+						value="#{colaboradorController.filtro.nomeColaborador}" size="40" />
+
+
+					<h:outputText value="CPF: " />
+					<p:inputMask value="#{colaboradorController.filtro.CPF}"
+						placeholder="Digite o CPF" size="40" mask="999.999.999-99" />
+
+
+					<h:outputText value="Gestão:" />
+					<p:autoComplete size="40"
+						value="#{colaboradorController.filtro.gestaoColaborador}"
+						placeholder="Gestão do Colaborador"
+						completeMethod="#{colaboradorController.completeGestao}"
+						var="gestao" itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+						converter="gestaoConverter" />
+
+					<h:outputText value="Data de Nascimento:  " />
+					<p:calendar size="40" placeholder="Data de Nasc. do Colaborador"
+						mask="true" value="#{colaboradorController.filtro.dataNascimento}"
+						navigator="true" pattern="dd/MM/yyyy" />
+				</p:panelGrid>
+				<h:panelGroup>
+
+
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						action="#{colaboradorController.filtrar()}" onclick="start()"
+						onsuccess="stop()" onerror="stop()" update="tabela_colaborador"
+						style="color:#fff; margin: 8px 2px;">
+						<span class="glyphicon glyphicon-search"></span>
+						<span style="margin: 3px;">Procurar</span>
+					</p:commandLink>
+
+					<p:link styleClass="btn btn-success btn-sm fa fa-cart-plus"
+						style="color:#fff;margin: 8px 2px;"
+						outcome="/main/cadastro_colaborador_novo" title="Adicionar novo">
+						<span style="font-family: Arial">Novo</span>
+					</p:link>
+
+					<p:commandLink styleClass="btn btn-danger btn-sm fa fa-remove"
+						title="Limpar" process="@this" onstart="start()"
+						onsuccess="stop()" onerror="stop()"
+						action="#{colaboradorController.limpar()}"
+						update=":content_colaborador" style="color:#fff; margin: 8px 2px;">
+						<span style="width: 40px; font-family: Arial">Limpar</span>
+					</p:commandLink>
+
+
+				</h:panelGroup>
+			</p:panel>
+
+			<h:panelGrid styleClass="ui-fluid">
+				<p:dataTable id="tabela_colaborador" paginator="true" rows="12"
+					value="#{colaboradorController.listaColaborador}" var="colaborador">
+
+
+
+
+
+
+					<p:column headerText="NOME" filterBy="#{colaborador.nome}"
+						filterMatchMode="contains">
+
+						<p:link outcome="/main/cadastro_colaborador_novo"
+							value="#{colaborador.nome}">
+							<f:param name="id" value="#{colaborador.id}" />
+						</p:link>
+
+					</p:column>
+					<p:column headerText="RG" filterBy="#{colaborador.rg}"
+						filterMatchMode="contains">
+						<h:outputText value="#{colaborador.rg}" />
+
+					</p:column>
+					<p:column headerText="PIS" filterBy="#{colaborador.pis}"
+						filterMatchMode="contains">
+						<h:outputText value="#{colaborador.pis}" />
+
+					</p:column>
+					<p:column headerText="EMAIL" filterBy="#{colaborador.email}"
+						filterMatchMode="contains">
+						<h:outputText value="#{colaborador.email}" />
+
+					</p:column>
+					<p:column headerText="CPF" filterBy="#{colaborador.cpf}"
+						filterMatchMode="contains">
+						<h:outputText value="#{colaborador.cpf}" />
+					</p:column>
+
+				</p:dataTable>
+
+
+
+			</h:panelGrid>
+
+		</h:form>
+
+
+
+
+	</ui:define>
+	<ui:define name="adicionais">
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+	</ui:define>
+
+
+
+</ui:composition>

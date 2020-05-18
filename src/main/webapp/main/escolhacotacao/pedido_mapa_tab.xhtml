@@ -1,0 +1,224 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+	<p:panel id="list-pedido">
+
+		<div class="ui-g ui-fluid">
+
+			<div class="ui-g-12" style="text-align: right;">
+				<p:commandLink value="Definir recurso"
+					update="panel-recurso, table-recurso"
+					action="#{escolhaCotacao.selecionarFornecedor()}"
+					onclick="start(); setarWidthHeight('form-forma-pagamento-mode01');"
+					onerror="stop()" onsuccess="stop()" styleClass="btn btn-primary">
+
+				</p:commandLink>
+
+				<p:commandLink value="Excluir" update="table-pedido"
+					action="#{escolhaCotacao.excluirPedido()}" onclick="start();"
+					onerror="stop()" onsuccess="stop()" styleClass="btn btn-danger">
+					<p:confirm header="Confirmação"
+						message="Excluir pedido? Lembre-se, ao excluir o valor será retirado dos projetos associados"
+						icon="ui-icon-alert" />
+
+				</p:commandLink>
+
+				<p:commandLink styleClass="btn btn-success"
+					onclick="start(); setarWidthHeight('preparacao-aprovacao');" update="panel-preparacao"
+					onerror="stop()" onsuccess="stop();" oncomplete="setarFocused('div-preparacao');" 
+					title="Autorizar a compra. Deve ser realizado pelo setor de compras!"
+					action="#{escolhaCotacao.editarPedido()}"
+					style="color:#fff; margin: 2px 2px" value="Autorizar">
+				</p:commandLink>
+
+
+			</div>
+
+			<div class="ui-g-12">
+				<p:dataTable id="table-pedido" var="pedido"
+					value="#{escolhaCotacao.pedidos}" rowKey="#{pedido.id}"
+					selection="#{escolhaCotacao.pedidosSelecionados}">
+
+					<p:column selectionMode="multiple"
+						style="width:35px;text-align:center;" />
+
+					<p:column headerText="Código" style="width:80px">
+						<h:outputText value="#{pedido.id}" />
+					</p:column>
+
+					<p:column headerText="Fornecedor">
+						<h:outputText value="#{pedido.fornecedor.nomeFantasia}" />
+					</p:column>
+
+					<p:column headerText="Valor" style="width:120px">
+						<h:outputText value="#{pedido.valorTotalComDesconto}">
+							<f:convertNumber type="currency" maxFractionDigits="3"
+								currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+
+
+			</div>
+
+			<div id="repeat-list" class="ui-g-12" style="display: none">
+				<ui:repeat var="pedido" value="#{escolhaCotacao.pedidos}">
+
+					<p:dataTable var="itemPedido"
+						rowStyleClass="#{!itemPedido.pedido.statusCompra.nome.equals('Não iniciado/Solicitado') ? 'highlight' : null}"
+						value="#{escolhaCotacao.getItensPedidoByPedido(pedido)}">
+						<f:facet name="header">
+
+							<p:commandLink
+								title="Edição da fonte de recurso para pagemento da compra"
+								styleClass="btn btn-primary fa fa-usd"
+								update="panel-recurso, table-recurso"
+								actionListener="#{escolhaCotacao.selecionarFornecedor(pedido)}"
+								style="color:#fff; margin: 2px 2px;"
+								onclick="start(); setarWidthHeight('form-forma-pagamento-mode01');"
+								onerror="stop()" onsuccess="stop()"
+								value="Editar Recurso #{pedido.fornecedor.nomeFantasia}">
+							</p:commandLink>
+
+							<p:commandLink title="Remover todos os itens"
+								rendered="#{escolhaCotacao.verificarPrivilegioExclusao() or pedido.statusCompra.nome.equals('Não iniciado/Solicitado')}"
+								styleClass="btn btn-danger fa fa-remove"
+								style="margin: 2px 2px;color:#fff" value=" Excluir Pedido"
+								action="#{escolhaCotacao.deletarPedido(pedido)}">
+								<p:confirm header="Confirmação" message="Deletar todos?"
+									icon="ui-icon-alert" />
+							</p:commandLink>
+
+							<p:commandLink styleClass="btn btn-success  fa fa-check"
+								title="Autorizar a compra. Deve ser realizado pelo setor ADMINISTRATIVO!"
+								oncomplete="PF('prepara_aprovacao').show();"
+								action="#{escolhaCotacao.prepararAprovacaoPedido(pedido)}"
+								style="color:#fff; margin: 2px 2px" value=" Autorizar">
+							</p:commandLink>
+
+							<p:link title="Visualizar pedidos"
+								rendered="#{pedido.statusCompra.nome.equals('Concluído')}"
+								value="Pedido gerado, clique aqui para ir a tela de pedidos"
+								outcome="/main/pedidos"
+								style="color:#000;margin-right:10px;font-weight:bold">
+								<f:param name="comp" value="#{escolhaCotacao.compra.id}" />
+
+							</p:link>
+
+						</f:facet>
+
+						<p:columnGroup type="header">
+							<p:row>
+								<p:column rowspan="2" headerText="Item" />
+								<p:column style="text-align:center" colspan="5"
+									headerText="#{pedido.fornecedor.nomeFantasia}" />
+							</p:row>
+							<p:row>
+								<p:column style="text-align:right" headerText="Qtd." />
+								<p:column style="text-align:right" headerText="Valor unitário" />
+								<p:column style="text-align:right"
+									headerText="Valor unitário c/ desconto" />
+								<p:column style="text-align:right" headerText="Total" />
+								<p:column style="text-align:center;width:60px;"
+									headerText="Ação" />
+							</p:row>
+
+
+
+						</p:columnGroup>
+
+						<p:column>
+							<h:outputText
+								value="#{itemPedido.cotacao.itemCompra.produto.descricao}" />
+						</p:column>
+
+						<p:column>
+							<h:outputText value="#{itemPedido.cotacao.quantidade}" />
+						</p:column>
+
+						<p:column style="text-align:right">
+							<h:outputText value="#{itemPedido.cotacao.valor}">
+								<f:convertNumber type="currency" maxFractionDigits="3"
+									currencySymbol="R$" />
+							</h:outputText>
+						</p:column>
+
+						<p:column style="text-align:right;width:100px">
+							<h:outputText value="#{itemPedido.cotacao.valorDesconto}">
+								<f:convertNumber type="currency" maxFractionDigits="3"
+									currencySymbol="R$" />
+							</h:outputText>
+						</p:column>
+
+						<p:column style="text-align:right">
+							<h:outputText
+								value="#{itemPedido.cotacao.quantidade * itemPedido.cotacao.valorDesconto}">
+								<f:convertNumber type="currency" maxFractionDigits="2"
+									currencySymbol="R$" />
+							</h:outputText>
+						</p:column>
+
+						<p:column style="text-align:center;width:100px;">
+
+							<p:commandLink title="Excluir item do pedido" value=" Excluir"
+								style="color:#FFF;" process="@this"
+								styleClass="btn btn-danger btn-xs fa fa-remove"
+								rendered="#{escolhaCotacao.verificarPrivilegioExclusao() or itemPedido.pedido.statusCompra.nome.equals('Não iniciado/Solicitado')}"
+								action="#{escolhaCotacao.deletarItemPedido(itemPedido)}">
+								<p:confirm header="Confirmação"
+									message="Ao deletar o item não fará mais parte das escolhas."
+									icon="ui-icon-alert" />
+							</p:commandLink>
+
+						</p:column>
+
+						<p:columnGroup type="footer">
+							<p:row>
+								<p:column colspan="4" footerText="Subtotal: "
+									style="text-align:right" />
+								<p:column style="text-align:right"
+									footerText="#{escolhaCotacao.getTotais(pedido.valorTotalComDesconto)}" />
+								<p:column></p:column>
+							</p:row>
+
+							<p:row>
+								<p:column colspan="4" footerText="Desconto: "
+									style="text-align:right" />
+								<p:column style="text-align:right"
+									footerText="#{escolhaCotacao.getTotais(pedido.valorTotalSemDesconto.subtract(pedido.valorTotalComDesconto))}" />
+								<p:column></p:column>
+							</p:row>
+
+							<p:row>
+								<p:column colspan="4" footerText="Total: "
+									style="text-align:right" />
+								<p:column style="text-align:right"
+									footerText="#{escolhaCotacao.getTotais(pedido.valorTotalComDesconto)}" />
+								<p:column></p:column>
+							</p:row>
+
+
+
+						</p:columnGroup>
+
+					</p:dataTable>
+
+				</ui:repeat>
+
+
+			</div>
+		</div>
+
+	</p:panel>
+
+
+
+</ui:fragment>

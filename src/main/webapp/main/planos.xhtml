@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{plano_trabalho_controller.initListagem()}" />
+		</f:metadata>
+
+
+		<h:form id="form-plano">
+			<br/>
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Plano de Trabalho" url="#" />
+			</p:breadCrumb>
+
+			<p:panel id="panel-content">
+
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-12 ui-md-6 ui-lg-3">
+						<p:link styleClass="btn btn-success btn-sm"
+							style="margin-left:5px" outcome="/main/plano_trabalho_cadastro"
+							title="Adicionar plano de trabalho">
+							<span class="fa fa-fw fa-plus"></span>
+							<span>Novo</span>
+						</p:link>
+
+					</div>
+				</div>
+
+				<p:separator></p:separator>
+
+				<p:dataTable value="#{plano_trabalho_controller.planos}"
+					widgetVar="list"
+					filteredValue="#{plano_trabalho_controller.filter}" var="plano">
+
+					<p:column headerText="Título" filterBy="#{plano.titulo}"
+						filterMatchMode="contains">
+						<h:outputText value="#{plano.titulo.toUpperCase()}" />
+					</p:column>
+
+					<p:column headerText="UC" filterBy="#{plano.nomeUC}"
+						filterMatchMode="contains">
+						<h:outputText value="#{plano.nomeUC}" />
+					</p:column>
+
+
+					<p:column headerText="Gestão" filterBy="#{plano.nomeGestao}"
+						filterMatchMode="contains">
+						<h:outputText value="#{plano.nomeGestao}" />
+					</p:column>
+
+					<p:column headerText="Data Inicial" filterBy="#{plano.dataInicio}"
+						filterMatchMode="contains">
+						<h:outputText value="#{plano.dataInicio}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Data Final" filterBy="#{plano.dataFinal}"
+						filterMatchMode="contains">
+						<h:outputText value="#{plano.dataFinal}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+
+					<p:column headerText="Metas" filterBy="#{plano.qtdProjetos}"
+						filterMatchMode="contains">
+						<h:outputText value="#{plano.qtdProjetos}" />
+					</p:column>
+
+					<p:column headerText="Valor Previsto "
+						filterBy="#{plano.valorPrevisto}" filterMatchMode="contains">
+						<h:outputText value="#{plano.valorPrevisto}">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Valor" filterBy="#{plano.valor}"
+						filterMatchMode="contains">
+						<h:outputText value="#{plano.valor}">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Ação" style="width:145px">
+						<center>
+							<p:link styleClass="btn btn-primary"
+								outcome="/main/plano_trabalho_cadastro">
+								<f:param name="plano" value="#{plano.id}" />
+								<span>Editar/Visualizar</span>
+							</p:link>
+						</center>
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+
+</ui:composition>

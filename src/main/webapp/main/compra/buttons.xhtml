@@ -1,0 +1,92 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<div id="btn-panel-wizard" class="ui-g ui-fluid"
+		style="margin-bottom: 10px">
+
+		<div class="ui-g-6">
+			<p:commandLink styleClass="btn btn-primary btn-sm"
+				title="#{compraController.stepIndex}"
+				rendered="#{compraController.poderEditar()}" onerror="stop()"
+				onclick="start(); "
+				oncomplete="steping(#{compraController.stepIndex}); setarFocused('info-geral'); stop(); 
+								if (args &amp;&amp; !args.validationFailed) PF('dlg_salvar').show();"
+				process="@this, panel-info-geral, btn-save-panel"
+				update="@this, panel-info-geral, messages, btn-save-panel"
+				style="color:#fff; margin: 2px 2px;" value="Salvar">
+			</p:commandLink>
+
+			<p:commandLink styleClass="btn btn-success btn-sm" rendered="false"
+				oncomplete="stop(); " onerror="stop()" process="@this"
+				style="color:#fff; margin: 2px 2px;" value="Autorizar"
+				onclick="start(); setarWidthHeight('form_aprovacao'); PF('dlg_aprovacao_coordenador').show();" />
+
+			<p:commandLink styleClass="btn btn-success btn-sm"
+				update="@this, panel-info-geral, btn-panel-p"
+				action="#{compraController.atualizarStatusSC()}" process="@this"
+				oncomplete="setarFocused('info-geral'); stop();" onclick="start();"
+				onerror="stop();"
+				rendered="#{compraController.compra.id != null and  compraController.poderEditar()
+							and  !compraController.compra.statusCompra.nome.equals('Cancelado')}"
+				style="color:#fff; margin: 2px 2px;" value="Atualizar Status">
+			</p:commandLink>
+
+			<p:commandLink styleClass="btn btn-danger btn-sm"
+				action="#{compraController.cancelar()}" process="@this"
+				rendered="#{compraController.compra.id != null
+							and !compraController.compra.statusCompra.nome.equals('Cancelado') 
+							and !compraController.compra.statusCompra.nome.equals('Concluído')}"
+				oncomplete="stop(); setarFocused('info-geral');" onclick="start()"
+				onerror="stop()" style="color:#fff; margin: 2px 2px;"
+				update="@this, panel-info-geral, btn-panel-p" value="Cancelar">
+			</p:commandLink>
+
+			<p:commandLink styleClass="btn btn-success btn-sm"
+				rendered="#{compraController.compra.id != null 
+							and !compraController.compra.statusCompra.nome.equals('Autorizado')
+							and !compraController.compra.statusCompra.nome.equals('Não iniciado/Solicitado') 
+							and compraController.poderEditar()}"
+				update="@this, panel-info-geral, btn-panel-p" onclick="start()"
+				onerror="stop()" oncomplete="stop(); setarFocused('info-geral');"
+				process="@this" action="#{compraController.reabrir()}"
+				style="color:#fff; margin: 2px 2px;" value="Reabrir">
+			</p:commandLink>
+
+			<p:commandLink action="#{compraController.voltarListagem()}"
+				value="Sair" process="@this" styleClass="btn btn-danger btn-sm"
+				style="color:#fff; margin: 2px 2px;" />
+
+		</div>
+
+		<div class="ui-g-6" style="text-align: right">
+
+			<p:commandLink id="btn-back" styleClass="btn btn-primary"
+				update="step, btn-back, btn-next, btn-panel-p" value="Voltar"
+				process="@this"
+				onclick="steping(#{compraController.stepIndex - 1}); start()"
+				onerror="stop()" oncomplete="stop()"
+				action="#{compraController.steping('back')}"></p:commandLink>
+
+			<p:commandLink id="btn-next" styleClass="btn btn-primary"
+				update="step, btn-back, btn-next, btn-panel-p" value="Próximo"
+				onclick="steping(#{compraController.stepIndex + 1}); start()"
+				onerror="stop()" oncomplete="stop()" process="@this"
+				action="#{compraController.steping('next')}"></p:commandLink>
+
+
+		</div>
+
+		<div id="actions-button" class="ui-g-12" style="display: none">
+
+			<div class="ui-g-12" style="text-align: right;"></div>
+		</div>
+
+	</div>
+
+
+</ui:fragment>

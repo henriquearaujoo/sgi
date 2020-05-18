@@ -1,0 +1,359 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<div style="padding: 2px 2px">
+
+		<div class="cadastro-projeto"
+			style="margin-right: auto; margin-left: auto;">
+			<div>
+
+				<h:panelGroup id="panel-cadastro-projeto">
+
+
+					<div id="div_acoes" class="botao_central" align="left"
+						style="width: 100%; background-color: rgba(51, 122, 183, 0.18); margin: 0px 1px 10px 2px;">
+
+						<p:commandLink styleClass="btn btn-success btn-sm "
+							action="#{projetoBean.salvarMODE01()}"
+							process="panel-cadastro-projeto,panel_objetivos,id_enquadramento" update="panel-cadastro-projeto :form-cadastro-projeto"
+							style="color:#fff; margin: 2px 2px;"
+							onstart="start();" onsuccess="stop();" onerror="stop();" >
+							<span class="glyphicon glyphicon-floppy-disk"></span><span style="margin: 3px;">Salvar</span>
+							</p:commandLink>
+
+						<p:commandLink style="color:#FFF;margin-left:5px"
+									   value="Aprovar Projeto"
+									   styleClass="btn btn-primary btn-sm"
+									   oncomplete="PF('dlgAprovacaoProjeto').show()"
+									   process="@this"
+									   rendered="#{projetoBean.podeAprovar(null)}">
+									   <span class="glyphicon glyphicon-ok"></span><span style="margin: 3px;">Aprovar Projeto</span>
+						</p:commandLink>
+
+
+						<p:link styleClass="btn btn-danger btn-sm "
+							outcome="/main/projetos"
+							style="color:#fff; margin: 2px 2px 2px 2px;">
+							<span class="glyphicon glyphicon-chevron-left"></span><span style="margin: 3px;">Sair</span>
+						</p:link>
+
+
+					</div>
+
+					<p:fieldset legend="Dados do Projeto">
+						<p:panelGrid style="width:100%;" styleClass="ui-noborder"
+							columns="8">
+
+							<p:outputLabel value="Código:" for="cod_projeto" />
+							<p:inputText id="cod_projeto"
+								value="#{projetoBean.projeto.codigo}" required="true"
+								requiredMessage="Campo 'Código' obrigatório" />
+
+							<p:outputLabel value="Titulo:" for="nome_projeto" />
+							<p:inputText id="nome_projeto"
+								value="#{projetoBean.projeto.nome}" required="true"
+								requiredMessage="Campo 'Título' obrigatório" />
+
+							<p:outputLabel value="Responsável:" for="responsavel" />
+							<p:inputText id="responsavel"
+								value="#{projetoBean.projeto.responsavel}"
+								styleClass="font11-vi" required="true"
+								requiredMessage="Campo 'Responsável' obrigatório" />
+
+							<p:outputLabel value="Status:"  />
+							<p:inputSwitch offLabel="Desativado" onLabel="Ativado" disabled="#{projetoBean.usuarioSessao.usuario.perfil.id != 1}"
+								value="#{projetoBean.projeto.ativo}" />
+
+
+							<p:outputLabel value="Destino/Localização:" rendered="false" for="destino_loc"  />
+							<p:autoComplete id="destino_loc" styleClass="font11-vi" 
+								panelStyle="width:180px"
+								requiredMessage="Campo 'Destino/Localização' obrigatório"
+								rendered="false" placeholder="Destino" required="true"
+								value="#{projetoBean.projeto.localidade}"
+								completeMethod="#{fornecedor_controller.completeLocalidade}"
+								var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+								converter="localConverterVI" minQueryLength="3"
+								forceSelection="true" />
+
+							<p:outputLabel value="Gestão:" for="gestao" />
+							<p:autoComplete id="gestao" styleClass="font11-vi"
+								panelStyle="width:180px" requiredMessage="Campo obrigatório"
+								rendered="true"
+								placeholder="Superintendencia/Coordenadoria/Regional"
+								required="true" value="#{projetoBean.projeto.gestao}"
+								completeMethod="#{projetoBean.completeGestao}" var="gestao"
+								itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+								converter="gestaoConverterVI" minQueryLength="3"
+								forceSelection="true" />
+
+
+							
+
+
+							<p:outputLabel value="Data inicio:" for="data_inicio" />
+							<p:calendar id="data_inicio" navigator="true"
+								pattern="dd/MM/yyyy" value="#{projetoBean.projeto.dataInicio}"
+								required="true" requiredMessage="Campo obrigatório" />
+
+							<p:outputLabel value="Data final:" for="data_final" />
+							<p:calendar id="data_final" navigator="true" pattern="dd/MM/yyyy"
+								value="#{projetoBean.projeto.dataFinal}" required="true"
+								requiredMessage="Campo obrigatório" />
+
+							<p:outputLabel value="Quantidade:" rendered="false" />
+							<p:inputText value="#{projetoBean.projeto.quantidade}"
+								styleClass="font11-vi" rendered="false" />
+
+							<p:outputLabel value="Orçamento:" for="valor_projeto"  />
+							<p:inputText id="valor_projeto" disabled="#{projetoBean.usuarioSessao.usuario.perfil.id != 1}"
+								value="#{projetoBean.projeto.valor}"
+								onkeydown="mascaraMoeda(this,moeda)" required="true"
+								requiredMessage="Campo obrigatório">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" />
+							</p:inputText>
+
+
+
+							<h:panelGroup rendered="false" >
+								<p:outputLabel value="Estrutura:  " />
+								<p:spacer width="3px" />
+								<p:selectBooleanCheckbox
+									value="#{projetoBean.projeto.estrutura}" />
+							</h:panelGroup>
+
+							<h:panelGroup rendered="false" >
+								<p:outputLabel value="Tarifado:  " />
+								<p:spacer width="3px" />
+								<p:selectBooleanCheckbox value="#{projetoBean.projeto.tarifado}" />
+							</h:panelGroup>
+
+
+
+							<p:outputLabel value="Tipo:" for="tipo_projeto" />
+							<p:selectOneMenu id="tipo_projeto" style="width:150px"
+								value="#{projetoBean.projeto.tipoProjeto}" required="true"
+								requiredMessage="Campo obrigatório">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.TiposProjeto()}" var="tipo"
+									itemLabel="#{tipo.nome}" itemValue="#{tipo}" />
+							</p:selectOneMenu>
+
+
+
+
+							
+
+							
+							
+							
+
+							<p:outputLabel value="Qtd. Atividades:" for="qtd_atividade" rendered="false" />
+							<p:inputText id="qtd_atividade" rendered="false"
+								value="#{projetoBean.projeto.quantidadeAtividade}"
+								styleClass="font11-vi" />
+
+
+							<p:outputLabel value="Qualificação:" for="cadeia_proj" rendered="false" />
+							<p:selectOneMenu id="qualif" filter="true" style="width:150px" rendered="false"
+								value="#{projetoBean.projeto.qualificacaoProjeto}"
+								converter="qualifConverter" filterMatchMode="startsWith">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.qualificacoes}" var="qualif"
+									itemLabel="#{qualif.nome}" itemValue="#{cad}">
+								</f:selectItems>
+							</p:selectOneMenu>
+
+
+							<p:outputLabel value="Objetivo Geral:" for="objetivo_projeto" />
+							<p:inputTextarea id="objetivo_projeto" autoResize="false"
+								rows="5" cols="40" styleClass="font11-vi"
+								value="#{projetoBean.projeto.objetivo}" required="true"
+								requiredMessage="Campo obrigatório" />
+
+						</p:panelGrid>
+
+					</p:fieldset>
+
+				</h:panelGroup>
+
+				<p:separator></p:separator>
+				
+				<p:fieldset legend="Enquadramento do Projeto" id="id_enquadramento" >
+						<p:panelGrid style="width:100%;" styleClass="ui-noborder"
+							columns="8">
+							
+							
+							<p:outputLabel value="Componente" for="componente" />
+							<p:selectOneMenu id="componente" required="true"
+								style="width:150px" requiredMessage="Campo obrigatório"
+								value="#{projetoBean.projeto.componente}"
+								converter="componenteConverter">
+								<p:ajax listener="#{projetoBean.carregarSubComponentes()}"
+									process="@this" update="sub_componente" />
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.componentesClass}"
+									var="componente" itemLabel="#{componente.nome}"
+									itemValue="#{componente}" />
+							</p:selectOneMenu>
+
+							<p:outputLabel value="SubComponente:" for="sub_componente" />
+							<p:selectOneMenu id="sub_componente" required="true"
+								requiredMessage="Campo obrigatório"
+								value="#{projetoBean.projeto.subComponente}" style="width:150px"
+								converter="subcomponenteConverter">
+								<f:selectItems value="#{projetoBean.subComponentes}"
+									var="subcomponente" itemLabel="#{subcomponente.nome}"
+									itemValue="#{subcomponente}" />
+							</p:selectOneMenu>
+
+							
+							<p:outputLabel value="Cadeia:" for="cadeia_proj" />
+							<p:selectOneMenu id="cadeia_proj" filter="true"
+								style="width:150px" value="#{projetoBean.projeto.cadeia}"
+								converter="cadeiaConverter" filterMatchMode="startsWith">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.cadeias}" var="cad"
+									itemLabel="#{cad.nome}" itemValue="#{cad}">
+								</f:selectItems>
+							</p:selectOneMenu>
+
+							<p:outputLabel value="ED/RR:" for="resp_eder" />
+							<p:selectOneMenu id="resp_eder" 
+								style="width:150px" panelStyle="width:180px"
+								value="#{projetoBean.projeto.repasse}">
+								<f:selectItem itemLabel="Selecione um" noSelectionOption="true" />
+								<f:selectItem itemLabel="ED" itemValue="ED" />
+								<f:selectItem itemLabel="RR" itemValue="RR" />
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Plano de trabalho:" for="pt" />
+							<p:selectOneMenu id="pt"
+								value="#{projetoBean.projeto.planoDeTrabalho}"
+								style="width:150px">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.planos}" var="plano"
+									itemLabel="#{plano.titulo}" itemValue="#{plano}"/>
+							</p:selectOneMenu>
+							
+
+							<p:outputLabel value="Programa:" for="programa_projeto" />
+							<p:selectOneMenu id="programa_projeto" style="width:150px"
+								value="#{projetoBean.projeto.programa}">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.programas}" var="programa"
+									itemLabel="#{programa.nome}" itemValue="#{programa}" />
+							</p:selectOneMenu>
+
+							<p:outputLabel value="SubPrograma:" for="sub_programa" />
+							<p:selectOneMenu id="sub_programa" filter="true"
+								style="width:150px" value="#{projetoBean.projeto.subPrograma}"
+								converter="converterSubPrograma" filterMatchMode="startsWith">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.subsProgramas}"
+									var="subProg" itemLabel="#{subProg.nome}"
+									itemValue="#{subProg}">
+								</f:selectItems>
+							</p:selectOneMenu>
+				
+				</p:panelGrid>
+				</p:fieldset>
+				
+				<p:separator></p:separator>
+				
+				<h:panelGroup id="panel_objetivos" rendered="#{projetoBean.projeto.id != null}" >
+					<p:fieldset legend="Objetivos Específicos" id="objetivos" >
+						
+							<p:messages  showSummary="false" showDetail="true" closable="true" />
+							<p:dataTable value="#{projetoBean.listaObjetivos}" rowStyleClass="#{objetivo.concluido? 'highlight' : null}" id="tabela_objetivo"  emptyMessage="Sem Registros" var="objetivo" >
+								<f:facet name="header">
+										
+										<div align="center" >
+											<p:outputLabel value="Lista de Objetivos Específicos" style="font-size: 15px;" />
+										</div>
+										<div class="botao_central" align="left"
+											style="width: 100%; background-color: rgba(51, 122, 183, 0.18); margin: 0px 1px 10px 2px;">
+					
+											<p:commandLink id="add_objetivo"
+												styleClass="btn btn-primary btn-sm"
+												style="color:white;margin:2px 2px"
+												action="#{projetoBean.openDialogObjetivo()}"
+												process="@this"
+												update="form-cadastro-objetivo"
+												title="Adicionar Objetivo" >
+												<span class="glyphicon glyphicon-plus"></span><span style="margin: 3px;">Novo</span>
+											</p:commandLink>
+					
+										</div>	
+									
+								</f:facet>
+								<p:column headerText="Nome" style="text-align:center" width="20%" >
+									<p:outputLabel value="#{objetivo.nome}" />
+								</p:column>
+								
+								<p:column headerText="Descrição"  width="70%" >
+									<p:outputLabel value="#{objetivo.descricao}" />
+								</p:column>
+								
+								<p:column width="10%" headerText="Ação" style="text-align:center" >
+									<p:commandLink action="#{projetoBean.editarObjetivo()}" 
+										styleClass="btn btn-default btn-xs"
+										process="@this" 
+										update="form-cadastro-objetivo">
+										<span class=" glyphicon glyphicon-edit"></span>
+										<f:setPropertyActionListener value="#{objetivo}"
+											target="#{projetoBean.objetivo}" />
+									</p:commandLink>
+									
+									<p:commandLink update="@form,tabela_objetivo"
+										style="margin-left:5px;font-size:12px;color:#fff"
+										styleClass="btn btn-danger btn-xs "
+										process="@this" title="Excluir"
+										action="#{projetoBean.removeObjetivo(objetivo)}">
+										<span class="glyphicon glyphicon-remove-circle"></span>
+										<p:confirm header="Confirmar exclusão do objetivo"
+											icon="ui-icon-alert"
+											message="Excluir Objetivo. Deseja continuar?" />
+	
+									</p:commandLink>
+									
+									<p:commandLink update="@form" id="concluirObjetivo"
+										style="margin-left:5px;font-size:12px;color:#fff"
+										styleClass="btn btn-success btn-xs "
+										title="Concluir" process="concluirObjetivo"
+										action="#{projetoBean.concluirObjetivo(objetivo)}">
+									<span class="glyphicon glyphicon-ok-circle"></span>
+									</p:commandLink>
+									
+									
+								</p:column>
+								
+								
+								
+								
+							</p:dataTable>
+						
+					</p:fieldset>
+				</h:panelGroup>
+				
+				
+				
+				
+				
+			</div>
+		</div>
+
+
+
+	</div>
+
+
+
+</ui:fragment>

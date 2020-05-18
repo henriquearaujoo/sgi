@@ -1,0 +1,141 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<div id="info-items" class="ui-g ui-fluid">
+
+		<div class="ui-g-2 form-group">
+			<p:outputLabel styleClass="form-label" value="Quantidade"
+				for="input-quantidade" />
+			<p:inputText required="true" id="input-quantidade"
+				requiredMessage="Preencha a quantidade de produtos"
+				value="#{compraController.itemCompra.quantidade}" />
+
+		</div>
+
+		<div class="ui-g-3 form-group">
+			<p:outputLabel styleClass="form-label" value="Produtos"
+				for="input-produto" />
+			<p:autoComplete id="input-produto" panelStyle="height:300px"
+				required="true" requiredMessage="Preencha o campo Produto"
+				value="#{compraController.itemCompra.produto}"
+				completeMethod="#{compraController.completeProduto}" var="produto"
+				itemLabel="#{produto.descricao}" itemValue="#{produto}"
+				converter="produtoConverter" forceSelection="true" />
+
+		</div>
+
+		<div class="ui-g-3 form-group">
+			<p:outputLabel for="input-descricao" styleClass="form-label"
+				value="Descrição complementar" />
+			<p:inputText id="input-descricao" maxlength="255"
+				value="#{compraController.itemCompra.descricaoComplementar}">
+			</p:inputText>
+		</div>
+
+		<div class="ui-g-2 form-group">
+			<p:outputLabel styleClass="form-label" value="Unidade de medida"
+				for="input-und-medida" />
+			<p:selectOneMenu id="input-und-medida" filter="true"
+				filterMatchMode="contains" converter="unidadeCompraConverter"
+				required="true" requiredMessage="Preencha a unidade de medida"
+				value="#{compraController.itemCompra.unidadeM}">
+				<f:selectItem noSelectionOption="true" />
+				<f:selectItems value="#{produtoController.unidades}" var="und"
+					itemLabel="#{und.descricao}" itemValue="#{und}" />
+			</p:selectOneMenu>
+
+		</div>
+
+		<div class="ui-g-2">
+			<p:commandLink styleClass="btn btn-success"
+				style="color:#FFF; height:28px; margin-top:8px;"
+				rendered="#{compraController.poderEditar()}" onclick="start();"
+				onerror="stop();" update="panel-info-items"
+				action="#{compraController.addItem()}"
+				process="@this, panel-info-items" oncomplete="steping(1); stop();">
+				<span style="color: #fff" class="pi pi-check"></span>
+			</p:commandLink>
+
+		</div>
+
+
+		<div class="ui-g-12">
+			<p:dataTable id="table-item"
+				rowStyleClass="#{item.cancelado ? 'highlight_red' : null} "
+				style="margin-left:auto;margin-right:auto"
+				emptyMessage="Não há itens" value="#{compraController.compra.itens}"
+				var="item" rowIndexVar="indexRow">
+
+				<p:column headerText="Descrição" style="width:20%">
+					<h:outputText value="#{item.produto.descricao}" />
+				</p:column>
+
+				<p:column headerText="Descrição complementar" style="width:20%">
+					<h:outputText value="#{item.descricaoComplementar}" />
+				</p:column>
+
+				<p:column headerText="Und.compra" style="width:10%">
+					<h:outputText value="#{item.unidade}" />
+				</p:column>
+
+				<p:column headerText="Categoria" style="width:10%">
+					<h:outputText value="#{item.produto.categoriaDespesa.nome}" />
+				</p:column>
+
+
+				<p:column headerText="Tipo" style="width:10%">
+					<h:outputText value="#{item.produto.tipo}" />
+				</p:column>
+
+				<p:column headerText="Qtd." style="width:5%">
+					<h:outputText value="#{item.quantidade}" style="float:right" />
+				</p:column>
+
+
+				<p:column style="width:95px">
+
+					<p:commandLink title="Editar" styleClass="btn btn-default"
+						onclick="start();" onerror="stop();"
+						oncomplete="stop(); setarFocused('info-items'); steping(1);"
+						action="#{compraController.removerItem(indexRow)}"
+						rendered="#{compraController.poderEditar()}" process="@this"
+						update="panel-info-items,table-item">
+						<p:confirm header="Edição"
+							message="Ao editar serão removida as cotações e valores referente a esse item, deseja editar?"
+							icon="pi pi-exclamation-triangle" />
+
+						<f:setPropertyActionListener value="#{item}"
+							target="#{compraController.itemCompra}" />
+						<span class="glyphicon glyphicon-edit"></span>
+					</p:commandLink>
+
+					<p:commandLink title="excluir" style="color:#fff;margin-left:5px"
+						onclick="start();" onerror="stop();"
+						oncomplete="stop(); steping(1); "
+						styleClass="btn btn-danger btn-xs"
+						action="#{compraController.removerItem(indexRow)}"
+						rendered="#{compraController.poderEditar()}" process="@this"
+						update="table-item">
+
+						<p:confirm header="Exclusão" message="Você deseja excluir?"
+							icon="pi pi-exclamation-triangle" />
+						<f:setPropertyActionListener value="#{item}"
+							target="#{compraController.itemCompra}" />
+						<span class="pi pi-times-circle"></span>
+
+					</p:commandLink>
+
+
+				</p:column>
+
+			</p:dataTable>
+
+		</div>
+	</div>
+
+</ui:fragment>

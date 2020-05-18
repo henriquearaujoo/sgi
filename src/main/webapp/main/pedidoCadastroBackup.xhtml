@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="menu_lateral">
+
+		<style type="text/css">
+.ui-widget {
+	font-size: 100%;
+}
+</style>
+
+
+
+
+		<h:form id="form-menu">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{pedidoCadController.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{pedidoCadController.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{pedidoCadController.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right; color: #849A39"
+						class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+		<f:view>
+
+
+			<h:form id="form-tabela-pedido">
+				<p:outputPanel>
+
+					<div class="botao_central" align="left"
+						style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+						<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+							action="#{pedidoCadController.salvar()}"
+							style="color:#fff; margin: 2px 2px;" value="Salvar" />
+
+						<p:commandLink styleClass="btn btn-info btn-sm" type="button"
+							style="color:#fff; margin: 2px 2px;" value="Voltar"
+							action="#{pedidoCadController.redirecionarPagePedidos()}" />
+
+
+					</div>
+				</p:outputPanel>
+				<p:panelGrid columns="2" style="margin-top:10px;margin-bottom:5px">
+					<p:outputLabel value="Fornecedor:" />
+					<p:selectOneMenu value="#{pedidoCadController.idFornecedor}">
+						
+						<p:ajax listener="#{pedidoCadController.onChangeFornecedor()}"
+							update="tebela-item-pedido" />
+						
+						<f:selectItem noSelectionOption="true" />
+						
+						<f:selectItems value="#{pedidoCadController.fornecedores}"
+							var="fornecedor" itemLabel="#{fornecedor.nomeFantasia}"
+							itemValue="#{fornecedor.id}">
+						</f:selectItems>
+
+
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Data de entrega:"/>
+					<p:calendar value="#{pedidoCadController.pedido.dataEntrega}"
+					 timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy"/>
+							
+					<p:outputLabel value="Data de pagamento:"/>
+					<p:calendar value="#{pedidoCadController.pedido.dataPagamento}" 
+					timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy"/>
+					
+					<p:outputLabel value="Condições de pagamento:"/>
+					<p:inputText value="#{pedidoCadController.pedido.condicaoPagamento}"/>
+					
+					<p:outputLabel value="Observações"/>
+					<p:inputTextarea cols="35" value="#{pedidoCadController.pedido.observacao}"/>
+						
+					<p:outputLabel value="Total:"/>	
+					<h:outputText id="vl" value="#{pedidoCadController.pedido.valorTotalSemDesconto}" >
+					<f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="R$"/>
+					</h:outputText>
+					
+					<p:outputLabel value="Total c/ desconto:"/>	
+					<h:outputText id="vl_c_desconto" value="#{pedidoCadController.pedido.valorTotalComDesconto}" >
+					<f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="R$"/>
+					</h:outputText>
+					
+					<p:outputLabel value="Total de descontos:"/>	
+					<h:outputText id="vl_total_desconto" value="#{pedidoCadController.pedido.totalDeDesonto}">
+					<f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="R$"/>
+					</h:outputText>
+					
+					
+					
+				</p:panelGrid>
+				
+				
+				<p:dataTable id="tebela-item-pedido" binding="#{pedidoCadController.table}"
+					value="#{pedidoCadController.cotacoes}" var="cotacao" style="margin-bottom:0">
+					
+					<p:column style="width:50px;text-align:center">
+					<p:selectBooleanCheckbox value="#{cotacao.houvePedido}">
+					 <p:ajax listener="#{pedidoCadController.manterItemPedido()}" update=":form-tabela-pedido:vl :form-tabela-pedido:vl_c_desconto :form-tabela-pedido:vl_total_desconto"/>
+					</p:selectBooleanCheckbox>
+					
+					</p:column>	
+
+					<p:column headerText="Produto">
+						<h:outputText value="#{cotacao.itemCompra.produto.descricao}" />
+					</p:column>
+					
+					<p:column style="width:100px" headerText="Qtd.">
+						<h:outputText value="#{cotacao.quantidade}">
+							<f:convertNumber  maxFractionDigits="2"/>
+						</h:outputText>
+					</p:column>
+
+					<p:column style="width:100px" headerText="Valor">
+						<h:outputText value="#{cotacao.valor}">
+							<f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="R$"/>
+						</h:outputText>
+					</p:column>
+
+					<p:column style="width:100px" headerText="Valor c/ desconto">
+						<h:outputText value="#{cotacao.valorDesconto}">
+							<f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="R$"/>
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+
+			</h:form>
+		</f:view>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,88 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<div id="info-document" class="ui-g ui-fluid">
+
+		<div class="ui-g-3 form-group">
+			<p:outputLabel for="input_dt_doc" value="Dt.do Documento"
+				styleClass="form-label" />
+			<p:calendar id="input_dt_doc" required="true"
+				requiredMessage="Preencha a 'Dt. do Documento'"
+				value="#{pagamentoController.pagamento.dataDocumentoFiscal}"
+				navigator="true" pattern="dd/MM/yyyy" />
+
+		</div>
+
+		<div class="ui-g-3 form-group">
+			<p:outputLabel for="input_dt_pgt" value="Dt. Pagamento"
+				styleClass="form-label" />
+			<p:calendar id="input_dt_pgt" required="true"
+				requiredMessage="Preencha a 'Dt.pagamento'"
+				value="#{pagamentoController.pagamento.dataPagamento}"
+				 navigator="true" pattern="dd/MM/yyyy" />
+		</div>
+
+
+		<div class="ui-g-3 form-group">
+			<p:outputLabel for="input_tipo_doc" value="Documento fiscal"
+				styleClass="form-label" />
+			<p:selectOneMenu id="input_tipo_doc" required="true"
+				requiredMessage="Preencha o 'Doc fiscal'" style="font-size:12px"
+				value="#{pagamentoController.pagamento.tipoDocumentoFiscal}">
+				<f:selectItems value="#{pagamentoController.tipoDocumentoFiscal}"
+					var="tipoDocumento" itemValue="#{tipoDocumento}"
+					itemLabel="#{tipoDocumento.nome}" />
+				<p:ajax update="panel_nf"
+					listener="#{pagamentoController.verificarExigencia()}" />
+			</p:selectOneMenu>
+
+		</div>
+
+		<div class="ui-g-3 form-group">
+			<p:outputLabel for="panel_nf" value="Nota fiscal"
+				styleClass="form-label" />
+			<p:inputText id="panel_nf"
+				value="#{pagamentoController.pagamento.notaFiscal}"
+				required="#{pagamentoController.exigeNF}"
+				requiredMessage="Preencha a 'Nota fiscal'" />
+		</div>
+
+
+		<div class="ui-g-3 form-group">
+			<p:outputLabel value="Parcelamento" styleClass="form-label" />
+			<p:selectOneMenu id="parc" style="font-size:12px" required="true"
+				requiredMessage="Preencha o campo 'Parcelamento'."
+				value="#{pagamentoController.pagamento.tipoParcelamento}">
+				<f:selectItems value="#{pagamentoController.tiposParcelas()}"
+					var="tp" itemLabel="#{tp.nome}" itemValue="#{tp}" />
+			</p:selectOneMenu>
+		</div>
+
+		<div class="ui-g-3 form-group">
+			<p:outputLabel for="num_par" value="Nº Parcelas"
+				styleClass="form-label" />
+			<p:inputText id="num_par" required="true"
+				requiredMessage="Por favor preencha o campo 'Parcelas'."
+				value="#{pagamentoController.pagamento.quantidadeParcela}" />
+		</div>
+
+		<div class="ui-g-3 form-group">
+			<p:outputLabel for="id_condic" value="Condições"
+				styleClass="form-label" />
+			<p:selectOneMenu id="id_condic"
+				value="#{pagamentoController.pagamento.condicaoPagamentoEnum}">
+				<f:selectItems value="#{pagamentoController.condicoes}"
+					var="condicao" itemLabel="#{condicao.nome}" itemValue="#{condicao}" />
+			</p:selectOneMenu>
+		</div>
+
+	</div>
+
+
+</ui:fragment>

@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="content">
+
+
+		<h:form id="form_tab_orcamento" prependId="false">
+
+			<f:metadata>
+				<o:viewParam name="doacao" value="#{orcamento_controller.orcamento}" />
+				<f:viewAction action="#{orcamento_controller.initCadastro()}" />
+			</f:metadata>
+
+			<p:messages  showSummary="false" showDetail="true" closable="true">
+				<p:autoUpdate></p:autoUpdate>
+			</p:messages>
+
+			<p:breadCrumb>
+				<p:menuitem value="#" url="home_new.xhtml" />
+				<p:menuitem value="Lista de Doações" url="orcamentos.xhtml" />
+				<p:menuitem value="Cadastro de Doações" />
+			</p:breadCrumb>
+
+
+			<div id="panel-geral" style="margin-top: 3px">
+
+				<p:tabView prependId="false"
+					binding="#{orcamento_controller.tabviewOrcamento}">
+
+					<p:ajax event="tabChange" onstart="start();" onsuccess="stop();"
+						onerror="stop();"
+						listener="#{orcamento_controller.definirTabOrcamento()}"
+						update="form_tab_orcamento" />
+
+					<p:tab id="tab-info-geral" title="Info geral"
+						rendered="#{!orcamento_controller.preCadastro}">
+						<ui:include src="/main/doacao/info_geral.xhtml"/>
+					</p:tab>
+
+					<p:tab id="tab-info-permissoes" title="Permissões">
+						<ui:include src="/main/doacao/permissoes.xhtml" />
+					</p:tab>
+
+					<!-- 					<p:tab id="cad1_orcamento_pre_cadastro" title="Cadastro" -->
+					<!-- 						rendered="#{orcamento_controller.preCadastro}"> -->
+					<!-- 						<ui:include src="/WEB-INF/orcamento_pre_cadastro.xhtml" /> -->
+					<!-- 					</p:tab> -->
+
+					<p:tab id="cad_rubricas"
+						rendered="#{orcamento_controller.orcamento.id != null and !orcamento_controller.preCadastro}"
+						title="Requisitos de doação">
+						<ui:include src="/main/doacao/requisitos_doacao.xhtml" />
+					</p:tab>
+
+					<p:tab id="extrato_doacao"
+						rendered="#{orcamento_controller.orcamento.id != null and !orcamento_controller.preCadastro}"
+						title="Extrato">
+						<ui:include src="/main/doacao/extrato.xhtml" />
+					</p:tab>
+
+					<!-- 					<p:tab id="doacao" -->
+					<!-- 						rendered="#{orcamento_controller.orcamento.id != null and !orcamento_controller.preCadastro}" -->
+					<!-- 						title="Doações efetivadas"> -->
+					<!-- 						<ui:include src="/WEB-INF/orcamento_tab04.xhtml" /> -->
+					<!-- 					</p:tab> -->
+
+					<p:tab id="projetos_vinculados"
+						rendered="#{orcamento_controller.orcamento.id != null and !orcamento_controller.preCadastro}"
+						title="Projetos Vinculados">
+						<ui:include src="/main/doacao/projetos_vinculados.xhtml" />
+					</p:tab>
+
+					<p:tab id="prestacao_contas"
+						rendered="#{orcamento_controller.orcamento.id != null}"
+						title="Prestação de contas">
+						<ui:include src="/main/doacao/prestacoes.xhtml" />
+					</p:tab>
+
+					<!-- 					<p:tab id="overhead" -->
+					<!-- 						rendered="#{orcamento_controller.orcamento.id != null}" -->
+					<!-- 						title="Overhead"> -->
+					<!-- 						<ui:include src="/WEB-INF/orcamento_tab06.xhtml" /> -->
+					<!-- 					</p:tab> -->
+
+					<!-- 					<p:tab id="comp_orcamento" -->
+					<!-- 						rendered="#{orcamento_controller.orcamento.id != null}" -->
+					<!-- 						title="Composição de orçamento"> -->
+					<!-- 						<ui:include src="/WEB-INF/orcamento_tab08.xhtml" /> -->
+					<!-- 					</p:tab> -->
+
+				</p:tabView>
+
+			</div>
+
+			<div class="fixed-btn">
+
+				<p:panel id="btn-panel-p">
+
+					<div id="btn-panel-wizard" class="ui-g ui-fluid"
+						style="margin-bottom: 10px">
+
+
+						<div class="ui-g-12">
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								onclick="start()" onerror="stop()" style="margin-left:5px"
+								title="Salvar" oncomplete="setarFocused('info-geral'); stop()"
+								update="form_tab_orcamento"
+								process="@this,panel-info-geral,panel-info-permissoes"
+								action="#{orcamento_controller.salvar()}">
+								<span style="margin: 3px;">Salvar</span>
+							</p:commandLink>
+
+							<p:link styleClass="btn btn-danger btn-sm"
+								style="margin-left:5px;color:#fff" title="Cancelar"
+								outcome="/main/orcamentos">
+								<span class="glyphicon glyphicon-remove"></span>
+								<span style="margin: 3px;">Cancelar</span>
+							</p:link>
+
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								rendered="false" style="margin-left:5px" title="Gerar doação"
+								process="@this" update=":form_gerador_doacao"
+								onclick="PF('dlg_gerar_doacao').show();">
+								<span class="glyphicon glyphicon-usd"></span>
+								<span style="margin: 3px;">Gerar doação</span>
+							</p:commandLink>
+
+
+
+							<p:commandLink styleClass="btn btn-success btn-sm"
+								rendered="false" process="@this" style="margin-left:5px"
+								title="Aplicar"
+								action="#{orcamento_controller.prepararAplicacao()}"
+								update=":form_aplicacao" onclick="PF('dlg_aplicacao').show();">
+								<span class="glyphicon glyphicon-ok"></span>
+								<span style="margin: 3px;">Aplicar</span>
+							</p:commandLink>
+
+
+							<p:commandLink styleClass="btn btn-default btn-sm fa"
+								rendered="false" process="@this" style="margin-left:5px"
+								title="Baixar aplicação" update=":form_baixa_aplicacao"
+								onclick="PF('dlg_baixa_app').show();"
+								action="#{orcamento_controller.preparaBaixaAplicacao()}">
+								<span class="glyphicon glyphicon-save"></span>
+								<span style="margin: 3px;">Baixa aplicação</span>
+							</p:commandLink>
+
+							<p:commandLink styleClass="btn btn-default btn-sm "
+								process="@this" style="margin-left:5px"
+								title="Histórico de aditivos da doação"
+								update=":form_hist_aditivos"
+								onclick="PF('dlg_hist_aditivos').show();"
+								action="#{orcamento_controller.carregarHistoricoAditivos()}">
+								<span class="glyphicon glyphicon-tasks"></span>
+								<span style="margin: 3px;">Historico</span>
+
+							</p:commandLink>
+						</div>
+
+						<div id="actions-button" class="ui-g-12" style="display: none">
+
+							<div class="ui-g-12" style="text-align: right;"></div>
+						</div>
+
+					</div>
+
+				</p:panel>
+			</div>
+
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<script type="text/javascript">
+			function setarWidthHeight(id) {
+				var htmlTag = document.getElementById(id);
+				htmlTag.style.height = Math.floor(window.innerHeight*0.98)+"px";	
+				htmlTag.style.width = Math.floor(window.innerWidth*0.98)+"px";	
+				
+			}
+		</script>
+
+
+		<p:dialog widgetVar="dlg-detalhe-values" modal="true" width="100%"
+			height="100%" closable="true" closeOnEscape="true" showHeader="true"
+			header="Detalhamento de recurso - (Valor total da doação, Previsão de Overhead, Previsão de custo com pessoal)"
+			showEffect="clip" hideEffect="clip">
+
+			<h:form id="form-detalhe-values">
+
+				<p:panel id="panel-detalhe-values">
+
+					<div id="info-detalhe-values" class="ui-g ui-fluid"
+						style="margin-top: 50px">
+
+						<div class="ui-g-6 form-group">
+
+							<p:outputLabel value="Valor orçado" styleClass="form-label" />
+							<p:inputText value="#{orcamento_controller.orcamento.valor}"
+								onkeydown="mascaraMoeda(this,moeda)">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" />
+
+							</p:inputText>
+
+						</div>
+
+						<div class="ui-g-6 form-group focused">
+
+							<p:outputLabel value="Doação recebida" styleClass="form-label" />
+							<p:inputText value="#{orcamento_controller.saldoRealOrcamento}"
+								disabled="true">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" currencySymbol="R$" />
+							</p:inputText>
+
+						</div>
+
+
+
+						<div class="ui-g-6 form-group focused">
+
+							<p:outputLabel value="Overhead" styleClass="form-label" />
+							<p:inputText onkeydown="mascaraMoeda(this,moeda)"
+								value="#{orcamento_controller.orcamento.valorOverheadAPagar}">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" />
+
+							</p:inputText>
+
+						</div>
+
+						<div class="ui-g-6 form-group focused">
+
+							<p:outputLabel value="Overhead recebido" styleClass="form-label" />
+							<p:inputText
+								value="#{orcamento_controller.orcamento.valorOverheadExec}"
+								disabled="true">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" currencySymbol="R$" />
+							</p:inputText>
+						</div>
+
+						<div class="ui-g-6 form-group focused">
+
+							<p:outputLabel value="Custo de pessoal" styleClass="form-label" />
+							<p:inputText onkeydown="mascaraMoeda(this,moeda)"
+								value="#{orcamento_controller.orcamento.valorCustoPessoal}">
+
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" />
+
+							</p:inputText>
+						</div>
+
+						<div class="ui-g-6 form-group focused">
+							<p:outputLabel value="Custo de pessoal recebido"
+								styleClass="form-label" />
+							<p:inputText disabled="true"
+								value="#{orcamento_controller.orcamento.custoPessoalExec}"
+								style="font-size:15px;text-align:left;width:100%">
+								<f:convertNumber type="currency" maxFractionDigits="2"
+									currencySymbol="R$" />
+							</p:inputText>
+
+						</div>
+
+						<div class="ui-g-12">
+							<p:barChart model="#{orcamento_controller.stackedGroupBarModel}"
+								style="width:100%;height:250px;margin-bottom:150px" />
+						</div>
+
+					</div>
+
+				</p:panel>
+
+			</h:form>
+
+
+		</p:dialog>
+
+
+		<p:dialog widgetVar="dlg-nova-linha" modal="true" width="100%"
+			height="100%" closable="true" closeOnEscape="true" showHeader="true"
+			header="Inclusão de linha orçamentária" showEffect="clip"
+			hideEffect="clip">
+
+			<h:form id="form-nova-linha" prependId="false">
+
+
+				<p:panel id="panel-form-nova-linha">
+
+					<div class="ui-g ui-fluid" style="margin-top: 15px">
+
+						<div class="ui-g-12">
+							<p:messages showSummary="false" showDetail="true" closable="true"
+								escape="true">
+								<p:autoUpdate></p:autoUpdate>
+							</p:messages>
+						</div>
+
+						<div class="ui-g-12 form-group focused">
+							<p:outputLabel for="input-componente" value="Componente"
+								styleClass="form-label" />
+							<p:selectOneMenu id="input-componente" autoWidth="false"
+								value="#{orcamento_controller.componente}" required="true"
+								requiredMessage="Informe o 'Componente', é um campo obrigatório."
+								converter="componenteConverter" filter="true"
+								filterMatchMode="contains">
+								<p:ajax update="input-sub-componente"
+									listener="#{orcamento_controller.carregarSubComponentes()}"
+									process="@this" />
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{orcamento_controller.componentes}"
+									var="componente" itemLabel="#{componente.nome}"
+									itemValue="#{componente}" />
+							</p:selectOneMenu>
+						</div>
+
+						<div class="ui-g-12 form-group focused">
+							<p:outputLabel for="input-sub-componente" value="Subcomponente:"
+								styleClass="form-label" />
+							<p:selectOneMenu id="input-sub-componente" required="true"
+								filter="true" filterMatchMode="contains"
+								requiredMessage="Informe o 'Subcomponente', é um campo obrigatório."
+								value="#{orcamento_controller.subComponente}" autoWidth="false"
+								converter="subcomponenteConverter">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{orcamento_controller.subComponentes}"
+									var="subcomponente" itemLabel="#{subcomponente.nome}"
+									itemValue="#{subcomponente}" />
+							</p:selectOneMenu>
+
+						</div>
+
+						<div class="ui-g-6 form-group focused">
+							<p:outputLabel for="input-rubrica-orcamento" value="Categoria"
+								styleClass="form-label" />
+							<p:autoComplete id="input-rubrica-orcamento" required="true"
+								requiredMessage="Informe o 'Categoria', é um campo obrigatório."
+								value="#{orcamento_controller.rubricaOrcamento.rubrica}"
+								completeMethod="#{orcamento_controller.completeRubrica}"
+								var="rubrica" itemLabel="#{rubrica.nome}" itemValue="#{rubrica}"
+								converter="rubricaConverter" forceSelection="true" />
+						</div>
+
+						<div class="ui-g-6 form-group focused">
+							<p:outputLabel for="input-valor" value="Valor"
+								styleClass="form-label" style="text-align: right;" />
+							<p:inputText id="input-valor" required="true"
+								requiredMessage="Informe o 'Valor', é um campo obrigatório."
+								value="#{orcamento_controller.rubricaOrcamento.valor}"
+								onkeydown="mascaraMoeda(this,moeda)">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" />
+							</p:inputText>
+
+						</div>
+
+						<div class="ui-g-6 form-group" style="text-align: center"></div>
+
+						<div class="ui-g-6 form-group" style="text-align: right;">
+
+							<p:selectBooleanCheckbox
+								value="#{orcamento_controller.continueCadastro}">
+							</p:selectBooleanCheckbox>
+
+							<p:outputLabel value="Continuar cadastrando? "
+								style="margin-left:5px" />
+
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								style="margin-left:5px" title="Salvar" onclick="start()"
+								onerror="stop()" oncomplete="stop()"
+								update="panel-form-nova-linha,table_rubrica"
+								action="#{orcamento_controller.salvarRubricaOrcamento()}">
+								<i class="pi pi-check"></i>
+								<span style="margin: 3px;">Salvar</span>
+							</p:commandLink>
+
+						</div>
+
+
+					</div>
+
+					<div class="ui-g ui-fluid">
+
+						<span style="margin-left: 4px; font-weight: bold">Distribuído:</span>
+						<p:outputLabel style="margin-left:5px"
+							value="#{orcamento_controller.valorDistribuido}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</p:outputLabel>
+
+						<span style="margin-left: 4px">/</span> <span
+							style="margin-left: 4px; font-weight: bold">Não
+							distribuído:</span>
+						<p:outputLabel style="margin-left:5px"
+							value="#{orcamento_controller.diferenca}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</p:outputLabel>
+
+					</div>
+
+				</p:panel>
+
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+		<p:dialog widgetVar="dlg_gerar_doacao" modal="true" width="50%"
+			closable="true" closeOnEscape="true" showHeader="true"
+			showEffect="clip" hideEffect="clip">
+
+			<h:form id="form_gerador_doacao">
+
+				<p:messages showSummary="false" showDetail="true" showIcon="true" />
+
+				<p:panelGrid columns="2">
+
+					<h:outputText value="Doador" />
+					<p:autoComplete id="fornecedor-cotacao" required="true"
+						placeholder="Doador" requiredMessage="Preencha o campo Fornecedor"
+						size="50"
+						value="#{orcamento_controller.doacaoEfetiva.contaPagador}"
+						completeMethod="#{orcamento_controller.completeContaAdiantamentoEFornecedor}"
+						var="fornecedor" itemLabel="#{fornecedor.nomeConta}"
+						itemValue="#{fornecedor}" converter="contaConverter"
+						forceSelection="true" />
+
+					<h:outputText value="Descrição:" />
+					<p:inputText
+						value="#{orcamento_controller.doacaoEfetiva.descricao}"
+						style="font-size:12px" placeholder="Descrição" />
+
+					<h:outputText value="Valor:" />
+					<p:inputText onkeydown="mascaraMoeda(this,moeda)"
+						value="#{orcamento_controller.doacaoEfetiva.valorTotalComDesconto}">
+						<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+							locale="pt_BR" />
+					</p:inputText>
+
+					<p:outputLabel value="Parcelamento:" />
+					<p:selectOneMenu style="font-size:12px"
+						value="#{orcamento_controller.doacaoEfetiva.tipoParcelamento}">
+						<f:selectItems value="#{orcamento_controller.tiposParcelas()}"
+							var="tp" itemLabel="#{tp.nome}" itemValue="#{tp}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Nº Parcelas:" />
+					<p:inputText
+						value="#{orcamento_controller.doacaoEfetiva.quantidadeParcela}"
+						style="font-size:12px" placeholder="N° Parcelas" />
+
+					<h:outputText value="Data de pagamento:" />
+					<p:calendar id="dt_inicio" styleClass="font12-vi"
+						placeholder="Data início" size="12"
+						value="#{orcamento_controller.doacaoEfetiva.dataPagamento}"
+						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+				</p:panelGrid>
+
+				<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+					action="#{orcamento_controller.salvarDoacaoEfetiva()}"
+					onclick="start()" onerror="stop()" oncomplete="stop()"
+					style="color:#fff; margin: 2px 2px;">
+					<span class="glyphicon glyphicon-floppy-disk"></span>
+					<span style="margin: 3px;">Salvar</span>
+				</p:commandLink>
+
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog widgetVar="dlg_aplicacao" modal="true" width="50%"
+			closable="true" closeOnEscape="true" showHeader="true"
+			showEffect="clip" hideEffect="clip">
+
+			<h:form id="form_aplicacao">
+				<p:messages id="msg_aplicacao" showIcon="true" showDetail="true"
+					showSummary="false" />
+				<p:panelGrid columns="2">
+					<h:outputText value="Pagador:" />
+					<p:autoComplete id="pagador_app" required="true"
+						placeholder="Doador" requiredMessage="Preencha o campo Pagador"
+						size="50" value="#{orcamento_controller.aplicacao.contaPagador}"
+						completeMethod="#{orcamento_controller.completeConta}"
+						var="fornecedor" itemLabel="#{fornecedor.nomeConta}"
+						itemValue="#{fornecedor}" converter="contaConverter"
+						forceSelection="true" />
+
+
+					<h:outputText value="Recebedor:" />
+					<p:autoComplete id="recebedor_app" required="true"
+						placeholder="Doador" requiredMessage="Preencha o campo Pagador"
+						size="50" value="#{orcamento_controller.aplicacao.contaRecebedor}"
+						completeMethod="#{orcamento_controller.completeConta}"
+						var="fornecedor" itemLabel="#{fornecedor.nomeConta}"
+						itemValue="#{fornecedor}" converter="contaConverter"
+						forceSelection="true" />
+
+
+					<h:outputText value="Descrição:" />
+					<p:inputText value="#{orcamento_controller.aplicacao.descricao}"
+						style="font-size:12px" placeholder="Descrição" />
+
+					<h:outputText value="Valor:" />
+					<p:inputText onkeydown="mascaraMoeda(this,moeda)"
+						value="#{orcamento_controller.aplicacao.valorTotalComDesconto}">
+						<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+							locale="pt_BR" />
+					</p:inputText>
+
+					<p:outputLabel value="Parcelamento:" />
+					<h:outputText
+						value="#{orcamento_controller.aplicacao.tipoParcelamento.nome}" />
+
+					<p:outputLabel value="Nº Parcelas:" />
+					<h:outputText
+						value="#{orcamento_controller.aplicacao.quantidadeParcela}" />
+
+					<h:outputText value="Data de pagamento:" />
+					<p:calendar id="dt_inicio_aplicacao" styleClass="font12-vi"
+						placeholder="Data início" size="12"
+						value="#{orcamento_controller.aplicacao.dataPagamento}"
+						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+				</p:panelGrid>
+
+				<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+					action="#{orcamento_controller.salvarAplicacao()}"
+					onclick="start()" onerror="stop()" oncomplete="stop()"
+					style="color:#fff; margin: 2px 2px;" value="Salvar" />
+
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog widgetVar="dlg_baixa_app" modal="true" width="50%"
+			closable="true" closeOnEscape="true" showHeader="true"
+			showEffect="clip" hideEffect="clip">
+
+			<h:form id="form_baixa_aplicacao">
+
+				<p:panelGrid columns="2">
+					<h:outputText value="Conta pagador:" />
+					<p:autoComplete id="pagador_baixa_app" required="true"
+						placeholder="Doador" requiredMessage="Preencha o campo Pagador"
+						size="50"
+						value="#{orcamento_controller.baixaAplicacao.contaPagador}"
+						completeMethod="#{orcamento_controller.completeConta}"
+						var="fornecedor" itemLabel="#{fornecedor.nomeConta}"
+						itemValue="#{fornecedor}" converter="contaConverter"
+						forceSelection="true" />
+
+
+
+					<h:outputText value="Conta recebedor:" />
+					<p:autoComplete id="recebedor_baixa_app" required="true"
+						placeholder="Doador" requiredMessage="Preencha o campo Pagador"
+						size="50"
+						value="#{orcamento_controller.baixaAplicacao.contaRecebedor}"
+						completeMethod="#{orcamento_controller.completeConta}"
+						var="fornecedor" itemLabel="#{fornecedor.nomeConta}"
+						itemValue="#{fornecedor}" converter="contaConverter"
+						forceSelection="true" />
+
+					<h:outputText value="Descrição:" />
+					<p:inputText
+						value="#{orcamento_controller.baixaAplicacao.descricao}"
+						style="font-size:12px" placeholder="Descrição" />
+
+					<h:outputText value="Valor:" />
+					<p:inputText onkeydown="mascaraMoeda(this,moeda)"
+						value="#{orcamento_controller.baixaAplicacao.valorTotalComDesconto}">
+						<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+							locale="pt_BR" />
+					</p:inputText>
+
+					<p:outputLabel value="Parcelamento:" />
+					<h:outputText
+						value="#{orcamento_controller.baixaAplicacao.tipoParcelamento.nome}" />
+
+					<p:outputLabel value="Nº Parcelas:" />
+					<h:outputText
+						value="#{orcamento_controller.baixaAplicacao.quantidadeParcela}" />
+
+					<h:outputText value="Data de pagamento:" />
+					<p:calendar id="dt_inicio_baixa_aplicacao" styleClass="font12-vi"
+						placeholder="Data início" size="12"
+						value="#{orcamento_controller.baixaAplicacao.dataPagamento}"
+						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+				</p:panelGrid>
+
+				<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+					action="#{orcamento_controller.salvarBaixaAplicacao()}"
+					onclick="start()" onerror="stop()" oncomplete="stop()"
+					style="color:#fff; margin: 2px 2px;" value="Salvar" />
+
+			</h:form>
+
+
+		</p:dialog>
+
+		<p:dialog widgetVar="dlg_cad_rubrica" modal="true" width="50%"
+			closable="true" closeOnEscape="true" showHeader="true"
+			showEffect="clip" hideEffect="clip">
+
+			<h:form id="form_cad_rubrica_new">
+				<p:messages showDetail="true" showSummary="false" closable="true"
+					escape="true" />
+
+				<p:dataTable paginator="true" rows="5"
+					value="#{orcamento_controller.categorias}" var="categoria">
+
+					<f:facet name="header">
+
+						<p:outputPanel>
+							<h:outputText value="Rubrica:" />
+							<p:inputText value="#{orcamento_controller.rubrica.nome}"
+								style="margin-left:3px" />
+							<p:commandLink styleClass="btn btn-default btn-sm"
+								style="margin-left:4px"
+								action="#{orcamento_controller.salvarRubrica()}" value="Salvar" />
+						</p:outputPanel>
+
+					</f:facet>
+
+					<p:column headerText="id" style="width:50px">
+						<h:outputText value="#{categoria.id}" />
+					</p:column>
+
+					<p:column headerText="Nome" filterBy="#{categoria.nome}"
+						filterMatchMode="contains">
+						<h:outputText value="#{categoria.nome}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog header="Projetos Empenhados"
+			widgetVar="dialogProjetosEmpenhados" modal="true" resizable="false"
+			width="50%" showEffect="clip" hideEffect="clip">
+			<div class="ui-fluid">
+				<h:form id="form_projetos_empenhados">
+					<p:messages showDetail="true" showSummary="false" closable="true"
+						escape="true" />
+					<p:separator />
+
+					<p:panel id="panel_saldo_orcamento">
+						<span style="margin-left: 4px">Valor Orçado:</span>
+						<h:outputText style="margin-left:2px"
+							value="#{orcamento_controller.rubricaOrcamentoTemp.valor}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+
+						<span style="margin-left: 4px">/</span>
+						<span style="margin-left: 4px">Valor Disponível:</span>
+						<h:outputText style="margin-left:2px"
+							value="#{orcamento_controller.rubricaOrcamentoTemp.saldoOrcamento}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+
+						<span style="margin-left: 4px">/</span>
+						<span style="margin-left: 4px">Valor Empenhado:</span>
+						<h:outputText style="margin-left:2px"
+							value="#{orcamento_controller.rubricaOrcamentoTemp.valor - orcamento_controller.rubricaOrcamentoTemp.saldoOrcamento}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+
+					</p:panel>
+
+					<p:separator />
+
+					<p:dataTable paginator="true" rows="5"
+						value="#{orcamento_controller.listaProjetoRubricas}"
+						var="projetos">
+
+
+
+						<p:column headerText="Projeto" style="text-align:center;">
+							<h:outputText value="#{projetos.nomeProjeto}" />
+						</p:column>
+						<p:column headerText="Valor Projeto" style="text-align:center;">
+							<p:outputLabel value="#{projetos.valorProjeto}">
+								<f:convertNumber type="currency" maxFractionDigits="2"
+									currencySymbol="R$" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="% Por Projeto" style="text-align:center;">
+							<h:outputText value="#{projetos.porcentagemEmpenhadoProjeto}">
+								<f:convertNumber locale="pt_BR" currencySymbol="%" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="% Por Rubrica " style="text-align:center;">
+							<h:outputText value="#{projetos.porcentagemEmpenhadoRubrica}">
+								<f:convertNumber locale="pt_BR" currencySymbol="%" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Valor Empenhado" style="text-align:center;">
+							<h:outputText value="#{projetos.valorEmpenhado}">
+								<f:convertNumber type="currency" maxFractionDigits="2"
+									currencySymbol="R$" />
+							</h:outputText>
+						</p:column>
+
+					</p:dataTable>
+
+				</h:form>
+			</div>
+		</p:dialog>
+
+		<p:dialog header="Movimentação" widgetVar="dialogMoviementacao"
+			modal="true" resizable="false" width="50%" showEffect="clip"
+			hideEffect="clip">
+			<div class="ui-fluid">
+				<h:form id="form_movimentacao">
+					<p:messages showDetail="true" showSummary="false" closable="true"
+						escape="true" />
+					<p:separator />
+
+					<p:panel id="panel_movimentacao">
+						<span style="margin-left: 4px">Linha destino:</span>
+						<p:autoComplete required="true" placeholder="Doador"
+							requiredMessage="Preencha o campo Linha destino" size="50"
+							value="#{orcamento_controller.baixaAplicacao.contaRecebedor}"
+							completeMethod="#{orcamento_controller.completeConta}"
+							var="fornecedor" itemLabel="#{fornecedor.nomeConta}"
+							itemValue="#{fornecedor}" converter="contaConverter"
+							forceSelection="true" />
+
+						<span style="margin-left: 4px">/</span>
+						<span style="margin-left: 4px">Valor Disponível:</span>
+						<h:outputText style="margin-left:2px"
+							value="#{orcamento_controller.rubricaOrcamentoTemp.saldoOrcamento}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+
+						<span style="margin-left: 4px">/</span>
+						<span style="margin-left: 4px">Valor Empenhado:</span>
+						<h:outputText style="margin-left:2px"
+							value="#{orcamento_controller.rubricaOrcamentoTemp.valor - orcamento_controller.rubricaOrcamentoTemp.saldoOrcamento}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+
+					</p:panel>
+
+				</h:form>
+			</div>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlg_hist_aditivos" modal="true" width="70%"
+			closable="true" closeOnEscape="true" showHeader="true"
+			showEffect="clip" hideEffect="clip">
+
+			<h:form id="form_hist_aditivos">
+
+				<p:dataTable paginator="true" rows="5"
+					value="#{orcamento_controller.orcamento.historicoAditivos}"
+					var="historico" sortBy="#{historico.dataAlteracao}"
+					sortOrder="descending">
+
+					<f:facet name="header">
+						Lista de aditivos
+					</f:facet>
+
+					<p:column headerText="Data de alteração" style="width:80px">
+						<h:outputText value="#{historico.dataAlteracao}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+								timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Data anterior" style="width:80px">
+						<h:outputText value="#{historico.dataAnterior}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Data do aditivo" style="width:80px">
+						<h:outputText value="#{historico.dataAditivo}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Usuário" style="width:200px">
+						<h:outputText value="#{historico.usuario.nomeUsuario}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:form>
+
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,81 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<div id="info-geral" class="ui-g ui-fluid">
+
+		<div class="ui-g-4 form-group">
+			<p:outputLabel for="input_gestao" value="Gestão"
+				styleClass="form-label" />
+			<p:autoComplete id="input_gestao" styleClass="font12-vi"
+				panelStyle="width:180px" required="true"
+				requiredMessage="Preencha o campo 'Gestão'"
+				value="#{adiantamentoController.pagamento.gestao}"
+				completeMethod="#{projetoBean.completeGestao}" var="gestao"
+				itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+				converter="gestaoConverterVI" minQueryLength="3" />
+		</div>
+
+		<div class="ui-g-4 form-group">
+			<p:outputLabel for="input_destino" value="Destino"
+				styleClass="form-label" />
+			<p:autoComplete id="input_destino" styleClass="font12-vi"
+				required="true" requiredMessage="Preencha o campo 'Destino'"
+				panelStyle="width:180px"
+				value="#{adiantamentoController.pagamento.localidade}"
+				completeMethod="#{adiantamentoController.completeLocalidade}"
+				var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+				converter="localConverterVI" minQueryLength="3" />
+		</div>
+
+		<div class="ui-g-4 form-group">
+			<p:outputLabel value="Colaborador" for="input_colaborador"
+				styleClass="form-label" />
+			<p:autoComplete id="input_colaborador" required="true"
+				requiredMessage="Preencha o campo Fornecedor"
+				value="#{adiantamentoController.pagamento.contaRecebedor}"
+				completeMethod="#{adiantamentoController.completeContaFornecedorAtivos}"
+				var="fornecedor" itemLabel="#{fornecedor.nomeConta}"
+				itemValue="#{fornecedor}" converter="contaConverter"
+				forceSelection="true" />
+		</div>
+
+		<div class="ui-g-4 form-group">
+			<p:outputLabel value="Dt. Pagamento" for="input_data_pagamento"
+				styleClass="form-label" />
+			<p:calendar required="true" id="input_data_pagamento"
+				requiredMessage="Preencha o campo 'Dt. pagamento'"
+				value="#{adiantamentoController.pagamento.dataPagamento}"
+				navigator="true" pattern="dd/MM/yyyy" />
+
+		</div>
+
+		<div class="ui-g-12 form-group">
+
+			<p:outputLabel value="Descrição:" for="input_descricao"
+				styleClass="form-label" />
+			<p:inputText id="input_descricao" required="true"
+				requiredMessage="Preencha a 'Descrição'"
+				value="#{adiantamentoController.pagamento.descricao}" />
+
+		</div>
+
+		<div class="ui-g-12 form-group">
+			<p:outputLabel value="Observação:" for="input_obs"
+				styleClass="form-label" />
+			<p:inputText id="input_obs"
+				value="#{adiantamentoController.pagamento.observacao}" rows="2"
+				cols="60" />
+		</div>
+
+
+	</div>
+
+
+
+</ui:fragment>

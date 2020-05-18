@@ -1,0 +1,128 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<div id="info-geral" class="ui-g ui-fluid">
+		<div class="ui-g-10" style="position: relative">
+			<div class="ui-g-6 form-group">
+
+				<p:outputLabel value="Gestão" for="input-gestao"
+					styleClass="form-label"></p:outputLabel>
+				<p:autoComplete id="input-gestao" required="true"
+					requiredMessage="Preencha o campo 'Gestão'"
+					value="#{compraController.compra.gestao}"
+					completeMethod="#{projetoBean.completeGestao}" var="gestao"
+					itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+					converter="gestaoConverterVI" minQueryLength="3" />
+			</div>
+
+			<div class="ui-g-6 form-group">
+				<p:outputLabel value="Destino" for="input-destino"
+					styleClass="form-label" />
+				<p:autoComplete id="input-destino" required="true"
+					requiredMessage="Preencha o campo 'Destino'"
+					value="#{compraController.compra.localidade}"
+					completeMethod="#{fornecedor_controller.completeLocalidade}"
+					var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+					converter="localConverterVI" minQueryLength="3">
+
+
+					<p:column>
+						<h:outputText value="#{cidade.nome}" />
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{cidade.municipioNome}" />
+					</p:column>
+
+
+				</p:autoComplete>
+
+			</div>
+
+			<div class="ui-g-6 form-group">
+				<p:outputLabel value="Descrição" for="text-area-desc"
+					styleClass="form-label" />
+				<p:inputText id="text-area-desc" required="true"
+					requiredMessage="Preencha o campo 'Descrição'"
+					value="#{compraController.compra.descricao}" />
+			</div>
+
+			<div class="ui-g-6 form-group">
+				<p:outputLabel value="Observações" for="text-area"
+					styleClass="form-label" />
+				<p:inputText id="text-area"
+					value="#{compraController.compra.observacao}" />
+			</div>
+
+			<div class="ui-g-12 form-group" style="margin-top: 5px;">
+
+				<p:outputLabel value="Urgência?" styleClass="form-label"
+					style="margin-bottom:5px" for="input-urgencia" />
+				<p:toggleSwitch style="margin-left:80px;margin-bottom:15px"
+					styleClass="form-label"
+					value="#{compraController.compra.bootUrgencia}" label="Urgência">
+					<p:ajax update="input-urgencia" />
+				</p:toggleSwitch>
+
+				<p:inputText id="input-urgencia" style="margin-top:15px"
+					required="#{compraController.compra.bootUrgencia}"
+					requiredMessage="Descreva o motivo da urgência"
+					disabled="#{!compraController.compra.bootUrgencia}"
+					value="#{compraController.compra.justificativa}" />
+			</div>
+
+			<div id="info-geral" class="ui-g-12"
+				style="position: absolute; bottom: 0px; left: 5px; padding: 5px; display: #{compraController.compra.id != null ? 'block' : 'none'}">
+				<p:outputLabel value="Socilicitante:" />
+				<h:outputText style="margin-left:3px"
+					value="#{compraController.compra.solicitante.nome.toLowerCase()}" />
+
+				<p:outputLabel style="margin-left:5px" value="Status:" />
+				<h:outputText style="margin-left:3px"
+					value="#{compraController.compra.statusCompra.nome}" />
+
+				<p:outputLabel style="margin-left:5px" value="Emissão:" />
+				<h:outputText style="margin-left:3px"
+					value="#{compraController.compra.dataEmissao}">
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+				</h:outputText>
+
+			</div>
+
+
+		</div>
+
+		<div class="ui-g-2 form-group">
+			<p:outputLabel for="input-onde-comprar" styleClass="form-label"
+				value="Onde comprar" />
+			<p:selectManyMenu id="input-onde-comprar" required="true"
+				requiredMessage="Preencha 1 município de compra"
+				value="#{compraController.municipiosDeCompraSelected}"
+				converter="localConverter" var="municipo_select" filter="true"
+				filterMatchMode="contains" showCheckbox="true">
+
+				<f:selectItems value="#{compraController.municipiosDeCompra}"
+					var="municipio" itemLabel="#{municipio.nome}"
+					itemValue="#{municipio}" />
+
+				<p:column>
+					<h:outputText value="#{municipo_select.nome}" />
+				</p:column>
+
+			</p:selectManyMenu>
+
+		</div>
+
+	</div>
+
+
+
+
+
+</ui:fragment>

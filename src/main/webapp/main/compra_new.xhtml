@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:viewAction action="#{compraController.init()}" />
+		</f:metadata>
+
+		<h:panelGroup id="panel-content">
+
+			<h:form id="form-listagem" prependId="false">
+
+
+				<p:messages id="msg-list" showSummary="false"
+					style="margin-top:10px" showDetail="true" closable="true"
+					showIcon="true" />
+				<p:breadCrumb>
+					<p:menuitem value="Categories" url="home_new.xhtml" />
+					<p:menuitem value="Compras" />
+				</p:breadCrumb>
+
+
+				<p:panel id="filter-list">
+
+
+					<div class="ui-g ui-fluid" style="margin-top: 8px">
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+							<p:outputLabel for="filter-codigo" styleClass="form-label"
+								value="Código" />
+							<p:inputText id="filter-codigo"
+								value="#{compraController.filtro.codigo}" />
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+							<p:outputLabel for="filter-nome" styleClass="form-label"
+								value="Solicitante" />
+							<p:inputText id="filter-nome"
+								value="#{compraController.filtro.nome}" />
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+							<p:outputLabel for="filter-dt-inicio" value="Dt. Início"
+								styleClass="form-label" />
+
+							<p:calendar id="filter-dt-inicio"
+								value="#{compraController.filtro.dataInicio}" navigator="true"
+								pattern="dd/MM/yyyy" />
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+
+							<p:outputLabel for="filter-dt-final" value="Dt. Final"
+								styleClass="form-label" />
+							<p:calendar id="filter-dt-final"
+								value="#{compraController.filtro.dataFinal}" navigator="true"
+								pattern="dd/MM/yyyy" />
+
+						</div>
+
+					</div>
+
+					<div class="ui-g ui-fluid">
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+							<p:outputLabel for="filter-gestao" value="Gestão"
+								styleClass="form-label" />
+							<p:autoComplete id="filter-gestao" styleClass="font12-vi"
+								value="#{compraController.filtro.gestao}" maxResults="10"
+								completeMethod="#{compraController.completeGestao}" var="gestao"
+								itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+								converter="gestaoConverterVI" minQueryLength="3" />
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+
+							<p:outputLabel for="filter-destino" value="Destino/Localização"
+								styleClass="form-label" />
+							<p:autoComplete id="filter-destino" styleClass="font12-vi"
+								value="#{compraController.filtro.localidade}" maxResults="10"
+								completeMethod="#{compraController.completeLocalidade}"
+								var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+								converter="localConverterVI" minQueryLength="3">
+							</p:autoComplete>
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+							<p:outputLabel for="filter-produto" value="Produto"
+								styleClass="form-label" />
+							<p:inputText id="filter-produto"
+								value="#{compraController.filtro.descricaoProduto}"
+								styleClass="font12-vi" />
+
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+							<p:outputLabel for="filter-categoria" value="Categoria"
+								style="margin-left:4px" styleClass="form-label" />
+							<p:selectOneMenu id="filter-categoria" filter="true"
+								filterMatchMode="contains" autoWidth="false"
+								value="#{compraController.filtro.categoriaID}">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{compraController.categorias}"
+									var="categoria" itemLabel="#{categoria.nome}"
+									itemValue="#{categoria.id}" />
+							</p:selectOneMenu>
+
+						</div>
+
+					</div>
+
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-12 ui-lg-6 form-group">
+
+							<p:outputLabel for="filter-projeto" value="Projeto"
+								style="margin-left:1px" styleClass="form-label" />
+
+							<p:autoComplete id="filter-projeto"
+								value="#{compraController.filtro.projeto}"
+								completeMethod="#{compraController.completeProjetos}"
+								var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}"
+								converter="projetoConverter">
+
+								<p:column>
+									<h:outputText value="#{projeto.codigo}" />
+								</p:column>
+
+								<p:column>
+									<h:outputText value="#{projeto.nome}" />
+								</p:column>
+
+							</p:autoComplete>
+
+						</div>
+
+						<div class="ui-g-12 ui-lg-6" style="text-align: right">
+
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								action="#{compraController.filtrar()}" onclick="start()"
+								onsuccess="stop()" onerror="stop()" update="table-compras"
+								style="color:#fff; margin: 8px 2px;">
+								<span class="fa fa-fw fa-search"></span>
+								<span style="margin: 3px;">Procurar</span>
+
+							</p:commandLink>
+
+							<p:commandLink styleClass="btn btn-danger btn-sm"
+								action="#{compraController.limparFiltro()}"
+								update="form-listagem" process="@this"
+								style="color:#fff; margin: 8px 2px;" onclick="start();"
+								onerror="stop();" oncomplete="stop();">
+								<span class="fa fa-fw fa-trash-o"></span>
+								<span style="margin: 3px;">Limpar filtro</span>
+							</p:commandLink>
+
+							<p:link styleClass="btn btn-success btn-sm"
+								style="color:#fff;margin: 8px 2px;"
+								outcome="/main/compra_cadastro"
+								title="Adicionar solicitação de compra">
+								<span class="fa fa-fw fa-plus"></span>
+								<span style="margin: 3px;">Novo</span>
+							</p:link>
+
+						</div>
+
+						<div id="div-table" class="ui-g-12">
+
+							<p:dataTable id="table-compras"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								emptyMessage="Não há solicitações de compra"
+								value="#{compraController.compras}" var="compra"
+								paginator="true" widgetVar="comprasTable" rows="10"
+								rowsPerPageTemplate="5,10,15,20,25,50,100">
+
+								<p:column headerText="Código" style="width:95px"
+									filterBy="#{compra.id}" filterMatchMode="contains">
+
+									<p:link value="SC#{compra.id}" title="Editar"
+										outcome="/main/compra_cadastro" onclick="start();"
+										oncomplete="stop();" style="margin-left:9px;color:#000">
+										<f:param name="lanc" value="#{compra.id}" />
+									</p:link>
+
+								</p:column>
+
+								<p:column headerText="Gestão" filterBy="#{compra.nomeGestao}"
+									filterMatchMode="contains">
+									<h:outputText value="#{compra.nomeGestao}" />
+								</p:column>
+
+								<p:column headerText="Destino" filterBy="#{compra.nomeDestino}"
+									filterMatchMode="contains">
+									<h:outputText value="#{compra.nomeDestino}" />
+								</p:column>
+
+								<p:column headerText="Data" style="width:150px">
+									<h:outputText value="#{compra.dataEmissao}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss " />
+									</h:outputText>
+								</p:column>
+
+								<p:column headerText="Solicitante"
+									filterBy="#{compra.nomeSolicitante}" filterMatchMode="contains">
+									<h:outputText value="#{compra.nomeSolicitante}" />
+								</p:column>
+
+								<p:column headerText="Status"
+									style="text-align:center;width:125px"
+									filterBy="#{compra.statusCompra.nome}"
+									filterMatchMode="contains">
+
+									<h:outputText value="#{compra.statusCompra.nome}" />
+
+
+								</p:column>
+
+								<p:column headerText="Categoria"
+									filterBy="#{compra.nomeCategoria}" filterMatchMode="contains"
+									style="width:225px">
+									<h:outputText value="#{compra.nomeCategoria}" />
+								</p:column>
+
+								<p:column style="width:45px">
+									<p:commandLink rendered="#{compra.bootUrgencia}">
+										<span style="color: red" class="glyphicon glyphicon-alert"></span>
+									</p:commandLink>
+								</p:column>
+
+								<p:column headerText="Opções">
+									<p:menuButton value="Opções">
+
+										<p:menuitem update=":form-pedidos" icon="fa fa-cart-plus"
+											oncomplete="PF('dlg_pedido').show()" value="Pedidos"
+											onstart="start()" onsuccess="stop()" onerror="stop()"
+											action="#{compraController.carregarPedidos(compra.id)}" />
+
+										<p:menuitem icon="fa fa-dollar" value="Cotação"
+											outcome="/main/cotacao">
+											<f:param name="comp" value="#{compra.id}" />
+										</p:menuitem>
+
+										<p:menuitem icon="fa fa-envelope-o"
+											value="Enviar para aprovação" update="panel-content msg-list"
+											actionListener="#{compraController.enviarEmailAutorizacaoSC(compra)}"
+											onstart="start()" onerror="stop()" oncomplete="stop()">
+											<p:confirm header="Enviar para Aprovação"
+												icon="ui-icon-alert"
+												message="Enviar e-mail com solicitação para aprovação?" />
+
+										</p:menuitem>
+
+										<p:menuitem value="Imprimir" target="_blank" process="@this"
+											update="panel-content" ajax="false" icon="fa fa-print"
+											action="#{compraController.imprimir(compra)}">
+										</p:menuitem>
+
+										<p:menuitem icon="fa fa-copy" value="Selecionar fornecedor"
+											outcome="/main/escolha_cotacao">
+											<f:param name="comp" value="#{compra.id}" />
+										</p:menuitem>
+
+										<p:menuitem target="_blank" icon="fa fa-file"
+											value="Formulário de cotação" ajax="false" process="@this"
+											actionListener="#{compraController.imprimirFormulario(compra.id)}">
+
+										</p:menuitem>
+
+									</p:menuButton>
+
+								</p:column>
+
+							</p:dataTable>
+
+						</div>
+					</div>
+
+				</p:panel>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Yes" type="button"
+						styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+				</p:confirmDialog>
+
+
+			</h:form>
+
+
+		</h:panelGroup>
+
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog header="Pedidos" widgetVar="dlg_pedido" modal="true"
+			showEffect="clip" hideEffect="clip" closable="true"
+			closeOnEscape="true">
+
+			<h:form id="form-pedidos">
+				<p:dataTable id="table_pedido"
+					rowStyleClass="#{pedido.statusCompra.nome.equals('Cancelado') ? 'highlight_red' : null} "
+					tableStyle="width:auto" styleClass="ui-fluid"
+					value="#{compraController.pedidos}" var="pedido">
+
+					<p:column headerText="Código">
+						<h:outputText value="#{pedido.id}" />
+					</p:column>
+
+					<p:column headerText="Fornecedor">
+						<h:outputText value="#{pedido.fornecedor.nomeFantasia}" />
+					</p:column>
+
+					<p:column headerText="Gerador do pedido">
+						<h:outputText value="#{pedido.usuarioGeradorPedido.nomeUsuario}" />
+					</p:column>
+
+					<p:column headerText="Valor">
+						<h:outputText value="#{pedido.valorTotalSemDesconto}">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Valor c/ desconto">
+						<h:outputText value="#{pedido.valorTotalComDesconto}">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column>
+
+						<p:link title="Editar" target="_blank"
+							styleClass="btn btn-default btn-xs "
+							outcome="/main/pedidoCadastro">
+							<span class="glyphicon glyphicon-edit"></span>
+							<f:param name="ped" value="#{pedido.id}" />
+						</p:link>
+
+						<p:commandLink title="Imprimir"
+							styleClass="btn btn-default btn-xs" target="_blank"
+							style="margin-left:9px;" ajax="false"
+							action="#{compraController.imprimirPedido()}">
+							<span class=" glyphicon glyphicon-print"></span>
+							<f:setPropertyActionListener value="#{pedido}"
+								target="#{compraController.pedido}" />
+						</p:commandLink>
+
+						<p:commandLink title="Notas"
+							oncomplete="PF('dialog_arquivo').show();" update=":form-arquivo"
+							action="#{compraController.carregarArquivos()}"
+							styleClass="btn btn-default btn-xs " process="@this"
+							style="margin-left:9px;">
+							<span class="glyphicon glyphicon-open-file"></span>
+							<f:setPropertyActionListener value="#{pedido}"
+								target="#{compraController.lancamentoAux}" />
+						</p:commandLink>
+
+
+						<p:commandLink
+							rendered="#{!pedido.statusCompra.nome.equals('Concluído')}"
+							title="Excluir" update="@form" onstart="start()"
+							onclick="start()" onsuccess="stop();PF('dlg_pedido').hide();"
+							onerror="stop()"
+							styleClass="btn btn-default btn-xs glyphicon glyphicon-remove-circle"
+							style="margin-left:9px"
+							action="#{compraController.removerPedido()}">
+							<p:confirm header="Confirmar suspensão do pedido"
+								icon="ui-icon-alert" message="Excluir pedido?" />
+							<f:setPropertyActionListener value="#{pedido}"
+								target="#{compraController.pedido}" />
+						</p:commandLink>
+
+					</p:column>
+
+				</p:dataTable>
+
+			</h:form>
+		</p:dialog>
+
+
+
+		<p:dialog header="Email" widgetVar="dlg_email_compra" modal="false"
+			height="20%" width="50%" showEffect="clip" hideEffect="clip">
+			<h:form style="with:100%">
+				<p:panelGrid columns="2">
+					<h:outputText value="Destinatário(s):" />
+					<p:inputText required="true"
+						requiredMessage="É necessário prrencimento do campo."
+						style="width:450px;margin-left:auto;margin-right:auto"
+						value="#{compraController.email.toEmail}" />
+					<p:commandLink styleClass="btn btn-primary" style="color:#ffffff"
+						value="Enviar"
+						action="#{compraController.enviarSolicitacaoCompraEmail()}"
+						update=":panel-content msg-list" />
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+
+	</ui:define>
+
+
+</ui:composition>

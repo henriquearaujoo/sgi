@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="content">
+	
+	
+		<h:form id="form_relatorios"
+			style="margin-left:auto;maegin-right:auto;">
+			
+			<br/>
+			
+			<p:breadCrumb style="font-size:13px">
+				<p:menuitem value="Categories" url="home_new.xhtml" process="@this"/>
+				<p:menuitem value="Relatórios"  />
+			</p:breadCrumb>
+
+			<p:dataTable value="#{cp_controler.listaDeRelatorios}"
+				var="relatorio">
+
+				<p:column headerText="#" style="width:42px;text-align: center">
+					<p:commandButton icon="fa fa-fw fa-search"
+						action="#{cp_controler.redirecionarRelatorio()}" title="View">
+						<f:setPropertyActionListener value="#{relatorio}"
+							target="#{cp_controler.link}" />
+					</p:commandButton>
+				</p:column>
+
+				<p:column headerText="Descrição"  style="text-align : left;"  >
+					<h:outputText style="font-size:13px"  value="#{relatorio.label}" />
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+
+</ui:composition>

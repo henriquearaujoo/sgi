@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="content">
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+		 
+			function stop() {
+		    	PF('statusDialog').hide();
+			}
+		</script>
+		
+		<h:form id="form">
+					
+					<f:metadata>
+						<f:viewAction action="#{liberacaoProjetoController.init()}" />
+					</f:metadata>
+					
+					
+					
+					
+					<p:messages id="msg" showSummary="false" showDetail="true"  closable="true"
+						showIcon="true" >
+						 <p:effect type="pulsate" event="load" delay="500" />
+					</p:messages>	
+						
+					<p:breadCrumb>
+						<p:menuitem value="Categories" url="home_new.xhtml" />
+						<p:menuitem value="Painel de Liberação de Projetos"  />
+					</p:breadCrumb>
+						<p:panel header="Filtros" >
+							<p:panelGrid columns="2" styleClass="ui-noborder" >
+						 		
+						 		<p:outputLabel value="Plano de Trabalho: " />
+						 		<p:selectOneMenu value="#{liberacaoProjetoController.filtro.planoDeTrabalho}" style="width:180px"   filter="true" filterMatchMode="contains"  >
+						 			<f:selectItem noSelectionOption="true" />
+						 			<f:selectItems value="#{liberacaoProjetoController.listaPlanosDeTrabalho}" itemValue="#{plano}" itemLabel="#{plano.titulo}" var="plano" />
+						 		</p:selectOneMenu>
+						 		
+						 		<h:outputText value="Gestão:" />
+								<p:autoComplete styleClass="font12-vi" panelStyle="width:180px"
+									size="50" placeholder="Superintendencia/Coordenadoria/Regional"
+									value="#{liberacaoProjetoController.filtro.gestao}"
+									completeMethod="#{liberacaoProjetoController.completeGestao}" var="gestao"
+									itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+									converter="gestaoConverterVI" minQueryLength="3" />
+						 		
+						 		<h:panelGroup>
+									<p:commandLink styleClass="btn btn-primary btn-sm"
+										action="#{liberacaoProjetoController.findProjetosByPlanosDeTrabalhoAndGestao()}"
+										onclick="start()" onsuccess="stop()" onerror="stop()"
+										update="table_projetos"
+										style="color:#fff; margin: 8px 2px;">
+										<span class="glyphicon glyphicon-search" ></span><span  style="margin: 3px;">Procurar</span>
+									</p:commandLink>
+									
+									<p:commandLink styleClass="btn btn-success btn-sm fa fa-check"
+										action="#{liberacaoProjetoController.verificaProjetoSelecionado()}" onclick="start()" onsuccess="stop()" onerror="stop()"
+										update=":form_dialogUsuario"
+										style="color:#fff; margin: 8px 2px;">
+										<span style="font-family: Arial;">Liberar</span>
+									</p:commandLink>
+	
+								</h:panelGroup>
+						 		
+					 		</p:panelGrid>
+						</p:panel>
+						<p:dataTable value="#{liberacaoProjetoController.listaProjetos}" id="table_projetos" selection="#{liberacaoProjetoController.listaProjetosSelecionados}" filteredValue="#{liberacaoProjetoController.listafiltro}" rowKey="#{projeto.id}" var="projeto" emptyMessage="Nenhum Registro Encontrado!">
+						 	<f:facet name="header"  >
+						 		Lista de Projetos
+						 	</f:facet>
+						 	
+						 	<p:column selectionMode="multiple"  style="width:35px;text-align:center"/>
+						 	
+						 	<p:column headerText="Codigo" filterBy="#{projeto.codigo}" filterMatchMode="contains" >
+								<p:outputLabel value="#{projeto.codigo}" />
+							</p:column>
+						 	
+							<p:column headerText="Nome"  filterBy="#{projeto.codigo}" filterMatchMode="contains"  >
+								<p:outputLabel value="#{projeto.nome}" />
+							</p:column>
+							
+							<p:column headerText="Ação" width="5%" style="text-align:center" >
+								
+								<p:commandLink style="margin-right:2px"
+								onclick="start()" onsuccess="stop()" onerror="stop()" 
+								oncomplete="PF('dialogUsuariosLiberados').show()" action="#{liberacaoProjetoController.findUsuariosComAcesso(projeto)}" 
+								update="form_dialogUsuariosLiberados"  
+								styleClass="btn btn-default btn-xs glyphicon glyphicon-edit"
+								>
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+						
+		
+		
+		
+		</h:form>
+	</ui:define>
+	<ui:define name="adicionais">
+		
+		<p:dialog modal="true" widgetVar="dialogUsuario" closable="true" header="Controle de Permissão" resizable="false" >
+			<h:form id="form_dialogUsuario" >
+				
+				<p:panel>
+					<p:panelGrid columns="2" styleClass="ui-noborder" >
+				 		<p:outputLabel value="Selecione o Usuario: " />
+				 		<p:selectOneMenu value="#{liberacaoProjetoController.usuarioSelecionado}" filter="true" filterMatchMode="contains"  converter="usuarioConverter"  >
+				 			<f:selectItems value="#{liberacaoProjetoController.listaUsuario}" itemValue="#{user}" itemLabel="#{user.nomeColaborador} - #{user.nomeUsuario}" var="user" />
+				 		</p:selectOneMenu>
+					</p:panelGrid>
+					<br />
+					<center>
+						
+					
+						
+						<p:commandLink styleClass="btn btn-primary btn-sm fa fa-save"
+							action="#{liberacaoProjetoController.salvaProjetoUsuario()}"
+							onclick="start()" oncomplete="PF('dialogUsuario').hide()" onsuccess="stop()" onerror="stop()"
+							
+							style="color:#fff; margin: 8px 2px;">
+							<span style="font-family: Arial;">Salvar</span>
+						</p:commandLink>
+						
+						<p:commandLink  onclick="PF('dialogUsuario').hide()"  styleClass="btn btn-danger btn-sm fa fa-times" style="color:#fff; margin: 8px 2px;" >
+							 <span style="font-family: Arial;">Cancelar</span>
+						</p:commandLink>
+					</center>
+				</p:panel>
+			</h:form>
+		</p:dialog>
+		
+		
+		<p:dialog modal="true" widgetVar="dialogUsuariosLiberados" closable="true" header="Usuários com Permissão" resizable="false" >
+			<h:form id="form_dialogUsuariosLiberados" >
+				<p:messages id="msg" showSummary="false" showDetail="true"  closable="true" showIcon="true" />
+				<p:panel id="panel_liberados" >
+					<p:dataTable value="#{liberacaoProjetoController.listaUsuarios}" id="table_usuario"   rowKey="#{usuario.id}" var="usuario" emptyMessage="Nenhum Registro Encontrado!">
+					 	<f:facet name="header"  >
+					 		Lista de Usuário
+					 	</f:facet>
+					 	
+					 	<p:column headerText="Nome" filterBy="#{usuario.nomeUsuario}" filterMatchMode="contains" >
+							<p:outputLabel value="#{usuario.nomeUsuario}" />
+						</p:column>
+					 	
+					 	<p:column headerText="Ação" width="5%" style="text-align:center" >
+							
+						 	<p:commandLink style="color:#FFF;margin-left:5px" process="@this" 
+								title="Excluir" id="excluir_liberados" update="form_dialogUsuariosLiberados"
+								styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove-circle" 
+								action="#{liberacaoProjetoController.removerAcesso(usuario)}" 
+								>
+							</p:commandLink>
+					 	</p:column>
+						
+					</p:dataTable>
+					<br />
+					
+				</p:panel>
+			</h:form>
+		</p:dialog>
+		
+		
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+		
+	</ui:define>
+
+</ui:composition>
+		
+		

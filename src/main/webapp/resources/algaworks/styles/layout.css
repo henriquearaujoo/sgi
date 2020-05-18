@@ -1,0 +1,109 @@
+/* TOPBAR */
+.aw-topbar {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	min-height: 63px;
+	z-index: 999;
+	background-color: #30383c;
+	padding-top: 4px;
+}
+
+.aw-topbar > img {
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    float: left;
+}
+
+.aw-topbar > ul{
+	float: left;
+    list-style: none;
+    margin-left: 17px;
+}
+
+.aw-topbar > ul > li{
+	display: inline;
+}
+
+.aw-topbar > ul > li > a{
+	
+	padding-bottom:16px;
+	padding-top:14px;
+	padding-left: 0px;
+	padding-right: 4px;
+	
+	display: inline-block;
+	color: #fff;
+	text-decoration: none;
+	border-bottom:1px solid #1f8214;
+
+}
+
+.aw-topbar > ul > li > a > span{
+	padding-left: 14px;
+	padding-right: 6px;
+}
+
+.aw-topbar > ul > li a:hover {
+	background-color:#D6D6D6;
+	color: #6D6D6D;
+	border-bottom:3px solid #FFF;
+}
+
+/* SIDEBAR */
+.aw-sidebar {
+	position: fixed;
+	top: 67px;
+	bottom: 0;
+	left: 0;
+	width: 240px; /* Define a largura do menu lateral */
+	margin-left: -211px;
+	z-index: 1001;
+	transition: margin-left 0.8s;
+	overflow-y: auto;
+	background-color: #fff;
+	border-right: 1px solid #eaeaea;
+}
+
+.aw-sidebar.is-toggled {
+	margin-left: 0px;
+}
+
+@media (min-width: 960px) {
+	.aw-sidebar {
+		margin-left: 0px;
+	}
+	
+	.aw-sidebar.is-toggled {
+		margin-left: -280px;
+		/* Definie o quanto o menu lateral fica escondido */
+		
+	}
+}
+
+/* CONTENT */
+.aw-content {
+	padding: 0 5px;
+	margin-top: 50px;
+	transition: margin-left 0.8s;
+}
+
+.all-content {
+	padding: 0 15px;
+	margin-top: 50px;
+	transition: margin-left 0.8s;
+}
+
+@media (min-width: 960px) {
+	.aw-content {
+		margin-left: 0px;
+		/* padding: 0 15px; */
+	}
+	
+	.aw-content.is-toggled {
+		margin-left: 230px;	
+		/* Aumenta ou diminuir tamanho do conteúdo principal */
+	}
+}

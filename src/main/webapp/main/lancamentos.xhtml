@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="content">
+		
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Lançamentos"
+					url="#" />
+			</p:breadCrumb>
+		</h:form>
+		
+
+		<h1>Lançamentos</h1>
+
+		<p:panel id="toggleable" header="Não provisionados" toggleable="true"
+			closable="false" toggleSpeed="500" closeSpeed="500" widgetVar="panel"
+			style="margin-bottom:20px">
+			<h:form id="form-lancamento-pagamento">
+				<h:panelGrid cellpadding="10">
+					<p:dataTable id="table-lancamentos" tableStyle="width:auto"
+						value="#{pagamentoLancController.lancamentos}" var="lancamento"
+						paginator="true" rows="10">
+
+						<f:facet name="header">
+
+							<p:panelGrid style="border:0px" styleClass="ui-fluid" columns="6"
+								cellpadding="5" cellspacing="5">
+
+
+
+								<p:outputLabel value="Dt. Pagamento:" style="float:right" />
+
+								<p:calendar value="#{pagamentoLancController.filtro.dataInicio}"
+									navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+								<p:calendar value="#{pagamentoLancController.filtro.dataFinal}"
+									navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+
+								<p:outputLabel value="Dt. Emissão:" style="float:right" />
+
+								<p:calendar
+									value="#{pagamentoLancController.filtro.dataInicioEmissao}"
+									navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+								<p:calendar
+									value="#{pagamentoLancController.filtro.dataFinalEmissao}"
+									navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+
+								<p:inputText placeholder="Nº lançamento"
+									value="#{pagamentoLancController.filtro.lancamentoID}" />
+
+								<p:autoComplete placeholder="Ação"
+									value="#{pagamentoLancController.filtro.acao}"
+									completeMethod="#{pagamentoLancController.completeAcoes}"
+									var="acao" itemLabel="#{acao.codigo}" itemValue="#{acao}"
+									converter="acaoConverter" />
+
+								<p:autoComplete placeholder="Fornecedor" size="40"
+									value="#{pagamentoLancController.filtro.contaFiltro}"
+									completeMethod="#{pagamentoLancController.completeConta}"
+									var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+									converter="contaConverter" />
+
+								<h:panelGroup>
+									<p:commandLink styleClass="btn btn-primary btn-sm"
+										action="#{pagamentoLancController.carregarLancamentosNãoProvisionados()}"
+										update=":form-lancamento-pagamento:table-lancamentos"
+										style="color:#fff; margin: 8px 2px;">
+										<span style="width: 40px;" class="glyphicon glyphicon-search"></span>
+									</p:commandLink>
+
+									<p:commandLink styleClass="btn btn-primary btn-sm"
+										title="Limpar" process="@this"
+										action="#{pagamentoLancController.limpar()}"
+										update=":form-lancamento-pagamento"
+										style="color:#fff; margin: 8px 2px;">
+										<span style="width: 40px;" class="fa fa-remove"></span>
+									</p:commandLink>
+
+								</h:panelGroup>
+
+							</p:panelGrid>
+
+						</f:facet>
+
+						<p:column headerText="Lançamento">
+							<h:outputText value="#{lancamento.codigoLancamento}" />
+						</p:column>
+
+						<p:column headerText="Pagador">
+							<h:outputText value="#{lancamento.contaPagadorLbl}" />
+						</p:column>
+
+						<p:column headerText="Fornecedor">
+							<h:outputText value="#{lancamento.labelFornecedor}" />
+							<h:outputText value="#{lancamento.contaRecebedorLbl}" />
+						</p:column>
+
+						<p:column headerText="Fonte de recurso">
+							<h:outputText value="#{lancamento.fonte}" />
+						</p:column>
+
+						<p:column headerText="Ação">
+							<h:outputText value="#{lancamento.codigo}" />
+						</p:column>
+
+						<p:column headerText="Valor pago">
+							<h:outputText value="#{lancamento.valorPagoAcao}">
+								<f:convertNumber type="currency" locale="pt_BR" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Valor lançamento">
+							<h:outputText value="#{lancamento.valorLancamento}">
+								<f:convertNumber type="currency" locale="pt_BR" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Emissão">
+							<h:outputText value="#{lancamento.dataEmissao}">
+								<f:convertDateTime pattern="dd/MM/yyyy"
+									timeZone="America/Manaus" />
+							</h:outputText>
+						</p:column>
+
+
+						<p:column headerText="Pagamento">
+							<h:outputText value="#{lancamento.dataPagamento}">
+								<f:convertDateTime pattern="dd/MM/yyyy"
+									timeZone="America/Manaus" />
+							</h:outputText>
+						</p:column>
+
+						<p:column style="width:40px">
+							<p:commandLink oncomplete="PF('pagamentoConta').show()"
+								action="#{pagamentoLancController.prepararDialogPagamento()}"
+								update=":form-pagamento">
+								<f:setPropertyActionListener value="#{lancamento}"
+									target="#{pagamentoLancController.lancAuxiliar}" />
+								<span class="fa fa-money"></span>
+							</p:commandLink>
+						</p:column>
+
+					</p:dataTable>
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:panel>
+		<p:separator />
+
+
+		<h1>Provisionados/Efetivados</h1>
+
+
+		<p:panel id="toggleable_2" header="Provisionados/Efetivados"
+			toggleable="true" closable="false" toggleSpeed="500" collapsed="true"
+			closeSpeed="500" widgetVar="panel2" style="margin-bottom:20px">
+
+
+			<h:form id="form-pagamentoPE">
+
+				<p:dataTable id="table-pagamentoPE"
+					selection="#{pagamentoLancController.selectedpagamentosPE}"
+					value="#{pagamentoLancController.pagamentosPE}" var="pagamentoPE"
+					tableStyle="width:auto" paginator="true" rows="10"
+					rowKey="#{pagamentoPE.idPagamento}" style="margin-bottom:0">
+
+					<f:facet name="header">
+						<p:panelGrid style="border:0px" styleClass="ui-fluid" columns="6"
+							cellpadding="5" cellspacing="5">
+
+
+							<p:outputLabel value="Dt. Pagamento:" style="float:right" />
+
+							<p:calendar value="#{pagamentoLancController.filtro.dataInicio}"
+								navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+							<p:calendar value="#{pagamentoLancController.filtro.dataFinal}"
+								navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+
+							<p:outputLabel value="Dt. Emissão:" style="float:right" />
+
+							<p:calendar
+								value="#{pagamentoLancController.filtro.dataInicioEmissao}"
+								navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+							<p:calendar
+								value="#{pagamentoLancController.filtro.dataFinalEmissao}"
+								navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+
+							<p:inputText placeholder="Nº lançamento" style="margin: 2px 2px;"
+								value="#{pagamentoLancController.filtro.lancamentoID}" />
+
+							<p:inputText placeholder="Nº documento" style="margin: 2px 2px;"
+								value="#{pagamentoLancController.filtro.numeroDocumento}" />
+
+
+
+							<p:autoComplete id="acao-lancamento" placeholder="Ação"
+								value="#{pagamentoLancController.filtro.acao}"
+								completeMethod="#{pagamentoLancController.completeAcoes}"
+								var="acao" itemLabel="#{acao.codigo}" itemValue="#{acao}"
+								converter="acaoConverter" />
+
+
+							<p:autoComplete id="conta_banco" placeholder="Conta" size="40"
+								value="#{pagamentoLancController.filtro.contaFiltro}"
+								completeMethod="#{pagamentoLancController.completeConta}"
+								var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+								converter="contaConverter" />
+
+
+							<p:selectOneMenu style="margin: 2px 2px;"
+								value="#{pagamentoLancController.filtro.statusPagamento}">
+								<p:ajax
+									listener="#{pagamentoLancController.carregarPagamentosPE()}"
+									update="table-pagamentoPE" />
+								<f:selectItem itemLabel="Status" noSelectionOption="true" />
+								<f:selectItems
+									value="#{pagamentoLancController.statusPagamento}" var="stt"
+									itemLabel="#{stt.nome}" itemValue="#{stt}" />
+							</p:selectOneMenu>
+
+
+							<h:panelGroup>
+								<p:commandLink styleClass="btn btn-primary btn-sm"
+									action="#{pagamentoLancController.carregarPagamentosPE()}"
+									update=":form-pagamentoPE:table-pagamentoPE"
+									style="color:#fff; margin: 8px 2px;">
+									<span style="width: 40px;" class="glyphicon glyphicon-search"></span>
+								</p:commandLink>
+
+								<p:commandLink styleClass="btn btn-primary btn-sm"
+									title="Limpar" process="@this"
+									action="#{pagamentoLancController.limpar()}"
+									update=":form-pagamentoPE" style="color:#fff; margin: 8px 2px;">
+									<span style="width: 40px;" class="fa fa-remove"></span>
+								</p:commandLink>
+
+								<p:commandLink styleClass="btn btn-success btn-sm"
+									title="Adicionar lançamento avulso" process="@this"
+									oncomplete="PF('lancamento_avulso').show()"
+									action="#{pagamentoLancController.prepararLancamentoAvulsso()}"
+									style="color:#fff; margin: 8px 2px;">
+									<span style="width: 40px;" class="glyphicon glyphicon-plus"></span>
+								</p:commandLink>
+
+								<p:commandLink styleClass="btn btn-primary btn-sm"
+									action="#{pagamentoLancController.efetivarMultiplos()}"
+									update=":form-pagamentoPE:table-pagamentoPE"
+									style="color:#fff; margin: 8px 2px;">
+									<span style="width: 40px;" class="glyphicon glyphicon-ok"></span>
+								</p:commandLink>
+
+
+							</h:panelGroup>
+
+						</p:panelGrid>
+
+					</f:facet>
+
+					<p:column headerText="Nº Doc">
+						<h:outputText value="#{pagamentoPE.numeroDocumento}" />
+					</p:column>
+
+					<p:column headerText="Dt. Emissão">
+						<h:outputText value="#{pagamentoPE.dataEmissao}">
+							<f:convertDateTime timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Dt. Pagamento">
+						<h:outputText value="#{pagamentoPE.dataPagamento}">
+							<f:convertDateTime timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Pagador">
+						<h:outputText value="#{pagamentoPE.conta}" />
+					</p:column>
+
+					<p:column headerText="Recebedor">
+						<h:outputText value="#{pagamentoPE.fornecedor}" />
+						<h:outputText value="#{pagamentoPE.contaRecebedor}" />
+					</p:column>
+
+
+					<p:column headerText="Valor">
+						<h:outputText value="#{pagamentoPE.valor}">
+							<f:convertNumber locale="pt_BR" type="currency" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Descrição">
+						<h:outputText value="#{pagamentoPE.descricao}" />
+					</p:column>
+
+					<p:column headerText="Status">
+						<h:outputText value="#{pagamentoPE.status.nome}" />
+					</p:column>
+
+					<p:column headerText="Fonte de recurso">
+						<h:outputText value="#{pagamentoPE.fonteRecurso}" />
+					</p:column>
+
+					<p:column headerText="Ação">
+						<h:outputText value="#{pagamentoPE.acao}" />
+					</p:column>
+
+					<p:column>
+
+						<p:commandLink style="margin-right:5px"
+							update=":form-edit-pagamento-tab2" value="editar"
+							oncomplete="PF('dlg_edt_pagamento_tab2').show()"
+							action="#{pagamentoLancController.prepararEdicao(pagamentoPE.idPagamento)}">
+						</p:commandLink>
+
+						<p:commandLink rendered="false" value="Excluir"
+							update="table-pagamentoPE"
+							action="#{pagamentoLancController.efetivar(pagamentoPE.idPagamento)}">
+							<p:confirm message="Efevetivar pagamento?" header="Pagamento" />
+						</p:commandLink>
+					</p:column>
+
+					<p:column selectionMode="multiple" />
+
+				</p:dataTable>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</h:form>
+
+		</p:panel>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+
+		<p:dialog header="Rateio" hideEffect="clip" showEffect="clip"
+			widgetVar="acao-rateio">
+			<h:form id="form-acao-rateio">
+				<p:focus context="form-acao-rateio" />
+				<p:panelGrid columns="3">
+					<p:inputText placeholder="Ação" />
+					<p:inputText placeholder="Valor" />
+					<p:commandButton value="salvar" process="form-acao-rateio"
+						update="form-acao-rateio" />
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="lancamento_avulso" header="Lançamentos"
+			closable="true" width="90%" modal="true" showEffect="clip"
+			hideEffect="clip" resizable="false">
+			<h:form id="form-lancamento-avulso">
+
+				<p:focus context="form-lancamento-avulso" />
+				<p:panelGrid columns="2" style="width:100%">
+
+					<p:panelGrid columns="5" style="ui-fluid;width:100%">
+
+
+
+						<p:inputText style="font-size:12px"
+							placeholder="Pagador/Recebedor" />
+
+						<p:inputText style="font-size:12px" placeholder="Categoria" />
+
+						<p:inputText style="font-size:12px" placeholder="Moeda" />
+
+						<p:inputText style="font-size:12px" placeholder="Valor" />
+
+						<p:inputText style="font-size:12px" placeholder="Vencto/Pagamento" />
+
+						<p:inputText style="font-size:12px" placeholder="Entr./Emissão" />
+
+						<p:inputText style="font-size:12px" placeholder="Descrição" />
+
+						<p:inputText onfocus="PF('acao-rateio').show()"
+							style="font-size:12px" placeholder="Classificação" />
+
+						<p:inputText style="font-size:12px" placeholder="Nº Doc." />
+					</p:panelGrid>
+
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						update="form-lancamento-avulso" value="Salvar" style="color:#fff" />
+
+				</p:panelGrid>
+			</h:form>
+
+		</p:dialog>
+
+
+		<p:dialog widgetVar="pagamentoConta" header="Pagamento"
+			closable="true" width="700" modal="true" showEffect="clip"
+			hideEffect="clip" resizable="false">
+
+			<h:form id="form-pagamento">
+				<p:messages  showIcon="true" showSummary="false"
+					showDetail="true" />
+				<p:panelGrid columns="2">
+					<p:panelGrid columns="2">
+
+
+						<p:outputLabel value="Tipo:" />
+						<p:selectOneMenu
+							value="#{pagamentoLancController.pagamento.tipoParcelamento}">
+
+							<f:selectItems value="#{pagamentoLancController.parcelamentos}"
+								var="parcelamento" itemValue="#{parcelamento}"
+								itemLabel="#{parcelamento.nome}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Nº Parcelas:" />
+						<p:inputText
+							value="#{pagamentoLancController.pagamento.quantidadeParcela}"
+							style="width:40px" />
+
+
+						<p:outputLabel value="Conta:" />
+						<p:selectOneMenu filter="true" filterMatchMode="contains"
+							value="#{pagamentoLancController.pagamento.conta}"
+							converter="contaConverter">
+							<f:selectItems value="#{pagamentoLancController.contas}"
+								var="conta" itemValue="#{conta}" itemLabel="#{conta.nomeConta}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Pagamento:" />
+						<p:calendar navigator="true"
+							value="#{pagamentoLancController.pagamento.dataPagamento}"
+							timeZone="America/Manaus" pattern="dd/MM/yyyy">
+						</p:calendar>
+
+						<p:outputLabel value="Valor:" />
+						<p:inputText placeholder="Valor" required="true"
+							requiredMessage="Preencha o campo Valor."
+							onkeypress="return formatarNumero(this,event,19,2);"
+							value="#{pagamentoLancController.pagamento.valor}"
+							style="width:150px;margin-left:5px">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+								locale="pt_BR" />
+						</p:inputText>
+
+
+						<p:commandLink styleClass="btn btn-primary"
+							action="#{pagamentoLancController.salvarPagamento()}"
+							update="totais :form-pagamento :form-pagamentoPE:table-pagamentoPE"
+							style="color:#fff;margin-left:5px;" value="Enviar" />
+
+					</p:panelGrid>
+
+					<p:panelGrid id="totais" columns="2">
+
+						<p:outputLabel value="Total a pagar:" />
+						<p:inputText id="total-a-pagar" disabled="true"
+							value="#{pagamentoLancController.totalApagar}">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+								locale="pt_BR" />
+						</p:inputText>
+
+						<p:outputLabel value="Total pago:" />
+						<p:inputText id="total-pago" disabled="true" style="color:'red'"
+							value="#{pagamentoLancController.totalPago}">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+								locale="pt_BR" />
+						</p:inputText>
+
+						<p:outputLabel id="total-falta" value="Falta pagar:" />
+						<p:inputText disabled="true"
+							value="#{pagamentoLancController.totalFaltaPagar}">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+								locale="pt_BR" />
+						</p:inputText>
+					</p:panelGrid>
+
+				</p:panelGrid>
+
+				<p:dataTable value="#{pagamentoLancController.pagamentos}"
+					var="pagamento">
+
+					<p:column headerText="Conta">
+						<h:outputText value="#{pagamento.conta.nomeConta}" />
+					</p:column>
+
+					<p:column headerText="Valor">
+						<h:outputText value="#{pagamento.valor}">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Emissão">
+						<h:outputText value="#{pagamento.dataEmissao}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Pagamento">
+						<h:outputText value="#{pagamento.dataPagamento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column>
+						<p:commandLink style="margin-right:5px" value="editar"
+							process="@this" onclick="PF('dlg_edt_pagamento').show()"
+							update=":form-edit-pagamento">
+							<f:setPropertyActionListener value="#{pagamento}"
+								target="#{pagamentoLancController.pagamentoLancAuxiliar}" />
+						</p:commandLink>
+
+						<p:commandLink value="excluir" process="@this"
+							action="#{pagamentoLancController.removerPagamento()}"
+							update=":form-pagamento">
+							<p:confirm header="Confirmação" icon="ui-icon-alert"
+								message="Desejar excluir pagamento?" />
+							<f:setPropertyActionListener value="#{pagamento}"
+								target="#{pagamentoLancController.pagamento}" />
+						</p:commandLink>
+					</p:column>
+
+				</p:dataTable>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlg_edt_pagamento" closable="true"
+			resizable="true" header="Pagamento" showEffect="clip"
+			hideEffect="clip">
+			<h:form id="form-edit-pagamento">
+				<p:panelGrid columns="2">
+					<p:outputLabel value="Lançamento:" />
+					<h:outputText
+						value="#{pagamentoLancamentoController.pagamentoLancAuxiliar.lancamento.id}" />
+
+					<p:outputLabel value="Data:" />
+					<p:calendar navigator="true"
+						value="#{pagamentoLancController.pagamentoLancAuxiliar.dataPagamento}"
+						timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+					<p:outputLabel value="Valor:" />
+					<p:inputText
+						value="#{pagamentoLancController.pagamentoLancAuxiliar.valor}">
+						<f:convertNumber type="currency" locale="pt_BR" />
+					</p:inputText>
+				</p:panelGrid>
+				<p:separator />
+				<p:commandLink style="color:#fff" value="Salvar"
+					update=":form-pagamento" styleClass="btn btn-primary btn-default"
+					action="#{pagamentoLancController.editarPagamento()}"
+					oncomplete="PF('dlg_edt_pagamento').hide()" />
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlg_edt_pagamento_tab2" closable="true"
+			resizable="true" header="Pagamento" showEffect="clip"
+			hideEffect="clip">
+			<h:form id="form-edit-pagamento-tab2">
+				<p:panelGrid columns="2" >
+					<p:outputLabel value="Lançamento:" />
+					<h:outputText
+						value="#{pagamentoLancamentoController.pagamentoLancAuxiliar.lancamento.id}" />
+
+					<p:outputLabel value="Data:" />
+					<p:calendar navigator="true"
+						value="#{pagamentoLancController.pagamentoLancAuxiliar.dataPagamento}"
+						timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+					<p:outputLabel value="Valor:" />
+					<p:inputText
+						value="#{pagamentoLancController.pagamentoLancAuxiliar.valor}">
+						<f:convertNumber type="currency" locale="pt_BR" />
+					</p:inputText>
+					<p:outputLabel value="Fonte:" />
+					<p:autoComplete placeholder="Fonte pagadora" 
+						value="#{pagamentoLancController.pagamentoLancAuxiliar.lancamentoAcao.fontePagadora}"
+						completeMethod="#{pagamentoLancController.completeFonte}"
+						var="fontePagadora" itemLabel="#{fontePagadora.nome}"
+						itemValue="#{fontePagadora}" converter="fontePagadoraConverter"
+						forceSelection="true" />
+
+					<p:outputLabel value="Ação:" />
+					<p:autoComplete id="acao_compra" placeholder="Ação"
+					 
+						value="#{pagamentoLancController.pagamentoLancAuxiliar.lancamentoAcao.acao}"
+						completeMethod="#{pagamentoLancController.completeAcoesInPagto}" var="acao"
+						itemLabel="#{acao.codigo}" itemValue="#{acao}"
+						converter="acaoConverter" forceSelection="true" />
+
+
+				</p:panelGrid>
+				<p:separator />
+				<p:commandLink style="color:#fff" value="Salvar"
+					update=":form-pagamentoPE:table-pagamentoPE"
+					process="form-edit-pagamento-tab2"
+					styleClass="btn btn-primary btn-default"
+					action="#{pagamentoLancController.editarPagamentoTab2()}"
+					oncomplete="PF('dlg_edt_pagamento_tab2').hide()" />
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

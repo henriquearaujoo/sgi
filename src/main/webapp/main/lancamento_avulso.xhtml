@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="menu_lateral">
+
+		<h:form id="tabela_projeto">
+
+			<script type="text/javascript">
+	function start() {
+    	PF('statusDialog').show();
+	}
+ 
+	function stop() {
+    	PF('statusDialog').hide();
+	}
+</script>
+
+
+
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+				<p:graphicImage style="width:120px;height:70px" library="image"
+					name="logofas.png" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{pagtoAvulsoController.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{pagtoAvulsoController.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{pagtoAvulsoController.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right;" class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h1>Adiantamentos/Prestação de contas</h1>
+
+		<h:form id="form-lancamento-avulso">
+
+			<p:focus context="form-lancamento-avulso" />
+			<p:messages  showDetail="true" showSummary="false"
+				closable="true" />
+
+			<p:panelGrid columns="2" style="width:100%">
+
+				<p:panelGrid style="width:100%" columns="5" styleClass="ui-fluid">
+
+					<p:inputText style="font-size:12px" placeholder="Nº Doc."
+						value="#{pagtoAvulsoController.lancamento.numeroDocumento}" />
+
+
+					<p:inputMask mask="999?999999" style="font-size:12px"
+						placeholder="Nº Nota Fiscal."
+						value="#{pagtoAvulsoController.lancamento.notaFiscal}">
+
+					</p:inputMask>
+
+
+					<h:panelGroup>
+						<p:autoComplete id="conta_banco" required="true"
+							placeholder="Pagador" style="width:160px"
+							requiredMessage="Preencha o campo Pagador" size="40"
+							value="#{pagtoAvulsoController.lancamento.contaPagador}"
+							completeMethod="#{pagtoAvulsoController.completeConta}"
+							var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+							converter="contaConverter" forceSelection="true" />
+
+						<p:commandLink id="add_pagador"
+							update=":tab-cad-fornecedor :tab-cad-fornecedor:cadastro-fornecedor"
+							action="#{pagtoAvulsoController.prepararFornecedor()}"
+							process="@this" oncomplete="PF('cadastro_fornecedor').show()"
+							styleClass="link-content" title="Adicionar pagador">
+							<span style="color: green; font-size: 25px" class="icon-plus-alt"></span>
+							<p:resetInput target=":tab-cad-fornecedor:cadastro-fornecedor" />
+						</p:commandLink>
+
+					</h:panelGroup>
+
+					<h:panelGroup>
+
+						<p:autoComplete id="pagador_recebedor" required="true"
+							placeholder="Recebedor" style="width:160px"
+							requiredMessage="Preencha o campo Recebedor" size="40"
+							value="#{pagtoAvulsoController.lancamento.contaRecebedor}"
+							completeMethod="#{pagtoAvulsoController.completeConta}"
+							var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+							converter="contaConverter" forceSelection="true" />
+
+						<p:commandLink id="add_recebedor"
+							update=":tab-cad-fornecedor :tab-cad-fornecedor:cadastro-fornecedor"
+							action="#{pagtoAvulsoController.prepararFornecedor()}"
+							process="@this" oncomplete="PF('cadastro_fornecedor').show()"
+							styleClass="link-content" title="Adicionar recebedor">
+							<span style="color: green; font-size: 25px" class="icon-plus-alt"></span>
+							<p:resetInput target=":tab-cad-fornecedor:cadastro-fornecedor" />
+						</p:commandLink>
+
+					</h:panelGroup>
+
+					<p:selectOneMenu style="font-size:12px"
+						value="#{pagtoAvulsoController.lancamento.tipoParcelamento}">
+						<f:selectItems value="#{pagtoAvulsoController.tiposParcelas()}"
+							var="tp" itemLabel="#{tp.nome}" itemValue="#{tp}" />
+					</p:selectOneMenu>
+
+					<p:inputText required="true"
+						requiredMessage="Por favor preencha o campo 'Parcelas'."
+						value="#{pagtoAvulsoController.lancamento.quantidadeParcela}"
+						style="font-size:12px" placeholder="Parcelas" />
+
+
+
+					<p:calendar placeholder="Vencto/Pagamento" required="true"
+						requiredMessage="Por favor preencha o campo 'Vencto/Pagamento'."
+						value="#{pagtoAvulsoController.lancamento.dataPagamento}"
+						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+					<p:calendar placeholder="Entr./Emissão" required="true"
+						requiredMessage="Por favor preencha o campo  'Entr./Emissão'."
+						value="#{pagtoAvulsoController.lancamento.dataEmissao}"
+						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+					<p:inputText style="font-size:12px" placeholder="Descrição"
+						required="true"
+						requiredMessage="Por favor preencha o campo 'Descrição'"
+						value="#{pagtoAvulsoController.lancamento.descricao}" />
+
+					<p:selectOneMenu
+						value="#{pagtoAvulsoController.lancamento.tipoLancamento}">
+						<f:selectItem itemLabel="N/ se aplica" noSelectionOption="true" />
+						<f:selectItem itemLabel="Adiantamento" itemValue="ad" />
+						<f:selectItem itemLabel="Reembolso" itemValue="reenb" />
+						<f:selectItem itemLabel="Reembolso entre contas"
+							itemValue="reemb_conta" />
+						<f:selectItem itemLabel="Devolução" itemValue="dev" />
+
+					</p:selectOneMenu>
+
+					<p:selectOneMenu
+						value="#{pagtoAvulsoController.lancamento.depesaReceita}">
+						<f:selectItems value="#{pagtoAvulsoController.despesaReceita}"
+							var="despesaReceita" itemLabel="#{despesaReceita.nome}"
+							itemValue="#{despesaReceita}" />
+					</p:selectOneMenu>
+
+					<p:selectOneMenu style="font-size:12px" filter="true"
+						filterMatchMode="contains" converter="categoriaConverter"
+						value="#{pagtoAvulsoController.lancamento.categoriaDespesaClass}">
+						<f:selectItem itemLabel="Categoria despesa"
+							itemValue="#{pagtoAvulsoController.categoria}" />
+						<f:selectItems value="#{pagtoAvulsoController.categorias}"
+							var="categoria" itemLabel="#{categoria.nome}"
+							itemValue="#{categoria}" />
+					</p:selectOneMenu>
+
+
+
+					<p:inputText onfocus="PF('acao-rateio').show()"
+						style="font-size:12px" placeholder="Classificação" />
+
+					<p:panel id="valor-lancamento">
+						<p:inputText style="font-size:12px" disabled="true"
+							value="#{pagtoAvulsoController.lancamento.valorTotalComDesconto}"
+							onkeydown="mascaraMoeda(this,moeda)" placeholder="Valor">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+								locale="pt_BR" />
+						</p:inputText>
+					</p:panel>
+
+
+
+
+
+				</p:panelGrid>
+				<p:panelGrid>
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						onclick="PrimeFaces.monitorDownload(start, stop);"
+						rendered="#{pagtoAvulsoController.lancamento.id == null}"
+						action="#{pagtoAvulsoController.salvarLancamento()}"
+						update="form-lancamento-avulso :form-acao-rateio" value="Salvar"
+						style="color:#fff" />
+
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						oncomplete="PF('selecao_pagamento').show();"
+						rendered="#{pagtoAvulsoController.lancamento.id != null}"
+						action="#{pagtoAvulsoController.carregarPagamentos()}"
+						update=":form-pagamento" value="Salvar" style="color:#fff" />
+
+				</p:panelGrid>
+			</p:panelGrid>
+
+			<p:dataTable id="table-lancav" paginator="true" rows="10"
+				rowIndexVar="indexRow" value="#{pagtoAvulsoController.lancamentos}"
+				selection="#{pagtoAvulsoController.selectedLancamentos}"
+				rowKey="#{lanc.id}" var="lanc" style="margin-bottom:0">
+
+				<f:facet name="header">
+					<p:panelGrid columns="8" styleClass="ui-fluid">
+
+
+						<p:inputText placeholder="ID lançamento"
+							value="#{pagtoAvulsoController.filtro.codigo}">
+
+						</p:inputText>
+
+						<p:inputText placeholder="Nº documento"
+							value="#{pagtoAvulsoController.filtro.numeroDocumento}" />
+
+						<p:inputText placeholder="Descrição"
+							value="#{pagtoAvulsoController.filtro.descricao}" />
+
+
+
+
+						<p:selectOneMenu style="margin: 2px 2px;"
+							filterMatchMode="contains" filter="true"
+							value="#{pagtoAvulsoController.filtro.idConta}">
+							<p:ajax listener="#{pagtoAvulsoController.carregarLancamentos()}"
+								update="table-lancav" process="table-lancav" />
+							<f:selectItem itemLabel="Pagador/Recebedor"
+								noSelectionOption="true" />
+							<f:selectItems value="#{pagtoAvulsoController.contasFiltro}"
+								var="ct" itemLabel="#{ct.nomeConta}" itemValue="#{ct.id}" />
+						</p:selectOneMenu>
+
+						<p:calendar id="dt_inicio" placeholder="Data início"
+							value="#{pagtoAvulsoController.filtro.dataInicio}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy">
+						</p:calendar>
+
+						<p:calendar id="dt_final" placeholder="Data final"
+							value="#{pagtoAvulsoController.filtro.dataFinal}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+
+						<p:panelGrid styleClass="ui-fluid" columns="2">
+
+							<p:commandLink styleClass="btn btn-primary btn-xs fa fa-search"
+								process="table-lancav"
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								action="#{pagtoAvulsoController.carregarLancamentos()}"
+								style="color:#fff" update="table-lancav" />
+
+							<p:commandLink style="color:#fff"
+								styleClass="btn btn-primary btn-xs" process="@this"
+								oncomplete="PF('prestacao_dialog').show();"
+								action="#{pagtoAvulsoController.preparaDialogAdiantamento()}"
+								value="RPC" />
+
+							<p:commandLink styleClass="btn btn-primary btn-xs fa fa-remove"
+								process="table-lancav"
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								action="#{pagtoAvulsoController.limparLista()}"
+								style="color:#fff" update="table-lancav" />
+
+
+
+						</p:panelGrid>
+
+					</p:panelGrid>
+				</f:facet>
+
+				<p:column headerText="Documento">
+					<h:outputText value="#{lanc.numeroDocumento}" />
+				</p:column>
+
+				<p:column headerText="Descrição">
+					<h:outputText value="#{lanc.descricao}" />
+				</p:column>
+
+				<p:column headerText="Dt. pagamento">
+					<h:outputText value="#{lanc.dataPagamento}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Pagador">
+					<h:outputText
+						value="#{lanc.pagador  != null and !lanc.pagador.equals('') ? lanc.pagador : 'FAS'}" />
+				</p:column>
+
+				<p:column headerText="Recebedor">
+					<h:outputText value="#{lanc.recebedor}" />
+				</p:column>
+
+				<p:column headerText="Valor">
+					<h:outputText value="#{lanc.valorTotalComDesconto}">
+						<f:convertNumber type="currency" locale="pt_BR" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="edição/exclusão">
+
+
+					<p:commandLink styleClass="glyphicon glyphicon-pencil"
+						onclick="PrimeFaces.monitorDownload(start, stop);"
+						rendered="#{lanc.pagador  != null and !lanc.pagador.equals('')}"
+						action="#{pagtoAvulsoController.prepararEdicao()}" process="@this"
+						update="form-lancamento-avulso :form-acao-rateio">
+						<f:setPropertyActionListener value="#{lanc}"
+							target="#{pagtoAvulsoController.lancamentoAux}" />
+					</p:commandLink>
+
+					<p:commandLink title="Notas"
+						oncomplete="PF('dialog_arquivo').show();" update=":form-arquivo"
+						action="#{pagtoAvulsoController.carregarArquivos()}"
+						styleClass="glyphicon glyphicon-file" process="@this"
+						style="font-size:14px;margin-left:20px;">
+
+						<f:setPropertyActionListener value="#{lanc}"
+							target="#{pagtoAvulsoController.lancamentoAux}" />
+
+					</p:commandLink>
+
+
+					<p:commandLink styleClass="glyphicon glyphicon-remove"
+						style="margin-left:20px"
+						onclick="PrimeFaces.monitorDownload(start, stop);"
+						rendered="#{lanc.pagador  != null and !lanc.pagador.equals('')}"
+						action="#{pagtoAvulsoController.excluirLancamentoAvulso(indexRow)}"
+						process="@this" update="form-lancamento-avulso :form-acao-rateio">
+						<f:setPropertyActionListener value="#{lanc}"
+							target="#{pagtoAvulsoController.lancamentoAux}" />
+						<p:confirm
+							message="Ao excluir um lançamento excluirá todos os pagamentos previstos para ele! Deseja excluir?" />
+					</p:commandLink>
+
+				</p:column>
+			</p:dataTable>
+
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog header="Pagamentos" modal="true" closable="true" width="60%"
+			hideEffect="clip" closeOnEscape="true" showEffect="clip"
+			widgetVar="selecao_pagamento">
+
+			<h:form id="form-pagamento">
+
+
+				<p:dataTable id="table" styleClass="table"
+					value="#{pagtoAvulsoController.pagamentos}" var="pagamento">
+					<p:column width="50%">
+						<f:facet name="header">
+					     Ação
+					   </f:facet>
+						<h:outputText value="#{pagamento.lancamentoAcao.acao.codigo}"
+							style="font-size:12px" />
+					</p:column>
+
+					<p:column width="25%">
+						<f:facet name="header">
+					     Valor
+					   </f:facet>
+						<h:outputText value="#{pagamento.valor}" style="font-size:12px">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column width="25%">
+						<f:facet name="header">
+					     Data
+					   </f:facet>
+						<h:outputText value="#{pagamento.dataPagamento}"
+							style="font-size:12px">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<f:facet name="footer">
+						<h:outputText
+							value="Existem pagamentos provisionados/efetivados 
+					  para esse lançamento. ao reescrever você apagará todos os pagamentos referente ao lançamento e iniciará novos
+					  levando em consideração a data do lançamento."
+							style="font-size:12px;" />
+					</f:facet>
+				</p:dataTable>
+
+				<p:separator></p:separator>
+				<h:panelGrid columns="2">
+					<p:commandLink update=":form-lancamento-avulso :form-acao-rateio"
+						style="color:#fff"
+						onclick="PrimeFaces.monitorDownload(start, stop);"
+						styleClass="btn btn-success btn-xs"
+						value="Salvar sem alteração no pagamento"
+						action="#{pagtoAvulsoController.salvarLancamentoSemRefatorar()}"
+						oncomplete="PF('selecao_pagamento').hide()" />
+					<p:commandLink update=":form-lancamento-avulso :form-acao-rateio"
+						style="margin-left:3px;color:#fff"
+						styleClass="btn btn-danger btn-xs"
+						value="Salvar com alteração no pagamento"
+						action="#{pagtoAvulsoController.salvarLancamento()}"
+						oncomplete="PF('selecao_pagamento').hide()"
+						onclick="PrimeFaces.monitorDownload(start, stop);" />
+				</h:panelGrid>
+
+
+
+			</h:form>
+
+
+		</p:dialog>
+
+		<p:dialog header="Anexos" modal="true" widgetVar="dialog_arquivo"
+			hideEffect="clip" closeOnEscape="true" showEffect="clip">
+			<h:form id="form-arquivo" enctype="multipart/form-data">
+				<p:messages id="msg_aprouve"  showIcon="true"
+					showSummary="false" showDetail="true" closable="true" />
+				<p:panelGrid columns="2" styleClass="ui-fluid">
+
+					<p:panelGrid>
+
+						<p:row>
+							<p:column>
+								<h:outputLabel value="Nome:" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{pagtoAvulsoController.arquivo.nome}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column>
+								<h:outputLabel value="Arquivo:" />
+							</p:column>
+							<p:column>
+								<p:fileUpload update="panel_path"
+									fileUploadListener="#{pagtoAvulsoController.handleFileUpload}"
+									mode="advanced" auto="true" sizeLimit="100000000"
+									allowTypes="/(\.|\/)(csv|doc|docx|xls|xlsx|pdf)$/" />
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column colspan="2">
+								<p:panel id="panel_path">
+									<p:outputLabel value="#{pagtoAvulsoController.path}" />
+								</p:panel>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column colspan="2">
+								<p:commandLink
+									action="#{pagtoAvulsoController.adicionarArquivo()}"
+									style="color:#FFF" update="table-arquivo form-arquivo"
+									styleClass="btn btn-block btn-primary" value="Salvar" />
+							</p:column>
+
+						</p:row>
+
+					</p:panelGrid>
+
+					<p:dataTable id="table-arquivo"
+						value="#{pagtoAvulsoController.lancamentoAux.arquivos}" var="arq">
+
+						<p:column headerText="Nome">
+							<h:outputText value="#{arq.nome}" />
+						</p:column>
+
+
+
+						<p:column style="width:200px">
+							<p:panelGrid columns="2">
+								<p:commandLink style="color:#FFF" styleClass="btn btn-primary"
+									action="#{pagtoAvulsoController.visualizarArquivo()}"
+									ajax="false" process="@this">
+									<span style="width: 40px;" class="glyphicon glyphicon-search"></span>
+									<f:setPropertyActionListener value="#{arq}"
+										target="#{pagtoAvulsoController.arqAuxiliar}" />
+								</p:commandLink>
+
+								<p:commandLink style="color:#FFF" styleClass="btn  btn-primary"
+									action="#{pagtoAvulsoController.removerArquivo()}"
+									process="@this"
+									update="table-arquivo :form-arquivo:msg_aprouve">
+									<span style="width: 40px;" class="fa fa-remove"></span>
+									<f:setPropertyActionListener value="#{arq}"
+										target="#{pagtoAvulsoController.arqAuxiliar}" />
+								</p:commandLink>
+							</p:panelGrid>
+						</p:column>
+
+					</p:dataTable>
+
+
+				</p:panelGrid>
+			</h:form>
+
+		</p:dialog>
+
+
+		<p:dialog header="Arquivos" modal="true" width="90%" height="90%"
+			hideEffect="clip" closeOnEscape="true" showEffect="clip"
+			widgetVar="arquivo_lancamento">
+			<h:form id="form-arquivo-img">
+				<p:graphicImage
+					value="/get_imagem_lancamento?id=#{pagtoAvulsoController.arquivo.id}"
+					width="90%" height="90%" />
+			</h:form>
+		</p:dialog>
+
+
+		<p:dialog header="Cadastro de Conta/Fornecedor" modal="true"
+			hideEffect="clip" closeOnEscape="true" showEffect="clip"
+			widgetVar="cadastro_fornecedor">
+
+
+			<p:tabView id="tab-cad-fornecedor"
+				binding="#{pagtoAvulsoController.tabview}">
+
+				<p:tab title="Fornecedor">
+
+					<h:form id="cadastro-fornecedor" styleClass="ui-fluid">
+
+						<p:messages  showIcon="true" showSummary="false"
+							showDetail="true" closable="true" />
+						<p:panelGrid columns="2" id="panel-cad">
+
+							<h:outputText value="Tipo" />
+							<p:selectOneMenu
+								value="#{pagtoAvulsoController.conta.tipoJuridico}"
+								required="true" requiredMessage="Preencha o campo 'Tipo'.">
+								<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+								<f:selectItem itemLabel="Fisica" itemValue="fisica" />
+								<f:selectItem itemLabel="Jurídica" itemValue="juridica" />
+								<f:selectItem itemLabel="Internacional" itemValue="int" />
+								<p:ajax event="change" update="panel-cad" />
+							</p:selectOneMenu>
+
+							<h:outputText
+								rendered="#{pagtoAvulsoController.conta.tipoJuridico.equals('juridica')}"
+								value="CNPJ:" />
+							<p:inputMask required="true"
+								requiredMessage="Preencha o campo CNPJ."
+								rendered="#{pagtoAvulsoController.conta.tipoJuridico.equals('juridica')}"
+								mask="99.999.999/9999-99"
+								value="#{pagtoAvulsoController.conta.cnpj}" />
+
+							<h:outputText value="CPF:"
+								rendered="#{pagtoAvulsoController.conta.tipoJuridico.equals('fisica')}" />
+							<p:inputMask mask="999.999.999-99" required="true"
+								requiredMessage="Preencha o campo CPF."
+								rendered="#{pagtoAvulsoController.conta.tipoJuridico.equals('fisica')}"
+								value="#{pagtoAvulsoController.conta.cpf}" />
+
+							<h:outputText value="TAXI ID:"
+								rendered="#{pagtoAvulsoController.conta.tipoJuridico.equals('int')}" />
+							<p:inputText value="#{pagtoAvulsoController.conta.taxiid}"
+								rendered="#{pagtoAvulsoController.conta.tipoJuridico.equals('int')}" />
+
+
+							<h:outputText value="Nome fantasia:" />
+							<p:inputText value="#{pagtoAvulsoController.conta.nomeConta}"
+								required="true"
+								requiredMessage="Preencha o campo 'Nome Fantásia'"
+								placeholder="Nome fantásia" />
+
+							<h:outputText value="Razão Social:" />
+							<p:inputText value="#{pagtoAvulsoController.conta.razaoSocial}"
+								required="true"
+								requiredMessage="Preencha o campo 'Razão Social'" />
+
+							<h:outputText value="PIS:" />
+							<p:inputText value="#{pagtoAvulsoController.conta.PIS}" />
+
+							<h:outputText value="Email:" />
+							<p:inputText value="#{pagtoAvulsoController.conta.email}" />
+
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								action="#{pagtoAvulsoController.salvarFornecedor()}"
+								update=":tab-cad-fornecedor:cadastro-fornecedor"
+								process=":tab-cad-fornecedor:cadastro-fornecedor" value="Salvar"
+								style="color:#fff" />
+
+						</p:panelGrid>
+					</h:form>
+				</p:tab>
+
+				<p:tab title="Conta">
+					<h:form id="cadastro-conta" styleClass="ui-fluid">
+
+						<p:messages  showIcon="true" showSummary="false"
+							showDetail="true" />
+						<p:panelGrid columns="2" id="panel-cad">
+
+							<h:outputText value="Tipo" />
+							<p:selectOneMenu value="#{pagtoAvulsoController.conta.tipo}">
+								<f:selectItem itemLabel="Selecione um tipo"
+									noSelectionOption="true" />
+								<f:selectItem itemLabel="Corrente" itemValue="CB" />
+								<f:selectItem itemLabel="Aplicação" itemValue="CAP" />
+								<f:selectItem itemLabel="Adiantamento" itemValue="CA" />
+							</p:selectOneMenu>
+
+							<h:outputText value="Nome:" />
+							<p:inputText value="#{pagtoAvulsoController.conta.nomeConta}"
+								required="true"
+								requiredMessage="Preencha o campo 'Nome Fantásia'"
+								placeholder="Nome da conta" />
+
+							<h:outputText value="Agencia:" />
+							<p:inputText value="#{pagtoAvulsoController.conta.numeroAgencia}" />
+
+							<h:outputText value="Conta:" />
+							<p:inputText value="#{pagtoAvulsoController.conta.numeroConta}" />
+
+							<h:outputText value="Saldo Inicial:" />
+							<p:inputText placeholder="Valor" style="width:100px"
+								required="true"
+								requiredMessage="Por favor preencha o campo 'Valor'"
+								onkeydown="mascaraMoeda(this,moeda)"
+								value="#{pagtoAvulsoController.conta.saldoInicial}">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" />
+
+							</p:inputText>
+
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								action="#{pagtoAvulsoController.salvarConta()}"
+								update=":tab-cad-fornecedor:cadastro-conta"
+								process=":tab-cad-fornecedor:cadastro-conta" value="Salvar"
+								style="color:#fff" />
+
+						</p:panelGrid>
+					</h:form>
+
+
+				</p:tab>
+
+				<p:tab title="Lista">
+
+					<p:panelGrid columns="1">
+						<h:form id="form-listagem-fornecedor" style="width:480px">
+
+
+							<p:dataTable selectionMode="single"
+								selection="#{pagtoAvulsoController.selectedConta}"
+								rowKey="#{c_fornecedor.id}" paginator="true"
+								styleClass="table table-hover" rows="5"
+								value="#{pagtoAvulsoController.allContaFornecedor}"
+								var="c_fornecedor">
+
+								<p:column filterBy="#{c_fornecedor.nomeConta}"
+									filterMatchMode="contains" headerText="Nome">
+									<h:outputText value="#{c_fornecedor.nomeConta}" />
+								</p:column>
+
+								<f:facet name="footer">
+									<p:commandLink styleClass="btn btn-primary"
+										update=":tab-cad-fornecedor:cadastro-fornecedor :tab-cad-fornecedor:cadastro-conta"
+										action="#{pagtoAvulsoController.editarFornecedor()}"
+										style="color:#fff;margin-right:5px" value="Editar" />
+
+								</f:facet>
+
+							</p:dataTable>
+						</h:form>
+					</p:panelGrid>
+				</p:tab>
+
+
+
+			</p:tabView>
+
+
+
+
+		</p:dialog>
+
+
+		<p:dialog modal="false" header="Prestações de conta" hideEffect="clip"
+			closeOnEscape="true" showEffect="clip" widgetVar="prestacao_dialog">
+
+			<h:form id="form-prestacao-conta">
+				<p:messages  id="msg-prestacao-conta"></p:messages>
+				<p:panelGrid columns="2">
+					<h:outputText value="Nº Documento:" />
+					<p:inputText
+						value="#{pagtoAvulsoController.filtro.numeroDocumento}" />
+					<p:commandLink ajax="false" value="Gerar"
+						styleClass="btn btn-primary"
+						action="#{pagtoAvulsoController.gerarRelatorioAdiantamento()}"
+						process="form-prestacao-conta"
+						update=":form-prestacao-conta:msg-prestacao-conta" />
+				</p:panelGrid>
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog header="Classificação" hideEffect="clip"
+			closeOnEscape="true" showEffect="clip" widgetVar="acao-rateio"
+			width="60%" modal="false">
+			<h:form id="form-acao-rateio">
+
+				<p:messages  closable="true" showIcon="true"
+					showSummary="false" showDetail="true" />
+				<p:panel id="panel-lancamento">
+					<p:focus context="form-acao-rateio" />
+					<p:dataTable id="table-lancamento-acao" rowIndexVar="indexRow"
+						scrollable="true" scrollHeight="350"
+						value="#{pagtoAvulsoController.lancamento.lancamentosAcoes}"
+						var="lanc_acao">
+
+						<f:facet name="header">
+							<p:outputPanel>
+
+
+
+
+								<p:inputText placeholder="Valor" style="width:100px"
+									required="true"
+									requiredMessage="Por favor preencha o campo 'Valor'"
+									onkeydown="mascaraMoeda(this,moeda)"
+									value="#{pagtoAvulsoController.lancamentoAcao.valor}">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+										locale="pt_BR" />
+
+								</p:inputText>
+								<p:autoComplete id="fonte-pagadora-lancamento"
+									placeholder="Fonte pagadora" style="margin-left:5px"
+									value="#{pagtoAvulsoController.lancamentoAcao.fontePagadora}"
+									completeMethod="#{pagtoAvulsoController.completeFonte}"
+									var="fontePagadora" itemLabel="#{fontePagadora.nome}"
+									itemValue="#{fontePagadora}" converter="fontePagadoraConverter"
+									forceSelection="true" required="true"
+									requiredMessage="Por favor preencha o campo Fonte 'pagadora'" />
+
+								<p:autoComplete id="acao-lancamento" placeholder="Ação"
+									style="margin-left:5px"
+									value="#{pagtoAvulsoController.lancamentoAcao.acao}"
+									completeMethod="#{pagtoAvulsoController.completeAcoes}"
+									var="acao" itemLabel="#{acao.codigo} - #{acao.projeto.nome}"
+									itemValue="#{acao}" converter="acaoConverter"
+									forceSelection="true" required="true"
+									requiredMessage="Por favor preencha o campo 'Ação'" />
+
+								<p:inputText style="margin-left:5px" placeholder="Descrição"
+									value="#{pagtoAvulsoController.lancamentoAcao.descricao}" />
+
+								<p:commandLink value="salvar" style="color:#FFF;margin-left:5px"
+									styleClass="btn btn-primary btn-xs"
+									action="#{pagtoAvulsoController.addLancamentoAcao()}"
+									process="form-acao-rateio"
+									update="form-acao-rateio table-lancamento-acao :form-lancamento-avulso:valor-lancamento" />
+							</p:outputPanel>
+
+						</f:facet>
+
+						<p:column headerText="Fonte" filterMatchMode="contains"
+							filterBy="#{lanc_acao.fontePagadora.nome}">
+							<h:outputText value="#{lanc_acao.fontePagadora.nome}" />
+						</p:column>
+
+						<p:column headerText="Ação" filterMatchMode="contains"
+							filterBy="#{lanc_acao.acao.codigo}">
+							<h:outputText value="#{lanc_acao.acao.codigo}" />
+						</p:column>
+
+						<p:column headerText="Valor">
+							<h:outputText value="#{lanc_acao.valor}">
+								<f:convertNumber type="currency" />
+							</h:outputText>
+						</p:column>
+
+						<p:column>
+							<p:commandLink value="excluir" process="@this"
+								update="form-acao-rateio table-lancamento-acao :form-lancamento-avulso:valor-lancamento"
+								action="#{pagtoAvulsoController.removeLancamentoAcao(indexRow)}">
+								<p:confirm header="Excluir"
+									message="Ao excluir um registro, excluirá também todos os possíveis pagamentos que estão provisionados a ele!
+							         Deseja excluir?"></p:confirm>
+							</p:commandLink>
+						</p:column>
+
+
+					</p:dataTable>
+				</p:panel>
+
+				<p:confirmDialog global="true" showEffect="clip" hideEffect="clip"
+					icon="ui-icon-alert">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

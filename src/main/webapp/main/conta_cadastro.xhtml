@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+
+
+	<ui:define name="content">,
+
+		<style type="text/css">
+.right_label {
+	float: right;
+}
+</style>
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+		</script>
+
+		<f:metadata>
+			<o:viewParam name="cont" value="#{conta_controller.contaBancaria}" />
+			<f:viewAction action="#{conta_controller.initCadastro()}" />
+		</f:metadata>
+
+		<h:form id="form_conta_cadastro" style="width:100%">
+			<p:tabView prependId="false">
+				<p:tab title="Conta bancária">
+					<p:messages  showIcon="true" showSummary="false"
+						showDetail="true" />
+
+					<p:panelGrid id="panelSaldos" columns="12">
+
+						<h:outputText value="Saldo Inicial: R$" />
+						<p:outputLabel value="#{conta_controller.saldoInicial}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Saldo Doações: R$" />
+						<p:outputLabel value="#{conta_controller.totalDoacoes}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Rendimentos aplicados: R$" />
+						<p:outputLabel value="#{conta_controller.totalRendimentos}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Rendimentos alocados: R$" />
+						<p:outputLabel value="#{conta_controller.totalAlocacoes}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Aplicações: R$" />
+						<p:outputLabel value="#{conta_controller.totalAplicacoes}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Baixas: R$" />
+						<p:outputLabel value="#{conta_controller.totalBaixas}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Outras despesas: R$" />
+						<p:outputLabel value="#{conta_controller.totalOutrasDespesas}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Outras receitas: R$" />
+						<p:outputLabel value="#{conta_controller.totalOutrasReceitas}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputLabel value="Saldo Total: R$" />
+						<p:outputLabel value="#{conta_controller.saldoTotal}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+					</p:panelGrid>
+					<p:separator/>
+
+					<p:panelGrid id="panelConta" columns="2">
+
+						<p:panelGrid columns="2" id="panel-cad"
+							style="width:80%;margin-left:auto;margin-right:auto">
+							<h:outputText value="Tipo:" styleClass="right_label" />
+							<p:selectOneMenu value="#{conta_controller.contaBancaria.tipo}">
+								<f:selectItem itemLabel="Selecione um tipo"
+									noSelectionOption="true" />
+								<f:selectItem itemLabel="Corrente" itemValue="CB" />
+								<f:selectItem itemLabel="Aplicação" itemValue="CAP" />
+								<f:selectItem itemLabel="Adiantamento" itemValue="CA" />
+								<f:selectItem itemLabel="Conta fornecedor" itemValue="CF" />
+								<f:selectItem itemLabel="Baixa de rendimento" itemValue="RDT" />
+
+							</p:selectOneMenu>
+
+							<h:outputText value="Nome:" styleClass="right_label" />
+							<p:inputText value="#{conta_controller.contaBancaria.nomeConta}"
+								required="true" requiredMessage="Preencha o campo 'Nome Fantásia'"
+								placeholder="Ex: Conta FAS-PRINCIPAL" />
+
+							<h:outputText value="Agencia:" styleClass="right_label" />
+							<p:inputText
+								value="#{conta_controller.contaBancaria.numeroAgencia}"
+								placeholder="Ex: 3739" />
+
+							<h:outputText value="Conta:" styleClass="right_label" />
+							<p:inputText value="#{conta_controller.contaBancaria.numeroConta}"
+								placeholder="Ex: 55669-2" />
+
+							<h:outputText value="Banco:" styleClass="right_label" />
+							<p:autoComplete id="banco_conta" required="true"
+								placeholder="Banco" inputStyle="width:155px"
+								requiredMessage="Preencha o campo Banco"
+								value="#{conta_controller.contaBancaria.banco}"
+								completeMethod="#{conta_controller.completeBanco}" var="banc"
+								itemLabel="#{banc.nomeBanco}" itemValue="#{banc}"
+								forceSelection="true">
+
+								<p:column>
+									<h:outputText value="#{banc.numeroBanco}" />
+								</p:column>
+
+								<p:column>
+									<h:outputText value="#{banc.nomeBanco}" />
+								</p:column>
+
+							</p:autoComplete>
+
+							<h:outputText value="Saldo Inicial:" styleClass="right_label" />
+							<p:inputText placeholder="Valor" style="width:100px"
+								required="true"
+								requiredMessage="Por favor preencha o campo 'Valor'"
+								onkeydown="mascaraMoeda(this,moeda)"
+								value="#{conta_controller.contaBancaria.saldoInicial}">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" />
+
+							</p:inputText>
+
+							<p:link styleClass="btn btn-danger btn-block btn-sm"
+								outcome="/main/contas" value="Cancelar" style="color:#fff" />
+
+							<p:commandLink styleClass="btn btn-primary btn-block btn-sm"
+								action="#{conta_controller.salvarConta()}" value="Salvar" process="panelConta"
+								style="color:#fff" />
+
+						</p:panelGrid>
+
+						<p:panelGrid>
+
+							<p:panelGrid>
+
+								<p:panelGrid id="panelFiltroLancamentos" columns="10">
+									<h:outputText value="De:" />
+									<p:calendar styleClass="font12-vi"
+												placeholder="Data inicio" size="12"
+												value="#{conta_controller.filtro.dataInicio}"
+												timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy"/>
+
+									<h:outputText value="Até:" />
+									<p:calendar styleClass="font12-vi"
+												placeholder="Data final" size="12"
+												value="#{conta_controller.filtro.dataFinal}"
+												timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy"/>
+
+									<p:outputLabel value="Fonte/Doação:" />
+									<p:selectOneMenu value="#{conta_controller.filtro.orcamento}"
+													 filter="true" style="width:210px" filterMatchMode="contains"
+													 converter="orcamentoConverter">
+										<f:selectItem noSelectionOption="true" />
+										<f:selectItems value="#{conta_controller.orcamentos}"
+													   var="orcamento"
+													   itemLabel="#{orcamento.titulo}"
+													   itemValue="#{orcamento}" />
+									</p:selectOneMenu>
+
+									<p:selectOneMenu value="#{conta_controller.filtro.tipoConta}">
+										<f:selectItem noSelectionOption="true" itemLabel="Tipo de lançamento"/>
+										<f:selectItem itemLabel="Alocação de Rendimento" itemValue="rendimento"/>
+										<f:selectItem itemLabel="Aplicação" itemValue="aplicacao_recurso"/>
+										<f:selectItem itemLabel="Baixa" itemValue="baixa_aplicacao"/>
+
+									</p:selectOneMenu>
+
+									<p:selectOneMenu value="#{conta_controller.filtro.tipoDespesa}">
+										<f:selectItem noSelectionOption="true" itemLabel="Tipo"/>
+										<f:selectItem itemLabel="Despesa" itemValue="0"/>
+										<f:selectItem itemLabel="Receita" itemValue="1"/>
+
+									</p:selectOneMenu>
+
+									<p:commandLink styleClass="btn btn-primary btn-sm fa fa-search"
+												   action="#{conta_controller.carregarTransacoes()}" value="Pesquisar"
+												   style="color:#fff" update="lancamentos" process="panelFiltroLancamentos"/>
+
+									<p:commandLink title="Exportar para excel"
+												   action="#{conta_controller.exportarPagamentosExcel()}" ajax="false" immediate="true">
+										<p:graphicImage library="image" name="excel.png" width="24" />
+									</p:commandLink>
+								</p:panelGrid>
+
+								<br/>
+
+								<p:dataTable id="lancamentos" rowIndexVar="index"
+									value="#{conta_controller.listaDePagamentosRelatados}" paginator="true" rows="25"
+									var="lancamento">
+
+									<p:column headerText="#" width="40">
+										<h:outputText value="#{index}" />
+									</p:column>
+
+									<p:column headerText="Tipo" width="110">
+										<h:outputText value="#{lancamento.tipo}" />
+									</p:column>
+
+									<p:column headerText="Dt. Pagamento" width="110"
+										style="text-align:center">
+										<h:outputText value="#{lancamento.emissao}" />
+									</p:column>
+
+									<p:column headerText="Fonte" width="150">
+										<h:outputText value="#{lancamento.fonte}" />
+									</p:column>
+
+									<p:column headerText="Pagador/Recebedor"
+										rendered="#{!lancamento.despesa}">
+										<h:outputText value="#{lancamento.pagador}" />
+									</p:column>
+
+									<p:column headerText="Pagador/Recebedor"
+										rendered="#{lancamento.despesa}">
+										<h:outputText value="#{lancamento.recebedor}" />
+									</p:column>
+
+									<p:column style="width:100px" headerText="Valor"
+										rendered="#{!lancamento.despesa}">
+										<h:outputText style="color:green;float:right"
+											value="#{lancamento.entrada}">
+											<f:convertNumber type="currency" locale="pt_BR" />
+										</h:outputText>
+									</p:column>
+
+									<p:column style="width:100px" rendered="#{lancamento.despesa}"
+										headerText="Valor">
+										<h:outputText style="color:red;float:right"
+											value="#{lancamento.saida}">
+											<f:convertNumber type="currency" locale="pt_BR" />
+										</h:outputText>
+									</p:column>
+
+
+								</p:dataTable>
+
+							</p:panelGrid>
+						</p:panelGrid>
+
+					</p:panelGrid>
+				</p:tab>
+
+				<p:tab title="Doações" rendered="#{conta_controller.contaBancaria.id != null and (conta_controller.contaBancaria.tipo.equals('CAP') or conta_controller.contaBancaria.tipo.equals('CB'))}">
+
+					<p:panelGrid id="panelSaldosD" columns="12">
+
+						<h:outputText value="Saldo Inicial: R$" />
+						<p:outputLabel value="#{conta_controller.saldoInicial}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Saldo Doações: R$" />
+						<p:outputLabel value="#{conta_controller.totalDoacoes}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Rendimentos aplicados: R$" />
+						<p:outputLabel value="#{conta_controller.totalRendimentos}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Rendimentos alocados: R$" />
+						<p:outputLabel value="#{conta_controller.totalAlocacoes}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Aplicações: R$" />
+						<p:outputLabel value="#{conta_controller.totalAplicacoes}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Baixas: R$" />
+						<p:outputLabel value="#{conta_controller.totalBaixas}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Outras despesas: R$" />
+						<p:outputLabel value="#{conta_controller.totalOutrasDespesas}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Outras receitas: R$" />
+						<p:outputLabel value="#{conta_controller.totalOutrasReceitas}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputLabel value="Saldo Total: R$" />
+						<p:outputLabel value="#{conta_controller.saldoTotal}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+					</p:panelGrid>
+					<p:separator/>
+
+					<p:fieldset legend="Adicionar doações">
+						<p:messages id="msgDoacao"  showDetail="true" closable="true" showSummary="false"></p:messages>
+						<p:panelGrid id="panelDoacao" columns="6">
+
+							<h:outputText value="Valor: R$" />
+							<p:inputText value="#{conta_controller.fonteDoacaoConta.valor}"
+										 onkeydown="mascaraMoeda(this,moeda)" style="text-align: right;"
+										 requiredMessage="Valor é obrigatório" required="true">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												 locale="pt_BR" />
+							</p:inputText>
+
+							<p:outputLabel value="Fonte/Doação:" />
+							<p:selectOneMenu value="#{conta_controller.fonteDoacaoConta.orcamento}"
+											 filter="true" style="width:210px" filterMatchMode="contains"
+											 converter="orcamentoConverter" required="true"
+											 requiredMessage="Fonte/Doação é obrigatório.">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{conta_controller.orcamentos}"
+											   var="orcamento"
+											   itemLabel="#{orcamento.titulo}"
+											   itemValue="#{orcamento}" />
+							</p:selectOneMenu>
+
+							<p:commandLink styleClass="btn btn-primary btn-block btn-sm"
+										   action="#{conta_controller.salvarDoacao()}" value="Adicionar doação"
+										   style="color:#fff" update="msgDoacao doacoes panelDoacao panelSaldos panelSaldosD" process="panelDoacao"/>
+						</p:panelGrid>
+
+						<br/>
+
+						<p:dataTable id="doacoes" value="#{conta_controller.contaBancaria.doacoes}"
+									 var="doacao" style="width: 1000px">
+							<f:facet name="header">
+								Lista de doações
+							</f:facet>
+
+							<p:column headerText="Fonte/Doação" width="250">
+								<h:outputText value="#{doacao.orcamento.titulo}" />
+							</p:column>
+
+							<p:column headerText="Usuário" width="200">
+								<h:outputText value="#{doacao.usuario.nomeUsuario}" />
+							</p:column>
+
+							<p:column headerText="Valor" style="text-align:right" width="100">
+								<h:outputText value="#{doacao.valor}">
+									<f:convertNumber type="currency" maxFractionDigits="2"
+													 currencySymbol="R$" />
+								</h:outputText>
+							</p:column>
+
+							<p:column style="width:50px;text-align:center">
+								<p:commandLink style="color:#FFF;margin-left:5px"
+											   styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove-circle"
+											   action="#{conta_controller.removerDoacao()}" process="@this"
+											   update="doacoes :form_conta_cadastro:msgDoacao :form_conta_cadastro:panelSaldos :form_conta_cadastro:panelSaldosD" title="Excluir doação">
+									<f:setPropertyActionListener value="#{doacao}"
+																 target="#{conta_controller.fonteDoacaoConta}" />
+								</p:commandLink>
+							</p:column>
+
+							<p:columnGroup type="footer">
+								<p:row>
+									<p:column colspan="2" footerText="TOTAL R$: "
+											  style="text-align:right" />
+									<p:column style="text-align:right"
+											  footerText="#{conta_controller.totalDoacoes}" />
+								</p:row>
+							</p:columnGroup>
+						</p:dataTable>
+
+					</p:fieldset>
+				</p:tab>
+				<p:tab title="Rendimentos" rendered="#{conta_controller.contaBancaria.id != null and conta_controller.contaBancaria.tipo.equals('CAP')}">
+					<p:panelGrid id="panelTotais" columns="7">
+						<h:outputText value="Aplicados a conta: R$" />
+						<p:outputLabel value="#{conta_controller.totalRendimentos}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Aplicados a doações: R$" />
+						<p:outputLabel value="#{conta_controller.totalAlocacoes}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Disponível: R$" />
+						<p:outputLabel value="#{conta_controller.totalDisponivel}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+						<p:commandLink title="Exportar para excel"
+									   action="#{conta_controller.exportarExcel()}" ajax="false" immediate="true">
+							<p:graphicImage library="image" name="excel.png" width="24" />
+						</p:commandLink>
+					</p:panelGrid>
+					<p:separator/>
+					<p:fieldset legend="Adicionar rendimentos">
+						<p:messages id="msgRendimento"  showDetail="true" closable="true" showSummary="false"></p:messages>
+						<p:panelGrid id="panelRendimento" columns="4">
+							<h:outputText value="Data do pagamento:" />
+							<p:calendar id="dt_prest" styleClass="font12-vi"
+										placeholder="Data do pagamento" size="12"
+										value="#{conta_controller.rendimentoConta.dataPagamento}"
+										timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy"
+										requiredMessage="Data do pagamento é obrigatório" required="true"/>
+
+							<h:outputText value="Valor: R$" />
+							<p:inputText value="#{conta_controller.rendimentoConta.valor}"
+										 onkeydown="mascaraMoeda(this,moeda)" style="text-align: right;"
+										 requiredMessage="Valor é obrigatório" required="true">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												 locale="pt_BR" />
+							</p:inputText>
+
+							<h:outputText value="Competência:" />
+							<p:inputMask mask="99/9999" autoClear="true" value="#{conta_controller.rendimentoConta.competencia}" required="true"
+										 requiredMessage="Competência é obrigatório"/>
+
+							<h:outputText value="Conta Pagadora:" />
+							<p:selectOneMenu converter="contaConverter" filter="true"
+											 filterMatchMode="contains"
+											 value="#{conta_controller.rendimentoConta.contaPagadora}"
+											 style="width:200px" styleClass="font12-vi"
+												required="true" requiredMessage="Conta pagadora é obrigatório. Informe uma conta do tipo rendimento.">
+								<f:selectItems value="#{conta_controller.contasPagadoras}" var="conta"
+											   itemLabel="#{conta.nomeConta}" itemValue="#{conta}" />
+							</p:selectOneMenu>
+
+							<p:commandLink styleClass="btn btn-primary btn-block btn-sm"
+										   action="#{conta_controller.salvarRendimento()}" value="Adicionar rendimento"
+										   style="color:#fff" update="msgRendimento rendimentos panelRendimento panelTotais panelAlocTotais panelSaldos panelSaldosD" process="panelRendimento"/>
+						</p:panelGrid>
+
+						<br/>
+
+						<p:dataTable id="rendimentos" value="#{conta_controller.contaBancaria.rendimentos}"
+									 var="rendimento" style="width: 1100px">
+							<f:facet name="header">
+								Lista de rendimentos
+							</f:facet>
+
+							<p:column headerText="Data" width="100">
+								<h:outputText value="#{rendimento.dataPagamento}">
+									<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Compentência" width="120">
+								<h:outputText value="#{rendimento.competencia}" />
+							</p:column>
+
+							<p:column headerText="Conta pagadora" width="250">
+								<h:outputText value="#{rendimento.contaPagadora.contaFornecedor}" />
+							</p:column>
+
+							<p:column headerText="Usuário" width="200">
+								<h:outputText value="#{rendimento.usuario.nomeUsuario}" />
+							</p:column>
+
+							<p:column headerText="Valor" style="text-align:right" width="100">
+								<h:outputText value="#{rendimento.valor}">
+									<f:convertNumber type="currency" maxFractionDigits="2"
+													 currencySymbol="R$" />
+								</h:outputText>
+							</p:column>
+
+							<p:column style="width:50px;text-align:center">
+								<p:commandLink style="color:#FFF;margin-left:5px"
+											   styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove-circle"
+											   action="#{conta_controller.removerRendimento()}" process="@this"
+											   update="rendimentos :form_conta_cadastro:panelTotais :form_conta_cadastro:panelAlocTotais :form_conta_cadastro:msgRendimento :form_conta_cadastro:panelSaldos :form_conta_cadastro:panelSaldosD" title="Excluir rendimento">
+									<f:setPropertyActionListener value="#{rendimento}"
+																 target="#{conta_controller.rendimentoConta}" />
+								</p:commandLink>
+							</p:column>
+
+							<p:columnGroup type="footer">
+								<p:row>
+									<p:column colspan="4" footerText="TOTAL R$: "
+											  style="text-align:right" />
+									<p:column style="text-align:right"
+											  footerText="#{conta_controller.totalRendimentos}" />
+								</p:row>
+							</p:columnGroup>
+						</p:dataTable>
+
+					</p:fieldset>
+				</p:tab>
+				<p:tab title="Alocação de rendimentos" rendered="#{conta_controller.contaBancaria.id != null and conta_controller.contaBancaria.tipo.equals('CAP')}">
+					<p:panelGrid id="panelAlocTotais" columns="7">
+						<h:outputText value="Aplicados a conta: R$" />
+						<p:outputLabel value="#{conta_controller.totalRendimentos}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Aplicados a doações: R$" />
+						<p:outputLabel value="#{conta_controller.totalAlocacoes}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+
+						<h:outputText value="Disponível: R$" />
+						<p:outputLabel value="#{conta_controller.totalDisponivel}" style="font-size:15px;text-align:right;width:100%">
+						</p:outputLabel>
+						<p:commandLink title="Exportar para excel"
+									   action="#{conta_controller.exportarExcel()}" ajax="false" immediate="true">
+							<p:graphicImage library="image" name="excel.png" width="24" />
+						</p:commandLink>
+					</p:panelGrid>
+					<p:separator/>
+					<p:fieldset legend="Alocar rendimentos">
+						<p:messages id="msgAlocRendimento"  showDetail="true" closable="true" showSummary="false"></p:messages>
+						<p:panelGrid id="panelAlocRendimento" columns="7">
+							<h:outputText value="Valor: R$" />
+							<p:inputText value="#{conta_controller.alocacaoRendimento.valor}"
+										 onkeydown="mascaraMoeda(this,moeda)" style="text-align: right;"
+										 requiredMessage="Valor é obrigatório" required="true">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												 locale="pt_BR" />
+							</p:inputText>
+
+							<p:outputLabel value="Fonte/Doação:" />
+							<p:selectOneMenu id="orcamento"
+											 value="#{conta_controller.alocacaoRendimento.orcamento}"
+											 filter="true" style="width:210px" filterMatchMode="contains"
+											 converter="orcamentoConverter" required="true"
+											 requiredMessage="Fonte/Doação é obrigatório.">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{conta_controller.orcamentos}"
+											   var="orcamento"
+											   itemLabel="#{orcamento.titulo}"
+											   itemValue="#{orcamento}" />
+								<p:ajax event="change" update="panelContaDoacao"/>
+							</p:selectOneMenu>
+
+							<h:outputLabel value="Conta:" />
+							<h:panelGrid id="panelContaDoacao">
+								<p:inputText value="#{conta_controller.alocacaoRendimento.orcamento.contaBancaria.contaFornecedor}" disabled="true" style="width:300px"/>
+							</h:panelGrid>
+
+							<p:commandLink styleClass="btn btn-primary btn-block btn-sm"
+										   action="#{conta_controller.salvarAlocacaoRendimento()}" value="Alocar rendimento"
+										   style="color:#fff" update="msgAlocRendimento alocacoes panelAlocRendimento panelTotais panelAlocTotais panelSaldos panelSaldosD" process="panelAlocRendimento"/>
+						</p:panelGrid>
+
+						<br/>
+
+						<p:dataTable id="alocacoes" value="#{conta_controller.contaBancaria.alocacoesRendimentos}"
+									 var="alocacao" style="width: 1100px">
+							<f:facet name="header">
+								Lista de alocações
+							</f:facet>
+
+							<p:column headerText="Conta" width="250">
+								<h:outputText value="#{alocacao.contaAlocacao.contaFornecedor}" />
+							</p:column>
+
+							<p:column headerText="Fonte/Doação" width="250">
+								<h:outputText value="#{alocacao.orcamento.titulo}" />
+							</p:column>
+
+
+							<p:column headerText="Valor" style="text-align:right" width="100">
+								<h:outputText value="#{alocacao.valor}">
+									<f:convertNumber type="currency" maxFractionDigits="2"
+													 currencySymbol="R$" />
+								</h:outputText>
+							</p:column>
+
+							<p:column style="width:50px;text-align:center">
+								<p:commandLink style="color:#FFF;margin-left:5px"
+											   styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove-circle"
+											   action="#{conta_controller.removerAlocacaoRendimento()}" process="@this"
+											   update="alocacoes :form_conta_cadastro:panelTotais :form_conta_cadastro:panelAlocTotais :form_conta_cadastro:panelSaldos :form_conta_cadastro:panelSaldosD :form_conta_cadastro:msgAlocRendimento" title="Excluir rendimento">
+									<f:setPropertyActionListener value="#{alocacao}"
+																 target="#{conta_controller.alocacaoRendimento}" />
+								</p:commandLink>
+							</p:column>
+
+							<p:columnGroup type="footer">
+								<p:row>
+									<p:column colspan="2" footerText="TOTAL R$: "
+											  style="text-align:right" />
+									<p:column style="text-align:right"
+											  footerText="#{conta_controller.totalAlocacoes}" />
+								</p:row>
+							</p:columnGroup>
+						</p:dataTable>
+					</p:fieldset>
+				</p:tab>
+                <p:tab title="Baixa de Aplicação" rendered="#{conta_controller.contaBancaria.id != null and conta_controller.contaBancaria.tipo.equals('CAP')}">
+                    <p:fieldset legend="Baixar aplicação">
+                        <p:messages id="msgAplicacao"  showDetail="true" closable="true" showSummary="false"></p:messages>
+
+                        <h:panelGrid id="panelAplicacao">
+                            <p:panelGrid  columns="6">
+
+                                <h:outputText value="Tipo da Aplicação: " styleClass="right_label" />
+                                <p:selectOneMenu value="#{conta_controller.tipoAplicacao}">
+                                    <f:selectItem itemLabel="Aplicação" itemValue="0" />
+                                    <f:selectItem itemLabel="Baixa" itemValue="1" />
+                                    <p:ajax event="change" update="panelBotoesAplicacao"/>
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Data:" />
+                                <p:calendar id="dataAplicacao" styleClass="font12-vi"
+                                            placeholder="Data" size="12"
+                                            value="#{conta_controller.dataAplicacao}"
+                                            timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy"
+                                            requiredMessage="Data é obrigatória" required="true"/>
+
+                                <h:outputText value="Valor: R$" />
+                                <p:inputText value="#{conta_controller.valorAplicacao}"
+                                             onkeydown="mascaraMoeda(this,moeda)" style="text-align: right;"
+                                             requiredMessage="Valor é obrigatório" required="true">
+                                    <f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+                                                     locale="pt_BR" />
+                                </p:inputText>
+
+                            </p:panelGrid>
+
+                            <br/>
+
+                            <p:panelGrid columns="4">
+
+                                <p:outputLabel value="Fonte/Doação:" />
+                                <p:selectOneMenu id="orcamentoAplicacao"
+                                                 value="#{conta_controller.orcamento}"
+                                                 filter="true" style="width:210px" filterMatchMode="contains"
+                                                 converter="orcamentoConverter" required="true"
+                                                 requiredMessage="Fonte/Doação é obrigatório.">
+                                    <f:selectItem noSelectionOption="true" />
+                                    <f:selectItems value="#{conta_controller.orcamentos}"
+                                                   var="orcamento"
+                                                   itemLabel="#{orcamento.titulo}"
+                                                   itemValue="#{orcamento}" />
+                                    <p:ajax event="change" update="panelContaDoacaoAplicacao"/>
+                                </p:selectOneMenu>
+
+                                <h:outputLabel value="Conta:" />
+                                <h:panelGrid id="panelContaDoacaoAplicacao">
+                                    <p:inputText value="#{conta_controller.orcamento.contaBancaria.contaFornecedor}" disabled="true" style="width:300px"/>
+                                </h:panelGrid>
+                            </p:panelGrid>
+
+                            <br/>
+
+                            <h:panelGrid id="panelBotoesAplicacao" columns="2">
+                                <p:commandLink styleClass="btn btn-primary btn-block btn-sm"
+                                               action="#{conta_controller.salvarAplicacao()}" value="Salvar"
+                                               style="color:#fff" update="msgAplicacao baixas aplicacoes panelAplicacao panelSaldos panelSaldosD" process="panelAplicacao"
+                                               rendered="#{conta_controller.tipoAplicacao.intValue() == 0}"/>
+
+                                <p:commandLink styleClass="btn btn-primary btn-block btn-sm"
+                                               action="#{conta_controller.salvarBaixaAplicacao()}" value="Salvar"
+                                               style="color:#fff" update="msgAplicacao baixas aplicacoes panelAplicacao panelSaldos panelSaldosD" process="panelAplicacao"
+                                               rendered="#{conta_controller.tipoAplicacao.intValue() == 1}"/>
+
+								<p:commandLink styleClass="btn btn-primary btn-block btn-sm"
+											   action="#{conta_controller.cancelarBaixaAplicacao()}" value="Cancelar"
+											   style="color:#fff; margin-left: 5px" update="panelAplicacao" process="panelAplicacao"/>
+                            </h:panelGrid>
+
+                        </h:panelGrid>
+
+                        <br/>
+
+                        <p:dataTable id="aplicacoes" value="#{conta_controller.aplicacoes}"
+                                     var="aplicacao" style="width: 1050px">
+                            <f:facet name="header">
+                                Lista de aplicações
+                            </f:facet>
+
+							<p:column headerText="ID" width="80">
+								<h:outputText value="#{aplicacao.id}" />
+							</p:column>
+
+                            <p:column headerText="Data" width="100">
+                                <h:outputText value="#{aplicacao.dataPagamento}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+                                </h:outputText>
+                            </p:column>
+
+							<p:column headerText="Fonte/Doação" width="200">
+								<h:outputText value="#{aplicacao.orcamento.titulo}" />
+							</p:column>
+
+                            <p:column headerText="Conta pagadora" width="250">
+                                <h:outputText value="#{aplicacao.contaPagador.contaFornecedor}" />
+                            </p:column>
+
+                            <p:column headerText="Conta recebedora" width="250">
+                                <h:outputText value="#{aplicacao.contaRecebedor.contaFornecedor}" />
+                            </p:column>
+
+                            <p:column headerText="Valor" style="text-align:right" width="100">
+                                <h:outputText value="#{aplicacao.valorTotalComDesconto}">
+                                    <f:convertNumber type="currency" maxFractionDigits="2"
+                                                     currencySymbol="R$" />
+                                </h:outputText>
+                            </p:column>
+
+							<p:column style="width:50px;text-align:center">
+								<p:commandLink style="color:#FFF;margin-left:5px"
+											   styleClass="btn btn-primary btn-xs glyphicon glyphicon-edit"
+											   action="#{conta_controller.editarAplicacao()}" process="@this"
+											   update=":form_conta_cadastro:panelAplicacao" title="Editar">
+									<f:setPropertyActionListener value="#{aplicacao}"
+																 target="#{conta_controller.aplicacao}" />
+								</p:commandLink>
+							</p:column>
+
+                            <p:columnGroup type="footer">
+                                <p:row>
+                                    <p:column colspan="5" footerText="TOTAL R$: "
+                                              style="text-align:right" />
+                                    <p:column style="text-align:right"
+                                              footerText="#{conta_controller.totalAplicacoes}" />
+                                </p:row>
+                            </p:columnGroup>
+                        </p:dataTable>
+
+                        <br/>
+
+                        <p:dataTable id="baixas" value="#{conta_controller.baixas}"
+                                     var="baixa" style="width: 1050px">
+                            <f:facet name="header">
+                                Lista de baixas
+                            </f:facet>
+
+							<p:column headerText="ID" width="80">
+								<h:outputText value="#{baixa.id}" />
+							</p:column>
+
+                            <p:column headerText="Data" width="100">
+                                <h:outputText value="#{baixa.dataPagamento}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+                                </h:outputText>
+                            </p:column>
+
+							<p:column headerText="Fonte/Doação" width="200">
+								<h:outputText value="#{baixa.orcamento.titulo}" />
+							</p:column>
+
+                            <p:column headerText="Conta pagadora" width="250">
+                                <h:outputText value="#{baixa.contaPagador.contaFornecedor}" />
+                            </p:column>
+
+                            <p:column headerText="Conta recebedora" width="250">
+                                <h:outputText value="#{baixa.contaRecebedor.contaFornecedor}" />
+                            </p:column>
+
+                            <p:column headerText="Valor" style="text-align:right" width="100">
+                                <h:outputText value="#{baixa.valorTotalComDesconto}">
+                                    <f:convertNumber type="currency" maxFractionDigits="2"
+                                                     currencySymbol="R$" />
+                                </h:outputText>
+                            </p:column>
+
+							<p:column style="width:50px;text-align:center">
+								<p:commandLink style="color:#FFF;margin-left:5px"
+											   styleClass="btn btn-primary btn-xs glyphicon glyphicon-edit"
+											   action="#{conta_controller.editarBaixa()}" process="@this"
+											   update=":form_conta_cadastro:panelAplicacao" title="Editar">
+									<f:setPropertyActionListener value="#{baixa}"
+																 target="#{conta_controller.baixaAplicacao}" />
+								</p:commandLink>
+							</p:column>
+
+                            <p:columnGroup type="footer">
+                                <p:row>
+                                    <p:column colspan="5" footerText="TOTAL R$: "
+                                              style="text-align:right" />
+                                    <p:column style="text-align:right"
+                                              footerText="#{conta_controller.totalBaixas}" />
+                                </p:row>
+                            </p:columnGroup>
+                        </p:dataTable>
+                    </p:fieldset>
+                </p:tab>
+			</p:tabView>
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+	</ui:define>
+
+
+</ui:composition>

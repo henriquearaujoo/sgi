@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TermoDocao" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0f3fb1d4-f9a5-4d74-9fab-459304b93c76">
+	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="ano" class="java.lang.String"/>
+	<parameter name="aprovador" class="java.lang.String"/>
+	<parameter name="associacao" class="java.lang.String"/>
+	<parameter name="cpf_presidente" class="java.lang.String"/>
+	<parameter name="rg_presidente" class="java.lang.String"/>
+	<parameter name="cnpj_associacao" class="java.lang.String"/>
+	<parameter name="presidente" class="java.lang.String"/>
+	<parameter name="aprovador_ass" class="java.lang.String"/>
+	<parameter name="sup" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="descricaoProduto" class="java.lang.String"/>
+	<field name="quantidade" class="java.lang.Double"/>
+	<field name="unidade" class="java.lang.String"/>
+	<field name="pedido.notaFiscal" class="java.lang.String"/>
+	<field name="localidade.mascara" class="java.lang.String"/>
+	<field name="pedido.id" class="java.lang.Long"/>
+	<field name="pedido.termo.id" class="java.lang.Long"/>
+	<field name="localidade.unidadeConservacao.nomeAssociacao" class="java.lang.String"/>
+	<field name="localidade.unidadeConservacao.presidenteAssociacao" class="java.lang.String"/>
+	<field name="localidade.unidadeConservacao.rgPresidente" class="java.lang.String"/>
+	<field name="localidade.unidadeConservacao.cpfPresidente" class="java.lang.String"/>
+	<field name="pedido.compra.id" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="100" y="0" width="355" height="50" uuid="3c4b685b-57ad-418a-8832-7b76e97ffd41"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA["CONTRATO DE DOAÇÃO COM ENCARGO"]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="455" y="0" width="55" height="50" uuid="64bb59e0-2cdd-49fc-9f7d-ff85a48f8c59"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pedido.termo.id}+"/"]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="0" y="0" width="100" height="50" uuid="84e1e1f9-7854-4cc4-a094-1539402738f0"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="510" y="0" width="45" height="50" uuid="851cbe56-35fc-4aa4-91c8-fc6f59a6ad00"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{ano}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="190" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="555" height="190" uuid="cd490e49-c06c-486e-94f0-a82f85a8de64">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA["Pelo presente instrumento particular de DOAÇÃO, de um lado, a FUNDAÇÃO AMAZONAS SUSTENTÁVEL - FAS, Fundação de Direito Privado, inscrita no CNPJ/MF 09.351.359/0001-88 e com sede na Capital do Estado do Amazonas à Rua Álvaro Braga, 351 – Parque 10 de Novembro, neste ato representada por seu "+ $P{aprovador} + ", doravante simplesmente denominado DOADORA, e, de outro lado, a "+$P{associacao}+", Associação de Direito Privado, inscrito no CNPJ/MF "+$P{cnpj_associacao}+", neste ato representada pelo seu Presidente "+$P{presidente}+", portador da cédula de identidade RG: " +$P{rg_presidente}+", CPF: "+$P{cpf_presidente}+",doravante simplesmente denominada DONATÁRIA, têm entre os mesmos, de maneira justa e acordada, o presente CONTRATO DE DOAÇÃO CONDICIONAL, ficando desde já aceito, pelas cláusulas abaixo descritas. \n \n"
++
+"CLÁUSULA PRIMEIRA – Por livre e espontânea vontade do DOADOR, sem coação ou influência de quem quer que seja, faz a DOAÇÃO COM ENCARGO, inter vivos,ao DONATÁRIO, que a aceita, sendo transferindo desde já irrevogavelmente o que se segue:"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="15" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="40" height="15" backcolor="#CCCCCC" uuid="a5d8bccb-5c06-46d2-bf6c-48e37578c119">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Item]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="40" y="0" width="40" height="15" backcolor="#CCCCCC" uuid="248cf553-73d6-4183-9918-a971605fe290"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Qtde.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="81" y="0" width="315" height="15" backcolor="#CCCCCC" uuid="6e49e892-b046-40b4-8fae-5ed92db8fa99">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descrição do Produto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="396" y="0" width="99" height="15" backcolor="#CCCCCC" uuid="62b892f1-25fa-4452-a327-73fd98ded9e1">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pedido]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="495" y="0" width="60" height="15" backcolor="#CCCCCC" uuid="6c8af9cb-d308-42eb-9d2b-4f8ae4c8b16d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nota]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="40" height="15" uuid="ddd3a0d8-c1d4-437f-b033-b36d616b53dd"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="40" y="0" width="40" height="15" uuid="56fb97a0-f4ee-4f2b-a479-79d5b65e4c82"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantidade}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="81" y="0" width="315" height="15" uuid="1083f16e-f51d-4369-b0ef-05282005b8ef"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descricaoProduto}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="396" y="0" width="99" height="15" uuid="e43bcb98-3500-4f0a-b3f0-2548885335ec"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pedido.compra.id}+"/"+$F{pedido.id}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="495" y="0" width="60" height="15" uuid="a37b8709-7b33-4fb2-a386-d72f31363324">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pedido.notaFiscal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="200">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="50" uuid="b3b74409-6197-40b5-9a54-82a8d949d02d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[CLÁUSULA SEGUNDA – O DONATÁRIO não poderá utilizar o produto da dação em outra finalidade senão para as quais se destinam cada item doado, ou seja, em consonância do escopo social definido pela DOADORA, caso contrário a doação se reverterá em favor desta.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="555" height="50" uuid="bc67e518-078d-4ea2-9a5d-e94afc9be902">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="1">
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[CLÁUSULA TERCEIRA – O Presidente da instituição DONATÁRIA se declara ciente de que deverá manter o produto da doação em excelente estado de conservação, passando ao seu sucessor todos os itens doados, caso contrário responderá administrativa, civil, e criminalmente pelos danos causados à Associação.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="100" width="555" height="100" uuid="df8ae2ae-3f9b-4d38-b709-6927a28b262d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="1">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[CLÁUSULA QUARTA – O presente contrato passa a vigorar entre as partes a partir da assinatura, as quais elegem o foro da cidade de Manaus, para dirimirem quaisquer dúvidas provenientes de sua execução e cumprimento.
+
+Para firmeza e como prova de assim justos e contratados estarem, assinam o presente instrumento particular de DOAÇAO, em duas vias de igual teor, na presença de testemunhas que a tudo assistiram e conhecimento tiveram.
+]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<summary>
+		<band height="296" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="257" width="555" height="39" uuid="a817b23c-df60-42e3-846d-1597ac81aeef"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Endereço em Manaus - Rua Álvaro Braga, 351 – Parque 10 de Novembro – Tel:(5592) 3648 - 7425 / 4393
+Endereço em São Paulo - Rua Pequetita, 145 – Cj. 22– Ed. Almar - Vila Olímpia – Capital - Tel:(5511) 3849 - 5303
+www.fas-amazonas.org     /     e-mail: fas@fas-amazonas.org
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="230" height="19" uuid="fbe61906-420c-4d6f-9e82-7c7e2205df82"/>
+				<text><![CDATA[Manaus,______de______________de______.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="14" y="157" width="253" height="20" uuid="34530ad4-31ba-410c-aa27-36e294d209f2"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[TESTEMUNHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="297" y="157" width="244" height="20" uuid="af4d167c-d064-42d2-aeb9-3a9c2093b863"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[TESTEMUNHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="14" y="183" width="253" height="20" uuid="69131b3e-1ea8-4664-ad5b-924fdeb250b6"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[R.G:   _______________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="297" y="183" width="244" height="20" uuid="b3e1f3da-b721-4249-a4c2-2ae542711845"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[R.G:  _______________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="14" y="203" width="253" height="20" uuid="c91d264e-77e8-406e-86a1-1f73abdee1a2"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[C.P.F:_______________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="297" y="203" width="244" height="20" uuid="f078778c-c7c9-43e9-a1bc-c0aa4906f5cf"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[C.P.F:_______________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="102" width="251" height="18" uuid="bd19bee7-7837-4d9f-a393-1246a23599cc"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Presidente da Associação]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="14" y="102" width="253" height="18" uuid="c9539b08-3b1a-4b89-a925-281ca8f44df8"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{aprovador_ass}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="14" y="120" width="253" height="18" uuid="2af5ae4b-1495-4479-b344-6376410a0bf6"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{sup}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

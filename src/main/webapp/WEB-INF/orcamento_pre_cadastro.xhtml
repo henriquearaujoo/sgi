@@ -1,0 +1,132 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<div style="padding: 2px 2px">
+
+		<p:messages  showDetail="true" showSummary="false"></p:messages>
+		<p:commandLink styleClass="btn btn-default btn-sm fa fa-cart-plus"
+			style="margin-left:5px" title="Salvar" update=":form_tab_orcamento"
+			action="#{orcamento_controller.salvar()}">
+			<span style="font-family: Arial">Salvar</span>
+		</p:commandLink>
+
+		<p:link styleClass="btn btn-danger btn-sm fa fa-cart-plus"
+			style="margin-left:5px;color:#fff" title="Salvar"
+			outcome="/main/orcamentos">
+			<span style="font-family: Arial; color: #fff">Cancelar</span>
+		</p:link>
+
+		<p:separator></p:separator>
+
+		<p:panel>
+
+		<h:panelGrid columns="2">
+
+			<p:panelGrid columns="1" style="width:100%">
+				<p:panelGrid columns="6" style="width:100%">
+					<h:outputText value="Título:" style="width:100px" />
+					<p:inputText value="#{orcamento_controller.orcamento.titulo}"
+						style="width:300px" styleClass="font12-vi"/>
+
+					<h:outputText value="Período" />
+
+					<p:calendar styleClass="font12-vi"
+								placeholder="Data início" size="12"
+								value="#{orcamento_controller.orcamento.dataInicio}"
+								timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+					<h:outputText value="a:" />
+
+					<p:calendar styleClass="font12-vi"
+								placeholder="Data final" size="12"
+								value="#{orcamento_controller.orcamento.dataFinal}"
+								timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+				</p:panelGrid>
+
+				<p:panelGrid columns="2">
+					<h:outputText value="Responsável Técnico: " style="font-size:12px" />
+					<p:autoComplete id="respTecnico_pre"  styleClass="font12-vi"
+									rendered="true"
+									placeholder="Responsável Técnico" size="20"
+									inputStyle="width:250px"
+									value="#{orcamento_controller.orcamento.responsavelTecnico}"
+									completeMethod="#{orcamento_controller.completeColaborador}"
+									var="colaborador" itemLabel="#{colaborador.nome}"
+									itemValue="#{colaborador}" converter="colaboradorConverter"
+									minQueryLength="2" forceSelection="true" />
+				</p:panelGrid>
+
+				<p:panelGrid columns="8">
+					<p:selectBooleanCheckbox value="#{orcamento_controller.orcamento.permiteEmprestimo}"/>
+					<h:outputText value="Permite empréstimo? " />
+
+					<p:selectBooleanCheckbox value="#{orcamento_controller.orcamento.permiteRemanejamentoCategoria}"/>
+					<h:outputText value="Permite remanejamento entre categorias? " />
+
+					<p:selectBooleanCheckbox value="#{orcamento_controller.orcamento.pagaTarifaBancaria}">
+						<p:ajax update="panelTipoProjetoDespesa panelProjetoDespesa panelLinhaOrc" listener="#{orcamento_controller.limparProjetoDespesa()}"/>
+					</p:selectBooleanCheckbox>
+					<h:outputText value="Paga tarifa bancária? " />
+
+					<h:outputText value="Tipo da Doação: " styleClass="right_label" />
+					<p:selectOneMenu value="#{orcamento_controller.orcamento.tipoDoacao}" required="true" requiredMessage="Tipo da doação é obrigatório">
+						<f:selectItem itemLabel="Selecione um tipo"
+									  noSelectionOption="true" />
+						<f:selectItem itemLabel="Vinculada" itemValue="V" />
+						<f:selectItem itemLabel="Desvinculada" itemValue="D" />
+
+					</p:selectOneMenu>
+				</p:panelGrid>
+
+				<p:panelGrid columns="6">
+					<h:outputText value="Data de criação:" />
+					<h:outputText value="#{orcamento_controller.orcamento.dataCriacao}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+
+					<h:outputText value="Ultima atualização:" />
+					<h:outputText value="#{orcamento_controller.orcamento.dataCriacao}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+
+					<h:outputText value="usuário:" />
+					<h:outputText
+						value="#{orcamento_controller.orcamento.usuarioEdicao.nomeUsuario}" />
+				</p:panelGrid>
+
+			</p:panelGrid>
+
+			<p:panelGrid id="panelValores_pre" columns="2" style="margin-left:15px">
+				<h:outputText value="Orçado: R$" />
+				<p:inputText value="#{orcamento_controller.orcamento.valor}"
+					onkeydown="mascaraMoeda(this,moeda)" style="font-size:15px;text-align: right;">
+					<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+						locale="pt_BR" />
+				</p:inputText>
+
+				<h:outputText value="Saldo em caixa:" />
+				<p:outputLabel value="#{orcamento_controller.saldoRealOrcamento}" style="font-size:15px;text-align:right;width:100%">
+					<f:convertNumber type="currency" maxFractionDigits="2"
+						currencySymbol="R$" />
+				</p:outputLabel>
+
+				<h:outputText value="A receber:" />
+				<p:outputLabel value="#{orcamento_controller.aReceber}" style="font-size:15px;text-align:right;width:100%">
+					<f:convertNumber type="currency" maxFractionDigits="2"
+						currencySymbol="R$" />
+				</p:outputLabel>
+			</p:panelGrid>
+
+
+		</h:panelGrid>
+
+		</p:panel>
+	</div>
+
+
+
+</ui:fragment>

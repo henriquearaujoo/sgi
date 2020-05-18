@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+	<f:facet name="first">
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+	</f:facet>
+	
+	<link rel="shortcut icon" href="http://fas-amazonas.org/versao/2012/wordpress/wp-content/uploads/2016/03/favicon.png" />
+	
+
+	<title>Um clique</title>
+
+	<h:outputStylesheet library="algaworks" name="styles/custom.css" />
+	<h:outputStylesheet library="algaworks" name="styles/layout.css" />
+	<h:outputStylesheet library="algaworks" name="styles/components.css" />
+	
+	<link rel="stylesheet" href="../resources/css/estilos.css"/>
+	<link rel="stylesheet" href="../resources/css/global.css"/> 
+  
+    <link rel="stylesheet" href="../resources/bootstrap/css/bootstrap.min.css"/> 
+    <link rel="stylesheet" href="../resources/bootsnip/css/style.css"/>
+   	<link rel="stylesheet" href="../resources/icomoon/style.css"/>
+   	
+   	<link rel="stylesheet" href="../resources/css/primefaces_alter.css"/>
+   	<link rel="stylesheet" href="../resources/css/bootstrap_alter.css"/>
+	
+	<h:outputScript target="body" library="primefaces" name="jquery/jquery.js" />
+	<h:outputScript target="body" library="algaworks" name="javascripts/app.js" />
+	<h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="body" />
+	<h:outputScript name="mascaras.js" library="js" />	
+</h:head>
+
+<h:body>
+  <h:form>
+	<header class="aw-topbar">
+		
+		
+		<a href="#" class="aw-toggle  js-toggle"><i style="font-size: 20px;" class="fa  fa-bars"></i></a>
+		
+		<h:commandLink styleClass="aw-toggle-logout"  action="#{loginBean.logout}">
+		  <span class="fa fa-power-off"></span>
+		  </h:commandLink>
+		
+		<ul>
+		  <li>
+		   <h:commandLink action="home.xhtml"><span class="fa fa-clipboard"></span>Projetos</h:commandLink>
+		  </li>
+		  
+		  <li>
+		   <h:commandLink action="compras.xhtml"><span class="fa fa-usd"></span>Compras</h:commandLink>
+		  </li>
+		  
+		  <li>
+		   <a href="#"><span class="fa fa-desktop"></span>Bolsa Floresta</a>
+		  </li>
+		  
+		  <li>
+		   <h:commandLink action="relatorios.xhtml"><span class="fa fa-file-archive-o"></span>Relatórios</h:commandLink>
+		  </li>
+		  
+		  <li>
+		   <h:commandLink action="cadastro_colaborador.xhtml"><span class="fa fa-group"></span>RH</h:commandLink>
+		  </li>
+	
+		</ul>
+			
+		
+	</header>
+	</h:form>
+	
+	
+	<section >
+	    <div style="margin-left:10px;padding-left: 2px; padding-right: 2px; padding-top: 20px; ">
+		<ui:insert name="content" />
+		</div>
+	</section>
+	
+    <ui:insert name="adicionais">
+	</ui:insert>
+	
+	
+</h:body>
+
+</html>

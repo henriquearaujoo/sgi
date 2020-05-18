@@ -1,0 +1,151 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<h:form id="form-forma-pagamento-mode01" prependId="false">
+		<p:panel id="panel-recurso">
+			<div class="ui-g ui-fluid" style="position: relative">
+
+				<div class="ui-g-12">
+					<p:messages closable="true" showDetail="true" showIcon="true"
+						showSummary="false">
+						<p:autoUpdate></p:autoUpdate>
+					</p:messages>
+				</div>
+
+				<div class="ui-g-12">
+					<div class="ui-g-4">
+						<p:outputLabel value="Total:" style="font-weight:bold"></p:outputLabel>
+						<p:outputLabel style="margin-left:3px;margin-right:3px"
+							value="#{escolhaCotacao.pedido.valorTotalComDesconto}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</p:outputLabel>
+					</div>
+
+					<div class="ui-g-4">
+
+						<p:outputLabel style="font-weight:bold"
+							value="Disponibilizado para pagamento:"></p:outputLabel>
+						<p:outputLabel style="margin-left:3px;margin-right:3px"
+							value="#{escolhaCotacao.valorTotalLiberado}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</p:outputLabel>
+
+					</div>
+
+
+					<div class="ui-g-4" style="text-align: right">
+						<p:outputLabel style="font-weight:bold"
+							value="Valor restante a disponibilizar:"></p:outputLabel>
+						<p:outputLabel style="margin-left:3px;margin-right:3px"
+							value="#{escolhaCotacao.valorTotalFaltaLiberar}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</p:outputLabel>
+
+					</div>
+
+				</div>
+
+				<div class="ui-g-12">
+					<p:dataTable id="table-recurso" styleClass="ui-fluid"
+						value="#{escolhaCotacao.listaDeRubricasProjeto}" var="recurso">
+
+						<p:column headerText="Código">
+							<h:outputText value="#{recurso.codigo}" />
+						</p:column>
+
+						<p:column headerText="Fonte">
+							<h:outputText value="#{recurso.nomeFonte}" />
+						</p:column>
+
+						<p:column headerText="Projeto">
+							<h:outputText value="#{recurso.nomeProjeto}" />
+						</p:column>
+
+						<p:column headerText="Componente">
+							<h:outputText value="#{recurso.nomeComponente}" />
+						</p:column>
+
+						<p:column headerText="SubComponente">
+							<h:outputText value="#{recurso.nomeSubComponente}" />
+						</p:column>
+
+						<p:column headerText="Linha orçamentária">
+							<h:outputText value="#{recurso.nomeCategoria}" />
+						</p:column>
+
+						<p:column headerText="Saldo">
+							<h:outputText value="#{recurso.valorSaldo}">
+								<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+									maxFractionDigits="2" locale="pt_BR" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Disponibilizar">
+
+							<p:inputText id="input-value-project"
+								onkeypress="return formatarNumero(this,event,19,2);"
+								placeholder="valor" value="#{recurso.valorEmpenhado}">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" />
+
+								<p:ajax event="blur" update="panel-recurso"
+									listener="#{escolhaCotacao.calcularValoresRecurso()}" />
+
+							</p:inputText>
+
+						</p:column>
+
+
+
+					</p:dataTable>
+
+				</div>
+
+				<div class="ui-g-12">
+					<p:commandLink id="btn-ss" process="panel-recurso" onclick="start();"
+						oncomplete="stop();" 
+						rendered="#{!escolhaCotacao.pedido.statusCompra.name().equals('PENDENTE_APROVACAO')}"
+						onerror="stop();" onsuccess="stop();" update="panel-recurso"
+						action="#{escolhaCotacao.salvarRecursoNoPedido()}"
+						style="margin-top:5px;color:#fff"
+						styleClass="btn btn-success btn-block">
+
+						<span class="fa fa-envelope-o"></span>
+						<span style="margin: 3px;">Enviar para aprovação</span>
+
+					</p:commandLink>
+
+					<p:commandLink id="btn-se"
+						rendered="#{escolhaCotacao.pedido.statusCompra.name().equals('PENDENTE_APROVACAO')}"
+						process="panel-recurso" onclick="start();" oncomplete="stop();"
+						onerror="stop();" onsuccess="stop();"
+						action="#{escolhaCotacao.salvarRecursoNoPedido()}"
+						style="margin-top:5px;color:#fff"
+						styleClass="btn btn-primary btn-block">
+
+						<span class="fa fa-envelope-o"></span>
+						<span style="margin: 3px;">Reenviar</span>
+
+					</p:commandLink>
+				</div>
+
+			</div>
+
+		</p:panel>
+
+
+	</h:form>
+
+
+
+
+</ui:fragment>

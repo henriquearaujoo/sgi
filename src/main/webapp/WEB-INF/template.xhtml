@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui" 
+	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	  xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+<head jsf:id="head">
+	<title>OnClick</title>
+	
+        
+    <link rel="stylesheet" href="../resources/bootstrap/css/bootstrap.min.css"/>
+    
+    <link rel="stylesheet" href="../resources/bootsnip/css/style.css"/>
+   	<link rel="stylesheet" href="../resources/icomoon/style.css"/>
+	
+	<link rel="stylesheet" href="../resources/css/estilos.css"/>
+	<link rel="stylesheet" href="../resources/css/global.css"/>
+	
+	<link rel="stylesheet" href="../resources/css/primefaces_alter.css"/>
+   	<link rel="stylesheet" href="../resources/css/bootstrap_alter.css"/>
+   	
+   	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans"/>
+   	
+
+   	<h:outputScript name="js/menu.js" library="resources"/>
+   	<h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+	<h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" />
+   	
+   	<!-- 
+   	<h:outputScript name="bootstrap/js/bootstrap.min.js" library="resources"/> 
+   	<h:outputScript name="jquery/jquery-1.12.1.min.js" library="resources"/>
+   	 -->
+ <!--    	 
+    <script src="../resources/bootstrap/js/bootstrap.min.js"></script>
+   	<script src="../resources/jquery/jquery-1.12.1.min.js"></script>
+	<script src="../resources/js/menu.js"></script>
+ -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+   
+</head>
+
+<body jsf:id="body">
+  <h:form id="formTemplate">
+  <header class="hd">
+
+	<div class="logo">
+		WebFas
+	</div>
+  	<nav class="nav-main">
+
+  		<ul id="menu">
+  					
+  			<li>
+  				<a href="#" class="nav-item"><span class="icon-earth"></span>Projetos</a>
+  				
+ 				 <ul class="nav-content">
+ 				  	<li class="nav-sub"><h:commandLink  action="/main/home"><span class="icon-switch"></span>Meus Projetos</h:commandLink></li>
+ 				  </ul>
+  				
+  			</li>
+  			<li>
+  				<a href="#" class="nav-item"><span class="icon-sphere"></span>Financeiro</a>
+  			    
+ 				  		<ul class="nav-content">
+ 				  			<li class="nav-sub"><a href="#"><span class="icon-earth"></span>Compras</a></li>
+ 				  			<li class="nav-sub"><a href="#"><span class="icon-earth"></span>Pagamentos</a></li>
+ 				  			<li class="nav-sub"><a href="#"><span class="icon-earth"></span>Contas</a></li>
+ 				  		</ul>
+ 				  			</li>
+  			<li><a href="#"><span class="icon-attachment"></span>Relatórios</a></li>
+  			<li><a href="#"><span class="icon-address-book"></span>Segurança</a></li>
+  		    <li class="logout" style="float: right;"><h:commandLink action="#{loginBean.logout}"><span class="icon-switch"></span>Logout</h:commandLink></li>
+  		</ul>
+  	
+  	
+  	</nav>
+  </header>
+</h:form>
+  
+   <div id="corpo" class="corpo">
+    <ui:insert name="content">
+         Template            
+   </ui:insert>
+  </div>	
+	
+	<ui:insert name="adicionais">
+	</ui:insert>
+
+</body>
+
+
+
+     
+</html>

@@ -1,0 +1,65 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<style type="text/css">
+.col_panel {
+	font-weight: bold;
+	text-align: center;
+	font-size: 15px;
+	background-color: #849a39;
+	color: #FFF
+}
+
+.label_panel {
+	font-weight: bold;
+	text-align: right;
+	font-size: 15px;
+}
+</style>
+
+	<div style="padding: 2px 2px">
+
+
+
+		<div class="cadastro-projeto"
+			style="margin-right: auto; margin-left: auto;">
+			<div>
+
+				<h:form id="form_chart">
+
+					<p:panelGrid columns="1" style="width:100%">
+
+						<p:fieldset legend="Cadeias produtivas">
+							<p:chart type="bar"
+								model="#{plano_trabalho_controller.cadeiasModel}"
+								 />
+						</p:fieldset>
+						
+						<p:fieldset legend="Localidades">
+							<p:chart type="bar"
+								model="#{plano_trabalho_controller.localidadeModel}"
+								 />
+						</p:fieldset>
+
+						
+					</p:panelGrid>
+				</h:form>
+
+				<p:separator></p:separator>
+
+			</div>
+		</div>
+
+
+
+	</div>
+
+
+
+</ui:fragment>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="menu_lateral">
+
+		<style type="text/css">
+		.ui-widget {
+			font-size: 100%;
+			}
+		</style>
+
+
+		
+
+		<h:form id="tabela_projeto">
+		
+		 	   <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+ 
+				<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false"
+				 showHeader="false" style="background-color:#FFFFFF; z-index:1009">
+			    	<p:graphicImage library="image" name="aguarde.gif"/>
+				</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" 
+				emptyMessage="..." 
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{cotacaoController.menus}" var="menu">
+			
+				<p:column>
+					<p:commandLink action="#{cotacaoController.redirecionar()}" style="font-size:1em;" value="#{menu.nome}" >
+					 <f:setPropertyActionListener value="#{menu}" target="#{cotacaoController.menu}"/>
+					</p:commandLink>
+					<span  style="margin-left: 4px; float: right; color: #849A39" class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+	<f:view>
+	
+	  <h:form id="form-cotacao-escolha">
+		  <p:dataTable var="item" value="#{escolhaCotacao.itens}" style="margin-top:40px">
+	        <f:facet name="header">
+	            Mapa comparativo
+	        </f:facet>
+	 
+	        <p:columnGroup type="header">
+	            <p:row>
+	                <p:column rowspan="2" headerText="#" style="width:64px;text-align: center"/>
+	                <p:column rowspan="2" headerText="Itens" style="width:180px;"/>
+	                <p:column colspan="#{escolhaCotacao.cotacoesAuxiliares.size()}" headerText="Valores" />
+	                
+	            </p:row>
+	            <p:row>
+	                <ui:repeat value="#{escolhaCotacao.cotacoesAuxiliares}" var="fornecedor">
+	                    <p:column headerText="#{fornecedor.fornecedor}" />
+	                </ui:repeat>
+	            </p:row>
+	        </p:columnGroup>
+	 
+	        
+	        <p:column style="text-align:center">
+	            <p:commandButton action="#{escolhaCotacao.testarMetodo()}" process="@this"  icon="ui-icon-search" title="Selecionar cotação"/>
+        	</p:column>
+	        
+	        <p:column>
+	            <h:outputText value="#{item.produto.descricao.toLowerCase()}" />
+	        </p:column>
+	 
+	        <p:columns value="#{escolhaCotacao.cotacoesAuxiliares}" var="fornecedor1" >
+	            <h:outputText value="#{escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id)}">
+	             
+	            </h:outputText>
+	        </p:columns>
+	       
+       		
+       		 	
+	    </p:dataTable>
+       </h:form>
+
+
+	 </f:view>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+		
+	</ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,150 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+
+	<div style="padding: 2px 2px">
+
+		<h:form id="cadastro-programacao">
+			<p:panelGrid columns="2" id="grid-cadastro">
+				<p:panelGrid columns="2">
+					<h:outputText value="Data inicio: " style="font-size:12px" />
+					<p:calendar id="dataIda"
+						value="#{sv_cadastro_controller.progViagem.dataIda}"
+						style="font-size:12px" timeZone="America/Manaus" navigator="true"
+						pattern="dd/MM/yyyy" />
+
+					<h:outputText value="Data final:" style="font-size:12px" />
+					<p:calendar id="dataVolta"
+						value="#{sv_cadastro_controller.progViagem.dataVolta}"
+						style="font-size:12px" timeZone="America/Manaus" navigator="true"
+						pattern="dd/MM/yyyy" />
+
+					<h:outputText value="Equipe:" style="font-size:12px" />
+					<p:inputText value="#{sv_cadastro_controller.progViagem.equipe}"
+						style="font-size:12px" />
+
+					<h:outputText value="Atividade:" style="font-size:12px" />
+					<p:inputTextarea
+						value="#{sv_cadastro_controller.progViagem.atividade}" rows="3"
+						cols="33" style="font-size:12px" />
+
+					<h:outputText value="Local: " style="font-size:12px" />
+					<p:inputText value="#{sv_cadastro_controller.progViagem.local}"
+						style="font-size:12px" />
+
+					<h:outputText value="Público: " style="font-size:12px" />
+					<p:inputText value="#{sv_cadastro_controller.progViagem.publico}"
+						style="font-size:12px" />
+
+					<h:outputText value="Observações: " style="font-size:12px" />
+					<p:inputTextarea
+						value="#{sv_cadastro_controller.progViagem.observacao}"
+						style="font-size:12px" rows="3" cols="33" />
+
+					<p:commandLink style="color:#fff"
+						styleClass="btn btn-danger btn-block btn-sm"
+						process="@this" update="cadastro-programacao" onclick="start()"
+						onerror="stop()" onsuccess="stop()"
+						action="#{sv_cadastro_controller.limparProgramacao()}">
+						<span class="glyphicon glyphicon-trash"></span><span  style="margin: 3px;">Limpar</span>
+					</p:commandLink>
+
+					<p:commandLink
+						styleClass="btn btn-primary btn-block btn-sm"
+						onclick="start()" onerror="stop()" onsuccess="stop()"
+						rendered="#{sv_cadastro_controller.poderEditar()}"
+						type="button" action="#{sv_cadastro_controller.addProgamacao()}"
+						update="cadastro-programacao" process="cadastro-programacao"
+						style="color:#fff; margin: 2px 2px;">
+						<span class="glyphicon glyphicon-floppy-disk"></span><span style="margin: 3px;">Salvar</span>
+					</p:commandLink>
+
+				</p:panelGrid>
+
+				<p:dataTable id="table-programacao" style="font-size:12px"
+					paginator="true" rows="5"
+					value="#{sv_cadastro_controller.programacoes}" var="programacao">
+					<p:column headerText="Data inicio">
+						<h:outputText value="#{programacao.dataIda}"
+							style="font-size:12px">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Data final">
+						<h:outputText value="#{programacao.dataVolta}"
+							style="font-size:12px">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Equipe">
+						<h:outputText value="#{programacao.equipe}" style="font-size:12px" />
+					</p:column>
+
+					<p:column headerText="Local">
+						<h:outputText value="#{programacao.local}" style="font-size:12px" />
+					</p:column>
+
+					<p:column headerText="Público">
+						<h:outputText value="#{programacao.publico}"
+							style="font-size:12px" />
+					</p:column>
+
+					<p:column style="width:100px">
+
+						
+
+						<p:commandLink style=";font-size:12px"
+							styleClass="btn btn-default btn-xs "
+							action="#{sv_cadastro_controller.prepararEdicaoProgramacao()}"
+							process="@this" onclick="start()" onerror="stop()"
+							onsuccess="stop()"
+							update="form-cadastro-viagem:tab_viagem:cadastro-programacao">
+							<span class="glyphicon glyphicon-edit"></span>
+							<f:setPropertyActionListener value="#{programacao}"
+								target="#{sv_cadastro_controller.progViagem}" />
+						</p:commandLink>
+
+						<p:commandLink
+							action="#{sv_cadastro_controller.removerProgramcao()}"
+							update="table-programacao" process="@this"
+							style="margin-left:5px;font-size:12px;color:#fff"
+							styleClass="btn btn-danger btn-xs ">
+							<p:confirm header="Confirmação" message="Excluir programação?"
+								icon="ui-icon-alert" />
+								<span class="glyphicon glyphicon-remove-circle"></span>
+							<f:setPropertyActionListener value="#{programacao}"
+								target="#{sv_cadastro_controller.progViagem}" />
+						</p:commandLink>
+					</p:column>
+
+				</p:dataTable>
+
+			</p:panelGrid>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes"
+					onclick="PrimeFaces.monitorDownload(start, stop);"
+					icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+		</h:form>
+	</div>
+
+	<style type="text/css">
+.fonte_sv {
+	font-size: 12px;
+}
+</style>
+</ui:fragment>

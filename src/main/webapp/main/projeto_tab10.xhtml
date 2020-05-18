@@ -1,0 +1,80 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<style type="text/css">
+.valorPropaganda {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(80, 80, 80, 0.79);
+}
+
+.valorPropagandaRED {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(234, 15, 15, 0.79);
+}
+
+.ui-progressbar .ui-progressbar-label {
+	text-align: center;
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	display: none;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+td.jqplot-table-legend {
+	vertical-align: middle;
+	font-size: 15px;
+}
+
+.jqplot-target {
+	position: relative;
+	color: #666;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 2em;
+}
+</style>
+
+
+
+	<div style="padding: 2px 2px">
+
+		<div class="cadastro-projeto"
+			style="margin-right: auto; margin-left: auto;">
+			<div>
+
+				<h:panelGroup id="panel_graf_atividade">
+					<p:fieldset legend="Informações Gráficas" id="graficos"
+						toggleable="true">
+
+						<p:panelGrid columns="2" style="width:100%">
+
+							<p:knob value="#{projetoBean.percentExecucaoFisica}" id="knob"
+								foregroundColor="#849A39" disabled="true"
+								labelTemplate="{value}%" max="100" />
+
+
+							<p:chart type="bar" model="#{projetoBean.gExecFinance}"
+								style="height:350px;width:1000px" />
+
+						</p:panelGrid>
+
+					</p:fieldset>
+				</h:panelGroup>
+
+			</div>
+		</div>
+
+	</div>
+
+</ui:fragment>

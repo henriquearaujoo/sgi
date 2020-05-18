@@ -1,0 +1,115 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<p:outputPanel id="colaborador-panel">
+
+		<div class="ui-g ui-fluid">
+			<div class="ui-g-10">
+				<h:outputText for="input_nome_colaborador" value="Nome" />
+				<p:inputText id="input_nome_colaborador"
+					value="#{home_controller.filtro.nome}" />
+			</div>
+
+			<div class="ui-g-2">
+				<p:commandLink update="colaborador-panel" onclick="start();"
+					oncomplete="stop();" onerror="stop();" 
+					action="#{home_controller.carregarColaboradores()}"
+					styleClass="btn btn-primary btn-sm">
+					<span class="fa fa-fw fa-search"></span>
+				</p:commandLink>
+
+			</div>
+		</div>
+	
+
+		<div class="comments-container">
+			<ul id="list-col" class="list-col">
+
+				<ui:repeat var="colaborador"
+					value="#{home_controller.colaboradores}">
+					<li style="margin-bottom: 10px">
+						<div class="comment-main-level">
+							<div class="comment-avatar-col">
+								<img src="../resources/image/#{colaborador.id}.jpg"
+									style="width: 60px; height: 60px; border-radius: 50%; -webkit-border-radius: 50%; -moz-border-radius: 50%" />
+
+							</div>
+
+							<div class="comment-box">
+
+								<h:panelGrid columns="2">
+									<p:outputLabel value="Nome:" />
+									<p:outputLabel value="#{colaborador.nome}" />
+
+									<p:outputLabel value="Nome social:" />
+									<p:outputLabel value="#{colaborador.nomeSocial}" />
+
+									<p:outputLabel value="E-mail:" />
+									<p:outputLabel value="#{colaborador.email}" />
+
+									<p:outputLabel value="Skype:" />
+									<p:outputLabel value="#{colaborador.skype}" />
+
+									<p:outputLabel value="Telefone:" />
+									<p:outputLabel value="#{colaborador.telefone}" />
+
+								</h:panelGrid>
+
+							</div>
+
+						</div>
+					</li>
+
+				</ui:repeat>
+
+			</ul>
+		</div>
+
+
+
+		<p:dataGrid rendered="false" var="col"
+			value="#{home_controller.colaboradores}" columns="2" rows="12"
+			paginator="true" id="col"
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			rowsPerPageTemplate="6,12,16">
+
+
+			<p:panelGrid columns="2" style="width:100%">
+				<f:facet name="header">
+					<img src="../resources/image/imagem.jpg"
+						style="width: 60px; height: 60px; border-radius: 50%; -webkit-border-radius: 50%; -moz-border-radius: 50%" />
+				</f:facet>
+
+				<h:outputText value="Nome:" />
+				<h:outputText value="#{col.nome}" />
+
+				<h:outputText value="Nome social:" />
+				<h:outputText value="#{col.nomeSocial}" />
+
+				<h:outputText value="Gestão:" />
+				<h:outputText value="#{col.gestao.nome}" />
+
+				<h:outputText value="E-mail:" />
+				<h:outputText value="#{col.email}" />
+
+				<h:outputText value="Skype:" />
+				<h:outputText value="#{col.skype}" />
+
+				<h:outputText value="Telefone:" />
+				<h:outputText value="#{col.telefone}" />
+
+			</p:panelGrid>
+
+
+		</p:dataGrid>
+
+
+	</p:outputPanel>
+
+
+</ui:fragment>

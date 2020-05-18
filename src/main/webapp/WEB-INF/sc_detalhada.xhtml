@@ -1,0 +1,384 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+
+	<div style="padding: 2px 2px">
+
+		<h:form id="form-pedido-detalhado">
+
+			<p:panel id="toggleable_pedido" header="Filtro" toggleable="true"
+				closable="false" toggleSpeed="500" closeSpeed="500"
+				widgetVar="panel" style="margin-bottom:20px">
+
+				<p:panelGrid columns="1" styleClass="semBorda">
+					<p:panelGrid columns="2" styleClass="semBorda" style="width:900px"
+						columnClasses="ui-grid-col-2,ui-grid-col-10">
+
+						<h:outputText value="Código:" />
+						<h:panelGroup>
+							<p:inputText
+								value="#{compraDetalhadaController.filtro.codigo}"
+								style="width:80px" />
+							<h:outputText value="Solicitante:" style="margin-left:5px;" />
+							<p:inputText value="#{compraDetalhadaController.filtro.nome}"
+								style="margin-left:5px;" />
+						</h:panelGroup>
+
+
+						<h:outputText value="Data Emissão Compra ínicio:" />
+						
+							<p:calendar id="dt_inicio"
+								value="#{compraDetalhadaController.filtro.dataInicio}"
+								timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+						<h:outputText value="Data Emissão Compra final:"  />
+						<p:calendar id="dt_final" 
+							value="#{compraDetalhadaController.filtro.dataFinal}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+							
+						<h:outputText value="Data Emissão Pedido ínicio:" />
+						
+							<p:calendar id="dt_pedido_inicio"
+								value="#{compraDetalhadaController.filtro.dataPedidoInicial}"
+								timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+						<h:outputText value="Data Emissão Pedido final:"  />
+						<p:calendar id="dt_pedido_final" 
+							value="#{compraDetalhadaController.filtro.dataPedidoFinal}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+						
+
+						<h:outputText value="Gestão:" />
+						<h:panelGroup id="panel-gestao-filtro">
+
+							<p:selectOneMenu id="tipo_gestao_filtro"
+								value="#{compraDetalhadaController.filtro.tipoGestao}">
+								<p:ajax
+									listener="#{compraDetalhadaController.onTipoGestaoChangeFiltro()}"
+									process="@this" update="panel-gestao-filtro" />
+								<f:selectItem noSelectionOption="true" itemLabel="Selecione" />
+								<f:selectItems
+									value="#{compraDetalhadaController.tiposGestao}"
+									var="tipoGestao" itemLabel="#{tipoGestao.nome}"
+									itemValue="#{tipoGestao}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="sup_filtro"
+								value="#{compraDetalhadaController.filtro.gestaoID}"
+								style="margin-left:5px"
+								rendered="#{compraDetalhadaController.tipoGestao.equals('Superintendencia')}">
+								<f:selectItem  itemLabel="Selecione" />
+								<f:selectItems value="#{compraDetalhadaController.gestoes}"
+									var="gest" itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="coord_filtro" filter="true"
+								filterMatchMode="contains" style="margin-left:5px"
+								value="#{compraDetalhadaController.filtro.gestaoID}"
+								rendered="#{compraDetalhadaController.tipoGestao.equals('Coordenadoria')}">
+								<f:selectItem  itemLabel="Selecione" />
+								<f:selectItems value="#{compraDetalhadaController.gestoes}"
+									var="gest" itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="reg_filtro" filter="true"
+								filterMatchMode="contains" style="margin-left:5px"
+								value="#{compraDetalhadaController.filtro.gestaoID}"
+								rendered="#{compraDetalhadaController.tipoGestao.equals('Regional')}">
+								<f:selectItem  itemLabel="Selecione" />
+								<f:selectItems value="#{compraDetalhadaController.gestoes}"
+									var="gest" itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+							</p:selectOneMenu>
+
+						</h:panelGroup>
+
+
+						<h:outputText value="Destino/Localização:" for="local_filtro" />
+
+						<h:panelGroup id="panel-loc-filtro">
+
+							<p:selectOneMenu id="local_filtro"
+								value="#{compraDetalhadaController.filtro.tipoLocalidade}">
+								<p:ajax
+									listener="#{compraDetalhadaController.onLocalChangeFilter()}"
+									process="@this" update="panel-loc-filtro" />
+								<f:selectItem noSelectionOption="true" itemLabel="Selecione" />
+								<f:selectItems
+									value="#{compraDetalhadaController.tipoLocais}" var="local"
+									itemLabel="#{local.nome}" itemValue="#{local}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="estado_filtro" filter="true"
+								filterMatchMode="contains" style="margin-left:5px"
+								value="#{compraDetalhadaController.idEstado}"
+								rendered="#{compraDetalhadaController.local.equals('Municipio')}">
+								<p:ajax
+									listener="#{compraDetalhadaController.onEstadoChange()}"
+									process="@this" update="municipio_filtro" />
+								<f:selectItem itemLabel="Selecione um estado" itemValue="0" />
+								<f:selectItems value="#{compraDetalhadaController.estados}"
+									var="estado" itemLabel="#{estado.nome}"
+									itemValue="#{estado.id}" />
+							</p:selectOneMenu>
+
+
+
+							<p:selectOneMenu id="municipio_filtro" filter="true"
+								filterMatchMode="contains" style="margin-left:5px"
+								value="#{compraDetalhadaController.filtro.localidadeID}"
+								rendered="#{compraDetalhadaController.local.equals('Municipio')}">
+								<f:selectItem  itemLabel="Selecione" />
+								<f:selectItems
+									value="#{compraDetalhadaController.localidades}" var="loc"
+									itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+							</p:selectOneMenu>
+
+
+							<p:selectOneMenu id="comunidade_filtro"
+								value="#{compraDetalhadaController.filtro.localidadeID}"
+								filter="true" filterMatchMode="contains"
+								rendered="#{compraDetalhadaController.local.equals('Comunidade')}"
+								style="margin-left:5px">
+								<f:selectItem  itemLabel="Selecione" />
+								<f:selectItems
+									value="#{compraDetalhadaController.localidades}" var="loc"
+									itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+							</p:selectOneMenu>
+
+
+							<p:selectOneMenu id="uc_filtro"
+								value="#{compraDetalhadaController.filtro.localidadeID}"
+								filter="true" filterMatchMode="contains" style="margin-left:5px"
+								rendered="#{compraDetalhadaController.local.equals('Uc')}">
+								<f:selectItems
+									value="#{compraDetalhadaController.localidades}" var="loc"
+									itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="sede_filtro"
+								value="#{compraDetalhadaController.filtro.localidadeID}"
+								filter="true" filterMatchMode="contains" style="margin-left:5px"
+								rendered="#{compraDetalhadaController.local.equals('Sede')}">
+								<f:selectItem  itemLabel="Selecione" />
+								<f:selectItems
+									value="#{compraDetalhadaController.localidades}" var="loc"
+									itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="nucleo_filtro"
+								value="#{compraDetalhadaController.filtro.localidadeID}"
+								filter="true" filterMatchMode="contains" style="margin-left:5px"
+								rendered="#{compraDetalhadaController.local.equals('Nucleo')}">
+								<f:selectItem  itemLabel="Selecione" />
+								<f:selectItems
+									value="#{compraDetalhadaController.localidades}" var="loc"
+									itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+							</p:selectOneMenu>
+
+						</h:panelGroup>
+
+						<h:outputText value="Status:" />
+						<p:selectOneMenu
+							value="#{compraDetalhadaController.filtro.statusCompra}">
+							<f:selectItem noSelectionOption="true" itemLabel="Selecione" />
+							<f:selectItems
+								value="#{compraDetalhadaController.listaStatusCompras()}"
+								var="stt" itemLabel="#{stt.nome}" itemValue="#{stt}" />
+						</p:selectOneMenu>
+
+						<h:outputText value="Produto:" />
+						<h:panelGroup>
+							<p:inputText
+								value="#{compraDetalhadaController.filtro.descricaoProduto}"  placeholder="Nome do Produto" />
+							<h:outputText value="Fornecedor:" style="margin-left:5px" />
+							<p:inputText
+								value="#{compraDetalhadaController.filtro.nomeFornecedor}" placeholder="Nome do Fornecedor"
+								style="margin-left:5px" />
+								
+							<h:outputText value="Urgência:" style="margin-left:4px"/>
+											<p:selectBooleanCheckbox value="#{compraDetalhadaController.filtro.urgencia}"
+												label="Urgência" style="margin-left:4px" />	
+						</h:panelGroup>
+
+					</p:panelGrid>
+					<h:panelGroup>
+
+						<p:commandLink styleClass="btn btn-primary btn-sm fa fa-search"
+							action="#{compraDetalhadaController.filtrarItens()}"
+							onclick="start()" onsuccess="stop()" onerror="stop()"
+							update=":tab:form-pedido-detalhado:pedido-itens-detalhe"
+							style="color:#fff; margin: 8px 2px;">
+							<span style="font-family: Arial">Procurar</span>
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-primary btn-sm fa fa-trash-o"
+							action="#{compraDetalhadaController.limparFiltro()}"
+							process="@this" update=":tab:form-pedido-detalhado"
+							style="color:#fff; margin: 8px 2px;">
+							<span style="font-family: Arial"> Limpar filtro</span>
+						</p:commandLink>
+
+					</h:panelGroup>
+				</p:panelGrid>
+
+			</p:panel>
+
+
+			<p:dataTable paginator="true" rows="10" tableStyle="width:auto" emptyMessage="Não há solicitações cadastradas"
+				id="pedido-itens-detalhe" style="he"
+				value="#{compraDetalhadaController.itensPedidos}" var="item" paginatorPosition="top"
+				paginatorTemplate="{Exporters}  {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="5,10,15,20,25,50,100">
+
+
+				<f:facet name="{Exporters}">
+
+					<h:commandLink style="margin:3px">
+						<p:graphicImage library="image" name="excel.png" width="30" />
+						<p:dataExporter type="xls" target="pedido-itens-detalhe"
+							fileName="Itens pedidos" />
+					</h:commandLink>
+				</f:facet>
+
+				<p:column headerText="SC">
+					<h:outputText value="#{item.idSC}" />
+				</p:column>
+
+				<p:column headerText="Pedido">
+					<h:outputText value="#{item.idPedido}" />
+				</p:column>
+
+				<p:column headerText="Emissão SC">
+					<h:outputText value="#{item.dataEmissaoSC}" />
+				</p:column>
+
+				<p:column headerText="Aprovação SC">
+					<h:outputText value="#{item.dataAprovacao}" />
+				</p:column>
+				
+				<p:column headerText="Conclusão SC">
+					<h:outputText value="#{item.dataConclusaoSC}" />
+				</p:column>
+			
+				<p:column headerText="Emissão Pedido">
+					<h:outputText value="#{item.dataEmissaoPedido}" />
+				</p:column>
+				
+				<p:column headerText="Status">
+					<h:outputText value="#{item.statusCompra}" />
+				</p:column>
+
+				<p:column headerText="Gestão">
+					<h:outputText value="#{item.nomeGestao}" />
+				</p:column>
+
+				<p:column headerText="Destino">
+					<h:outputText value="#{item.nomeDestino}" />
+				</p:column>
+
+				<p:column headerText="Nota Fiscal">
+					<h:outputLabel value="#{item.notaFiscal}" />
+				</p:column>
+
+				<p:column headerText="Produto">
+					<h:outputText value="#{item.descricaoProduto}"  />
+				</p:column>
+				
+				<p:column headerText="Descrição Complementar" >
+					<h:outputText value="#{item.descricaoProdutoComplementar}" />
+				</p:column>
+				
+				<p:column headerText="Data Pagamento" >
+					<h:outputLabel value="#{item.dataPagamento}" >
+						<f:convertDateTime pattern="dd/MM/YYYY" />
+					</h:outputLabel>
+				</p:column>
+				
+				<p:column headerText="Tipo">
+					<h:outputText value="#{item.tipo}"  />
+				</p:column>
+
+
+				<p:column headerText="Categoria">
+					<h:outputText value="#{item.categoria}" />
+				</p:column>
+
+				<p:column headerText="Fornecedor">
+					<h:outputText value="#{item.nomeFornecedor}" />
+				</p:column>
+				
+				<p:column headerText="Doação" >
+					<h:outputText value="#{item.orcamento}" />
+				</p:column>
+				
+				<p:column headerText="Componente" >
+					<h:outputText value="#{item.componente}" />
+				</p:column>
+				
+				<p:column headerText="Sub Componente" >
+					<h:outputText value="#{item.subComponente}" />
+				</p:column>
+				
+				<p:column headerText="Rubrica" >
+					<h:outputText value="#{item.rubrica}" />
+				</p:column>
+				
+				<p:column headerText="Und. medida">
+					<h:outputText value="#{item.unidade}"  />
+				</p:column>
+				
+				<p:column headerText="Qtd.">
+					<h:outputText
+						value="#{item.quantidade.toString().replace('.', ',')}" />
+				</p:column>
+				
+				<p:column headerText="Valor unitário">
+					<h:outputText value="#{item.valorUnitarioComDesconto}" >
+					 <f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="R$"/>
+					</h:outputText>
+				</p:column>
+				
+				<p:column headerText="Valor total Item">
+					<h:outputText value="#{item.valorTotal}" >
+					 <f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="R$"/>
+					</h:outputText>
+				</p:column>
+				
+				<p:column headerText="Valor total do pedido">
+					<h:outputText value="#{item.valorTotalPedido}" >
+					 <f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="R$"/>
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Urgência">
+					<h:outputText value="Sim" rendered="#{item.bootUrgencia}" />
+				</p:column>
+
+				
+
+				<p:column headerText="Solicitante">
+					<h:outputText value="#{item.nomeSolicitante}" />
+				</p:column>
+
+				<p:column headerText="Comprador">
+					<h:outputText value="#{item.nomeComprador}" />
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+	</div>
+
+
+
+</ui:fragment>

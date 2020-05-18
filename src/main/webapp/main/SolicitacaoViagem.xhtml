@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="content">
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+
+
+			
+			$(document).ready(function(){
+			  $('[data-toggle="tooltip"]').tooltip();   
+			});
+			
+
+			
+		</script>
+
+		<style type="text/css">
+.semBorda tr, .semBorda td {
+	border: none !important;
+}
+</style>
+
+
+		<h:panelGroup id="panel-content">
+
+			<h:panelGroup id="panel-listagem"
+				rendered="#{viagemController.panelListagem}">
+
+
+
+				<h:form id="form-listagem">
+					<br />
+					<p:breadCrumb>
+						<p:menuitem value="Categories" url="home_new.xhtml" />
+						<p:menuitem value="Solicitação de viagem"
+							url="SolicitacaoViagem.xhtml" />
+					</p:breadCrumb>
+
+					<p:panel id="filter-list">
+
+						<p:messages id="msg-pagamento" showSummary="false"
+							style="margin-top:10px" showDetail="true" closable="true"
+							showIcon="true" />
+
+
+
+
+
+						<div class="ui-g ui-fluid">
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
+								<h:outputText value="Código:" />
+								<p:inputText value="#{viagemController.filtro.codigo}" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
+								<h:outputText value="Solicitante:" />
+								<p:inputText value="#{viagemController.filtro.nome}"
+									style="width:230px" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
+								<h:outputText value="Dt. ínicio:" />
+								<p:calendar id="dt_inicio" styleClass="font12-vi" size="10"
+									value="#{viagemController.filtro.dataInicio}"
+									timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
+								<h:outputText value="Dt. final:" />
+								<p:calendar id="dt_final" styleClass="font12-vi" size="10"
+									value="#{viagemController.filtro.dataFinal}"
+									timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+							</div>
+						</div>
+
+						<div class="ui-g ui-fluid">
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
+								<h:outputText value="Gestão:" />
+								<p:autoComplete styleClass="font12-vi" panelStyle="width:180px"
+									size="50" placeholder="Superintendencia/Coordenadoria/Regional"
+									value="#{viagemController.filtro.gestao}"
+									completeMethod="#{viagemController.completeGestao}"
+									var="gestao" itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+									converter="gestaoConverterVI" minQueryLength="3" />
+							</div>
+
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
+								<h:outputText value="Destino/Localização:" />
+								<p:autoComplete styleClass="font12-vi" size="45"
+									panelStyle="width:180px" placeholder="Destino"
+									value="#{viagemController.filtro.destino}"
+									completeMethod="#{viagemController.completeLocalidade}"
+									var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+									converter="localConverterVI" minQueryLength="3" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
+								<h:outputText value="Missão:" />
+								<p:inputText value="#{viagemController.filtro.missao}" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
+								<h:outputText value="Diária:" />
+								<p:inputText value="#{viagemController.filtro.codigoDaria}" />
+							</div>
+
+						</div>
+
+
+
+						<div class="ui-g ui-fluid">
+							<div class="ui-g-12 ui-lg-6 form-group">
+								<h:outputText value="Descrição:" />
+								<p:inputText value="#{viagemController.filtro.descricao}" />
+							</div>
+
+							<div class="ui-g-12 ui-lg-6 " style="text-align: right">
+								<p:commandLink styleClass="btn btn-primary btn-sm"
+									action="#{viagemController.filtrar()}" onclick="start()"
+									onsuccess="stop()" onerror="stop()" update="table-viagem"
+									style="color:#fff; margin: 8px 2px;">
+									<span class="fa fa-fw fa-search"></span>
+									<span>Procurar</span>
+								</p:commandLink>
+
+								<p:commandLink styleClass="btn btn-danger btn-sm"
+									action="#{viagemController.limparFiltro()}"
+									update="form-listagem" process="@this"
+									style="color:#fff; margin: 8px 2px;">
+									<span class="fa fa-fw fa-trash-o"></span>
+									<span>Limpar fltro</span>
+								</p:commandLink>
+
+								<p:link styleClass="btn btn-success btn-sm"
+									style="color:#fff;margin: 8px 2px;"
+									outcome="/main/viagem_cadastro" title="Adicionar viagem">
+									<span class="fa fa-fw fa-plus"></span>
+									<span>Novo</span>
+								</p:link>
+							</div>
+						</div>
+
+
+						<p:dataTable emptyMessage="Não há solicitaçoes de Viagem"
+							paginator="true" rows="10" id="table-viagem"
+							value="#{viagemController.viagems}" var="viagem"
+							paginatorTemplate="{Exporters}  {CurrentPageReport}  
+						{FirstPageLink} {PreviousPageLink} {PageLinks} 
+						{NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+							<p:column headerText="Codigo" style="width:70px"
+								filterBy="SV#{viagem.id}" filterMatchMode="contains">
+
+								<p:link value="SV#{viagem.id}" styleClass="link-content"
+									style="margin-left:5px" outcome="/main/viagem_cadastro"
+									title="Adicionar viagem">
+									<f:param name="viagem" value="#{viagem.id}" />
+									<span style="color: green; font-size: 25px;"
+										class="icon-plus-alt"> </span>
+								</p:link>
+
+							</p:column>
+
+							<p:column headerText="Missão" style="width:350px">
+								<h:outputText value="#{viagem.missao}" />
+							</p:column>
+
+							<p:column headerText="Descrição" style="width:20%">
+								<h:outputText id="motivo"
+									value="#{viagem.motivo.length() > 30 ? viagem.motivo.substring(0,30) : viagem.motivo}" />
+								
+								<h:outputText rendered="#{viagem.motivo.length() > 30}" id="mot"
+									value=" . . ." />
+									
+								<p:tooltip id="toolTipFade" for="mot" value="#{viagem.motivo}" style="width:50%" position="top"/>	
+
+							</p:column>
+
+
+							<p:column headerText="Data" style="width:100px"
+								filterBy="#{viagem.dataEmissao}">
+								<h:outputText value="#{viagem.dataEmissao}">
+									<f:convertDateTime pattern="dd/MM/yyy"
+										timeZone="America/Manaus" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Solicitante" style="width:250px"
+								filterBy="#{viagem.solicitante.nome.toLowerCase()}">
+								<h:outputText value="#{viagem.solicitante.nome.toLowerCase()}" />
+							</p:column>
+
+							<p:column style="width:110px;text-align:center;"
+								headerText="Opções">
+
+								<p:commandLink title="Imprimir"
+									styleClass="btn btn-primary btn-sm" target="_blank"
+									style="margin-left:9px;color:#000" ajax="false"
+									action="#{viagemController.gerarRelatorioViagem(viagem)}">
+									<f:setPropertyActionListener value="#{compra}"
+										target="#{compraController.compra}" />
+									<span class="fa fa-fw fa-print"></span>
+								</p:commandLink>
+
+								<p:commandLink style="color:#FFF;margin-left:5px"
+									rendered="#{viagem.statusViagem == null or viagem.statusViagem.nome != 'Concluído'}"
+									title="Excluir" styleClass="btn btn-danger btn-xs "
+									action="#{viagemController.remover()}"
+									update="table-viagem,:form-listagem:msg-pagamento">
+									<span class="fa fa-fw fa-trash-o"></span>
+									<f:setPropertyActionListener value="#{viagem}"
+										target="#{viagemController.viagem}" />
+
+								</p:commandLink>
+
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</h:form>
+
+
+			</h:panelGroup>
+
+		</h:panelGroup>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+	</ui:define>
+
+
+</ui:composition>

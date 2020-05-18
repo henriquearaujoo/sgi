@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="content">
+	
+		<f:metadata>
+				<f:viewAction action="#{orcamento_controller.init()}" />
+			</f:metadata>
+
+		<h:form id="form_listagem_orcamento">
+
+			<p:messages showSummary="false" showDetail="true" closable="true">
+				<p:autoUpdate></p:autoUpdate>
+			</p:messages>
+
+	
+
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Doações" />
+			</p:breadCrumb>
+		
+		<p:panel> 
+
+				<p:link styleClass="btn btn-success btn-sm" style="margin-left:5px"
+					outcome="/main/orcamento_cadastro" title="Adicionar orçamento">
+					<span class="glyphicon glyphicon-plus"></span>
+					<span style="margin: 3px;">Novo</span>
+				</p:link>
+
+
+			<p:separator></p:separator>
+
+			<p:dataTable id="table_doacao" paginator="true" rows="12"
+				value="#{orcamento_controller.orcamentos}" var="doacao">
+
+				<p:column headerText="Nome" filterBy="#{doacao.titulo}">
+					<h:outputText value="#{doacao.titulo}" />
+				</p:column>
+
+				<p:column headerText="Contrato" style="text-align:center">
+					<h:outputText value="#{doacao.contrato}" />
+				</p:column>
+
+				<p:column headerText="Parceiro" style="text-align:center">
+					<h:outputText value="#{doacao.fonte.nome}" />
+				</p:column>
+
+				<p:column headerText="Valor" style="width:160px;text-align:center">
+					<h:outputText value="#{doacao.valor}" style="float:right">
+						<f:convertNumber type="currency" locale="pt_BR" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Opções" style="width:120px;text-align:center">
+
+					<p:link styleClass="btn btn-primary btn-sm"
+						outcome="/main/orcamento_cadastro">
+						<span class="pi pi-pencil"></span>
+						<f:param name="doacao" value="#{doacao.id}" />
+					</p:link>
+
+					<p:commandLink style="color:#FFF;margin-left:5px"
+						styleClass="btn btn-danger btn-sm "
+						action="#{orcamento_controller.remover()}" process="@this"
+						update="table_doacao :form_listagem_orcamento">
+						<span class="pi pi-times-circle"></span>
+						<f:setPropertyActionListener value="#{doacao}"
+							target="#{orcamento_controller.orcamento}" />
+					</p:commandLink>
+
+				</p:column>
+			</p:dataTable>
+
+		</p:panel>
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+
+</ui:composition>

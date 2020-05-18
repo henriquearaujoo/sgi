@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+
+
+	<ui:define name="menu_lateral">
+
+		<h:form id="tabela_menu">
+
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{aprouveController.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{aprouveController.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{aprouveController.menu}" />
+					</p:commandLink>
+
+					<span style="margin-left: 0px; float: right; color: #849A39"
+						class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+		 
+			function stop() {
+		    	PF('statusDialog').hide();
+			}
+		</script>
+
+		<h:form id="form_lista_aprovador">
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Lista de Aprovadores" />
+			</p:breadCrumb>
+
+
+			<p:messages id="msg-aprovadores" showSummary="false"
+				showDetail="true" closable="true"
+				showIcon="true" />
+
+			
+			<div class="botao_central" align="left"
+				style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+				<p:commandLink styleClass="btn btn-success btn-sm fa fa-plus"
+					style="color:#fff;" 
+					actionListener="#{aprouveController.openDialog()}"
+					process="@form" title="Adicionar Aprovador">
+					<span style="font-family: Arial; font-size: 12px">Novo</span>
+				</p:commandLink>
+
+			</div>
+			<h:panelGroup id="painel" >
+			
+				
+				<p:dataTable value="#{aprouveController.lista}" id="listaAprovadores"
+					filteredValue="#{aprouveController.listaFiltro}" paginator="true"
+					rows="10" var="aprouve">
+
+					<p:column headerText="Usuário" style="text-align:center"
+						filterBy="#{aprouve.usuario.nomeUsuario}"
+						filterMatchMode="contains">
+						<h:outputText value="#{aprouve.usuario.nomeUsuario}"
+							rendered="#{aprouve.usuario != null}" />
+						<h:outputText value="Sem Registro"
+							rendered="#{aprouve.usuario == null}" />
+					</p:column>
+
+					<p:column headerText="Colaborador"
+						filterBy="#{aprouve.usuario.colaborador.nome}"
+						filterMatchMode="contains" style="text-align:center">
+						<h:outputText value="#{aprouve.usuario.colaborador.nome}"
+							rendered="#{aprouve.usuario != null}" />
+						<h:outputText value="Sem Registro"
+							rendered="#{aprouve.usuario == null}" />
+					</p:column>
+					<p:column headerText="SIGLA" filterBy="#{aprouve.sigla}"
+						filterMatchMode="contains" style="text-align:center">
+						<h:outputText value="#{aprouve.sigla}" />
+					</p:column>
+					<p:column headerText="Ação" style="text-align:center;" width="10%">
+						<center>
+							<p:commandLink style="margin-right:5px" value="Editar"
+								process="form_lista_aprovador"
+								actionListener="#{aprouveController.openDialog()}">
+								<f:setPropertyActionListener value="#{aprouve}"
+									target="#{aprouveController.aprouve}" />
+							</p:commandLink>
+
+							<p:commandLink value="Excluir" process="@this"
+								action="#{aprouveController.removerAprouve(aprouve)}">
+							</p:commandLink>
+						</center>
+					</p:column>
+				</p:dataTable>
+
+			</h:panelGroup>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog header="Criar aprovador" widgetVar="dlg_cadastro_aprovador"
+			modal="false" showEffect="clip" hideEffect="clip">
+
+			<h:form id="form_cadastro_aprovador">
+				<p:panelGrid columns="2" styleClass="ui-noborder">
+
+					<p:outputLabel value="Usuário" for="usuario_liberacao" />
+					<p:autoComplete id="usuario_liberacao"
+						emptyMessage="Não foram encontrado registros!"
+						requiredMessage="Preencha o campo usuário"
+						value="#{aprouveController.aprouve.usuario}"
+						completeMethod="#{aprouveController.completeUsuario}"
+						var="usuario" itemLabel="#{usuario.nomeUsuario}"
+						itemValue="#{usuario}" converter="usuarioConverter"
+						forceSelection="true" />
+
+					<p:outputLabel value="Sigla:" for="sigla" />
+					<p:inputText id="sigla" required="true"
+						value="#{aprouveController.aprouve.sigla}" />
+
+					<p:outputLabel value="Senha:" for="senha" />
+					<p:password id="senha" value="#{aprouveController.aprouve.senha}" />
+
+
+
+
+				</p:panelGrid>
+				<center>
+					<p:commandLink value="Salvar" styleClass="btn btn-primary btn-sm "
+						style="color:#fff;" action="#{aprouveController.salvar()}"
+						onclick="start()" onerror="stop()" onsuccess="stop()"
+						oncomplete="PF('dlg_cadastro_aprovador').hide()">
+					</p:commandLink>
+
+					<p:commandLink styleClass="btn btn-danger btn-sm "
+						onclick="PF('dlg_cadastro_aprovador').hide()"
+						style="color:#fff; margin: 8px 2px;" value="Cancelar">
+					</p:commandLink>
+				</center>
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="menu_lateral">
+
+
+
+		<f:metadata>
+			<o:viewParam name="comp" value="#{pedidoController.compra}" />
+			<f:viewAction action="#{pedidoController.carregarPedidos()}" />
+		</f:metadata>
+
+
+
+		<h:form id="form-menu">
+
+			<script type="text/javascript">
+function start() {
+    PF('statusDialog').show();
+}
+ 
+function stop() {
+    PF('statusDialog').hide();
+}
+</script>
+
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{pedidoController.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{pedidoController.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{pedidoController.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right; color: #849A39"
+						class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+		<f:view>
+
+
+			<h:form id="form-tabela-pedido">
+				<p:outputPanel>
+					<div class="botao_central" align="left"
+						style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+						<p:commandLink rendered="false"
+							styleClass="btn btn-primary btn-sm" type="button"
+							action="#{pedidoController.redirecionarPageCadastroPedido()}"
+							style="color:#fff; margin: 2px 2px;" value="Novo" />
+
+						<p:commandLink styleClass="btn btn-info btn-sm" type="button"
+							style="color:#fff; margin: 2px 2px;" value="Voltar"
+							action="#{pedidoController.redirecionarPageCompras()}" />
+					</div>
+				</p:outputPanel>
+
+				<p:dataTable tableStyle="width:auto"
+					rowStyleClass="#{pedido.statusCompra.nome.equals('Suspenso') ? 'highlight_red' : null} "
+					id="table-pedido" value="#{pedidoController.pedidos}" var="pedido"
+					emptyMessage="Sem pedidos">
+
+
+					<p:column headerText="Código">
+						<h:outputText value="#{pedido.id}" />
+					</p:column>
+
+					<p:column headerText="Fornecedor">
+						<h:outputText value="#{pedido.fornecedor.nomeFantasia}" />
+					</p:column>
+
+					<p:column headerText="Gerador do pedido">
+						<h:outputText value="#{pedido.usuarioGeradorPedido.nomeUsuario}" />
+					</p:column>
+
+					<p:column headerText="Valor">
+						<h:outputText value="#{pedido.valorTotalSemDesconto}" />
+					</p:column>
+
+					<p:column style="width:100px" headerText="Valor c/ desconto">
+						<h:outputText value="#{pedido.valorTotalComDesconto}" />
+					</p:column>
+
+					<p:column>
+						<p:button value="Editar" outcome="/main/pedidoCadastro"
+							style="font-size:10px;" icon="fa fa-pencil">
+							<f:param name="ped" value="#{pedido.id}" />
+						</p:button>
+					</p:column>
+
+					<p:column>
+
+						<p:commandLink title="Imprimir"
+							styleClass="glyphicon glyphicon-print" target="_blank"
+							style="font-size:14px;margin-left:9px;" ajax="false"
+							action="#{pedidoController.imprimirPedido()}">
+							<f:setPropertyActionListener value="#{pedido}"
+								target="#{pedidoController.pedido}" />
+						</p:commandLink>
+
+						<p:commandLink title="Notas"
+							oncomplete="PF('dialog_arquivo').show();" update=":form-arquivo"
+							action="#{pedidoController.carregarArquivos()}"
+							styleClass="glyphicon glyphicon-file" process="@this"
+							style="font-size:14px;margin-left:20px;">
+
+							<f:setPropertyActionListener value="#{pedido}"
+								target="#{pedidoController.lancamentoAux}" />
+
+						</p:commandLink>
+
+
+						<p:commandLink rendered="#{pedidoController.verificaPermissao()}"
+							title="Excluir" update="table-pedido" styleClass="fa fa-times"
+							style="font-size:14px;margin-left:12px"
+							action="#{pedidoController.removerPedido()}">
+							<p:confirm header="Confirmar suspensão do pedido"
+								icon="ui-icon-alert"
+								message="Ao suspender o pedido todos os lançamentos referente a ele serão excluídos, deseja continuar?" />
+							<f:setPropertyActionListener value="#{pedido}"
+								target="#{pedidoController.pedido}" />
+						</p:commandLink>
+
+					</p:column>
+
+				</p:dataTable>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</h:form>
+		</f:view>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+
+		<p:dialog header="Autorização" widgetVar="dlg_aprovacao_coordenador"
+			modal="false" showEffect="clip" hideEffect="clip">
+			<h:form id="form_autorizacao_exclusao">
+
+				<p:panelGrid columns="2">
+					<h:outputText value="Senha:" />
+					<p:password value="#{pedidoController.aprouve.senha}" />
+					<p:commandLink
+						update="form_autorizacao_exclusao :form-tabela-pedido"
+						styleClass="btn btn-primary" style="color:#ffffff"
+						onclick="PrimeFaces.monitorDownload(start, stop);"
+						action="#{pedidoController.removerPedido()}" value="Remover"></p:commandLink>
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog header="Anexos" modal="true" widgetVar="dialog_arquivo"
+			hideEffect="clip" closeOnEscape="true" showEffect="clip">
+			<h:form id="form-arquivo" enctype="multipart/form-data">
+				<p:messages id="msg_aprouve"  showIcon="true"
+					showSummary="false" showDetail="true" closable="true" />
+				<p:panelGrid columns="2" styleClass="ui-fluid">
+
+					<p:panelGrid>
+
+						<p:row>
+							<p:column>
+								<h:outputLabel value="Nome:" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{pedidoController.arquivo.nome}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column>
+								<h:outputLabel value="Arquivo:" />
+							</p:column>
+							<p:column>
+								<p:fileUpload update="panel_path"
+									fileUploadListener="#{pedidoController.handleFileUpload}"
+									mode="advanced" auto="true" sizeLimit="100000000"
+									allowTypes="/(\.|\/)(doc|docx|xls|xlsx|pdf)$/" />
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column colspan="2">
+								<p:panel id="panel_path">
+									<p:outputLabel value="#{pedidoController.path}" />
+								</p:panel>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column colspan="2">
+								<p:commandLink action="#{pedidoController.adicionarArquivo()}"
+									style="color:#FFF" update="table-arquivo form-arquivo"
+									styleClass="btn btn-block btn-primary" value="Salvar" />
+							</p:column>
+
+						</p:row>
+
+					</p:panelGrid>
+
+					<p:dataTable id="table-arquivo"
+						value="#{pedidoController.lancamentoAux.arquivos}" var="arq">
+
+						<p:column headerText="Nome">
+							<h:outputText value="#{arq.nome}" />
+						</p:column>
+
+
+
+						<p:column style="width:200px">
+							<p:panelGrid columns="2">
+								<p:commandLink style="color:#FFF" styleClass="btn btn-primary"
+									action="#{pedidoController.visualizarArquivo()}" ajax="false"
+									process="@this">
+									<span style="width: 40px;" class="glyphicon glyphicon-search"></span>
+									<f:setPropertyActionListener value="#{arq}"
+										target="#{pedidoController.arqAuxiliar}" />
+								</p:commandLink>
+
+								<p:commandLink style="color:#FFF" styleClass="btn  btn-primary"
+									action="#{pedidoController.removerArquivo()}" process="@this"
+									update="table-arquivo :form-arquivo:msg_aprouve">
+									<span style="width: 40px;" class="fa fa-remove"></span>
+									<f:setPropertyActionListener value="#{arq}"
+										target="#{pedidoController.arqAuxiliar}" />
+								</p:commandLink>
+							</p:panelGrid>
+						</p:column>
+
+					</p:dataTable>
+
+
+				</p:panelGrid>
+			</h:form>
+
+		</p:dialog>
+
+
+
+	</ui:define>
+
+
+</ui:composition>

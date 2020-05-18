@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+
+	<ui:define name="content">
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+			function stopDlgfilter() {
+			    PF('dlg_filtro_compra').hide();
+			}
+		</script>
+
+
+		<h:form id="form_saving" style="width:100%">
+
+			<p:messages id="msg"  showDetail="true"
+				showSummary="false" closable="true" showIcon="true" />
+
+			<p:panelGrid columns="2">
+
+				<h:outputText value="Fornecedor:" />
+				<p:selectOneMenu value="#{saving_controller.filtro.fornecedorID}"
+					filter="true" filterMatchMode="contains"
+					filterPlaceholder="Fornecedor">
+					<f:selectItem noSelectionOption="true" />
+					<f:selectItems value="#{saving_controller.listaFornecedor}"
+						var="forn" itemLabel="#{forn.nomeConta}" itemValue="#{forn.id}" />
+				</p:selectOneMenu>
+
+				<h:outputText value="Gestão:" />
+				<p:selectOneMenu value="#{saving_controller.filtro.gestaoID}"
+					filter="true" filterMatchMode="contains" filterPlaceholder="Gestão">
+					<f:selectItem noSelectionOption="true" />
+					<f:selectItems value="#{saving_controller.listaGestao}"
+						var="gestao" itemLabel="#{gestao.nome}" itemValue="#{gestao.id}" />
+				</p:selectOneMenu>
+
+				<h:outputText value="Data início:" />
+				<p:calendar id="dt_inicio" styleClass="font12-vi"
+					value="#{saving_controller.filtro.dataInicio}" required="true"
+					requiredMessage="Preencha a data início" timeZone="America/Manaus"
+					navigator="true" pattern="dd/MM/yyyy" />
+
+				<h:outputText value="Data final:" />
+				<p:calendar id="dt_final" styleClass="font12-vi" required="true"
+					requiredMessage="Preencha a data final"
+					value="#{saving_controller.filtro.dataFinal}"
+					timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+			</p:panelGrid>
+
+			<p:panelGrid columns="2" styleClass="ui-noborder">
+
+				<p:commandLink styleClass="btn btn-primary btn-sm"
+					ajax="false" action="#{saving_controller.filtrar()}"
+					onclick="start()" onsuccess="stop()" onerror="stop()"
+					update="table_saving" style="color:#fff; margin: 8px 2px;">
+					<span class="glyphicon glyphicon-search" ></span><span  style="margin: 3px;">Procurar</span>
+				</p:commandLink>
+
+				<p:commandLink styleClass="btn btn-danger btn-sm"
+					action="#{saving_controller.limpar()}" 
+					update="form_saving" process="@none"
+					onclick="start()" onsuccess="stop()" onerror="stop()"
+					style="color:#fff; margin: 8px 2px;">
+					<span class="glyphicon glyphicon-trash"></span><span  style="margin: 3px;">Limpar filtro</span>
+				</p:commandLink>
+
+			</p:panelGrid>
+
+			<p:dataTable id="table_saving" paginator="true" rows="12"
+				value="#{saving_controller.lista}" var="saving">
+
+				<f:facet name="header">
+
+					<h:commandLink style="margin:3px">
+						<p:graphicImage library="image" name="excel.png" width="30" />
+						<p:dataExporter type="xls" target="table_saving" fileName="Saving" />
+					</h:commandLink>
+
+					<h:commandLink style="margin:3px">
+						<p:graphicImage library="image" name="pdf.png" width="30" />
+						<p:dataExporter type="pdf" target="table_saving" fileName="Saving" />
+					</h:commandLink>
+
+				</f:facet>
+
+				<p:column headerText="Nº Pedido">
+					<h:outputText value="#{saving.pedido}" />
+				</p:column>
+
+				<p:column headerText="Dt. Pagamento">
+					<h:outputText value="#{saving.dataPagamento}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Dt. Emissão">
+					<h:outputText value="#{saving.dataEmissao}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Gestão">
+					<h:outputText value="#{saving.gestao}" />
+				</p:column>
+
+				<p:column headerText="Local">
+					<h:outputText value="#{saving.localidade}" />
+				</p:column>
+
+				<p:column headerText="Fornecedor">
+					<h:outputText value="#{saving.fornecedor}" />
+				</p:column>
+
+				<p:column headerText="Produto">
+					<h:outputText value="#{saving.produto}" />
+				</p:column>
+
+				<p:column headerText="Quantidade">
+					<h:outputText value="#{saving.quantidade}" />
+				</p:column>
+
+				<p:column headerText="valor com desconto">
+					<h:outputText value="#{saving.valorComDesconto}">
+						<f:convertNumber type="currency" locale="pt_BR" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="valor sem desconto">
+					<h:outputText value="#{saving.valorSemDesconto}">
+						<f:convertNumber type="currency" locale="pt_BR" />
+					</h:outputText>
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

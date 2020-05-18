@@ -1,0 +1,118 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+
+	<p:panel id="panel-info-projetos">
+		<div id="info-projetos" class="ui-g ui-fluid">
+
+
+			<div class="ui-g-3 form-group">
+
+				<p:outputLabel for="input-filter-sup" value="Superintendência" styleClass="form-label" />
+				<p:autoComplete id="input-filter-sup" 
+					value="#{orcamento_controller.filtro.superintendencia}"
+					completeMethod="#{orcamento_controller.completeSuperintendencia}"
+					var="gestao" itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+					converter="gestaoConverter" minQueryLength="2"
+					forceSelection="true" />
+
+			</div>
+
+			<div class="ui-g-3 form-group">
+				<p:outputLabel for="input-filter-coordenadoria" value="Coordenadoria" styleClass="form-label" />
+				<p:autoComplete id="input-filter-coordenadoria" value="#{orcamento_controller.filtro.coordenadoria}"
+					completeMethod="#{orcamento_controller.completeCoordenadoria}"
+					var="gestao" itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+					converter="gestaoConverter" minQueryLength="2"
+					forceSelection="true" />
+			</div>
+
+			<div class="ui-g-3 form-group">
+				<p:outputLabel for="input-filter-gerencia" value="Gerência" styleClass="form-label" />
+				<p:autoComplete id="input-filter-gerencia" styleClass="font12-vi"
+					value="#{orcamento_controller.filtro.gerencia}"
+					completeMethod="#{orcamento_controller.completeGerencia}"
+					var="gestao" itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+					converter="gestaoConverter" minQueryLength="2"
+					forceSelection="true" />
+
+			</div>
+
+			<div class="ui-g-3 form-group">
+				<p:commandLink styleClass="btn btn-primary btn-sm"
+					style="margin-left:5px" title="Filtrar" update="projetos"
+					value="Filtrar"
+					action="#{orcamento_controller.carregarProjetosPorDoacao()}">
+
+				</p:commandLink>
+
+			</div>
+
+			<div class="ui-g-12">
+
+
+
+				<p:dataTable id="projetos"
+					value="#{orcamento_controller.projetosDoOrcamento}" var="projeto">
+					<f:facet name="header">
+				Lista de projetos vinculados a essa doação
+			</f:facet>
+
+					<p:column headerText="Projeto">
+						<h:outputText value="#{projeto.nomeProjeto}" />
+					</p:column>
+
+					<p:column headerText="Valor" style="text-align:right" width="120">
+						<h:outputText value="#{projeto.valor}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column colspan="1" footerText="TOTAL DOS PROJETOS: "
+								style="text-align:right" />
+							<p:column style="text-align:right"
+								footerText="#{orcamento_controller.saldoDistribuido}" />
+
+						</p:row>
+
+						<p:row>
+							<p:column colspan="1" footerText="TOTAL DOADO: "
+								style="text-align:right" />
+							<p:column style="text-align:right"
+								footerText="#{orcamento_controller.buscarValorTotal(orcamento_controller.orcamento.valor)}" />
+
+						</p:row>
+
+						<p:row>
+							<p:column colspan="1" footerText="NÃO EMPENHADO: "
+								style="text-align:right" />
+							<p:column style="text-align:right"
+								footerText="#{orcamento_controller.saldoNaoDistribuido}" />
+
+						</p:row>
+
+					</p:columnGroup>
+
+
+				</p:dataTable>
+
+
+			</div>
+
+
+		</div>
+
+	</p:panel>
+
+
+</ui:fragment>

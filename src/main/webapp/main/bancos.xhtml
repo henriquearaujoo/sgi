@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:viewAction action="#{banco_controller.initListagem()}" />
+		</f:metadata>
+
+
+
+		<h:form id="form_banco_lista">
+
+			<br />
+
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Bancos" url="bancos.xhtml" />
+			</p:breadCrumb>
+
+			<p:panel id="panel-content">
+
+
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-12 ui-md-6 ui-lg-3">
+						<h:outputText value="Nome:" />
+						<p:inputText value="#{banco_controller.filtro.nome}" />
+
+					</div>
+
+					<div class="ui-g-12 ui-md-6 ui-lg-3">
+						<h:outputText value="Código:" />
+						<p:inputText style="margin-left:5px"
+							value="#{banco_controller.filtro.codigo}" />
+
+					</div>
+				</div>
+
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-12 ui-lg-12 " style="text-align: right">
+
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							style="margin-left:5px;color:#fff" update="table_banco"
+							action="#{banco_controller.carregarListaDeBanco()}">
+							<span class="fa fa-fw fa-search"></span>
+							<span>Procurar</span>
+						</p:commandLink>
+
+						<p:link styleClass="btn btn-success btn-sm"
+							style="margin-left:5px;color:#fff" title="Novo"
+							outcome="/main/banco_cadastro">
+							<span class="fa fa-fw fa-plus"></span>
+							<span>Novo</span>
+						</p:link>
+
+					</div>
+				</div>
+
+				<p:separator></p:separator>
+
+				<div class="ui-g ui-fluid">
+					<p:dataTable id="table_banco" paginator="true" rows="12"
+						value="#{banco_controller.bancos}" var="banco">
+						<p:column headerText="Cód." style="width:120px">
+							<h:outputText value="#{banco.numeroBanco}" />
+						</p:column>
+
+						<p:column headerText="Nome">
+							<h:outputText value="#{banco.nomeBanco}" />
+						</p:column>
+
+						<p:column headerText="Opções" style="width:110px">
+
+							<p:menuButton value="Opções">
+
+								<p:menuitem icon="fa fa-fw fa-edit" value="Editar"
+									outcome="/main/banco_cadastro">
+									<f:param name="bc" value="#{banco.id}" />
+								</p:menuitem>
+
+								<p:menuitem value="Excluir" target="_blank" ajax="false"
+									icon="fa fa-fw fa-trash-o" update="table_banco">
+									<f:setPropertyActionListener value="#{banco}"
+										target="#{banco_controller.banco}" />
+								</p:menuitem>
+
+							</p:menuButton>
+						</p:column>
+					</p:dataTable>
+				</div>
+			</p:panel>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+
+</ui:composition>

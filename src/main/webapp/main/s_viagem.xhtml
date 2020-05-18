@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="content">
+
+
+		<style type="text/css">
+.semBorda tr, .semBorda td {
+	border: none !important;
+}
+</style>
+
+		<h3>Solicitação de Viagem</h3>
+
+
+
+		<h:panelGroup id="panel-content">
+
+			<h:panelGroup id="panel-listagem"
+				rendered="#{viagemController.panelListagem}">
+
+				<h:form id="form-listagem">
+					<p:messages id="msg-pagamento" showSummary="false"
+						showDetail="true" showIcon="true" />
+
+					<p:dataTable emptyMessage="Não há solicitaçoes de Viagem"
+						id="table-compras" value="#{viagemController.viagems}"
+						var="viagem">
+
+						<f:facet name="header">
+
+							<p:outputLabel>
+								<h:outputText value="Procura:" />
+								<p:inputText id="globalFilter"
+									onkeyup="PF('viagemsTable').filter()" style="width:150px"
+									placeholder="palavra-chave" />
+
+
+								<p:commandLink id="add" rendered="false" value="NOVOOLD"
+									style="margin-left:5px"
+									action="#{viagemController.inciarNovaViagem()}"
+									update="panel-content" title="Adicionar Viagem">
+									<span style="color: green; font-size: 25px;"
+										class="icon-plus-alt"> </span>
+								</p:commandLink>
+
+
+								<p:link styleClass="link-content" style="margin-left:5px"
+									outcome="/main/solicitacao_viagem_cadastro"
+									title="Adicionar viagem">
+									<span style="color: green; font-size: 25px;"
+										class="icon-plus-alt"> </span>
+								</p:link>
+
+
+
+							</p:outputLabel>
+						</f:facet>
+
+						<p:column headerText="Codigo" filterBy="#{viagem.id}"
+							style="width:100px" filterMatchMode="contains">
+
+
+							<p:link value="SV#{viagem.id}" styleClass="link-content"
+								style="margin-left:5px"
+								outcome="/main/solicitacao_viagem_cadastro"
+								title="Adicionar viagem">
+								<f:param name="viagem" value="#{viagem.id}" />
+								<span style="color: green; font-size: 25px;"
+									class="icon-plus-alt"> </span>
+							</p:link>
+
+						</p:column>
+
+						<p:column headerText="Missão">
+							<h:outputText value="#{viagem.missao}" />
+						</p:column>
+
+						<p:column headerText="Descrição">
+							<h:outputText value="#{viagem.motivo}" />
+						</p:column>
+
+						<p:column headerText="Destino"
+							filterBy="#{viagem.localidade.mascara}"
+							filterMatchMode="contains">
+							<h:outputText value="#{viagem.localidade.mascara}" />
+						</p:column>
+
+						<p:column headerText="Data">
+							<h:outputText value="#{viagem.dataEmissao}">
+								<f:convertDateTime pattern="dd/MM/yyy HH:mm:ss"
+									timeZone="America/Manaus" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Solicitante"
+							filterBy="#{viagem.solicitante.nome}" filterMatchMode="contains">
+							<h:outputText value="#{viagem.solicitante.nome.toLowerCase()}" />
+						</p:column>
+
+						<p:column headerText="Status">
+
+							<h:outputText value="#{viagem.statusViagem.nome}" />
+						</p:column>
+
+
+						<p:column style="width:90px;text-align:center;"
+							headerText="Relatórios">
+							<p:commandLink type="button"
+								styleClass="glyphicon glyphicon-print"
+								action="#{viagemController.gerarRelatorioViagem(viagem)}"
+								target="_blank" ajax="false" value="" />
+
+						</p:column>
+
+					</p:dataTable>
+
+				</h:form>
+
+			</h:panelGroup>
+
+
+		</h:panelGroup>
+
+
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+
+	</ui:define>
+
+
+</ui:composition>

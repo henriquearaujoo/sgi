@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="menu_lateral">
+
+		<h:form id="tabela_menu">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{usuario_controller.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{usuario_controller.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{usuario_controller.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right; color: #849A39"
+						class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="formUsuario" acceptcharset="ISO-8859-1">
+			<p:tabView id="cadastroUsuario" prependId="false">
+				<p:tab title="Cadastro de Usuário">
+					<p:messages id="msgs"  showSummary="false"
+						showDetail="true" showIcon="true" closable="true" />
+
+					<div class="botao_central" align="left"
+						style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+						<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+							action="#{usuario_controller.insert()}" ajax="false"
+							style="color:#fff; margin: 2px 2px;" value="Salvar" />
+						<p:commandLink action="cadastro_usuarios" value="voltar"
+							ajax="false" immediate="true" styleClass="btn btn-info btn-sm" />
+
+					</div>
+
+
+					<p:panelGrid columns="2" style="width:100%">
+						<p:outputLabel value="Colaborador: " style="font-size:12px" />
+						<p:autoComplete id="colaborador" style="font-size:12px;"
+							requiredMessage="Colaborador é Obrigatório" rendered="true"
+							placeholder="Nome" size="20" required="true"
+							value="#{usuario_controller.usuario.colaborador}"
+							completeMethod="#{sv_cadastro_controller.completeProfissional}"
+							var="colaborador" itemLabel="#{colaborador.nome}"
+							itemValue="#{colaborador}" converter="colaboradorConverter"
+							minQueryLength="2" forceSelection="true" />
+
+						<p:outputLabel value="Email: " />
+						<p:inputText value="#{usuario_controller.usuario.email}"
+							placeholder="exemplo@fas-amazonas.org" style="width:300px">
+							<f:validateRegex
+								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+						</p:inputText>
+
+						<p:outputLabel value="Perfil: " />
+						<p:selectOneMenu value="#{usuario_controller.usuario.perfil}"
+							converter="perfilConverter">
+							<f:selectItems value="#{usuario_controller.listaPerfil()}"
+								var="perfil" itemLabel="#{perfil.descricao}"
+								itemValue="#{perfil}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Usuário: " />
+						<p:inputText value="#{usuario_controller.usuario.nomeUsuario}" />
+
+						<p:outputLabel value="Digite a Senha: " />
+						<p:password id="pwd1" value="#{usuario_controller.usuario.senha}"
+							match="pwd2" label="Senha" required="true" />
+
+						<p:outputLabel value="Confirme a Senha: " />
+						<p:password id="pwd2" value="#{usuario_controller.usuario.senha}"
+							label="Confirmação" required="true" />
+
+
+
+
+					</p:panelGrid>
+				</p:tab>
+			</p:tabView>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

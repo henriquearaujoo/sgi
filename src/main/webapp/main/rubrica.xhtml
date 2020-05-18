@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="menu_lateral">
+
+		<style type="text/css">
+.ui-widget {
+	font-size: 100%;
+}
+</style>
+
+
+		<h:form id="tabela_projeto">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{rubricaController.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{rubricaController.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{rubricaController.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right;" class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+	<h:form id="form-rubrica">
+		<p:panelGrid columns="1" style="margin-top:80px" styleClass="semBorda">
+			<h:panelGrid columns="1">
+				<h:outputText value="Nome:" />
+				<p:inputText value="#{rubricaController.rubrica.nome}" />
+			</h:panelGrid>
+			<p:commandLink style="color:#FFF"
+				styleClass="btn btn-primary btn-sm fa fa-cart-plus "
+				action="#{rubricaController.salvar()}" update="table-rubrica">
+				<span style="font-family: Arial">Enviar cadastro</span>
+			</p:commandLink>
+
+		</p:panelGrid>
+
+		<p:dataTable id="table-rubrica" value="#{rubricaController.rubricas}"
+			var="rubrica">
+			<p:column headerText="id">
+				<h:outputText value="#{rubrica.id}" />
+			</p:column>
+
+			<p:column headerText="Nome">
+				<h:outputText value="#{rubrica.nome}" />
+			</p:column>
+				
+			<p:column  headerText="Opções" style="width:200px">
+				<p:commandLink value="editar" update="form-rubrica">
+				   <f:setPropertyActionListener value="#{rubrica}" target="#{rubricaController.rubrica}"/>
+				</p:commandLink>
+				
+				<p:commandLink value="excluir" style="margin-left:5px" action="#{rubricaController.remover()}" update="form-rubrica">
+				   <f:setPropertyActionListener value="#{rubrica}" target="#{rubricaController.rubrica}"/>
+				</p:commandLink>
+			</p:column>	
+
+
+		</p:dataTable>
+</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+
+</ui:composition>

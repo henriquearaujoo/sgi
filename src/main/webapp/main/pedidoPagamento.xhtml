@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="menu_lateral">
+
+		<style type="text/css">
+.ui-widget {
+	font-size: 100%;
+}
+</style>
+
+
+
+
+		<h:form id="form-menu">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{pedidoPagamentoController.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{pedidoPagamentoController.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{pedidoPagamentoController.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right; color: #849A39"
+						class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+		<f:view>
+
+
+			<h:form id="form-tabela-pedido-pagamento">
+				
+				<div class="ui-fluid">
+				
+				<p:panelGrid columns="2" style="margin-top:10px;margin-bottom:5px">
+					
+					<p:outputLabel value="Compra:" />
+					<h:outputText value="SC#{pedidoPagamentoController.pedido.compra.id}" />
+					
+					<p:outputLabel value="Pedido:" />
+					<h:outputText value="PC#{pedidoPagamentoController.pedido.id}" />
+					
+					<p:outputLabel value="Fornecedor:" />
+					<h:outputText value="#{pedidoPagamentoController.pedido.fornecedor.nomeFantasia}" />
+
+					<p:outputLabel value="Data de emissão:"/>
+					<h:outputText value="#{pedidoPagamentoController.pedido.dataEmissao}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss "
+									timeZone="America/Manaus" />
+							</h:outputText>
+					
+					<p:outputLabel value="Data de entrega:"/>
+					<h:outputText value="#{pedidoPagamentoController.pedido.dataEntrega}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss "
+									timeZone="America/Manaus" />
+							</h:outputText>
+					
+							
+					<p:outputLabel value="Data de pagamento:"/>
+					<h:outputText value="#{pedidoPagamentoController.pedido.dataPagamento}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss "
+									timeZone="America/Manaus" />
+							</h:outputText>
+					
+					<p:outputLabel value="Condições de pagamento:"/>
+					<h:outputText value="#{pedidoPagamentoController.pedido.condicaoPagamento}" />
+					
+					<p:outputLabel value="Total:"/>	
+					<h:outputText id="vl" value="#{pedidoPagamentoController.pedido.valorTotalSemDesconto}" >
+						<f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="R$"/>
+					</h:outputText>
+				
+					<p:outputLabel value="Total c/ desconto:"/>	
+					<h:outputText id="vl_c_desconto" value="#{pedidoPagamentoController.pedido.valorTotalComDesconto}" >
+					<f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="R$"/>
+					</h:outputText>
+					
+					
+				</p:panelGrid>
+				 <p:fieldset legend="Ações" toggleable="true" collapsed="false" toggleSpeed="500">
+				  <p:dataTable id="tab_lanc_acao" var="lac_acao" value="#{pedidoPagamentoController.pedido.lancamentosAcoes}" >
+				
+						    <f:facet name="header">
+							<p:outputPanel id="lancamento_acao">
+							
+								<p:autoComplete id="fonte_pagadora_compra"
+										placeholder="Fonte pagadora"
+									    size="150" style="width:150px"
+										value="#{pedidoPagamentoController.lancamentoAcao.fontePagadora}"
+										completeMethod="#{pedidoPagamentoController.completeFonte}"
+										var="fontePagadora" itemLabel="#{fontePagadora.nome}"
+										itemValue="#{fontePagadora}" converter="fontePagadoraConverter"
+										forceSelection="true"/>
+								
+								<p:autoComplete id="acao_compra"
+										placeholder="Ação" style="width:150px;margin-left:5px"
+									    size="150"
+										value="#{pedidoPagamentoController.lancamentoAcao.acao}"
+										completeMethod="#{pedidoPagamentoController.completeAcoes}"
+										var="acao" itemLabel="#{acao.codigo}"
+										itemValue="#{acao}" converter="acaoConverter"
+										forceSelection="true"/>
+										
+								
+								
+						
+								
+								
+								
+								
+								<p:commandLink styleClass="btn btn-primary btn-sm" process="lancamento_acao" type="button" update="tab_lanc_acao"
+								action="#{pedidoPagamentoController.adicionarNovaAcao()}" style="color:#fff; margin: 2px 2px;"
+								value="Adicionar" />			
+				
+							</p:outputPanel>
+							</f:facet>
+						
+						    <p:column headerText="Fonte pagadora">
+						        <h:outputText value="#{lac_acao.fontePagadora.nome}" />
+						    </p:column>
+						    
+						    <p:column headerText="Ação">
+						        <h:outputText value="#{lac_acao.acao.codigo}" />
+						    </p:column>
+						    
+						    <p:column style="width:50px;">
+									<p:commandLink action="#{pedidoPagamentoController.removerAcao()}"
+										process="@this" update="tab_lanc_acao">
+										<f:setPropertyActionListener value="#{lac_acao}"
+											target="#{pedidoPagamentoController.lancamentoAcao}" />
+										<span class="fa fa-times"></span>
+									</p:commandLink>
+								</p:column>
+   
+							</p:dataTable>
+							
+						</p:fieldset>	
+						
+					</div>	
+
+			</h:form>
+		</f:view>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+
+</ui:composition>

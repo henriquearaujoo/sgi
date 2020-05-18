@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="menu_lateral">
+
+		<style type="text/css">
+.ui-widget {
+	font-size: 100%;
+}
+</style>
+
+
+
+
+		<h:form id="tabela_projeto">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{escolhaCotacao.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{escolhaCotacao.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{escolhaCotacao.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right; color: #849A39"
+						class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+		<f:view>
+
+			<style type="text/css">
+.ui-widget {
+	font-size: 85%;
+}
+</style>
+
+			<h:form id="form-cotacao-escolha">
+			   
+				<p:dataTable id="table-mapa-comparativo" var="item"  value="#{escolhaCotacao.itens}"
+					style="margin-top:40px">
+					<f:facet name="header">
+	            Mapa comparativo
+	        </f:facet>
+
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column rowspan="3" headerText="#"
+								style="width:64px;text-align: center" />
+						    <p:column style="width:64px;" rowspan="3" headerText="Qtd."/>		
+							<p:column rowspan="3" headerText="Itens" style="width:180px;" />
+							<p:column  colspan="#{2 * escolhaCotacao.cotacoesAuxiliares.size()}"
+								headerText="Valores" />
+
+						</p:row>
+						<p:row>
+							<ui:repeat value="#{escolhaCotacao.cotacoesAuxiliares}"
+								var="fornecedor">
+								<p:column colspan="2"  headerText="#{fornecedor.fornecedor}" />
+							</ui:repeat>
+						</p:row>
+						
+						<p:row>
+						<ui:repeat value="#{escolhaCotacao.cotacoesAuxiliares}"
+								var="fornecedor">
+						 <p:column headerText="Valor"/>
+						 <p:column headerText="Total"/>
+						</ui:repeat>
+						</p:row>
+						
+					</p:columnGroup>
+
+
+					<p:column style="text-align:center">
+						<p:commandButton
+							action="#{escolhaCotacao.carregarCotacoesItem(item)}"
+							oncomplete="PF('selecao_cotacao').show()"
+							update=":selecao_cotacao_form:tab_cotacao" icon="ui-icon-search"
+							title="SRanking menor preçoelecionar cotação" />
+					</p:column>
+					
+					<p:column>
+					 <h:outputText value="#{item.quantidade}" />
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{item.produto.descricao.toLowerCase()}" />
+					</p:column>
+
+					<p:columns colspan="2" styleClass="#{escolhaCotacao.getHouveEscolhaCotacao(fornecedor1.fornecedorId, item.compra.id, item.id) ? 'highlight' : null}" value="#{escolhaCotacao.cotacoesAuxiliares}"
+						var="fornecedor1">
+						
+						 <table>
+						  <tr>
+							  <td style="border:0">
+								<p:outputLabel 
+									value="#{escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id)}">
+									<f:convertNumber type="currency" maxFractionDigits="2"
+										currencySymbol="R$" />
+								</p:outputLabel>
+							   </td>
+							    
+							    <td style="border: 0">
+								<h:outputText 
+									value="#{item.quantidade * escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id)}">
+									<f:convertNumber type="currency" maxFractionDigits="2"
+										currencySymbol="R$" />
+								</h:outputText>
+							   </td>
+						   </tr>
+						 </table>	
+								
+					</p:columns>
+					
+					
+
+
+
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column footerText="#" style="text-align:center" />
+							<p:column></p:column>
+							<p:column footerText="Totais:" />
+							<p:columns  colspan="2" value="#{escolhaCotacao.cotacoesAuxiliares}"
+								var="fornecedor1"
+								footerText="#{escolhaCotacao.getTotais(fornecedor1.totalDesconto)}"/>
+						</p:row>
+					</p:columnGroup>
+
+				</p:dataTable>
+				
+				
+				 <p:panel id="horizontal" header="Menor preço global" style="margin-top:5px;" toggleable="true" toggleOrientation="horizontal">
+        			
+        			<p:dataTable rowStyleClass="#{escolhaCotacao.getColorRank()}" binding="#{escolhaCotacao.tableRank}" rowIndexVar="indexRow" value="#{escolhaCotacao.cotacoesAuxiliares}" var="fornecedoress">
+        			 
+        			  <f:facet name="header">
+       					<p:outputLabel value="RANKING MENOR PREÇO GLOBAL"/> 
+    				  </f:facet>
+        			 
+        			 <p:column headerText="#"  style="width:38px">
+        			  <h:outputText styleClass="#{escolhaCotacao.colorRankColumn}" value="#{indexRow + 1}º" />
+        			 </p:column>
+        			 
+        			 <p:column  headerText="Nome fantasia">
+        			  <h:outputText styleClass="#{escolhaCotacao.colorRankColumn}" value="#{fornecedoress.fornecedor}" />
+        			 </p:column>
+        			 
+        			 <p:column style="width:186px" headerText="Valor total">
+        			  <h:outputText styleClass="#{escolhaCotacao.colorRankColumn}" style="" value="#{fornecedoress.totalValor}">
+        			  <f:convertNumber type="currency" maxFractionDigits="2"
+										currencySymbol="R$" />
+        			  </h:outputText>
+        			 </p:column>
+        			 
+        			 <p:column style="width:186px" headerText="Valor total c/ desconto">
+        			  <h:outputText styleClass="#{escolhaCotacao.colorRankColumn}" value="#{fornecedoress.totalDesconto}">
+        			  <f:convertNumber type="currency" maxFractionDigits="2"
+										currencySymbol="R$" />
+        			  </h:outputText>
+        			 </p:column>
+        			 
+        			</p:dataTable>
+        			
+    			 </p:panel>
+				
+				
+				<p:dataTable id="table-fornecedor-pagamento" var="espelho"  value="#{escolhaCotacao.espelhos}"
+					style="margin-top:40px">
+			        
+			        <f:facet name="header"><!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="menu_lateral">
+
+		<style type="text/css">
+.ui-widget {
+	font-size: 100%;
+}
+</style>
+
+
+
+
+		<h:form id="tabela_projeto">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{escolhaCotacao.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{escolhaCotacao.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{escolhaCotacao.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right; color: #849A39"
+						class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+		<f:view>
+
+			<style type="text/css">
+.ui-widget {
+	font-size: 85%;
+}
+</style>
+
+			<h:form id="form-cotacao-escolha">
+			
+			 <p:panel id="horizontal" header="Menor preço global" style="margin-top:5px;" toggleable="true" toggleOrientation="horizontal">
+        			
+        			<p:dataTable rowStyleClass="#{escolhaCotacao.getColorRank()}" binding="#{escolhaCotacao.tableRank}" rowIndexVar="indexRow" value="#{escolhaCotacao.cotacoesAuxiliares}" var="fornecedoress">
+        			 
+        			  <f:facet name="header">
+       					<p:outputLabel value="RANKING MENOR PREÇO GLOBAL"/> 
+    				  </f:facet>
+        			 
+        			 <p:column headerText="#"  style="width:38px">
+        			  <h:outputText styleClass="#{escolhaCotacao.colorRankColumn}" value="#{indexRow + 1}º" />
+        			 </p:column>
+        			 
+        			 <p:column  headerText="Nome fantasia">
+        			  <h:outputText styleClass="#{escolhaCotacao.colorRankColumn}" value="#{fornecedoress.fornecedor}" />
+        			 </p:column>
+        			 
+        			 <p:column style="width:186px" headerText="Valor total">
+        			  <h:outputText styleClass="#{escolhaCotacao.colorRankColumn}" style="" value="#{fornecedoress.totalValor}">
+        			  <f:convertNumber type="currency" maxFractionDigits="2"
+										currencySymbol="R$" />
+        			  </h:outputText>
+        			 </p:column>
+        			 
+        			 <p:column style="width:186px" headerText="Valor total c/ desconto">
+        			  <h:outputText styleClass="#{escolhaCotacao.colorRankColumn}" value="#{fornecedoress.totalDesconto}">
+        			  <f:convertNumber type="currency" maxFractionDigits="2"
+										currencySymbol="R$" />
+        			  </h:outputText>
+        			 </p:column>
+        			 
+        			</p:dataTable>
+        			
+    			 </p:panel>
+			   
+				<p:dataTable id="table-mapa-comparativo" var="item"  value="#{escolhaCotacao.itens}"
+					style="margin-top:40px">
+					<f:facet name="header">
+	            Mapa comparativo
+	        </f:facet>
+
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column rowspan="3" headerText="#"
+								style="width:64px;text-align: center" />
+						    <p:column style="width:64px;" rowspan="3" headerText="Qtd."/>		
+							<p:column rowspan="3" headerText="Itens" style="width:180px;" />
+							<p:column  colspan="#{2 * escolhaCotacao.cotacoesAuxiliares.size()}"
+								headerText="Valores" />
+
+						</p:row>
+						<p:row>
+							<ui:repeat value="#{escolhaCotacao.cotacoesAuxiliares}"
+								var="fornecedor">
+								<p:column colspan="2"  headerText="#{fornecedor.fornecedor}" />
+							</ui:repeat>
+						</p:row>
+						
+						<p:row>
+						<ui:repeat value="#{escolhaCotacao.cotacoesAuxiliares}"
+								var="fornecedor">
+						 <p:column headerText="Valor"/>
+						 <p:column headerText="Total"/>
+						</ui:repeat>
+						</p:row>
+						
+					</p:columnGroup>
+
+
+					<p:column style="text-align:center">
+						<p:commandButton
+							action="#{escolhaCotacao.carregarCotacoesItem(item)}"
+							oncomplete="PF('selecao_cotacao').show()"
+							update=":selecao_cotacao_form:tab_cotacao" icon="ui-icon-search"
+							title="SRanking menor preçoelecionar cotação" />
+					</p:column>
+					
+					<p:column>
+					 <h:outputText value="#{item.quantidade}" />
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{item.produto.descricao.toLowerCase()}" />
+					</p:column>
+
+					<p:columns colspan="2" styleClass="#{escolhaCotacao.getHouveEscolhaCotacao(fornecedor1.fornecedorId, item.compra.id, item.id) ? 'highlight' : null}" value="#{escolhaCotacao.cotacoesAuxiliares}"
+						var="fornecedor1">
+						
+						 <table>
+						  <tr>
+							  <td style="border: 0px">
+								<h:outputText
+									value="#{escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id)}">
+									<f:convertNumber type="currency" maxFractionDigits="2"
+										currencySymbol="R$" />
+								</h:outputText>
+							   </td>
+							    
+							    <td style="border: 0">
+								<h:outputText
+									value="#{item.quantidade * escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id)}">
+									<f:convertNumber type="currency" maxFractionDigits="2"
+										currencySymbol="R$" />
+								</h:outputText>
+							   </td>
+						   </tr>
+						 </table>	
+								
+					</p:columns>
+					
+					
+
+
+
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column footerText="#" style="text-align:center" />
+							<p:column></p:column>
+							<p:column footerText="Totais:" />
+							<p:columns  colspan="2" value="#{escolhaCotacao.cotacoesAuxiliares}"
+								var="fornecedor1"
+								footerText="#{escolhaCotacao.getTotais(fornecedor1.totalDesconto)}"/>
+						</p:row>
+					</p:columnGroup>
+
+				</p:dataTable>
+				
+				
+				
+				
+				
+				<p:dataTable id="table-fornecedor-pagamento" var="espelho"  value="#{escolhaCotacao.espelhos}"
+					style="margin-top:40px">
+			        
+			        <f:facet name="header">
+			         <p:outputLabel />
+			        </f:facet>
+			         		
+					<p:column headerText="Fornecedor">
+					  <h:outputText  value="#{espelho.fornecedor}"/>
+					</p:column>
+					
+					<p:column headerText="Total">
+					  <h:outputText value="#{espelho.totalValor}" >
+					   <f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+					  </h:outputText>
+					</p:column>
+					
+					<p:column headerText="Total c/ desconto">
+					  <h:outputText value="#{espelho.totalDesconto}" >
+					   <f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+					  </h:outputText>
+					</p:column>
+					
+			    </p:dataTable>
+			    
+			    <br/>
+			    <br/>
+			    <br/>
+
+			</h:form>
+		</f:view>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog header="Selecionar cotação" widgetVar="selecao_cotacao"
+			modal="false" showEffect="clip" hideEffect="clip" resizable="false"
+			width="500">
+
+			<h:form id="selecao_cotacao_form">
+			
+				<p:messages showDetail="true" showSummary="false"  closable="true"/>
+				<p:dataTable id="tab_cotacao" rowStyleClass="#{cot.houveEscolha ? 'highlight' : null}" selection="#{escolhaCotacao.cotacao}" rowKey="#{cot.id}" value="#{escolhaCotacao.cotacoes}"
+					var="cot">
+					
+					<p:column selectionMode="single" style="width:34px;text-align:center"/>
+				
+					<p:column headerText="Fornecedor">
+						<h:outputLabel value="#{cot.fornecedor.nomeFantasia}" />
+					</p:column>
+
+					<p:column headerText="Valor">
+						<h:outputLabel value="#{cot.valorDesconto}" />
+					</p:column>
+					
+					<f:facet name="footer">
+            		<p:commandButton process="tab_cotacao"  action="#{escolhaCotacao.escolherCotacao()}" update="selecao_cotacao_form :form-cotacao-escolha:table-mapa-comparativo :form-cotacao-escolha:table-fornecedor-pagamento"  value="Escolher"/>
+        			</f:facet>
+
+				</p:dataTable>
+			</h:form>
+
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>
+			         <p:outputLabel />
+			        </f:facet>
+			         		
+					<p:column headerText="Fornecedor">
+					  <h:outputText  value="#{espelho.fornecedor}"/>
+					</p:column>
+					
+					<p:column headerText="Total">
+					  <h:outputText value="#{espelho.totalValor}" >
+					   <f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+					  </h:outputText>
+					</p:column>
+					
+					<p:column headerText="Total c/ desconto">
+					  <h:outputText value="#{espelho.totalDesconto}" >
+					   <f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+					  </h:outputText>
+					</p:column>
+					
+			    </p:dataTable>
+			    
+			    <br/>
+			    <br/>
+			    <br/>
+
+			</h:form>
+		</f:view>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog header="Selecionar cotação" widgetVar="selecao_cotacao"
+			modal="false" showEffect="clip" hideEffect="clip" resizable="false"
+			width="500">
+
+			<h:form id="selecao_cotacao_form">
+			
+				<p:messages showDetail="true" showSummary="false"  closable="true"/>
+				<p:dataTable id="tab_cotacao" rowStyleClass="#{cot.houveEscolha ? 'highlight' : null}" selection="#{escolhaCotacao.cotacao}" rowKey="#{cot.id}" value="#{escolhaCotacao.cotacoes}"
+					var="cot">
+					
+					<p:column selectionMode="single" style="width:34px;text-align:center"/>
+				
+					<p:column headerText="Fornecedor">
+						<h:outputLabel value="#{cot.fornecedor.nomeFantasia}" />
+					</p:column>
+
+					<p:column headerText="Valor">
+						<h:outputLabel value="#{cot.valorDesconto}" />
+					</p:column>
+					
+					<f:facet name="footer">
+            		<p:commandButton process="tab_cotacao"  action="#{escolhaCotacao.escolherCotacao()}" update="selecao_cotacao_form :form-cotacao-escolha:table-mapa-comparativo :form-cotacao-escolha:table-fornecedor-pagamento"  value="Escolher"/>
+        			</f:facet>
+
+				</p:dataTable>
+			</h:form>
+
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

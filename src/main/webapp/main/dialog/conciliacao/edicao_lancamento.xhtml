@@ -1,0 +1,302 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<h:form id="form-edit-pagamento-tab2" prependId="false">
+
+
+
+		<p:tabView prependId="false">
+
+			<p:tab title="Edição">
+
+				<p:outputPanel id="panel-edit-pagamento">
+
+					<div id="div-edit-pagamento" class="ui-g ui-fluid">
+						<div class="ui-g-12">
+							<p:messages showDetail="true" closable="true" id="msg_lancamento">
+								<p:autoUpdate></p:autoUpdate>
+							</p:messages>
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<h:outputText value="Lançamento" styleClass="form-label" />
+							<p:inputText disabled="true"
+								value="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.lancamento.id}" />
+						</div>
+
+						<div class="ui-g-3 form-group">
+
+							<h:outputText value="Categoria:" styleClass="form-label" />
+							<p:selectOneMenu filter="true" filterMatchMode="contains"
+								converter="categoriaFinConverter" autoWidth="false"
+								value="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.lancamento.categoriaFinanceira}">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{lancamentos_v2.listCategoriaFinanceira}"
+									var="categoria" itemLabel="#{categoria.nome}"
+									itemValue="#{categoria}" />
+
+							</p:selectOneMenu>
+
+
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<h:outputText value="Conta:" styleClass="form-label" />
+							<p:autoComplete id="conta_banco"
+								value="#{lancamentos_v2.pagamentoLancAuxiliar.conta}"
+								completeMethod="#{lancamentos_v2.completeConta}" var="conta"
+								itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+								converter="contaConverter">
+								<p:ajax event="itemSelect"
+									update="panelReembolso panelDataReembolso" />
+							</p:autoComplete>
+						</div>
+
+
+
+						<div class="ui-g-3 form-group">
+							<h:outputText value="N° Nota:" styleClass="form-label" />
+							<p:inputText
+								value="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.lancamento.notaFiscal}" />
+
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<h:outputText value="Data de pagamento" styleClass="form-label" />
+							<p:calendar navigator="true" locale="pt"
+								value="#{lancamentos_v2.pagamentoLancAuxiliar.dataPagamento}"
+								pattern="dd/MM/yyyy" />
+
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<h:outputText value="Valor" styleClass="form-label" />
+							<p:inputText
+								value="#{lancamentos_v2.pagamentoLancAuxiliar.valor}"
+								onkeypress="return formatarNumero(this,event,19,2);">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" />
+							</p:inputText>
+
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<h:outputText value="Fonte" styleClass="form-label"
+								rendered="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}" />
+							<p:inputText disabled="true"
+								rendered="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}"
+								value="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica.rubricaOrcamento.orcamento.fonte.nome}" />
+
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<h:outputText value="Doação" styleClass="form-label"
+								rendered="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}" />
+							<p:inputText disabled="true"
+								rendered="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}"
+								value="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica.rubricaOrcamento.orcamento.titulo}" />
+
+						</div>
+
+						<div class="ui-g-12 form-group">
+							<h:outputText value="Linhas orçamentárias:"
+								styleClass="form-label"
+								rendered="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.rubricaOrcamento != null}" />
+
+							<p:autoComplete id="cate_compra_edit" placeholder="Categoria"
+								size="40"
+								rendered="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.rubricaOrcamento != null}"
+								value="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.rubricaOrcamento}"
+								completeMethod="#{custo_pessoal_controller.completeRubricasDeOrcamento}"
+								var="categoria" itemLabel="#{categoria.rubrica.nome}"
+								itemValue="#{categoria}" converter="rubricaOrcamentoConverter">
+
+								<p:column headerText="Fonte">
+									<h:outputText value="#{categoria.orcamento.fonte.nome}" />
+								</p:column>
+
+								<p:column headerText="Doação">
+									<h:outputText value="#{categoria.orcamento.titulo}" />
+								</p:column>
+
+								<p:column headerText="Componente">
+									<h:outputText value="#{categoria.componente.nome}" />
+								</p:column>
+
+								<p:column headerText="SubComponente">
+									<h:outputText value="#{categoria.subComponente.nome}" />
+								</p:column>
+
+								<p:column headerText="Categoria">
+									<h:outputText value="#{categoria.rubrica.nome}" />
+								</p:column>
+
+							</p:autoComplete>
+						</div>
+
+						<div class="ui-g-12 form-group">
+							<h:outputText value="Projetos" styleClass="form-label"
+								rendered="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}" />
+							<p:selectOneMenu value="#{lancamentos_v2.projetoAux}"
+								filter="true" filterMatchMode="contains"
+								rendered="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{lancamentos_v2.listaProjeto}"
+									var="projeto" itemLabel="#{projeto.nome}"
+									itemValue="#{projeto}" />
+								<p:ajax update="lbl_linha linha_orcament" onstart="start()"
+									onerror="stop()" onsuccess="stop()"
+									listener="#{lancamentos_v2.listaRubricas()}" />
+							</p:selectOneMenu>
+
+						</div>
+
+						<div class="ui-g-12 form-group">
+							<h:outputText id="lbl_linha" value="Linha orçamentária"
+								styleClass="form-label"
+								rendered="#{lancamentos_v2.projetoAux != null}" />
+
+							<p:selectOneMenu id="linha_orcament"
+								rendered="#{lancamentos_v2.projetoAux != null}"
+								placeholder="Entre com o código/nome do projeto."
+								value="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica}"
+								filter="true" filterMatchMode="contains" var="categoria"
+								converter="projetoRubricaConverter">
+
+								<f:selectItems value="#{lancamentos_v2.listaDeRubricasProjeto}"
+									var="ru" itemLabel="#{ru.nomeCategoria}" itemValue="#{ru}" />
+
+
+								<p:column headerText="Código">
+									<h:outputText value="#{categoria.codigo}" />
+								</p:column>
+
+								<p:column headerText="Fonte">
+									<h:outputText value="#{categoria.nomeFonte}" />
+								</p:column>
+
+								<p:column headerText="Projeto">
+									<h:outputText value="#{categoria.nomeProjeto}" />
+								</p:column>
+
+								<p:column headerText="Componente">
+									<h:outputText value="#{categoria.nomeComponente}" />
+								</p:column>
+
+								<p:column headerText="SubComponente">
+									<h:outputText value="#{categoria.nomeSubComponente}" />
+								</p:column>
+
+								<p:column headerText="Linha orçamentária">
+									<h:outputText value="#{categoria.nomeCategoria}" />
+								</p:column>
+
+								<p:column headerText="Saldo">
+									<h:outputText value="#{categoria.valorSaldo}">
+										<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+											maxFractionDigits="2" locale="pt_BR" />
+									</h:outputText>
+								</p:column>
+
+
+							</p:selectOneMenu>
+
+
+						</div>
+
+						<div class="ui-g-12 form-group">
+
+							<h:outputText value="Descrição" styleClass="form-label" />
+							<p:inputText
+								value="#{lancamentos_v2.pagamentoLancAuxiliar.lancamentoAcao.lancamento.descricao}" />
+
+						</div>
+
+						<div class="ui-g-12">
+							<p:outputPanel id="panelReembolso"
+								rendered="#{lancamentos_v2.contaAlterada}">
+
+								<div class="ui-"></div>
+								<p:selectBooleanCheckbox
+									value="#{lancamentos_v2.gerarReembolso}"
+									disabled="#{!lancamentos_v2.contaAlterada}">
+									<p:ajax update="panelDataReembolso"
+										listener="#{lancamentos_v2.limparDataReembolso()}" />
+								</p:selectBooleanCheckbox>
+								<p:outputLabel value="Gerar reembolso? " />
+							</p:outputPanel>
+						</div>
+
+						<div class="ui-g-12">
+							<p:outputPanel id="panelDataReembolso"
+								rendered="#{lancamentos_v2.contaAlterada}">
+								<h:outputLabel value="Data do reembolso:" />
+								<p:calendar  value="#{lancamentos_v2.dataReembolso}"
+									navigator="true"  pattern="dd/MM/yyyy"
+									disabled="#{!lancamentos_v2.gerarReembolso}" />
+							</p:outputPanel>
+						</div>
+
+						<div class="ui-g-12">
+							<p:commandLink style="color:#fff" onstart="start()"
+								onsuccess="stop()" onerror="stop()"
+								update=":form-lancamento-pagamento"
+								process="form-edit-pagamento-tab2"
+								styleClass="btn btn-primary btn-default btn-sm"
+								action="#{lancamentos_v2.editarPagamentoTab2()}">
+								<span class="glyphicon glyphicon-floppy-disk"></span>
+								<span style="margin: 3px;">Salvar</span>
+							</p:commandLink>
+
+							<p:commandLink style="color:#fff;margin-left:5px"
+								rendered="#{!lancamentos_v2.editarLinha}" onstart="start()"
+								onsuccess="stop()" onerror="stop()"
+								update=":form-lancamento-pagamento form-edit-pagamento-tab2"
+								process="form-edit-pagamento-tab2"
+								styleClass="btn btn-primary btn-default btn-sm"
+								action="#{lancamentos_v2.changeMode()}">
+								<span class="glyphicon glyphicon-edit"></span>
+								<span style="margin: 3px;">Editar linha</span>
+							</p:commandLink>
+
+							<p:commandLink style="color:#fff;margin-left:5px"
+								rendered="#{lancamentos_v2.editarLinha}" onstart="start()"
+								onsuccess="stop()" onerror="stop()"
+								update=":form-lancamento-pagamento form-edit-pagamento-tab2"
+								process="form-edit-pagamento-tab2"
+								styleClass="btn btn-danger btn-default btn-sm fa fa-close"
+								action="#{lancamentos_v2.changeMode()}">
+								<span style="width: 40px; font-family: Arial">Cancelar
+									edição</span>
+							</p:commandLink>
+						</div>
+
+					</div>
+
+				</p:outputPanel>
+
+			</p:tab>
+
+			<p:tab title="Detalhamento">
+
+				<p:outputPanel id="id-detalhamento">
+
+
+					
+
+				</p:outputPanel>
+
+			</p:tab>
+
+		</p:tabView>
+
+	</h:form>
+
+
+</ui:fragment>

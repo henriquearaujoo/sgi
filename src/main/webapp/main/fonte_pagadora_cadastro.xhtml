@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="content">
+		
+		<p:breadCrumb>
+			<p:menuitem value="Home" url="home_new.xhtml" />
+			<p:menuitem value="Fontes pagadoras" url="fonte_pagadora.xhtml" />
+			<p:menuitem value="Cadastro/Edição de Fonte pagadora" url="#" />
+		</p:breadCrumb>
+		
+		<p:panel header="Fontes" >
+			<h:form id="form-cadastro-fontes"  >
+			
+			<f:metadata>
+				<o:viewParam name="fonte_pagadora" value="#{orcamento_controller.orcamento}" />
+				<f:viewAction action="#{fonte_pagadora_controller.init()}" />
+			</f:metadata>
+					
+						<p:commandLink
+					styleClass="btn btn-primary btn-sm"
+					style="color:#fff"
+					action="#{fonte_pagadora_controller.salvar()}">
+					<span style="font-family: Arial; margin-left: 4px">Salvar</span>
+						</p:commandLink>
+						
+					<p:link styleClass="btn btn-default btn-sm"
+						style="color:#000;margin: 8px 2px;"
+						outcome="/main/fonte_pagadora" title="Volar">
+						<span style="font-family: Arial">Voltar</span>
+					</p:link>
+					
+					<p:panelGrid columns="3" styleClass="ui-noborder" >
+							
+						<p:outputLabel value="Nome:" for="nome" style="text-align:center"/>
+						<p:inputText id="nome" value="#{fonte_pagadora_controller.fontePagadora.nome}" style="text-align:center" requiredMessage="Preencha o campo Nome!" required="true"/>
+						<p:message for="nome" />
+						
+     				</p:panelGrid>
+			 
+			
+		</h:form>
+		</p:panel>
+		
+	</ui:define>
+	<ui:define name="adicionais">
+
+	</ui:define>
+		
+</ui:composition>
+			
+			

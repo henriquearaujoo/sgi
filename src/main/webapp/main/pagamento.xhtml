@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<!-- 			<o:viewParam name="lancamento" value="#{pagamentoController.lancamento}" /> -->
+			<f:viewAction action="#{pagamentoController.init()}" />
+		</f:metadata>
+
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+		 
+			function stop() {
+		    	PF('statusDialog').hide();
+			}
+			
+		</script>
+
+		<!-- Painle de listagem -->
+
+
+		<h:panelGroup id="panel-listagem">
+
+			<h:form id="form-listagem" prependId="false">
+
+
+				<p:messages id="message" showSummary="false" style="margin-top:10px"
+					showDetail="true" closable="true" showIcon="true">
+
+					<p:autoUpdate />
+				</p:messages>
+
+
+				<p:breadCrumb>
+					<p:menuitem value="Categories" url="home_new.xhtml" />
+					<p:menuitem value="Pagamentos" url="pagamento.xhtml" />
+				</p:breadCrumb>
+
+
+				<p:panel id="filter-pgto">
+
+
+					<div class="ui-g ui-fluid" style="margin-top: 8px">
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+							<p:outputLabel value="Código" styleClass="form-label" />
+							<p:inputText value="#{pagamentoController.filtro.codigo}" />
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+							<p:outputLabel value="Solicitante" styleClass="form-label" />
+							<p:inputText value="#{pagamentoController.filtro.nome}" />
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+							<p:outputLabel value="Data início" styleClass="form-label" />
+							<p:calendar id="dt_inicio" placeholder="Inicio"
+								value="#{pagamentoController.filtro.dataInicio}"
+								navigator="true" pattern="dd/MM/yyyy" />
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+
+							<p:outputLabel value="Data final" styleClass="form-label" />
+							<p:calendar id="dt_final"
+								value="#{pagamentoController.filtro.dataFinal}" navigator="true"
+								pattern="dd/MM/yyyy" />
+
+						</div>
+
+					</div>
+
+					<div class="ui-g ui-fluid">
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+							<p:outputLabel value="Gestão" styleClass="form-label" />
+							<p:autoComplete styleClass="font12-vi" panelStyle="width:180px"
+								value="#{pagamentoController.filtro.gestao}"
+								completeMethod="#{pagamentoController.completeGestao}"
+								var="gestao" itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+								converter="gestaoConverterVI" minQueryLength="3" />
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+							<p:outputLabel value="Destino/Localização"
+								styleClass="form-label" />
+							<p:autoComplete styleClass="font12-vi" panelStyle="width:180px"
+								value="#{pagamentoController.filtro.localidade}"
+								completeMethod="#{pagamentoController.completeLocalidade}"
+								var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+								converter="localConverterVI" minQueryLength="3">
+							</p:autoComplete>
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+							<p:outputLabel value="Fornecedor" styleClass="form-label" />
+							<p:inputText value="#{pagamentoController.filtro.nomeFornecedor}" />
+
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+							<p:outputLabel value="Descrição" styleClass="form-label" />
+							<p:inputText value="#{pagamentoController.filtro.descricao}"
+								style="margin-left:5px"></p:inputText>
+
+						</div>
+
+					</div>
+
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-12 ui-lg-6 form-group">
+							<p:outputLabel value="Projeto" styleClass="form-label" />
+							<p:autoComplete value="#{pagamentoController.filtro.projeto}"
+								completeMethod="#{pagamentoController.completeProjetos}"
+								var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}"
+								converter="projetoConverter">
+
+								<p:column>
+									<h:outputText value="#{projeto.codigo}" />
+								</p:column>
+
+								<p:column>
+									<h:outputText value="#{projeto.nome}" />
+								</p:column>
+
+							</p:autoComplete>
+
+						</div>
+						<div class="ui-g-12 ui-lg-6" style="text-align: right">
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								action="#{pagamentoController.filtrar()}" onclick="start()"
+								onsuccess="stop()" onerror="stop()" update="table"
+								style="color:#fff; margin: 8px 2px;">
+								<span class="fa fa-fw fa-search"></span>
+								<span>Buscar</span>
+							</p:commandLink>
+
+							<p:commandLink styleClass="btn btn-danger btn-sm"
+								action="#{pagamentoController.limparFiltro()}" onclick="start()"
+								onsuccess="stop()" onerror="stop()" update="@form"
+								process="@this" style="color:#fff; margin: 8px 2px;">
+								<span class="fa fa-fw fa-trash-o"></span>
+								<span>Limpar</span>
+							</p:commandLink>
+
+
+
+							<p:link styleClass="btn btn-success btn-sm"
+								style="color:#fff;margin: 8px 2px;" onclick="start()"
+								outcome="/main/pagamento_cadastro" title="Adicionar pagamento">
+								<span class="fa fa-fw fa-plus" style="font-size: 12px"></span>
+								<span style="font-family: Arial">Novo</span>
+							</p:link>
+
+						</div>
+
+						<div id="div-table" class="ui-g-12">
+							<p:dataTable emptyMessage="Não há solicitações de pagamento"
+								id="table" value="#{pagamentoController.pagamentos}"
+								var="pagamento" paginator="true" widgetVar="comprasTable"
+								rows="10" reflow="true">
+
+								<p:column headerText="Código" filterBy="#{pagamento.id}"
+									filterMatchMode="contains">
+
+									<p:link value="SP#{pagamento.id}"
+										outcome="/main/pagamento_cadastro">
+										<f:param name="lanc" value="#{pagamento.id}" />
+									</p:link>
+								</p:column>
+
+								<p:column headerText="Descrição">
+
+
+									<h:outputText id="motivo"
+										value="#{pagamento.descricao.length() > 30 ? pagamento.descricao.substring(0,30) : pagamento.descricao}" />
+
+									<h:outputText rendered="#{pagamento.descricao.length() > 30}"
+										id="mot" value=" . . ." />
+
+									<p:tooltip id="toolTipFade" for="mot" value="#{pagamento.descricao}"
+										style="width:50%" position="top" />
+
+
+								</p:column>
+
+								<p:column headerText="Destino"
+									filterBy="#{pagamento.nomeDestino}" filterMatchMode="contains">
+									<h:outputText value="#{pagamento.nomeDestino}" />
+								</p:column>
+
+								<p:column headerText="Gestão" filterBy="#{pagamento.nomeGestao}"
+									filterMatchMode="contains">
+									<h:outputText value="#{pagamento.nomeGestao}" />
+								</p:column>
+
+								<p:column headerText="Fornecedor"
+									filterBy="#{pagamento.nomeFornecedor}"
+									filterMatchMode="contains">
+									<h:outputText value="#{pagamento.nomeFornecedor}" />
+								</p:column>
+
+								<p:column headerText="Status"
+									filterBy="#{pagamento.statusCompra.nome}"
+									filterMatchMode="contains">
+									<h:outputText value="#{pagamento.statusCompra.nome}" />
+								</p:column>
+
+								<p:column headerText="Data">
+									<h:outputText value="#{pagamento.dataEmissao}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+											timeZone="America/Manaus" />
+									</h:outputText>
+								</p:column>
+
+
+								<p:column headerText="Solicitante"
+									filterBy="#{pagamento.nomeSolicitante}"
+									filterMatchMode="contains">
+									<h:outputText
+										value="#{pagamento.nomeSolicitante.toLowerCase()}" />
+								</p:column>
+
+								<p:column headerText="valor">
+									<h:outputText value="#{pagamento.valorTotalComDesconto}">
+										<f:convertNumber type="currency" maxFractionDigits="2"
+											currencySymbol="R$" />
+
+									</h:outputText>
+								</p:column>
+
+								<p:column headerText="Opções">
+
+									<p:menuButton value="Opções">
+
+
+										<p:menuitem icon="fa fa-envelope-o" value="Notas e anexos"
+											update=":form-arquivo"
+											action="#{pagamentoController.carregarArquivos(pagamento.id)}"
+											onstart="start()" onerror="stop()"
+											oncomplete="stop(); PF('dialog_arquivo').show(); ">
+										</p:menuitem>
+
+										<p:menuitem value="Imprimir" target="_blank" ajax="false"
+											icon="fa fa-print"
+											action="#{pagamentoController.imprimir(pagamento.id)}">
+										</p:menuitem>
+
+
+									</p:menuButton>
+
+
+								</p:column>
+
+							</p:dataTable>
+
+
+						</div>
+					</div>
+
+				</p:panel>
+
+
+
+			</h:form>
+		</h:panelGroup>
+
+
+
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+
+
+
+		<p:dialog header="Anexos" modal="true" widgetVar="dialog_arquivo"
+			width="60%" hideEffect="clip" closeOnEscape="true" showEffect="clip">
+
+			<h:form id="form-arquivo" enctype="multipart/form-data">
+				<p:messages id="msg_aprouve" showIcon="true" showSummary="false"
+					showDetail="true" closable="true" />
+				<p:panelGrid columns="1">
+					<p:remoteCommand name="salvar"
+						action="#{pagamentoController.adicionarArquivo()}"
+						process="form-arquivo"
+						update="table-arquivo form-arquivo panel_grid" />
+
+
+
+					<p:panelGrid id="panel_grid" columns="4" styleClass="ui-fluid"
+						style="width:100%">
+						<h:outputLabel value="Descrição:" />
+						<h:panelGroup>
+							<p:inputText id="input_name_arq"
+								value="#{pagamentoController.arquivo.nome}" />
+							<p:tooltip for="input_name_arq"
+								value="Adicione um nome para que 
+								possamos achar com facilidade o anexo, 
+								adicione o número do lançamento antes do nome 
+								ex: Pedido 19009  o anexo ficaria '19009-Autor. Pagto. NF - 00888' "
+								position="top" />
+						</h:panelGroup>
+
+						<h:outputLabel value="Tipo:" />
+						<p:selectOneMenu value="#{pagamentoController.arquivo.tipo}">
+							<f:selectItem itemLabel="Selecione o tipo"
+								noSelectionOption="true" />
+							<f:selectItems value="#{lancamentos_v2.tipos}" var="tipo"
+								itemLabel="#{tipo.nome}" itemValue="#{tipo}" />
+						</p:selectOneMenu>
+
+						<h:panelGroup rendered="false">
+							<p:commandLink id="btn_add_arq"
+								action="#{pagamentoController.adicionarArquivo()}"
+								process="form-arquivo" style="color:#000"
+								update="table-arquivo form-arquivo"
+								styleClass="btn btn-default btn-xs glyphicon glyphicon-check" />
+							<p:tooltip id="toolTipGrow" for="btn_add_arq"
+								value="Salvar na lista de arquivos" position="top" />
+						</h:panelGroup>
+
+
+					</p:panelGrid>
+
+					<p:fileUpload label="Procurar" cancelLabel="Cancelar"
+						uploadLabel="Salvar" oncomplete="salvar()"
+						update="table-arquivo form-arquivo panel_grid"
+						fileUploadListener="#{pagamentoController.handleFileUpload}"
+						mode="advanced" process="form-arquivo:panel_grid"
+						skinSimple="true" dragDropSupport="false" sizeLimit="100000000"
+						allowTypes="/(\.|\/)(pdf)$/" />
+
+					<p:dataTable id="table-arquivo" styleClass="ui-fluid"
+						paginator="true" rows="4"
+						value="#{pagamentoController.lancamentoAux.arquivos}" var="arq">
+						<p:column headerText="Nome" filterBy="#{arq.nome}"
+							filterMatchMode="contains">
+							<h:outputText value="#{arq.nome}" />
+						</p:column>
+
+
+						<p:column headerText="Opções" style="width:110px">
+							<p:menuButton value="Opções">
+
+
+								<p:menuitem icon="fa fa-file-pdf-o" target="_blank"
+									action="#{pagamentoController.visualizarArquivo(arq)}"
+									onstart="start()" onerror="stop()" ajax="false"
+									oncomplete="stop(); PF('dialog_arquivo').show(); ">
+									<span>Visualizar</span>
+								</p:menuitem>
+
+								<p:menuitem icon="fa fa-trash-o" process="@this"
+									action="#{pagamentoController.removerArquivo(arq)}"
+									onstart="start()" onerror="stop()" update="table-arquivo"
+									oncomplete="stop(); PF('dialog_arquivo').show(); ">
+									<span>Excluir</span>
+								</p:menuitem>
+
+							</p:menuButton>
+
+
+						</p:column>
+
+					</p:dataTable>
+
+				</p:panelGrid>
+			</h:form>
+
+		</p:dialog>
+
+
+
+		<p:dialog header="Filtro" widgetVar="dlg_filtro" modal="false"
+			height="50%" width="50%" showEffect="clip" hideEffect="clip">
+			<div class="ui-fluid">
+				<h:form id="form-filtro">
+					<p:messages id="msg_filter" showDetail="true" showSummary="false"
+						showIcon="true" closable="true" />
+					<p:panelGrid columns="1" layout="grid">
+						<p:outputLabel value="Código:" />
+						<p:inputText value="#{pagamentoController.filtro.codigo}" />
+						<p:outputLabel value="Solicitante:" />
+						<p:inputText value="#{pagamentoController.filtro.nome}" />
+
+						<p:outputLabel value="Data ínicio:" />
+						<p:calendar id="dt_inicio"
+							value="#{pagamentoController.filtro.dataInicio}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+						<p:outputLabel value="Data final:" />
+						<p:calendar id="dt_final"
+							value="#{pagamentoController.filtro.dataFinal}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+						<p:outputLabel value="Tipo de gestão:" />
+						<h:panelGroup id="panel-gestao-filtro">
+
+							<p:selectOneMenu id="tipo_gestao_filtro"
+								value="#{pagamentoController.filtro.tipoGestao}">
+								<p:ajax
+									listener="#{pagamentoController.onTipoGestaoChangeFiltro()}"
+									process="@this" update="panel-gestao-filtro" />
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{pagamentoController.tiposGestao}"
+									var="tipoGestao" itemLabel="#{tipoGestao.nome}"
+									itemValue="#{tipoGestao}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="sup_filtro"
+								value="#{pagamentoController.filtro.gestaoID}"
+								rendered="#{pagamentoController.tipoGestao.equals('Superintendencia')}"
+								required="true"
+								requiredMessage="Campo 'Superintendencia' obrigatório">
+								<f:selectItems value="#{pagamentoController.gestoes}" var="gest"
+									itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="coord_filtro" filter="true"
+								filterMatchMode="contains"
+								value="#{pagamentoController.filtro.gestaoID}"
+								rendered="#{pagamentoController.tipoGestao.equals('Coordenadoria')}"
+								required="true"
+								requiredMessage="Campo 'Coordenadoria' obrigatório">
+								<f:selectItems value="#{pagamentoController.gestoes}" var="gest"
+									itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="reg_filtro" filter="true"
+								filterMatchMode="contains"
+								value="#{pagamentoController.filtro.gestaoID}"
+								rendered="#{pagamentoController.tipoGestao.equals('Regional')}"
+								required="true" requiredMessage="Campo 'Regional' obrigatório">
+								<f:selectItems value="#{pagamentoController.gestoes}" var="gest"
+									itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+
+
+						<p:outputLabel value="Destino/Localização:" for="local_filtro" />
+
+						<h:panelGroup id="panel-loc-filtro">
+
+							<p:selectOneMenu id="local_filtro"
+								value="#{pagamentoController.filtro.tipoLocalidade}">
+								<p:ajax listener="#{pagamentoController.onLocalChangeFilter()}"
+									process="@this" update="panel-loc-filtro" />
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{pagamentoController.tipoLocais}"
+									var="local" itemLabel="#{local.nome}" itemValue="#{local}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="estado_filtro" filter="true"
+								filterMatchMode="contains"
+								value="#{pagamentoController.idEstado}"
+								rendered="#{pagamentoController.local.equals('Municipio')}"
+								required="true" requiredMessage="Campo 'Estado' obrigatório">
+								<p:ajax listener="#{pagamentoController.onEstadoChange()}"
+									process="@this" update="municipio_filtro" />
+								<f:selectItem itemLabel="Selecione um estado" itemValue="0" />
+								<f:selectItems value="#{pagamentoController.estados}"
+									var="estado" itemLabel="#{estado.nome}"
+									itemValue="#{estado.id}" />
+							</p:selectOneMenu>
+
+
+
+							<p:selectOneMenu id="municipio_filtro" filter="true"
+								filterMatchMode="contains"
+								value="#{pagamentoController.filtro.localidadeID}"
+								rendered="#{pagamentoController.local.equals('Municipio')}"
+								required="true" requiredMessage="Campo 'Municipio' obrigatório">
+								<f:selectItems value="#{pagamentoController.localidades}"
+									var="loc" itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+							</p:selectOneMenu>
+
+
+							<p:selectOneMenu id="comunidade_filtro"
+								value="#{pagamentoController.filtro.localidadeID}" filter="true"
+								filterMatchMode="contains"
+								rendered="#{pagamentoController.local.equals('Comunidade')}"
+								required="true" requiredMessage="Campo 'Comunidade' obrigatório">
+								<f:selectItems value="#{pagamentoController.localidades}"
+									var="loc" itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+							</p:selectOneMenu>
+
+
+							<p:selectOneMenu id="uc_filtro"
+								value="#{pagamentoController.filtro.localidadeID}" filter="true"
+								filterMatchMode="contains"
+								rendered="#{pagamentoController.local.equals('Uc')}">
+								<f:selectItems value="#{pagamentoController.localidades}"
+									var="loc" itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="sede_filtro"
+								value="#{pagamentoController.filtro.localidadeID}" filter="true"
+								filterMatchMode="contains"
+								rendered="#{pagamentoController.local.equals('Sede')}"
+								required="true" requiredMessage="Campo 'Sede' obrigatório">
+								<f:selectItems value="#{pagamentoController.localidades}"
+									var="loc" itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="nucleo_filtro"
+								value="#{pagamentoController.filtro.localidadeID}" filter="true"
+								filterMatchMode="contains"
+								rendered="#{pagamentoController.local.equals('Nucleo')}"
+								required="true" requiredMessage="Campo 'Núcleo' obrigatório">
+								<f:selectItems value="#{pagamentoController.localidades}"
+									var="loc" itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+							</p:selectOneMenu>
+
+
+						</h:panelGroup>
+
+					</p:panelGrid>
+
+					<div class="botao_central" align="left">
+						<p:commandLink styleClass="btn btn-primary btn-sm" ajax="false"
+							action="#{pagamentoController.filtrar()}" onclick="start()"
+							onsuccess="stop()" onerror="stop()"
+							update="msg_filter :form-listagem:table"
+							style="color:#fff; margin: 8px 2px;">
+							<span style="width: 40px;" class="glyphicon glyphicon-search"></span>
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							action="#{pagamentoController.limparFiltro()}"
+							update="form-filtro" process="@this"
+							style="color:#fff; margin: 8px 2px;">
+						Limpar
+						</p:commandLink>
+
+					</div>
+
+
+				</h:form>
+			</div>
+		</p:dialog>
+
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+		<p:dialog header="Mudança de Status" widgetVar="dialogAlterarStatus"
+			modal="false" resizable="false" showEffect="clip" hideEffect="clip">
+			<div class="ui-fluid">
+				<h:form id="formDialogAlterarStatus">
+
+					<p:panelGrid columns="1" layout="grid">
+
+
+						<p:selectOneMenu
+							value="#{pagamentoController.pagamento.statusCompra}"
+							filter="true" filterMatchMode="contains">
+							<f:selectItems value="#{pagamentoController.status}" var="status"
+								itemLabel="#{status.nome}" itemValue="#{status}" />
+						</p:selectOneMenu>
+
+
+
+					</p:panelGrid>
+					<center>
+						<div class="botao_central" align="left">
+							<p:commandLink styleClass="btn btn-primary btn-sm" ajax="false"
+								action="#{pagamentoController.mudarStatusLancamento(pagamentoController.pagamento)}"
+								onclick="start()" onsuccess="stop()" onerror="stop()"
+								oncomplete="PF('dialogAlterarStatus').hide()"
+								update="form-listagem:table"
+								style="color:#fff; margin: 8px 2px;">
+								Salvar
+							</p:commandLink>
+
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								action="#{pagamentoController.filtrar()}"
+								onclick="PF('dialogAlterarStatus').hide()" ajax="false"
+								process="@this" style="color:#fff; margin: 8px 2px;">
+							Cancelar
+							</p:commandLink>
+
+						</div>
+					</center>
+				</h:form>
+			</div>
+		</p:dialog>
+
+
+
+	</ui:define>
+
+
+</ui:composition>

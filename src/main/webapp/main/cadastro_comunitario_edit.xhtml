@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="menu_lateral">
+
+		<h:form id="tabela_menu">
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{comunitario_controller.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{comunitario_controller.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{comunitario_controller.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right; color: #849A39"
+						class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+	
+	<ui:define name="content">
+		<h:form id="formcomunitario" acceptcharset="ISO-8859-1">
+			<p:tabView id="cadastrocomunitario" prependId="false">
+				<p:tab title="Cadastro comunitário">
+					<p:messages id="msgs"  showSummary="false"
+						showDetail="true" showIcon="true" closable="true" />
+
+					<div class="botao_central" align="left"
+						style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+						<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+							action="#{comunitario_controller.insert()}" 
+							style="color:#fff; margin: 2px 2px;" value="Salvar" />
+						<p:commandLink action="#{comunitario_controller.listagemComunitario}" value="voltar"
+							 immediate="true" styleClass="btn btn-info btn-sm" />
+
+					</div>
+					
+					<p:accordionPanel prependId="false">
+						<p:tab>
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Dados de Identificação</span>
+								</p:commandLink>
+							</f:facet>
+							
+							<p:panelGrid columns="2">
+										
+								<p:outputLabel value="Unidade de Conservação: " />
+								<p:autoComplete style="width:500px"
+									panelStyle="width:300px"
+									value="#{comunitario_controller.comunitario.unidadeConservacao}"
+									completeMethod="#{comunitario_controller.completeUnidadeConservacao}"
+									var="uc" itemLabel="#{uc.nome}"
+									itemValue="#{uc}" converter="unidadeConservacaoConverter"
+									minQueryLength="3" forceSelection="true" >
+									<p:ajax event="itemSelect" update="panelComunidade" listener="#{comunitario_controller.limparComunidade}"/>
+								</p:autoComplete>	
+								
+								<p:outputLabel value="Data de preenchimento: " />
+								<p:calendar
+										value="#{comunitario_controller.comunitario.dataPreenchimento}"
+										timeZone="America/Manaus" navigator="true"
+										pattern="dd/MM/yyyy" mask="true"/>	
+							</p:panelGrid>
+							
+							<br />
+							
+							<h:panelGroup>
+								<p:panelGrid columns="1">
+									<h:panelGroup>
+										<p:panelGrid id="panelMunicipio" columns="2">
+											<p:outputLabel value="Município: " />
+											<p:autoComplete styleClass="font12-vi" 
+												panelStyle="width:180px"
+												value="#{comunitario_controller.comunitario.municipio}"
+												completeMethod="#{comunitario_controller.completeMunicipio}"
+												var="municipio" itemLabel="#{municipio.nome}"
+												itemValue="#{municipio}" converter="localConverterVI"
+												minQueryLength="3" />
+												
+											<p:outputLabel value="Setor: " />
+											<p:autoComplete styleClass="font12-vi" 
+												panelStyle="width:180px"
+												value="#{comunitario_controller.comunitario.setor}"
+												completeMethod="#{comunitario_controller.completeSetores}"
+												var="setor" itemLabel="#{setor.nome}"
+												itemValue="#{setor}" converter="localConverterVI"
+												minQueryLength="3" />
+												
+											<p:outputLabel value="Pólo: " />
+											<p:autoComplete styleClass="font12-vi" 
+												panelStyle="width:180px"
+												value="#{comunitario_controller.comunitario.polo}"
+												completeMethod="#{comunitario_controller.completePolos}"
+												var="polo" itemLabel="#{polo.nome}"
+												itemValue="#{polo}" converter="localConverterVI"
+												minQueryLength="3" />
+												
+											<p:outputLabel value="Rio: " />
+											<p:autoComplete styleClass="font12-vi" 
+												panelStyle="width:180px"
+												value="#{comunitario_controller.comunitario.rio}"
+												completeMethod="#{comunitario_controller.completeRios}"
+												var="rio" itemLabel="#{rio.descricao}"
+												itemValue="#{rio}" 
+												minQueryLength="3" />
+												
+											<p:outputLabel value="Lago: " />
+											<p:inputText value="#{comunitario_controller.comunitario.lago}" style="width:300px">
+											</p:inputText>
+												
+										</p:panelGrid>
+									</h:panelGroup>
+								</p:panelGrid>	
+							</h:panelGroup>
+							
+							<br />
+							
+							<h:panelGroup>
+								<p:panelGrid columns="1">
+									<h:panelGroup>
+										<p:panelGrid id="panelComunidade" columns="2">
+										
+											<p:outputLabel value="Denominação:" />
+											<p:inputText value="#{comunitario_controller.comunitario.denominacao}" style="width:300px">
+											</p:inputText>
+											
+											<p:outputLabel value="Localidade:" />
+											<p:inputText value="#{comunitario_controller.comunitario.localidade}" style="width:300px">
+											</p:inputText>
+												
+											<p:outputLabel value="Comunidade:" />
+											<p:autoComplete styleClass="font12-vi" 
+												panelStyle="width:180px"
+												value="#{comunitario_controller.comunitario.comunidade}"
+												completeMethod="#{comunitario_controller.completeLocalidadePorUc}"
+												var="comunidade" itemLabel="#{comunidade.nome}"
+												itemValue="#{comunidade}" converter="comunidadeConverter"
+												minQueryLength="3" />
+										</p:panelGrid>
+									</h:panelGroup>
+								</p:panelGrid>	
+							</h:panelGroup>	
+							
+							<br />
+							
+							<h:panelGroup>
+								<p:panelGrid columns="2">
+									<p:outputLabel value="Situação: " />
+									<p:selectOneMenu value="#{comunitario_controller.comunitario.tipoSituacao}" >
+										<f:selectItem itemLabel="Selecione um tipo de ambiente" itemValue=""/>
+										<f:selectItems value="#{comunitario_controller.tiposSituacao}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+									</p:selectOneMenu>
+									
+									<p:outputLabel value="Ambiente: " />
+									<p:selectOneMenu value="#{comunitario_controller.comunitario.tipoAmbiente}" >
+										<f:selectItem itemLabel="Selecione um tipo de situação" itemValue=""/>
+										<f:selectItems value="#{comunitario_controller.tiposAmbiente}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+									</p:selectOneMenu>
+								</p:panelGrid>
+							</h:panelGroup>
+							
+							<br />
+							
+							<h:panelGroup>
+								<p:panelGrid columns="1">
+									<p:panelGrid columns="2">
+										<p:outputLabel value="Nº do ponto GPS: " />
+										<p:inputText
+											onkeypress="return somenteNumeros(event);"
+											placeholder="Número"
+											value="#{comunitario_controller.comunitario.numeroPontoGPS}">
+										</p:inputText>
+									</p:panelGrid>
+									
+									<h:panelGroup>
+										<p:outputLabel value="Coordenadas geográficas: " />
+										<p:panelGrid columns="2">
+											<p:outputLabel value="Latitude (S): " />
+											<p:inputMask value="#{comunitario_controller.comunitario.latitude}" style="width:100px" mask="99º99'9''9">
+											</p:inputMask>
+											<p:outputLabel value="Longitude (W): " />
+											<p:inputMask value="#{comunitario_controller.comunitario.longitude}" style="width:100px" mask="99º99'99''9">
+											</p:inputMask>		
+										</p:panelGrid>
+									</h:panelGroup>
+									
+									<br />
+									
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="Número de casas na comunidade: " />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.numeroCasas}">
+											</p:inputText>
+											
+											<p:outputLabel value="Número de infraestruturas coletivas na comunidade: " />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.numeroInfraestruturas}">
+											</p:inputText>
+											
+											<p:outputLabel value="Número de famílias que moram na sede da comunidade: " />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.numeroFamiliasNaSede}">
+											</p:inputText>
+											
+											<p:outputLabel value="Número de famílias que moram distante da sede: " />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.numeroFamiliasDistanteSede}">
+											</p:inputText>
+										</p:panelGrid>
+									</h:panelGroup>
+								</p:panelGrid>
+							</h:panelGroup>
+						</p:tab>
+						<p:tab >
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Líder comunitário</span>
+								</p:commandLink>
+							</f:facet>
+							
+							<p:panelGrid columns="2">
+								<p:outputLabel value="Nome completo: " />
+								<p:inputText value="#{comunitario_controller.comunitario.nomeCompleto}" style="width:300px">
+								</p:inputText>
+								<p:outputLabel value="Apelido: " />
+								<p:inputText value="#{comunitario_controller.comunitario.apelido}" >
+								</p:inputText>
+								<p:outputLabel value="Função na comunidade: " />
+								<p:inputText value="#{comunitario_controller.comunitario.funcaoNaComunidade}" >
+								</p:inputText>
+								<p:outputLabel value="Forma de contato: " />
+								<p:inputText value="#{comunitario_controller.comunitario.formaDeContato}" >
+								</p:inputText>
+								<p:outputLabel value="Mora na comunidade há (anos): " />
+								<p:inputText
+									onkeypress="return somenteNumeros(event);"
+									placeholder="Número"
+									value="#{comunitario_controller.comunitario.anosMoraNaComunidade}">
+								</p:inputText>
+								<p:outputLabel value="É liderança há (anos): " />
+								<p:inputText
+									onkeypress="return somenteNumeros(event);"
+									placeholder="Número"
+									value="#{comunitario_controller.comunitario.anosLideranca}">
+								</p:inputText>
+							</p:panelGrid>
+							
+						</p:tab>
+						<p:tab >
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Saneamento básico</span>
+								</p:commandLink>
+							</f:facet>
+							
+							<p:panelGrid columns="1">
+								<br />
+								
+								<p:fieldset legend="Destino de afluentes">
+									<p:dataTable var="item" value="#{comunitario_controller.destinosEsgoto}" style="width:400px">
+										<p:column style="width:10%">
+											<p:selectBooleanCheckbox
+												value="#{item.selecionado}" 
+												style="margin-left:4px">
+											</p:selectBooleanCheckbox>
+										</p:column>
+										<p:column style="width:40%">
+											<p:outputLabel value="#{item.tipo.descricao}:" />
+										</p:column>
+										<p:column style="width:50%" >
+											<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+										</p:column>
+									</p:dataTable>
+								</p:fieldset>	
+								
+								<br />
+								
+								<p:fieldset legend="Descarte do lixo">
+									<p:dataTable var="item" value="#{comunitario_controller.destinosLixo}" style="width:400px">
+										<p:column style="width:10%">
+											<p:selectBooleanCheckbox
+												value="#{item.selecionado}" 
+												style="margin-left:4px">
+											</p:selectBooleanCheckbox>
+										</p:column>
+										<p:column style="width:40%">
+											<p:outputLabel value="#{item.tipo.descricao}:" />
+										</p:column>
+										<p:column style="width:50%" >
+											<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+										</p:column>
+									</p:dataTable>
+								</p:fieldset>
+							</p:panelGrid>
+						</p:tab>
+						<p:tab>
+						
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Infraestrutura comunitária</span>
+								</p:commandLink>
+							</f:facet>
+							
+							<p:commandLink
+								styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+								title="Adicionar infraestrutura comunitária"
+								oncomplete="PF('dlg_cadastro_infraestrutura_comunitaria').show()"
+								update=":form-cadastro-infraestrutura-comunitaria"
+								action="#{comunitario_controller.prepararCadastroInfraEstrutura}"
+								style="color:#fff; margin: 8px 2px;">
+								<span style="font-family: Arial"> Adicionar Novo</span>
+							</p:commandLink>
+							
+							<p:dataTable id="infraestuturas" 
+								value="#{comunitario_controller.comunitario.infraestruturasComunitarias}" var="item"
+								paginator="true" rows="5" style="width:100%">
+								
+								<f:facet name="header">
+									<h:outputText value="Infraestruturas Comunitárias" />
+							    </f:facet>
+								
+								<p:column filterBy="#{item.infraestruturaComunitaria.descricao}"
+									filterStyle="display:none" headerText="Descrição" style="width:40%;">
+									<h:outputText value="#{item.infraestruturaComunitaria.descricao}" />
+								</p:column>
+								
+								<p:column filterBy="#{item.estadoConservacao.descricao}"
+									filterStyle="display:none" headerText="Estado de conservação" style="width:30%;">
+									<h:outputText value="#{item.estadoConservacao.descricao}" />
+								</p:column>
+								
+								<p:column filterBy="#{item.tipoFinanciador.descricao}"
+									filterStyle="display:none" headerText="Quem financicou?" style="width:30%;">
+									<h:outputText value="#{item.tipoFinanciador.descricao}" />
+								</p:column>
+								
+								<p:column headerText="Ação" style="width:20%;text-align: center;">
+									<p:commandLink title="Excluir" rendered="true" update="infraestuturas"
+										value="Excluir" oncomplete="PF('confirmacaoDeleteInfraEstrutura').show()" >
+										<f:setPropertyActionListener target="#{comunitario_controller.infraEstrutura}"
+											value="#{item}" />
+									</p:commandLink>
+									<p:spacer width="10px" />
+									
+									<p:commandLink value="Editar" action="#{comunitario_controller.prepararEditarInfraEstrutura}" oncomplete="PF('dlg_cadastro_infraestrutura_comunitaria').show()" update=":form-cadastro-infraestrutura-comunitaria">
+										<f:setPropertyActionListener target="#{comunitario_controller.infraEstrutura}"
+											value="#{item}" />
+									</p:commandLink>
+								
+								</p:column>
+							</p:dataTable>
+						</p:tab>
+						<p:tab>
+						
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Detalhamento de informações sobre infraestruturas comunitárias</span>
+								</p:commandLink>
+							</f:facet>
+							
+							<p:fieldset legend="Centro comunitário">
+								<p:panelGrid columns="2">
+									<p:outputLabel value="Quantas pessoas cabem no centro comunitário? " />
+									<p:inputText
+										onkeypress="return somenteNumeros(event);"
+										placeholder="Número"
+										value="#{comunitario_controller.comunitario.qtdePessoasCentroComunitario}">
+									</p:inputText>
+								</p:panelGrid>
+								<br/>
+								<p:fieldset legend="Onde a comunidade realiza as reuniões?">
+									<p:dataTable var="item" value="#{comunitario_controller.realizacoesReunioes}" style="width:400px">
+										<p:column style="width:10%">
+											<p:selectBooleanCheckbox
+												value="#{item.selecionado}" 
+												style="margin-left:4px">
+											</p:selectBooleanCheckbox>
+										</p:column>
+										<p:column style="width:40%">
+											<p:outputLabel value="#{item.tipo.descricao}:" />
+										</p:column>
+										<p:column style="width:50%" >
+											<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+										</p:column>
+									</p:dataTable>
+								</p:fieldset>
+							</p:fieldset>
+							
+							<br/>
+							
+							<p:fieldset legend="Transporte comunitário">
+								<h:panelGroup>
+									<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.possuiVoadeira}"/>
+									<p:outputLabel value="Possui transporte comunitário de voadeira?" style="padding-left: 10px;" />
+								</h:panelGroup>
+								<p:panelGrid columns="2">
+									<p:outputLabel value="Quantas? " />
+									<p:inputText
+										onkeypress="return somenteNumeros(event);"
+										placeholder="Número"
+										value="#{comunitario_controller.comunitario.qtdeVoadeiras}">
+									</p:inputText>
+									
+									<p:outputLabel value="Qual a potência do motor? (se mais de uma, informar a maior potência existente)" />
+									<p:selectOneMenu value="#{comunitario_controller.comunitario.potenciaMotorVoadeira}" >
+										<f:selectItem itemLabel="Selecione uma potência" itemValue=""/>
+										<f:selectItems value="#{comunitario_controller.tiposPotenciaMotor}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+									</p:selectOneMenu>
+									
+									<p:fieldset legend="Quem financiou a voadeira?">
+										<p:dataTable var="item" value="#{comunitario_controller.financiamentosVoadeira}" style="width:400px">
+											<p:column style="width:10%">
+												<p:selectBooleanCheckbox
+													value="#{item.selecionado}" 
+													style="margin-left:4px">
+												</p:selectBooleanCheckbox>
+											</p:column>
+											<p:column style="width:40%">
+												<p:outputLabel value="#{item.tipo.descricao}:" />
+											</p:column>
+											<p:column style="width:50%" >
+												<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+											</p:column>
+										</p:dataTable>
+									</p:fieldset>
+								</p:panelGrid>
+								
+								<br/>
+								
+								<h:panelGroup>
+									<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.possuiOutroTipoTransporte}"/>
+									<p:outputLabel value="Possui outro tipo de transporte comunitário?" style="padding-left: 10px;" />
+								</h:panelGroup>
+								
+								<p:panelGrid columns="2">
+									<p:outputLabel value="Quais? " />
+									<p:inputText
+										value="#{comunitario_controller.comunitario.tipoTransporte}" style="width:300px">
+									</p:inputText>
+									
+									<p:outputLabel value="Qual a potência do motor? (se mais de uma, informar a maior potência existente)" />
+									<p:selectOneMenu value="#{comunitario_controller.comunitario.potenciaMotorTransporte}" >
+										<f:selectItem itemLabel="Selecione uma potência" itemValue=""/>
+										<f:selectItems value="#{comunitario_controller.tiposPotenciaMotor}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+									</p:selectOneMenu>
+									
+									<p:fieldset legend="Quem financiou o transporte?">
+										<p:dataTable var="item" value="#{comunitario_controller.financiamentosTransporte}" style="width:400px">
+											<p:column style="width:10%">
+												<p:selectBooleanCheckbox
+													value="#{item.selecionado}" 
+													style="margin-left:4px">
+												</p:selectBooleanCheckbox>
+											</p:column>
+											<p:column style="width:40%">
+												<p:outputLabel value="#{item.tipo.descricao}:" />
+											</p:column>
+											<p:column style="width:50%" >
+												<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+											</p:column>
+										</p:dataTable>
+									</p:fieldset>
+								</p:panelGrid>
+							</p:fieldset>
+							
+							<br/>
+							
+							<p:fieldset legend="Educação">
+								<h:panelGroup>
+									<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.possuiOutroTipoTransporte}"/>
+									<p:outputLabel value="Possui outro tipo de transporte comunitário?" style="padding-left: 10px;" />
+								</h:panelGroup>
+								
+								<p:panelGrid columns="4">
+									<p:outputLabel value="Em qual comunidade os alunos dessas séries vão estudar?" />
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="1 a 5 ano" />
+											<p:autoComplete styleClass="font12-vi" 
+												panelStyle="width:180px"
+												value="#{comunitario_controller.comunitario.comunidade1a5Ano}"
+												completeMethod="#{comunitario_controller.completeLocalidadePorUc}"
+												var="comunidade" itemLabel="#{comunidade.nome}"
+												itemValue="#{comunidade}" converter="comunidadeConverter"
+												minQueryLength="3" />
+										</p:panelGrid>
+									</h:panelGroup>
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="6 a 9 ano" />
+											<p:autoComplete styleClass="font12-vi" 
+												panelStyle="width:180px"
+												value="#{comunitario_controller.comunitario.comunidade6a9Ano}"
+												completeMethod="#{comunitario_controller.completeLocalidadePorUc}"
+												var="comunidade" itemLabel="#{comunidade.nome}"
+												itemValue="#{comunidade}" converter="comunidadeConverter"
+												minQueryLength="3" />
+										</p:panelGrid>
+									</h:panelGroup>
+										
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="Ensino Médio" />
+											<p:autoComplete styleClass="font12-vi" 
+												panelStyle="width:180px"
+												value="#{comunitario_controller.comunitario.comunidadeEnsinoMedio}"
+												completeMethod="#{comunitario_controller.completeLocalidadePorUc}"
+												var="comunidade" itemLabel="#{comunidade.nome}"
+												itemValue="#{comunidade}" converter="comunidadeConverter"
+												minQueryLength="3" />
+										</p:panelGrid>
+									</h:panelGroup>
+								</p:panelGrid>
+								
+								<br/>
+								
+								<p:panelGrid columns="4">
+									<p:outputLabel value="Quantos moradores não terminaram e estão fora da escola?" />
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="1 a 5 ano" />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.qtdeMoradoresFora1a5Ano}">
+											</p:inputText>
+										</p:panelGrid>
+									</h:panelGroup>
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="6 a 9 ano" />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.qtdeMoradoresFora6a9Ano}">
+											</p:inputText>
+										</p:panelGrid>
+									</h:panelGroup>
+										
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="Ensino Médio" />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.qtdeMoradoresForaEnsinoMedio}">
+											</p:inputText>
+										</p:panelGrid>
+									</h:panelGroup>
+									
+								</p:panelGrid>
+								
+								<br/>
+								
+								<p:panelGrid columns="4">
+									<p:outputLabel value="Número de escolas" />
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="1 a 5 ano" />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.qtdeEscolas1a5Ano}">
+											</p:inputText>
+										</p:panelGrid>
+									</h:panelGroup>
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="6 a 9 ano" />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.qtdeEscolas6a9Ano}">
+											</p:inputText>
+										</p:panelGrid>
+									</h:panelGroup>
+										
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="Ensino Médio" />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.qtdeEscolasEnsinoMedio}">
+											</p:inputText>
+										</p:panelGrid>
+									</h:panelGroup>
+									
+								</p:panelGrid>
+								
+								<br/>
+								
+								<p:panelGrid columns="4">
+									<p:outputLabel value="Número de professores" />
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="1 a 5 ano" />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.qtdeProfessores1a5Ano}">
+											</p:inputText>
+										</p:panelGrid>
+									</h:panelGroup>
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="6 a 9 ano" />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.qtdeProfessores6a9Ano}">
+											</p:inputText>
+										</p:panelGrid>
+									</h:panelGroup>
+										
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="Ensino Médio" />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.qtdeProfessoresEnsinoMedio}">
+											</p:inputText>
+										</p:panelGrid>
+									</h:panelGroup>
+									
+								</p:panelGrid>
+								
+								<br/>
+								
+								<p:panelGrid columns="4">
+									<p:outputLabel value="Número de alunos" />
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="1 a 5 ano" />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.qtdeAlunos1a5Ano}">
+											</p:inputText>
+										</p:panelGrid>
+									</h:panelGroup>
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="6 a 9 ano" />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.qtdeAlunos6a9Ano}">
+											</p:inputText>
+										</p:panelGrid>
+									</h:panelGroup>
+										
+									<h:panelGroup>
+										<p:panelGrid columns="1">
+											<p:outputLabel value="Ensino Médio" />
+											<p:inputText
+												onkeypress="return somenteNumeros(event);"
+												placeholder="Número"
+												value="#{comunitario_controller.comunitario.qtdeAlunosEnsinoMedio}">
+											</p:inputText>
+										</p:panelGrid>
+									</h:panelGroup>
+									
+								</p:panelGrid>
+							</p:fieldset>
+							
+							<br/>
+							
+							<p:fieldset legend="Saúde">
+							
+								<p:panelGrid columns="1">
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.atendidaPorAgenteComunitarioDeSaude}"/>
+										<p:outputLabel value="É atendida por algum agente comunitário de saúde?" style="padding-left: 10px;" />
+									</h:panelGroup>
+									
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.agenteResideNaComunidade}"/>
+										<p:outputLabel value="Ele reside na comunidade?" style="padding-left: 10px;" />
+									</h:panelGroup>
+								</p:panelGrid>
+								
+								<p:panelGrid columns="2">
+									<p:outputLabel value="Qual?" />
+									<p:autoComplete styleClass="font12-vi" 
+										panelStyle="width:180px"
+										value="#{comunitario_controller.comunitario.comunidadeAgente}"
+										completeMethod="#{comunitario_controller.completeComunidade}"
+										var="comunidade" itemLabel="#{comunidade.nome}"
+										itemValue="#{comunidade}" converter="comunidadeConverter"
+										minQueryLength="3" />
+								</p:panelGrid>
+								<br/>
+								
+								<p:outputLabel value="Enumere quais os sintomas ou doenças mais comuns declarados pelo entrevistado" />
+								<br/>
+								
+								<p:commandLink
+									styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+									title="Adicionar sintoma"
+									oncomplete="PF('dlg_cadastro_sintoma').show()"
+									update=":form-cadastro-sintoma"
+									action="#{comunitario_controller.prepararCadastroSintoma}"
+									style="color:#fff; margin: 8px 2px;">
+									<span style="font-family: Arial"> Adicionar Novo</span>
+								</p:commandLink>
+								
+								<p:dataTable id="sintomas" 
+									value="#{comunitario_controller.comunitario.sintomasSaude}" var="item"
+									paginator="true" rows="5" style="width:70%">
+									
+									<f:facet name="header">
+										<h:outputText value="Sintomas" />
+								    </f:facet>
+									
+									<p:column filterBy="#{item.nivel}"
+										filterStyle="display:none" headerText="Nível" style="width:10%">
+										<h:outputText value="#{item.nivel}" style="float: right;"/>
+									</p:column>
+									
+									<p:column filterBy="#{item.sintoma.descricao}"
+										filterStyle="display:none" headerText="Descrição" style="width:35%;">
+										<h:outputText value="#{item.sintoma.descricao}" />
+									</p:column>
+									
+									<p:column filterBy="#{item.sintoma.respotaa}"
+										filterStyle="display:none" headerText="Outros" style="width:35%;">
+										<h:outputText value="#{item.resposta}" />
+									</p:column>
+									
+									<p:column headerText="Ação" style="width:20%;text-align: center;">
+										<p:commandLink title="Excluir" rendered="true" update="sintomas"
+											value="Excluir" oncomplete="PF('confirmacaoDeleteSintoma').show()" >
+											<f:setPropertyActionListener target="#{comunitario_controller.sintoma}"
+												value="#{item}" />
+										</p:commandLink>
+										<p:spacer width="10px" />
+										
+										<p:commandLink value="Editar" action="#{comunitario_controller.prepararEditarSintoma}" oncomplete="PF('dlg_cadastro_sintoma').show()" update=":form-cadastro-sintoma">
+											<f:setPropertyActionListener target="#{comunitario_controller.sintoma}"
+												value="#{item}" />
+										</p:commandLink>
+									
+									</p:column>
+								</p:dataTable>
+								
+								<br/>
+								
+								<p:panelGrid columns="1">
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.atendidaPorAmbulancha}"/>
+										<p:outputLabel value="A comunidade é atendida por ambulancha?" style="padding-left: 10px;" />
+									</h:panelGroup>
+									
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.ambulanchaSediadaNaComunidade}"/>
+										<p:outputLabel value="A ambulancha está sediada na comunidade?" style="padding-left: 10px;" />
+									</h:panelGroup>
+									
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.ambulanchaFunciona}"/>
+										<p:outputLabel value="Funciona?" style="padding-left: 10px;" />
+									</h:panelGroup>
+									
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.ambulanchaQuebrada}"/>
+										<p:outputLabel value="Quebrada?" style="padding-left: 10px;" />
+									</h:panelGroup>
+									
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.ambulanchaTemCaderneta}"/>
+										<p:outputLabel value="Tem caderneta?" style="padding-left: 10px;" />
+									</h:panelGroup>
+								</p:panelGrid>
+								
+								<br/>
+								<p:panelGrid columns="1">
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.possuiPostoDeSaude}"/>
+										<p:outputLabel value="Existe posto de saúde na comunidade?" style="padding-left: 10px;" />
+									</h:panelGroup>
+								</p:panelGrid>
+								<br/>
+								
+								<p:outputLabel value="Comunidade onde fica o posto de saúde mais próximo" />
+								<p:autoComplete styleClass="font12-vi" 
+									panelStyle="width:180px"
+									value="#{comunitario_controller.comunitario.comunidadePostoSaude}"
+									completeMethod="#{comunitario_controller.completeComunidade}"
+									var="comunidade" itemLabel="#{comunidade.nome}"
+									itemValue="#{comunidade}" converter="comunidadeConverter"
+									minQueryLength="3" />
+									
+								<br/>
+									
+								<p:outputLabel value="Município onde fica o posto de saúde mais próximo" />
+								<p:autoComplete styleClass="font12-vi" 
+									panelStyle="width:180px"
+									value="#{comunitario_controller.comunitario.municipioPostoSaude}"
+									completeMethod="#{comunitario_controller.completeMunicipio}"
+									var="municipio" itemLabel="#{municipio.nome}"
+									itemValue="#{municipio}" converter="localConverterVI"
+									minQueryLength="3" />
+							</p:fieldset>
+							<br/>
+							
+							<p:fieldset legend="Água">
+								<p:panelGrid columns="1">
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.possuiFonteDeAguaColetivo}"/>
+										<p:outputLabel value="Existe fonte de água de uso coletivo na comunidade?" style="padding-left: 10px;" />
+									</h:panelGroup>
+								</p:panelGrid>
+								
+								<br/>
+								
+								<p:outputLabel value="Enumere quais são as fontes de água para consumo declaradas pelo entrevistado" />
+								<br/>
+								
+								<p:commandLink
+									styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+									title="Adicionar fonte de água"
+									oncomplete="PF('dlg_cadastro_fonte_agua').show()"
+									update=":form-cadastro-fonte-agua"
+									action="#{comunitario_controller.prepararCadastroFonteAgua}"
+									style="color:#fff; margin: 8px 2px;">
+									<span style="font-family: Arial"> Adicionar Novo</span>
+								</p:commandLink>
+								
+								<p:dataTable id="fontesAgua" 
+									value="#{comunitario_controller.comunitario.fontesAguaConsumo}" var="item"
+									paginator="true" rows="5" style="width:70%">
+									
+									<f:facet name="header">
+										<h:outputText value="Fontes de água para consumo" />
+								    </f:facet>
+									
+									<p:column filterBy="#{item.nivel}"
+										filterStyle="display:none" headerText="Nível" style="width:10%">
+										<h:outputText value="#{item.nivel}" style="float: right;"/>
+									</p:column>
+									
+									<p:column filterBy="#{item.fonte.descricao}"
+										filterStyle="display:none" headerText="Descrição" style="width:35%;">
+										<h:outputText value="#{item.fonte.descricao}" />
+									</p:column>
+									
+									<p:column filterBy="#{item.fonte.respotaa}"
+										filterStyle="display:none" headerText="Outros" style="width:35%;">
+										<h:outputText value="#{item.resposta}" />
+									</p:column>
+									
+									<p:column headerText="Ação" style="width:20%;text-align: center;">
+										<p:commandLink title="Excluir" rendered="true" update="fontesAgua"
+											value="Excluir" oncomplete="PF('confirmacaoDeleteFonteAgua').show()" >
+											<f:setPropertyActionListener target="#{comunitario_controller.fonteAguaConsumo}"
+												value="#{item}" />
+										</p:commandLink>
+										<p:spacer width="10px" />
+										
+										<p:commandLink value="Editar" action="#{comunitario_controller.prepararEditarFonteAgua}" oncomplete="PF('dlg_cadastro_fonte_agua').show()" update=":form-cadastro-fonte-agua">
+											<f:setPropertyActionListener target="#{comunitario_controller.fonteAguaConsumo}"
+												value="#{item}" />
+										</p:commandLink>
+									
+									</p:column>
+								</p:dataTable>
+								
+								<br/>
+								
+								<p:fieldset legend="Qual é a forma de pegar água?">
+									<p:dataTable var="item" value="#{comunitario_controller.formasPegarAgua}" style="width:400px">
+										<p:column style="width:10%">
+											<p:selectBooleanCheckbox
+												value="#{item.selecionado}" 
+												style="margin-left:4px">
+											</p:selectBooleanCheckbox>
+										</p:column>
+										<p:column style="width:40%">
+											<p:outputLabel value="#{item.tipo.descricao}:" />
+										</p:column>
+										<p:column style="width:50%" >
+											<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+										</p:column>
+									</p:dataTable>
+								</p:fieldset>
+								
+								<br/>
+								
+								<p:panelGrid columns="1">
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.existeTratamentoAgua}"/>
+										<p:outputLabel value="Existe algum tratamento de água?" style="padding-left: 10px;" />
+									</h:panelGroup>
+								</p:panelGrid>
+								
+								<br/>
+								
+								<p:fieldset legend="Quais tratamentos de água?">
+									<p:dataTable var="item" value="#{comunitario_controller.tratamentos}" style="width:400px">
+										<p:column style="width:10%">
+											<p:selectBooleanCheckbox
+												value="#{item.selecionado}" 
+												style="margin-left:4px">
+											</p:selectBooleanCheckbox>
+										</p:column>
+										<p:column style="width:40%">
+											<p:outputLabel value="#{item.tipo.descricao}:" />
+										</p:column>
+										<p:column style="width:50%" >
+											<p:inputText value="#{item.resposta}" style="width:100%" rendered="#{item.temResposta}"/>
+										</p:column>
+									</p:dataTable>
+								</p:fieldset>
+								
+							</p:fieldset>
+							
+							<br/>
+							
+							<p:fieldset legend="Energia">
+								<p:panelGrid columns="2">
+									<p:outputLabel value="Quanto é o tempo em média de energia diária? " />
+									<p:inputText
+										onkeypress="return somenteNumeros(event);"
+										placeholder="Número"
+										value="#{comunitario_controller.comunitario.tempoMedioEnergiaDiaria}">
+									</p:inputText>
+								</p:panelGrid>
+								
+								<br/>
+								
+								<p:outputLabel value="Especifique as fontes de energia utilizadas pelos entrevistados" />
+								<br/>
+								
+								<p:commandLink
+									styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+									title="Adicionar fonte de energia"
+									oncomplete="PF('dlg_cadastro_fonte_energia').show()"
+									update=":form-cadastro-fonte-energia"
+									action="#{comunitario_controller.prepararCadastroFonteEnergia}"
+									style="color:#fff; margin: 8px 2px;">
+									<span style="font-family: Arial"> Adicionar Novo</span>
+								</p:commandLink>
+								
+								<p:dataTable id="fontesEnergia" 
+									value="#{comunitario_controller.comunitario.fontesEnergia}" var="item"
+									paginator="true" rows="5" style="width:70%">
+									
+									<f:facet name="header">
+										<h:outputText value="Fontes de Energia" />
+								    </f:facet>
+									
+									<p:column filterBy="#{item.nivel}"
+										filterStyle="display:none" headerText="Nível" style="width:10%">
+										<h:outputText value="#{item.nivel}" style="float: right;"/>
+									</p:column>
+									
+									<p:column filterBy="#{item.fonteEnergia.descricao}"
+										filterStyle="display:none" headerText="Descrição" style="width:35%;">
+										<h:outputText value="#{item.fonteEnergia.descricao}" />
+									</p:column>
+									
+									<p:column filterBy="#{item.fonteEnergia.respotaa}"
+										filterStyle="display:none" headerText="Outros" style="width:35%;">
+										<h:outputText value="#{item.resposta}" />
+									</p:column>
+									
+									<p:column headerText="Ação" style="width:20%;text-align: center;">
+										<p:commandLink title="Excluir" rendered="true" update="fontesEnergia"
+											value="Excluir" oncomplete="PF('confirmacaoDeleteFonteEnergia').show()" >
+											<f:setPropertyActionListener target="#{comunitario_controller.fonteEnergia}"
+												value="#{item}" />
+										</p:commandLink>
+										<p:spacer width="10px" />
+										
+										<p:commandLink value="Editar" action="#{comunitario_controller.prepararEditarFonteEnergia}" oncomplete="PF('dlg_cadastro_fonte_energia').show()" update=":form-cadastro-fonte-energia">
+											<f:setPropertyActionListener target="#{comunitario_controller.fonteEnergia}"
+												value="#{item}" />
+										</p:commandLink>
+									
+									</p:column>
+								</p:dataTable>
+							</p:fieldset>
+							
+							<br/>
+							
+							<p:fieldset legend="Comunicação">
+								<p:panelGrid columns="1">
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.possuiMeiosDeComunicacao}"/>
+										<p:outputLabel value="Há meios de comunicação na sua comunidade?" style="padding-left: 10px;" />
+									</h:panelGroup>
+								</p:panelGrid>
+								<br/>
+								
+								<p:outputLabel value="Qual é o meio que sua comunidade usa para se comunicar" />
+								<br/>
+								
+								<p:commandLink
+									styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+									title="Adicionar fonte de água"
+									oncomplete="PF('dlg_cadastro_meio_comunicacao').show()"
+									update=":form-cadastro-meio-comunicacao"
+									action="#{comunitario_controller.prepararCadastroMeioComunicacao}"
+									style="color:#fff; margin: 8px 2px;">
+									<span style="font-family: Arial"> Adicionar Novo</span>
+								</p:commandLink>
+								
+								<p:dataTable id="meiosComunicacao" 
+									value="#{comunitario_controller.comunitario.meiosComunicacao}" var="item"
+									paginator="true" rows="5" style="width:70%">
+									
+									<f:facet name="header">
+										<h:outputText value="Meios de comunicação" />
+								    </f:facet>
+									
+									<p:column filterBy="#{item.nivel}"
+										filterStyle="display:none" headerText="Nível" style="width:10%">
+										<h:outputText value="#{item.nivel}" style="float: right;"/>
+									</p:column>
+									
+									<p:column filterBy="#{item.fonte.descricao}"
+										filterStyle="display:none" headerText="Descrição" style="width:35%;">
+										<h:outputText value="#{item.meioComunicacao.descricao}" />
+									</p:column>
+									
+									<p:column filterBy="#{item.fonte.respotaa}"
+										filterStyle="display:none" headerText="Outros" style="width:35%;">
+										<h:outputText value="#{item.resposta}" />
+									</p:column>
+									
+									<p:column headerText="Ação" style="width:20%;text-align: center;">
+										<p:commandLink title="Excluir" rendered="true" update="meiosComunicacao"
+											value="Excluir" oncomplete="PF('confirmacaoDeleteMeioComunicacao').show()" >
+											<f:setPropertyActionListener target="#{comunitario_controller.meioComunicacao}"
+												value="#{item}" />
+										</p:commandLink>
+										<p:spacer width="10px" />
+										
+										<p:commandLink value="Editar" action="#{comunitario_controller.prepararEditarMeioComunicacao}" oncomplete="PF('dlg_cadastro_meio_comunicacao').show()" update=":form-cadastro-meio-comunicacao">
+											<f:setPropertyActionListener target="#{comunitario_controller.meioComunicacao}"
+												value="#{item}" />
+										</p:commandLink>
+									
+									</p:column>
+								</p:dataTable>
+								
+								<br/>
+								
+								<p:panelGrid columns="1">
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.meiosFuncionam}"/>
+										<p:outputLabel value="Em geral, esses meios funcionam?" style="padding-left: 10px;" />
+									</h:panelGroup>
+									
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.temRadioAMFM}"/>
+										<p:outputLabel value="Tem rádio AM/FM?" style="padding-left: 10px;" />
+									</h:panelGroup>
+									
+									<p:outputLabel value="Qual(is) as emissora(s) de rádio que mais se escuta?" />
+									<p:inputText value="#{comunitario_controller.comunitario.emissorasRadioMaisEscuta}" style="width:300px">
+									</p:inputText>
+								</p:panelGrid>
+								
+								<br/>
+								
+								<p:panelGrid columns="1">
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.possuiProgramaRadioPreferido}"/>
+										<p:outputLabel value="Há programa de rádio preferido?" style="padding-left: 10px;" />
+									</h:panelGroup>
+								</p:panelGrid>
+								
+								<p:panelGrid columns="2">
+									<p:outputLabel value="Qual?" />
+									<p:inputText value="#{comunitario_controller.comunitario.programaRadioPreferido}" style="width:300px">
+									</p:inputText>
+								</p:panelGrid>
+								
+								<p:panelGrid columns="1">
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.casasPossuiTV}"/>
+										<p:outputLabel value="A maioria das casas possui TV?" style="padding-left: 10px;" />
+									</h:panelGroup>
+								</p:panelGrid>
+								
+								<p:panelGrid columns="2">
+									<p:outputLabel value="Qual é o programa que mais assistem?" />
+									<p:inputText value="#{comunitario_controller.comunitario.programaQueMaisAssistem}" style="width:300px">
+									</p:inputText>
+								</p:panelGrid>
+								
+								<p:panelGrid columns="1">
+									<h:panelGroup>
+										<p:selectBooleanCheckbox value="#{comunitario_controller.comunitario.gostariaReceberMateriasInfoPBF}"/>
+										<p:outputLabel value="A comunidade gostaria de receber materiais informativos sobre a PBF?" style="padding-left: 10px;" />
+									</h:panelGroup>
+								</p:panelGrid>
+								
+								<br/>
+								
+								<p:outputLabel value="Especifique quais:" />
+								<br/>
+								
+								<p:commandLink
+									styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+									title="Adicionar fonte de água"
+									oncomplete="PF('dlg_cadastro_mat_informativo').show()"
+									update=":form-cadastro-mat-informativo"
+									action="#{comunitario_controller.prepararCadastroMaterialInformativo}"
+									style="color:#fff; margin: 8px 2px;">
+									<span style="font-family: Arial"> Adicionar Novo</span>
+								</p:commandLink>
+								
+								<p:dataTable id="materiais" 
+									value="#{comunitario_controller.comunitario.materiaisInformativos}" var="item"
+									paginator="true" rows="5" style="width:70%">
+									
+									<f:facet name="header">
+										<h:outputText value="Materiais informativos" />
+								    </f:facet>
+									
+									<p:column filterBy="#{item.nivel}"
+										filterStyle="display:none" headerText="Nível" style="width:10%">
+										<h:outputText value="#{item.nivel}" style="float: right;"/>
+									</p:column>
+									
+									<p:column filterBy="#{item.fonte.descricao}"
+										filterStyle="display:none" headerText="Descrição" style="width:35%;">
+										<h:outputText value="#{item.material.descricao}" />
+									</p:column>
+									
+									<p:column filterBy="#{item.fonte.respotaa}"
+										filterStyle="display:none" headerText="Outros" style="width:35%;">
+										<h:outputText value="#{item.resposta}" />
+									</p:column>
+									
+									<p:column headerText="Ação" style="width:20%;text-align: center;">
+										<p:commandLink title="Excluir" rendered="true" update="materiais"
+											value="Excluir" oncomplete="PF('confirmacaoDeleteMateriaisInformativos').show()" >
+											<f:setPropertyActionListener target="#{comunitario_controller.materialInformativo}"
+												value="#{item}" />
+										</p:commandLink>
+										<p:spacer width="10px" />
+										
+										<p:commandLink value="Editar" action="#{comunitario_controller.prepararEditarMaterialInformativo}" oncomplete="PF('dlg_cadastro_mat_informativo').show()" update=":form-cadastro-mat-informativo">
+											<f:setPropertyActionListener target="#{comunitario_controller.materialInformativo}"
+												value="#{item}" />
+										</p:commandLink>
+									
+									</p:column>
+								</p:dataTable>
+								
+								<br/>
+								
+								<p:panelGrid columns="2">
+									<p:outputLabel value="Qual é a renda média das familias na comunidade?" />
+									<p:inputText
+										onkeypress="return formatarNumero(this,event,19,2);"
+										placeholder="Valor"
+										value="#{comunitario_controller.comunitario.rendaMedia}">
+										<f:convertNumber minFractionDigits="2"
+											maxFractionDigits="2" locale="pt_BR" />
+		
+									</p:inputText>
+								</p:panelGrid>
+								
+								<br/>
+								
+								<p:outputLabel value="Enumere as atividades que fornecem mais renda para a comunidade." />
+								<br/>
+								
+								<p:commandLink
+									styleClass="btn btn-success btn-sm fa fa-plus-square-o"
+									title="Adicionar atividade de renda"
+									oncomplete="PF('dlg_cadastro_ativ_renda').show()"
+									update=":form-cadastro-ativ-renda"
+									action="#{comunitario_controller.prepararCadastroAtividadeRenda}"
+									style="color:#fff; margin: 8px 2px;">
+									<span style="font-family: Arial"> Adicionar Novo</span>
+								</p:commandLink>
+								
+								<p:dataTable id="atividades" 
+									value="#{comunitario_controller.comunitario.atividadesRenda}" var="item"
+									paginator="true" rows="5" style="width:70%">
+									
+									<f:facet name="header">
+										<h:outputText value="Atividades de renda" />
+								    </f:facet>
+									
+									<p:column filterBy="#{item.nivel}"
+										filterStyle="display:none" headerText="Nível" style="width:10%">
+										<h:outputText value="#{item.nivel}" style="float: right;"/>
+									</p:column>
+									
+									<p:column filterBy="#{item.fonte.descricao}"
+										filterStyle="display:none" headerText="Descrição" style="width:35%;">
+										<h:outputText value="#{item.atividade.descricao}" />
+									</p:column>
+									
+									<p:column filterBy="#{item.fonte.respotaa}"
+										filterStyle="display:none" headerText="Outros" style="width:35%;">
+										<h:outputText value="#{item.resposta}" />
+									</p:column>
+									
+									<p:column headerText="Ação" style="width:20%;text-align: center;">
+										<p:commandLink title="Excluir" rendered="true" update="atividades"
+											value="Excluir" oncomplete="PF('confirmacaoDeleteAtividadeRenda').show()" >
+											<f:setPropertyActionListener target="#{comunitario_controller.atividadeRenda}"
+												value="#{item}" />
+										</p:commandLink>
+										<p:spacer width="10px" />
+										
+										<p:commandLink value="Editar" action="#{comunitario_controller.prepararEditarAtividadeRenda}" oncomplete="PF('dlg_cadastro_ativ_renda').show()" update=":form-cadastro-ativ-renda">
+											<f:setPropertyActionListener target="#{comunitario_controller.atividadeRenda}"
+												value="#{item}" />
+										</p:commandLink>
+									
+									</p:column>
+								</p:dataTable>
+							</p:fieldset>
+						</p:tab>
+						<p:tab>
+						
+							<f:facet name="title">
+								<p:commandLink
+									styleClass="glyphicon glyphicon-menu-hamburger">
+									<span style="font-family: Arial; font-size: 16px">Informações</span>
+								</p:commandLink>
+							</f:facet>
+						</p:tab>
+					</p:accordionPanel>
+				</p:tab>
+			</p:tabView>
+		</h:form>
+	</ui:define>
+	
+	<ui:define name="adicionais">
+		<p:dialog id="dlg-infraestrutura" header="Cadastro de infraestruturas comunitárias"
+			widgetVar="dlg_cadastro_infraestrutura_comunitaria" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="50%">
+			<h:form id="form-cadastro-infraestrutura-comunitaria" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{comunitario_controller.adicionarInfraEstrutura}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formcomunitario:infraestuturas :formcomunitario:msgs"
+						onsuccess="PF('dlg_cadastro_infraestrutura_comunitaria').hide()"/>
+					<p:commandLink action="#{comunitario_controller.prepararCadastroInfraEstrutura}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_infraestrutura_comunitaria').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+					<p:panelGrid columns="2">
+						
+						<p:outputLabel value="Infraestrutura comunitária: " />
+						<p:autoComplete style="width: 300px"
+							value="#{comunitario_controller.infraEstrutura.infraestruturaComunitaria}"
+							completeMethod="#{comunitario_controller.completeInfraEstuturas}"
+							var="infra" itemLabel="#{infra.descricao}"
+							itemValue="#{infra}" converter="infraestruturaConverter"
+							minQueryLength="3" forceSelection="true">
+						</p:autoComplete>
+						
+						<p:outputLabel value="Estado de conservação: " />
+						<p:selectOneMenu value="#{comunitario_controller.infraEstrutura.estadoConservacao}" >
+							<f:selectItem itemLabel="Selecione um estado" itemValue=""/>
+							<f:selectItems value="#{comunitario_controller.tiposEstadoConservacao}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+						</p:selectOneMenu>
+						
+						<p:outputLabel value="Quem financiou? " />
+						<p:selectOneMenu value="#{comunitario_controller.infraEstrutura.tipoFinanciador}" >
+							<f:selectItem itemLabel="Selecione um financiador" itemValue=""/>
+							<f:selectItems value="#{comunitario_controller.tiposFinanciador}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+						</p:selectOneMenu>
+					</p:panelGrid>
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteInfraEstrutura" header="Confirmação" message="Confirma a exclusão do item?">
+			<h:form id="formConfirmacaoInfraEstrutura">
+				<p:commandButton value="Sim" action="#{comunitario_controller.deleteInfraEstrutura}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formcomunitario:infraestuturas :formcomunitario:msgs"
+					onsuccess="PF('confirmacaoDeleteInfraEstrutura').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteInfraEstrutura').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<p:dialog id="dlg-sintoma" header="Cadastro de sintomas"
+			widgetVar="dlg_cadastro_sintoma" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="50%">
+			<h:form id="form-cadastro-sintoma" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{comunitario_controller.adicionarSintoma}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formcomunitario:sintomas :formcomunitario:msgs"
+						onsuccess="PF('dlg_cadastro_sintoma').hide()"/>
+					<p:commandLink action="#{comunitario_controller.prepararCadastroSintoma}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_sintoma').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+					<p:panelGrid columns="4">
+						
+						<p:outputLabel value="Nível: " />
+						<p:inputText value="#{comunitario_controller.sintoma.nivel}" style="width:50px">
+						</p:inputText>
+						
+						<p:outputLabel value="Sintoma: " />
+						<p:autoComplete style="width: 300px"
+							value="#{comunitario_controller.sintoma.sintoma}"
+							completeMethod="#{comunitario_controller.completeSintomas}"
+							var="sintoma" itemLabel="#{sintoma.descricao}"
+							itemValue="#{sintoma}" converter="sintomaConverter"
+							minQueryLength="3" forceSelection="true">
+							<p:ajax event="itemSelect" update="panelOutros" />
+						</p:autoComplete>	
+					</p:panelGrid>
+					<h:panelGrid id="panelOutros">
+						<p:panelGrid columns="2" rendered="#{comunitario_controller.sintoma.sintoma.temResposta}">
+							<p:outputLabel value="Outros: "/>
+							<p:inputText value="#{comunitario_controller.sintoma.resposta}" style="width:300px">
+							</p:inputText>
+						</p:panelGrid>
+					</h:panelGrid>	
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteSintoma" header="Confirmação" message="Confirma a exclusão do sintoma?">
+			<h:form id="formConfirmacaoSintoma">
+				<p:commandButton value="Sim" action="#{comunitario_controller.deleteSintoma}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formcomunitario:sintomas :formcomunitario:msgs"
+					onsuccess="PF('confirmacaoDeleteSintoma').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteSintoma').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<p:dialog id="dlg-fonte_agua" header="Cadastro de fontes de água"
+			widgetVar="dlg_cadastro_fonte_agua" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="50%">
+			<h:form id="form-cadastro-fonte-agua" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{comunitario_controller.adicionarFonteAgua}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formcomunitario:fontesAgua :formcomunitario:msgs"
+						onsuccess="PF('dlg_cadastro_fonte_agua').hide()"/>
+					<p:commandLink action="#{comunitario_controller.prepararCadastroFonteAgua}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_fonte_agua').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+					<p:panelGrid columns="4">
+						
+						<p:outputLabel value="Nível: " />
+						<p:inputText value="#{comunitario_controller.fonteAguaConsumo.nivel}" style="width:50px">
+						</p:inputText>
+						
+						<p:outputLabel value="Fonte de água: " />
+						<p:autoComplete style="width: 300px"
+							value="#{comunitario_controller.fonteAguaConsumo.fonte}"
+							completeMethod="#{comunitario_controller.completeFontesAgua}"
+							var="fonteAguaConsumo" itemLabel="#{fonteAguaConsumo.descricao}"
+							itemValue="#{fonteAguaConsumo}" converter="fonteAguaConverter"
+							minQueryLength="3" forceSelection="true">
+							<p:ajax event="itemSelect" update="panelOutros" />
+						</p:autoComplete>	
+					</p:panelGrid>
+					<h:panelGrid id="panelOutros">
+						<p:panelGrid columns="2" rendered="#{comunitario_controller.fonteAguaConsumo.fonte.temResposta}">
+							<p:outputLabel value="Outros: "/>
+							<p:inputText value="#{comunitario_controller.fonteAguaConsumo.resposta}" style="width:300px">
+							</p:inputText>
+						</p:panelGrid>
+					</h:panelGrid>	
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteFonteAgua" header="Confirmação" message="Confirma a exclusão do item?">
+			<h:form id="formConfirmacaoFonteAgua">
+				<p:commandButton value="Sim" action="#{comunitario_controller.deleteFonteAgua}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formcomunitario:fontesAgua :formcomunitario:msgs"
+					onsuccess="PF('confirmacaoDeleteFonteAgua').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteFonteAgua').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<p:dialog id="dlg-meio_comunicacao" header="Cadastro de meio de comunicação"
+			widgetVar="dlg_cadastro_meio_comunicacao" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="50%">
+			<h:form id="form-cadastro-meio-comunicacao" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{comunitario_controller.adicionarMeioComunicacao}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formcomunitario:meiosComunicacao :formcomunitario:msgs"
+						onsuccess="PF('dlg_cadastro_meio_comunicacao').hide()"/>
+					<p:commandLink action="#{comunitario_controller.prepararCadastroMeioComunicacao}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_meio_comunicacao').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+					<p:panelGrid columns="4">
+						
+						<p:outputLabel value="Nível: " />
+						<p:inputText value="#{comunitario_controller.meioComunicacao.nivel}" style="width:50px">
+						</p:inputText>
+						
+						<p:outputLabel value="Meio de comunicação: " />
+						<p:autoComplete style="width: 300px"
+							value="#{comunitario_controller.meioComunicacao.meioComunicacao}"
+							completeMethod="#{comunitario_controller.completeMeiosComunicacao}"
+							var="meio" itemLabel="#{meio.descricao}"
+							itemValue="#{meio}" converter="meioComunicacaoConverter"
+							minQueryLength="3" forceSelection="true">
+							<p:ajax event="itemSelect" update="panelOutros" />
+						</p:autoComplete>	
+					</p:panelGrid>
+					<h:panelGrid id="panelOutros">
+						<p:panelGrid columns="2" rendered="#{comunitario_controller.meioComunicacao.meioComunicacao.temResposta}">
+							<p:outputLabel value="Outros: "/>
+							<p:inputText value="#{comunitario_controller.meioComunicacao.resposta}" style="width:300px">
+							</p:inputText>
+						</p:panelGrid>
+					</h:panelGrid>	
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteMeioComunicacao" header="Confirmação" message="Confirma a exclusão do item?">
+			<h:form id="formConfirmacaoMeioComunicacao">
+				<p:commandButton value="Sim" action="#{comunitario_controller.deleteMeioComunicacao}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formcomunitario:meiosComunicacao :formcomunitario:msgs"
+					onsuccess="PF('confirmacaoDeleteMeioComunicacao').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteMeioComunicacao').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<p:dialog id="dlg-mat_informativo" header="Cadastro de materiais informativos"
+			widgetVar="dlg_cadastro_mat_informativo" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="50%">
+			<h:form id="form-cadastro-mat-informativo" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{comunitario_controller.adicionarMaterialInformativo}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formcomunitario:materiais :formcomunitario:msgs"
+						onsuccess="PF('dlg_cadastro_mat_informativo').hide()"/>
+					<p:commandLink action="#{comunitario_controller.prepararCadastroMaterialInformativo}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_mat_informativo').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+					<p:panelGrid columns="4">
+						
+						<p:outputLabel value="Nível: " />
+						<p:inputText value="#{comunitario_controller.materialInformativo.nivel}" style="width:50px">
+						</p:inputText>
+						
+						<p:outputLabel value="Material informativo: " />
+						<p:autoComplete style="width: 300px"
+							value="#{comunitario_controller.materialInformativo.material}"
+							completeMethod="#{comunitario_controller.completeMateriaisInformativos}"
+							var="material" itemLabel="#{material.descricao}"
+							itemValue="#{material}" converter="materialInformativoConverter"
+							minQueryLength="3" forceSelection="true">
+							<p:ajax event="itemSelect" update="panelOutros" />
+						</p:autoComplete>	
+					</p:panelGrid>
+					<h:panelGrid id="panelOutros">
+						<p:panelGrid columns="2" rendered="#{comunitario_controller.materialInformativo.material.temResposta}">
+							<p:outputLabel value="Outros: "/>
+							<p:inputText value="#{comunitario_controller.materialInformativo.resposta}" style="width:300px">
+							</p:inputText>
+						</p:panelGrid>
+					</h:panelGrid>	
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteMaterialInformativo" header="Confirmação" message="Confirma a exclusão do item?">
+			<h:form id="formConfirmacaoMaterialInformativo">
+				<p:commandButton value="Sim" action="#{comunitario_controller.deleteMaterialInformativo}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formcomunitario:materiais :formcomunitario:msgs"
+					onsuccess="PF('confirmacaoDeleteMaterialInformativo').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteMaterialInformativo').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<p:dialog id="dlg-ativ_renda" header="Cadastro de atividades de renda"
+			widgetVar="dlg_cadastro_ativ_renda" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="50%">
+			<h:form id="form-cadastro-ativ-renda" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{comunitario_controller.adicionarAtividadeRenda}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formcomunitario:atividades :formcomunitario:msgs"
+						onsuccess="PF('dlg_cadastro_ativ_renda').hide()"/>
+					<p:commandLink action="#{comunitario_controller.prepararCadastroAtividadeRenda}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_ativ_renda').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+					<p:panelGrid columns="4">
+						
+						<p:outputLabel value="Nível: " />
+						<p:inputText value="#{comunitario_controller.atividadeRenda.nivel}" style="width:50px">
+						</p:inputText>
+						
+						<p:outputLabel value="Material informativo: " />
+						<p:autoComplete style="width: 300px"
+							value="#{comunitario_controller.atividadeRenda.atividade}"
+							completeMethod="#{comunitario_controller.completeAtividadesRenda}"
+							var="material" itemLabel="#{material.descricao}"
+							itemValue="#{material}" converter="atividadeRendaConverter"
+							minQueryLength="3" forceSelection="true">
+							<p:ajax event="itemSelect" update="panelOutros" />
+						</p:autoComplete>	
+					</p:panelGrid>
+					<h:panelGrid id="panelOutros">
+						<p:panelGrid columns="2" rendered="#{comunitario_controller.atividadeRenda.atividade.temResposta}">
+							<p:outputLabel value="Outros: "/>
+							<p:inputText value="#{comunitario_controller.atividadeRenda.resposta}" style="width:300px">
+							</p:inputText>
+						</p:panelGrid>
+					</h:panelGrid>	
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteAtividadeRenda" header="Confirmação" message="Confirma a exclusão do item?">
+			<h:form id="formConfirmacaoAtividadeRenda">
+				<p:commandButton value="Sim" action="#{comunitario_controller.deleteAtividadeRenda}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formcomunitario:atividades :formcomunitario:msgs"
+					onsuccess="PF('confirmacaoDeleteAtividadeRenda').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteAtividadeRenda').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<p:dialog id="dlg-fonte_energia" header="Cadastro de fonte de energia"
+			widgetVar="dlg_cadastro_fonte_energia" modal="true" showEffect="clip"
+			hideEffect="clip" height="100%" width="50%">
+			<h:form id="form-cadastro-fonte-energia" >
+			
+				<p:messages id="msgs"  showSummary="false"
+							showDetail="true" showIcon="true" closable="true" />
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+						action="#{comunitario_controller.adicionarFonteEnergia}" 
+						style="color:#fff; margin: 2px 2px;" value="Salvar" 
+						update=":formcomunitario:fontesEnergia :formcomunitario:msgs"
+						onsuccess="PF('dlg_cadastro_fonte_energia').hide()"/>
+					<p:commandLink action="#{comunitario_controller.prepararCadastroFonteEnergia}" value="voltar"
+						 immediate="true" styleClass="btn btn-info btn-sm" onsuccess="PF('dlg_cadastro_fonte_energia').hide()"/>
+
+				</div>
+				
+				<h:panelGroup>
+					<p:panelGrid columns="4">
+						
+						<p:outputLabel value="Nível: " />
+						<p:inputText value="#{comunitario_controller.fonteEnergia.nivel}" style="width:50px">
+						</p:inputText>
+						
+						<p:outputLabel value="Fonte de energia: " />
+						<p:autoComplete style="width: 300px"
+							value="#{comunitario_controller.fonteEnergia.fonteEnergia}"
+							completeMethod="#{comunitario_controller.completeFonteEnergia}"
+							var="fonte" itemLabel="#{fonte.descricao}"
+							itemValue="#{fonte}" converter="fonteEnergiaConverter"
+							minQueryLength="3" forceSelection="true">
+							<p:ajax event="itemSelect" update="panelOutros" />
+						</p:autoComplete>	
+					</p:panelGrid>
+					<h:panelGrid id="panelOutros">
+						<p:panelGrid columns="2" rendered="#{comunitario_controller.fonteEnergia.fonteEnergia.temResposta}">
+							<p:outputLabel value="Outros: "/>
+							<p:inputText value="#{comunitario_controller.fonteEnergia.resposta}" style="width:300px">
+							</p:inputText>
+						</p:panelGrid>
+					</h:panelGrid>	
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog widgetVar="confirmacaoDeleteFonteEnergia" header="Confirmação" message="Confirma a exclusão do item?">
+			<h:form id="formConfirmacaoFonteEnergia">
+				<p:commandButton value="Sim" action="#{comunitario_controller.deleteFonteEnergia}"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					update=":formcomunitario:fontesEnergia :formcomunitario:msgs"
+					onsuccess="PF('confirmacaoDeleteFonteEnergia').hide()" />
+				<p:commandButton value="Não"
+					onclick="PF('confirmacaoDeleteFonteEnergia').hide()" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					immediate="true" />
+			</h:form>
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

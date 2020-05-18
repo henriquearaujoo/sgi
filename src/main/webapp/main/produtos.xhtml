@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="content">
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();	
+			}
+			
+		</script>
+
+		<p:panel rendered="false" style="width:100%;margin-auto">
+			<h3>Você nem tem autorização pra acessar essa página</h3>
+		</p:panel>
+
+
+		<h:form id="form-produtos">
+			<br />
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Produtos" />
+			</p:breadCrumb>
+
+			<p:panel>
+
+
+				<p:messages id="msg_panel_cadastro" showSummary="false"
+					showDetail="true" closable="true" escape="true" />
+
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-8">
+						<h:outputText value="Descrição:" />
+						<p:inputTextarea value="#{produtoController.produto.descricao}"
+							disabled="#{!produtoController.novoProduto}" rows="4"
+							completeMethod="#{produtoController.completeProduto}"
+							minQueryLength="2">
+						</p:inputTextarea>
+					</div>
+
+					<div class="ui-g-4 ">
+
+						<h:outputText value="Status: " />
+						<br />
+						<h:outputText
+							value="#{produtoController.produto.inativo ? 'Inativo ' : 'Ativo '}" />
+						<br />
+						<h:outputText value="Ultima manutenção: " />
+						<p:commandLink action="#{produtoController.carregarHistoricos()}"
+							value="#{produtoController.ultimaManutencao}"
+							oncomplete="PF('historico_produto').show();"
+							update=":form-historico" />
+
+					</div>
+				</div>
+
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-12">
+
+						<h:outputText value="Categoria:" />
+						<p:selectOneMenu id="input_categoria"
+							disabled="#{!produtoController.novoProduto}"
+							value="#{produtoController.produto.categoriaDespesa}"
+							filter="true" filterMatchMode="contains"
+							converter="categoriaConverter">
+
+							<f:selectItem itemLabel="Categorias"
+								itemValue="#{produtoController.categoriaZERO}" />
+							<f:selectItems value="#{produtoController.categorias}" var="cat"
+								itemValue="#{cat}" itemLabel="#{cat.nome}" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+
+
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-6">
+						<h:outputText value="Unidade de medida:" />
+						<p:selectOneMenu filter="true"
+							disabled="#{!produtoController.novoProduto}"
+							filterMatchMode="contains" converter="unidadeCompraConverter"
+							value="#{produtoController.produto.unidadeDeCompra}">
+							<f:selectItem itemLabel="Unidades"
+								itemValue="#{produtoController.unidadeZERO}" />
+							<f:selectItems value="#{produtoController.unidades}" var="und"
+								itemLabel="#{und.descricao}" itemValue="#{und}" />
+						</p:selectOneMenu>
+					</div>
+
+					<div class="ui-g-6">
+						<h:outputText value="Tipo:" />
+						<p:selectOneMenu value="#{produtoController.produto.tipo}"
+							disabled="#{!produtoController.novoProduto}">
+							<f:selectItem itemLabel="Tipos" noSelectionOption="true" />
+							<f:selectItem itemLabel="Bem" itemValue="BEM" />
+							<f:selectItem itemLabel="Insumo" itemValue="INSUMO" />
+							<f:selectItem itemLabel="Serviço" itemValue="SERVICO" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+
+
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-12">
+						<p:commandLink rendered="#{!produtoController.novoProduto}"
+							styleClass="btn btn-primary"
+							action="#{produtoController.iniciarProduto()}"
+							update="form-produtos">
+							<span class="fa fa-fw fa-plus"></span>
+							<span style="margin: 3px;">Novo</span>
+						</p:commandLink>
+
+						<p:commandLink style="color:#fff"
+							rendered="#{produtoController.novoProduto}"
+							styleClass="btn btn-danger"
+							action="#{produtoController.cancelarCadastro()}"
+							update="form-produtos">
+							<span class="fa fa-fw fa-times-circle"></span>
+							<span style="margin: 3px;">Cancelar</span>
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-primary"
+							action="#{produtoController.alterar()}" update="form-produtos">
+							<span class="fa fa-fw fa-pencil"></span>
+							<span style="margin: 3px;">Alterar</span>
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-success "
+							action="#{produtoController.salvar()}" update="form-produtos">
+							<span class="fa fa-fw fa-floppy-o"></span>
+							<span style="margin: 3px;">Salvar</span>
+							<p:confirm icon="ui-icon-alert" message="Salvar produto?" />
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-success "
+							rendered="#{produtoController.poderEditar()}"
+							action="#{produtoController.reativar()}" update="table-produto">
+							<span class="fa fa-fw fa-check"></span>
+							<span style="margin: 3px;">Reativar</span>
+							<p:confirm icon="ui-icon-alert"
+								message="Reativar produtos selecionados?" />
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-danger "
+							rendered="#{produtoController.poderEditar()}"
+							action="#{produtoController.inativar()}" update="table-produto">
+							<p:confirm icon="ui-icon-alert"
+								message="Inativar produtos selecionados?" />
+
+							<span class="glyphicon glyphicon-ban-circle"></span>
+							<span style="margin: 3px;">Inativar</span>
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-primary " onstart="start()"
+							onsuccess="stop()" onerror="stop()"
+							action="#{produtoController.enviarAvisoAP()}"
+							update="form-produtos">
+							<span class="fa fa-fw fa-envelope"></span>
+							<span style="margin: 3px;">Enviar pré-cadatro</span>
+							<p:confirm icon="ui-icon-alert"
+								message="Enviar aviso de pré-cadastro?" />
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-primary "
+							oncomplete="PF('dialog_observacao').show();"
+							action="#{produtoController.carregarListaDeObservacao()}"
+							update=":form-observacao">
+							<span class="fa fa-fw fa-file"></span>
+							<span style="margin: 3px;">Observações</span>
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-danger"
+							action="#{produtoController.remover()}" update="table-produto">
+							<p:confirm icon="ui-icon-alert"
+								message="Excluir produtos selecionados?" />
+							<span class="fa fa-fw fa-trash-o"></span>
+							<span style="margin: 3px;">Excluir</span>
+						</p:commandLink>
+
+
+						<p:commandLink styleClass="btn btn-default "
+							update="form-produtos :form_help"
+							oncomplete="PF('dialog_help').show();">
+							<span class="fa fa-fw fa-info"></span>
+							<span style="margin: 3px;">Ajuda</span>
+						</p:commandLink>
+					</div>
+				</div>
+
+				<p:separator></p:separator>
+
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-6" style="text-align: right">
+						<h5>
+							<h:outputText value="Filtro" style="font-weight:bold" />
+						</h5>
+					</div>
+				</div>
+
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-3">
+						<h:outputText value="Código:" />
+						<p:inputText value="#{produtoController.filtro.idProduto}" />
+					</div>
+
+					<div class="ui-g-3">
+						<h:outputText value="Descrição:" />
+						<p:inputText value="#{produtoController.filtro.descricao}" />
+					</div>
+
+					<div class="ui-g-3">
+						<h:outputText value="Status cadastro:" />
+						<p:selectOneMenu
+							value="#{produtoController.filtro.statusCadastro}">
+							<f:selectItem itemLabel="Status" noSelectionOption="true" />
+							<f:selectItem itemLabel="Pré-cadastrado" itemValue="true" />
+							<f:selectItem itemLabel="Cadastrado" itemValue="false" />
+						</p:selectOneMenu>
+					</div>
+
+					<div class="ui-g-3">
+						<h:outputText value="Ativo/Inativo:" />
+						<p:selectOneMenu
+							value="#{produtoController.filtro.ativoInativoProd}">
+							<f:selectItem itemLabel="Status produto" noSelectionOption="true" />
+							<f:selectItem itemLabel="Ativo" itemValue="false" />
+							<f:selectItem itemLabel="Inativo" itemValue="true" />
+						</p:selectOneMenu>
+					</div>
+				</div>
+
+
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-8">
+						<h:outputText value="Categoria:" />
+						<p:selectOneMenu value="#{produtoController.filtro.categoriaID}"
+							filter="true" filterMatchMode="contains">
+							<f:selectItem itemLabel="Categorias" noSelectionOption="true" />
+							<f:selectItems value="#{produtoController.categorias}" var="cat"
+								itemLabel="#{cat.nome}" itemValue="#{cat.id}" />
+						</p:selectOneMenu>
+					</div>
+
+					<div class="ui-g-4" style="text-align: right">
+						<h:outputText value="" />
+						<p:commandLink styleClass="btn btn-primary btn-xs"
+							action="#{produtoController.filtrar()}" onclick="start()"
+							onsuccess="stop()" onerror="stop()" update="table-produto"
+							style="color:#fff;">
+							<span class="fa fa-fw  fa fa-search"></span>
+							<span style="margin: 3px;">Filtrar</span>
+						</p:commandLink>
+					</div>
+
+				</div>
+
+				<p:separator></p:separator>
+
+				<br />
+
+				<div class="ui-g ui-fluid">
+
+					<p:dataTable id="table-produto"
+						value="#{produtoController.produtos}"
+						selection="#{produtoController.produtosSelected}" var="produto"
+						rows="12" rowKey="#{produto.id}" widgetVar="tab-wi-produto"
+						rowStyleClass="#{produto.inativo ? 'highlight_red' : produto.preCadastro ? 'highlight_yellow' : 'null'} "
+						tableStyle="with:auto" paginator="true"
+						paginatorTemplate="{Exporters}  {CurrentPageReport}  
+				{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} 
+				{LastPageLink} {RowsPerPageDropdown}"
+						rowIndexVar="index">s
+
+					<f:facet name="{Exporters}">
+
+							<h:commandLink style="margin:3px">
+								<p:graphicImage library="image" name="excel.png" width="30" />
+								<p:dataExporter type="xls" target="table-produto"
+									fileName="Produtos" />
+							</h:commandLink>
+						</f:facet>
+
+						<p:column style="width:60px;text-align:center" headerText="#">
+							<h:outputText value="#{index + 1}" />
+						</p:column>
+
+						<p:column headerText="#">
+							<h:outputText value="#{produto.id}" />
+						</p:column>
+
+						<p:column id="coll_desc" headerText="Descrição"
+							style="text-align:left;width:35%">
+							<h:outputText value="#{produto.descricao}" />
+						</p:column>
+
+						<p:column headerText="Unidade" style="text-align:center">
+							<h:outputText value="#{produto.unidadeDeCompra.descricao}" />
+						</p:column>
+
+						<p:column headerText="Tipo" style="text-align:center">
+							<h:outputText value="#{produto.tipo}" />
+						</p:column>
+
+						<p:column headerText="Categoria Despesa"
+							style="text-align:center;width:200px">
+							<h:outputText value="#{produto.categoriaDespesa.nome}" />
+						</p:column>
+
+						<p:column headerText="Ativo/Inativo"
+							rendered="#{!produto.preCadastro}"
+							style="width:80px;text-align:center">
+							<h:outputText value="#{produto.inativo ? 'Inativo' : 'Ativo'}" />
+						</p:column>
+
+						<p:column headerText="Ativo/Inativo/Em análise"
+							rendered="#{produto.preCadastro}"
+							style="width:160px;text-align:center">
+							<h:outputText value="Em análise" />
+						</p:column>
+
+						<p:column selectionMode="multiple" style="width:35px" />
+
+					</p:dataTable>
+				</div>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog widgetVar="dialog_help" closable="true" closeOnEscape="true"
+			modal="true" showEffect="clip" hideEffect="clip">
+			<h:form id="form_help">
+				<p:graphicImage library="image" name="instrucao.png" />
+			</h:form>
+
+		</p:dialog>
+
+
+		<p:dialog header="Observações" widgetVar="dialog_observacao"
+			closable="true" closeOnEscape="true" modal="true" showEffect="clip"
+			hideEffect="clip" width="70%">
+			<h:form id="form-observacao">
+				<p:messages showSummary="false" showDetail="true" closable="true" />
+
+				<h:panelGrid columns="2" width="100%"
+					columnClasses="ui-grid-col-10,ui-grid-col-2">
+					<f:facet name="header">
+						<h:panelGrid columns="2"
+							columnClasses="ui-grid-col-2,ui-grid-col-10">
+							<h:outputText value="Produto: " />
+							<h:outputText style="margin-left:4px"
+								value="#{produtoController.produto.descricao}" />
+						</h:panelGrid>
+						<p:separator></p:separator>
+					</f:facet>
+
+					<p:inputText
+						value="#{produtoController.observacaoProduto.mensagem}"
+						style="width:100%" />
+					<p:commandLink value="Salvar" update="form-observacao"
+						process="form-observacao" style="margin-left:5px;color:#fff"
+						action="#{produtoController.salvarObservacao()}"
+						styleClass="btn btn-primary btn-sm" />
+				</h:panelGrid>
+
+				<p:separator></p:separator>
+				<table class="table table-hover">
+					<tbody>
+						<ui:repeat var="observacao"
+							value="#{produtoController.listObseravaoProduto}">
+							<p:outputPanel>
+								<tr>
+									<td><h:outputText
+											value="#{observacao.usuario.nomeUsuario}" /></td>
+									<td><h:outputText value="#{observacao.mensagem}" /></td>
+									<td><h:outputText value="#{observacao.data}">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss "
+												timeZone="America/Manaus" />
+										</h:outputText></td>
+
+									<td style="width: 150px; float: right"><p:commandLink
+											update="form-observacao" styleClass="fa fa-pencil"
+											onstart="start()" onsuccess="stop()" onerror="stop()">
+											<f:setPropertyActionListener value="#{observacao}"
+												target="#{produtoController.observacaoProduto}" />
+											<span style="font-family: Arial">Editar</span>
+										</p:commandLink></td>
+
+									<td style="width: 150px"><p:commandLink
+											action="#{produtoController.enviarEmailObservacao()}"
+											update="form-observacao" styleClass="fa fa-envelope"
+											onstart="start()" onsuccess="stop()" onerror="stop()">
+											<f:setPropertyActionListener value="#{observacao}"
+												target="#{produtoController.observacaoProduto}" />
+											<span style="font-family: Arial">Enviar aviso</span>
+										</p:commandLink></td>
+
+								</tr>
+
+							</p:outputPanel>
+
+						</ui:repeat>
+					</tbody>
+				</table>
+
+			</h:form>
+		</p:dialog>
+
+		<p:confirmDialog global="true" showEffect="clip" hideEffect="clip"
+			icon="ui-icon-alert">
+			<h:form>
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</h:form>
+		</p:confirmDialog>
+
+
+
+		<p:dialog header="Histórico" widgetVar="historico_produto"
+			closable="true" closeOnEscape="true" modal="true" showEffect="clip"
+			hideEffect="clip">
+
+			<h:form id="form-historico">
+				<p:dataTable tableStyle="width:auto" paginator="true" rows="10"
+					value="#{produtoController.listHistorico}" var="historico">
+
+					<p:column headerText="Descrição">
+						<h:outputText value="#{historico.descricao}" />
+					</p:column>
+
+					<p:column headerText="Categoria">
+						<h:outputText value="#{historico.categoriaDespesa.nome}" />
+					</p:column>
+
+					<p:column headerText="Und. medida">
+						<h:outputText value="#{historico.unidadeDeCompra.descricao}" />
+					</p:column>
+
+					<p:column headerText="Tipo">
+						<h:outputText value="#{historico.tipo}" />
+					</p:column>
+
+					<p:column headerText="Ativo">
+						<h:outputText value="#{historico.inativo ? 'Inativo' : 'Ativo'}" />
+					</p:column>
+
+					<p:column headerText="Data">
+						<h:outputText value="#{historico.dataEdicao}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss "
+								timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Editado por">
+						<h:outputText value="#{historico.usuario.nomeUsuario}" />
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog header="Cadastro/Edição" widgetVar="cadastro_produto"
+			width="40%" closable="false" modal="true" showEffect="clip"
+			hideEffect="clip">
+
+			<h:form id="form_cadastro_produto">
+				<p:messages id="message_produto" showIcon="true" showSummary="false" />
+				<p:panelGrid id="panel_cadastro" columns="2" styleClass="ui-fluid">
+
+					<p:outputLabel value="Descrição:" />
+					<p:inputText value="#{produtoController.produto.descricao}"
+						required="true" style="width:400px" />
+
+					<p:outputLabel value="Marca:" />
+					<p:inputText value="#{produtoController.produto.marca}" />
+
+					<p:outputLabel value="Unidade de medida:" />
+					<p:inputText value="#{produtoController.produto.unidadeDeMedida}" />
+
+					<p:outputLabel value="Categoria:" />
+					<p:inputText value="#{produtoController.produto.categoria}" />
+
+					<p:outputLabel value="NCM:" />
+					<p:inputText value="#{produtoController.produto.ncm}" />
+
+					<p:outputLabel value="Tipo:" />
+					<p:inputText value="#{produtoController.produto.tipo}" />
+
+					<p:outputLabel value="Categoria Despesa:" />
+					<p:selectOneMenu
+						value="#{produtoController.produto.categoriaDespesa}"
+						filter="true" converter="categoriaConverter">
+						<f:selectItems value="#{produtoController.listaCategoria()}"
+							var="cat" itemValue="#{cat}" itemLabel="#{cat.nome}" />
+					</p:selectOneMenu>
+
+
+
+
+				</p:panelGrid>
+				<p:separator style="margin-bottom:4px;margin-top:4px;"></p:separator>
+				<p:commandLink style="color:#FFF" value="Salvar"
+					styleClass="btn btn-primary"
+					oncomplete="PF('cadastro_produto').hide()"
+					action="#{produtoController.salvar()}"
+					update="form_cadastro_produto,form-produtos">
+				</p:commandLink>
+
+				<p:commandLink style="color:#FFF;margin-left:4px" value="Fechar"
+					styleClass="btn btn-danger" onclick="PF('cadastro_produto').hide()"
+					action="#{produtoController.preparaProduto()}"
+					update="form_cadastro_produto">
+				</p:commandLink>
+
+			</h:form>
+		</p:dialog>
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

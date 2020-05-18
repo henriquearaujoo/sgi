@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="menu_lateral">
+
+		<style type="text/css">
+.ui-widget {
+	font-size: 100%;
+}
+</style>
+
+
+		<h:form id="tabela_projeto">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{solicitacao_expedicao.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{solicitacao_expedicao.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{solicitacao_expedicao.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right;" class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h1>Solicitações de expedição</h1>
+
+		<h:form id="form-solicitacao-expedicao">
+		
+			<p:messages  showSummary="false" showDetail="true" showIcon="true" closable="true"/>
+			<p:dataTable id="table-solicitacao-expedicao" paginator="true"
+				rows="5" value="#{solicitacao_expedicao.solicitacoes}"
+				var="solicitacao">
+
+
+				<f:facet name="header">
+					<p:outputPanel id="panel-filtro-solicitacao-expedicao">
+
+						<h:outputText value="Código:" />
+						<p:inputText style="margin-left:5px;margin-right:5px" value="#{solicitacao_expedicao.filtro.solicitacaoExpedicaoID}"/>
+						
+						<h:outputText value="Código do pedido:" />
+						<p:inputText style="margin-left:5px;margin-right:5px" value="#{solicitacao_expedicao.filtro.lancamentoID}"/>
+
+						<h:outputText value="Data:" />
+						<p:calendar id="dt_inicio" required="true" requiredMessage="Preencha os campos de data" style="margin-left:5px;margin-right:5px"
+							value="#{solicitacao_expedicao.filtro.dataInicio}" placeholder="Ínicio"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+						
+						<p:calendar id="dt_fim" style="margin-left:5px;margin-right:5px" required="true" requiredMessage="Preencha os campos de data"
+							value="#{solicitacao_expedicao.filtro.dataFinal}" placeholder="Fim"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />	
+	
+						<p:commandLink id="filtro-botao" style="color:#fff" action="#{solicitacao_expedicao.carregarSolicitacoes()}" process="panel-filtro-solicitacao-expedicao" update=":form-solicitacao-expedicao:table-solicitacao-expedicao" styleClass="btn btn-primary btn-sm fa fa-search-plus" value="Buscar"/>
+						<p:commandLink id="filtro-limpar"   style="color:#fff;margin-left:5px" action="#{solicitacao_expedicao.limparFiltro()}" process="panel-filtro-solicitacao-expedicao" update=":form-solicitacao-expedicao:table-solicitacao-expedicao" styleClass="btn btn-primary btn-sm" value="Limpar"/>
+						
+						<p:commandLink id="add" styleClass="link-content"
+							action="#{solicitacao_expedicao.iniciarNovaSolicitacao()}"
+							title="Nova solicitação" update=":form-cadastro-solicitacao"
+							oncomplete="PF('dlg_nova_solicitacao').show();">
+							<span style="color: green; font-size: 25px;"
+								class="icon-plus-alt"></span>
+						</p:commandLink>
+
+
+						<p:commandLink id="buscar" styleClass="link-content-search"
+							style="float:right; margin-bottom:5px;" title="Buscar">
+							<span style="font-size: 25px;" class="fa fa-filter"></span>
+						</p:commandLink>
+
+
+
+					</p:outputPanel>
+
+
+
+				</f:facet>
+
+				<p:column headerText="Código" filterBy="#{solicitacao.id}"
+					filterMatchMode="contains">
+					<p:commandLink action="#{solicitacao_expedicao.prepararEdicao()}" oncomplete="PF('dlg_nova_solicitacao').show();" update=":form-cadastro-solicitacao" value="#{solicitacao.id}">
+					 <f:setPropertyActionListener value="#{solicitacao}" target="#{solicitacao_expedicao.solicitacao}"/>
+					</p:commandLink>
+				</p:column>
+
+				<p:column headerText="Data">
+					<h:outputText value="#{solicitacao.dataEmissao}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss "
+							timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Solicitante"
+					filterBy="#{solicitacao.usuario.colaborador.nome}"
+					filterMatchMode="contains">
+					<h:outputText value="#{solicitacao.usuario.colaborador.nome}" />
+				</p:column>
+
+
+				<p:column headerText="Status"
+					filterBy="#{solicitacao.statusSolicitacao.nome}"
+					filterMatchMode="contains">
+					<h:outputText value="#{solicitacao.statusSolicitacao.nome}" />
+				</p:column>
+
+				
+
+				<p:column  style="width:105px">
+					<p:commandLink title="Aceitar" process="@this"
+						style="margin-left:10px;color:#849A39"
+						styleClass="fa fa-check-square-o"
+						action="#{solicitacao_expedicao.aceitarSolicitacao()}"
+						update="table-solicitacao-expedicao">
+						<f:setPropertyActionListener value="#{solicitacao}"
+							target="#{solicitacao_expedicao.solicitacao}" />
+					</p:commandLink>
+					
+					<p:commandLink title="Recusar" rendered="true"
+											style="margin-left:10px;color:#849A39"
+											styleClass="fa fa-times"
+											action="#{solicitacao_expedicao.removerSolicitacao()}"
+											update="table-solicitacao-expedicao">
+											<f:setPropertyActionListener value="#{solicitacao}"
+												target="#{solicitacao_expedicao.solicitacao}" />
+					</p:commandLink>
+					
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog header="Adicionar/Editar Solicitação" closable="true"
+			widgetVar="dlg_nova_solicitacao" modal="true" height="90%"
+			width="90%" showEffect="clip" hideEffect="clip">
+			<h:form id="form-cadastro-solicitacao">
+
+				<p:messages  showSummary="false" showDetail="true"
+					showIcon="true" closable="true" />
+				<p:panelGrid columns="1" styleClass="ui-fluid">
+
+					<p:panelGrid columns="2">
+						<h:outputText value="Data prevista pra expedição:" />
+						<p:calendar
+							value="#{solicitacao_expedicao.solicitacao.dataPrevisaoDaExpedicao}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+						<h:outputText value="Observação:" />
+						<p:inputTextarea
+							value="#{solicitacao_expedicao.solicitacao.observacao}" cols="45"
+							rows="4" />
+
+						<p:commandLink value="Salvar Solicitação" 
+							styleClass="btn btn-primary btn-sm" style="color:#fff"
+							action="#{solicitacao_expedicao.salvarSolicitacao()}"
+							update="form-cadastro-solicitacao :form-solicitacao-expedicao" />
+					</p:panelGrid>
+
+					<p:dataTable id="table-lista-pedidos" rowIndexVar="indexRow" paginator="true" rows="5"
+						value="#{solicitacao_expedicao.solicitacao.pedidos}" var="pedido">
+
+						<f:facet name="header">
+							<p:panelGrid columns="1">
+
+								<h:outputText value="Código pedido:" />
+								<h:panelGroup>
+									<p:inputText style="width:120px;"
+										value="#{solicitacao_expedicao.idPedido}" />
+									<p:commandLink update="table-lista-pedidos"
+										styleClass="btn btn-primary btn-sm" value="Enviar pedido"
+										style="margin-left:5px;color:#fff"
+										action="#{solicitacao_expedicao.adicionarNovoPedido()}" />
+								</h:panelGroup>
+							</p:panelGrid>
+						</f:facet>
+
+						<p:column headerText="Nº Pedido">
+							<h:outputText value="#{pedido.id}" />
+						</p:column>
+
+						<p:column headerText="Fornecedor">
+							<h:outputText value="#{pedido.fornecedor.nomeFantasia}" />
+						</p:column>
+
+						<p:column headerText="Localidade">
+							<h:outputText value="#{pedido.localidade.mascara}" />
+						</p:column>
+
+						<p:column headerText="Valor">
+							<h:outputText value="#{pedido.valorTotalComDesconto}" />
+						</p:column>
+
+						<p:column headerText="Expedição">
+							<h:outputText
+								value="#{pedido.solicitacaoExpedicao != null ? pedido.solicitacaoExpedicao.statusSolicitacao.nome : 'N-Iniciado'}" />
+						</p:column>
+						
+						<p:column style="width:65px">
+						  <p:commandLink title="Excluir" 
+											style="margin-left:10px;color:#849A39"
+											styleClass="fa fa-times"
+											action="#{solicitacao_expedicao.removerPedidoDaSolicitacao(indexRow)}"
+											update="table-lista-pedidos">											
+						 </p:commandLink>
+						
+						</p:column>
+
+					</p:dataTable>
+
+				</p:panelGrid>
+
+			</h:form>
+
+
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

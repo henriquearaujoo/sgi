@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:viewAction action="#{custo_pessoal_controller.initCadastro()}" />
+			<o:viewParam name="custo"
+				value="#{custo_pessoal_controller.custoPessoal}" />
+		</f:metadata>
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+			function stopDlgfilter() {
+			    PF('dlg_filtro_compra').hide();
+			}
+		</script>
+
+		<p:breadCrumb>
+			<p:menuitem value="Categories" url="home_new.xhtml" />
+			<p:menuitem value="Custo de pessoal" url="custo_pessoal.xhtml" />
+			<p:menuitem value="Custo de pessoal - Cadastro"
+				url="cadastro_custo_pessoal.xhtml" />
+		</p:breadCrumb>
+
+		<h:form id="form_cadastro_custo" style="width:100%">
+
+			<p:panel id="toggleable_custo_pessoal" header="Cadastro"
+				toggleable="false" collapsed="false" closable="false"
+				toggleSpeed="500" closeSpeed="500" widgetVar="panel_custo_pessoal"
+				style="margin-bottom:20px;">
+
+				<div class="botao_central" align="left"
+					style="width: 100%; background-color: rgba(255, 255, 255, 0.18);">
+
+					<p:link styleClass="btn btn-default btn-sm"
+						style="color:#000;margin: 8px 2px;" outcome="/main/custo_pessoal"
+						title="Volar">
+						<span style="font-family: Arial">Voltar</span>
+					</p:link>
+
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						style="color:#FFF;margin: 8px 2px;"
+						action="#{custo_pessoal_controller.salvar()}">
+						<span class="glyphicon glyphicon-floppy-disk"></span>
+						<span style="margin: 3px;">Salvar</span>
+					</p:commandLink>
+
+				</div>
+
+				<p:panel id="panel_info_geral">
+
+					<p:panelGrid columns="8">
+						<h:outputText value="Pagador:" />
+						<p:autoComplete id="conta_banco" required="true"
+							placeholder="Pagador" requiredMessage="Preencha o campo Pagador"
+							size="40"
+							value="#{custo_pessoal_controller.custoPessoal.contaPagador}"
+							completeMethod="#{custo_pessoal_controller.completeConta}"
+							var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+							converter="contaConverter" forceSelection="true" />
+
+						<h:outputText value="Recebedor:" />
+						<p:autoComplete id="pagador_recebedor" required="true"
+							placeholder="Recebedor"
+							requiredMessage="Preencha o campo Recebedor" size="40"
+							value="#{custo_pessoal_controller.custoPessoal.contaRecebedor}"
+							completeMethod="#{custo_pessoal_controller.completeConta}"
+							var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+							converter="contaConverter" forceSelection="true" />
+
+						<h:outputText value="Dt. de Pagamento:" />
+						<p:calendar placeholder="Ex:10/12/2023" required="true" size="10"
+							requiredMessage="Por favor preencha o campo 'Vencto/Pagamento'."
+							value="#{custo_pessoal_controller.custoPessoal.dataPagamento}"
+							navigator="true" pattern="dd/MM/yyyy" />
+
+					</p:panelGrid>
+
+					<p:panelGrid columns="6">
+						<h:outputText value="Descrição:" />
+						<p:inputText
+							value="#{custo_pessoal_controller.custoPessoal.descricao}" />
+
+						<p:outputLabel value="Categoria:" />
+
+						<p:selectOneMenu style="font-size:12px" filter="true"
+							filterMatchMode="contains" converter="categoriaConverter"
+							value="#{custo_pessoal_controller.custoPessoal.categoriaDespesaClass}">
+							<f:selectItems value="#{custo_pessoal_controller.categorias}"
+								var="categoria" itemLabel="#{categoria.nome}"
+								itemValue="#{categoria}" />
+
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Competência:" />
+
+						<p:selectOneMenu style="font-size:12px" filter="true"
+							filterMatchMode="contains"
+							value="#{custo_pessoal_controller.custoPessoal.competencia}">
+							<f:selectItems value="#{custo_pessoal_controller.competencias}"
+								var="competencia" itemLabel="#{competencia}"
+								itemValue="#{competencia}" />
+
+						</p:selectOneMenu>
+
+
+					</p:panelGrid>
+
+				</p:panel>
+
+				<p:panelGrid columns="6" id="panel_categoria">
+					<h:outputText value="Categoria:" />
+					<p:autoComplete id="cate_compra" placeholder="Categoria" size="40"
+						value="#{custo_pessoal_controller.lancamentoAcao.rubricaOrcamento}"
+						completeMethod="#{custo_pessoal_controller.completeRubricasDeOrcamento}"
+						var="categoria" itemLabel="#{categoria.rubrica.nome}"
+						itemValue="#{categoria}" converter="rubricaOrcamentoConverter">
+
+						<p:column headerText="Doação">
+							<h:outputText value="#{categoria.orcamento.fonte.nome}" />
+						</p:column>
+
+						<p:column headerText="Doação">
+							<h:outputText value="#{categoria.orcamento.titulo}" />
+						</p:column>
+
+						<p:column headerText="Componente">
+							<h:outputText value="#{categoria.componente.nome}" />
+						</p:column>
+
+						<p:column headerText="SubComponente">
+							<h:outputText value="#{categoria.subComponente.nome}" />
+						</p:column>
+
+						<p:column headerText="Categoria">
+							<h:outputText value="#{categoria.rubrica.nome}" />
+						</p:column>
+
+
+					</p:autoComplete>
+
+					<h:outputText value="Valor:" />
+					<p:inputText onkeypress="return formatarNumero(this,event,19,2);"
+						placeholder="valor"
+						value="#{custo_pessoal_controller.lancamentoAcao.valor}">
+						<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+							locale="pt_BR" />
+					</p:inputText>
+
+					<h:outputText value="::" />
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						process="panel_categoria" type="button"
+						update="tab_lanc_acao :form_cadastro_custo:panel_categoria"
+						action="#{custo_pessoal_controller.adicionarNovaAcao()}"
+						style="color:#fff; margin: 2px 2px;" value="Adicionar" />
+
+				</p:panelGrid>
+
+				<p:dataTable id="tab_lanc_acao" var="lac_acao"
+					rowIndexVar="indexRow" paginator="true" rows="12"
+					value="#{custo_pessoal_controller.custoPessoal.lancamentosAcoes}">
+
+					<f:facet name="header">
+						<p:outputLabel style="font-size:38px"
+							value="#{custo_pessoal_controller.custoPessoal.valorTotalComDesconto}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</p:outputLabel>
+					</f:facet>
+
+					<p:column headerText="Fonte">
+						<h:outputText
+							value="#{lac_acao.rubricaOrcamento.orcamento.fonte.nome}" />
+					</p:column>
+
+
+					<p:column headerText="Doação">
+						<h:outputText
+							value="#{lac_acao.rubricaOrcamento.orcamento.titulo}" />
+					</p:column>
+
+					<p:column headerText="Categoria">
+						<h:outputText value="#{lac_acao.rubricaOrcamento.rubrica.nome}" />
+					</p:column>
+
+					<p:column headerText="Valor" style="width:100px">
+						<h:outputText value="#{lac_acao.valor}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+
+					<p:column style="width:50px;">
+						<p:commandLink
+							action="#{custo_pessoal_controller.removerAcao(indexRow)}"
+							process="@this"
+							update="tab_lanc_acao :form_cadastro_custo:panel_categoria">
+
+							<span class="fa fa-times"></span>
+						</p:commandLink>
+					</p:column>
+
+
+				</p:dataTable>
+			</p:panel>
+
+
+
+
+
+
+		</h:form>
+
+
+		<p:separator />
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+
+
+	</ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="termo_plano_trabalho" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="191d624c-e5d6-466f-9f9b-ff75e318639c">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="EXTRATEGY_EX" class="java.lang.String"/>
+	<parameter name="COORDENADOR" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="461" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="29" width="801" height="59" uuid="bb71292b-ade7-41ee-a70e-31adcab4ab73"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$P{EXTRATEGY_EX}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="6" y="427" width="246" height="18" uuid="d70e778a-e432-4b61-9958-1a6781888450"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Coordenador Regional]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="152" width="791" height="20" uuid="d53650f1-3af4-474a-bd8a-08e5ed7ae848"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[1- Estatuto Social, se associação, contrato social, se empresa, ou regimento interno se orgao público.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="6" y="410" width="246" height="17" uuid="7f1f295a-6d91-46ce-8594-c2bb6954e8dc"/>
+				<box>
+					<topPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{COORDENADOR}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="380" width="801" height="81" uuid="a9573d03-5f26-40d7-8a84-8b9fb8a1a75b"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="12" width="802" height="16" backcolor="#CCCCCC" uuid="84c5bdfd-301d-4fe4-8927-19d0f96a08d6"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ ESTRATÉGIA DE  EXECUÇÃO ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="244" width="199" height="20" uuid="1a97a676-d6b5-4fd8-b8ca-a8910e4b85e8"/>
+				<box>
+					<topPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Proponente]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="1" y="111" width="800" height="163" uuid="b47d8491-c88e-450b-8c5d-5cc7a45655aa"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="275" y="427" width="250" height="18" uuid="eb88a082-2dd9-407f-9262-d8d0bee4b538"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Coordenadora Geral do PBF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="116" width="791" height="17" uuid="1dc2d7ee-f183-498d-b1ef-5614082e1510"/>
+				<textElement textAlignment="Justified">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Na qualidade de representante legal do proponente, declaro que cumprirei todos os compromissos  assumidos dentro  dos prazos estipulados neste plano de trabalho.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="284" width="802" height="16" backcolor="#CCCCCC" uuid="fe291004-4d8f-4791-adcf-7c87dec2f048"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ PARECER DA SUPERINTENDÊNCIA TÉCNICA-CIENTÍFICA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="300" width="802" height="69" uuid="fe163c20-e327-4beb-be68-0eb8ae948a3e"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="195" width="791" height="14" uuid="d8652166-bfcf-4748-8521-4b1343d0103c"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[3- Cópias do CNPJ da instituição, RG, CPF e comprovante de residência do representante legal.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="95" width="801" height="16" backcolor="#CCCCCC" uuid="b16bd137-cc7f-4a52-a567-bf7c018a88bb"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ DECLARAÇÃO DO PROPONENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="551" y="410" width="246" height="15" uuid="ad6183dd-e079-4bfd-9b2f-71f7fc2321a9"/>
+				<box>
+					<topPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Eduardo Taveira]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="275" y="410" width="250" height="17" uuid="8da2ad8f-7c2a-45ee-a1c1-3809f62736b2"/>
+				<box>
+					<topPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Valcléia Solidade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="175" width="791" height="14" uuid="bd738592-2c20-490f-904e-644459eab459"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[2- Ata de eleição e posse do representante legal, se associação/empresa ou cópia  do decreto de nomeação do dirigente, se orgão público.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="566" y="336" width="231" height="20" uuid="ef215b18-7f79-4905-b448-f8f05acb2e94"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Manaus,____de_____________de20___.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="132" width="328" height="20" uuid="8046d993-06ae-4b65-979f-9389c6a9f2a1"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Encaminho em anexo os seguintes documentos:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="566" y="216" width="231" height="20" uuid="fa86a12c-8aa0-478a-b197-ecc3d60ef156"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Manaus,____de_____________de20___.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="551" y="425" width="246" height="20" uuid="808f877a-69c0-42fb-ab54-4785f8564d9d"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Superintendente Tecnico-Científico]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="303" width="791" height="26" uuid="86b2cae4-d092-4ead-8c14-c3d7135eb47b"/>
+				<text><![CDATA[O Plano de Trabalho, parte deste processo foi elaborado  em conjunto com a proponente, observando-se as finalidades sociais e os preceitos técnicos aplicados pela Fundação Amazonas Sustentável. Encaminha-se à Assessoria jurídica para elaboração do instrumento jurídico adequado.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="425" width="246" height="18" uuid="01415d4b-d823-44fc-a34f-77291f2f9d73"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Coordenador Regional]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="6" y="408" width="246" height="17" uuid="a231afb0-84c8-45be-9bc8-1eac6b3d06e8"/>
+				<box>
+					<topPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{COORDENADOR}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="240" y="251" width="300" height="17" uuid="2f30e965-11cc-43a6-9f7b-c4546b014f7b"/>
+				<box>
+					<topPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[PROPONENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="158" width="791" height="14" uuid="e9295f29-a077-4716-b466-ac4fdc268961"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[1 – Estatuto social, se associação, contrato social, se empresa, ou regimento interno se órgão público;]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="19" splitType="Stretch"/>
+	</detail>
+	<summary>
+		<band height="27" splitType="Stretch"/>
+	</summary>
+</jasperReport>

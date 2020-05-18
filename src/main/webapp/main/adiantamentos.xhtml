@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+
+
+	<ui:define name="content">
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+		 
+			function stop() {
+		    	PF('statusDialog').hide();
+			}
+		</script>
+
+		<!-- Painle de listagem -->
+		<h:panelGroup id="panel-content">
+
+			<h:panelGroup id="panel-listagem">
+
+				<h:form id="form-listagem" prependId="false">
+
+					<p:messages id="message" showSummary="false"
+						style="margin-top:10px" showDetail="true" closable="true"
+						showIcon="true">
+
+						<p:autoUpdate />
+					</p:messages>
+
+					<p:breadCrumb>
+						<p:menuitem value="Categories" url="home_new.xhtml" />
+						<p:menuitem value="Adiantamentos" url="adiantamentos.xhtml" />
+					</p:breadCrumb>
+
+					<f:metadata>
+						<f:viewAction action="#{adiantamentoController.init()}" />
+					</f:metadata>
+
+
+					<p:panel id="filter-list">
+
+
+						<div class="ui-g ui-fluid" style="margin-top: 8px">
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
+								<p:outputLabel value="Código:" for="codigo"
+									styleClass="form-label" />
+								<p:inputText value="#{adiantamentoController.filtro.codigo}"
+									id="codigo" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
+								<p:outputLabel value="Solicitante:" styleClass="form-label"
+									for="nome" />
+								<p:inputText value="#{adiantamentoController.filtro.nome}"
+									id="nome" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+								<p:outputLabel value="Dt. Inicio:" styleClass="form-label"
+									for="dt_inicio" />
+								<p:calendar id="dt_inicio"
+									value="#{adiantamentoController.filtro.dataInicio}"
+									navigator="true" pattern="dd/MM/yyyy" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+
+								<p:outputLabel value="Dt. Final" for="dt_final"
+									style="margin-left:5px" styleClass="form-label" />
+								<p:calendar id="dt_final"
+									value="#{adiantamentoController.filtro.dataFinal}"
+									navigator="true" pattern="dd/MM/yyyy" />
+
+							</div>
+
+						</div>
+
+						<div class="ui-g ui-fluid">
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+								<p:outputLabel value="Gestão:" for="gestao"
+									styleClass="form-label" />
+								<p:autoComplete styleClass="font12-vi" id="gestao"
+									panelStyle="width:180px"
+									value="#{adiantamentoController.filtro.gestao}"
+									completeMethod="#{adiantamentoController.completeGestao}"
+									var="gestao" itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+									converter="gestaoConverterVI" minQueryLength="3" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+								<p:outputLabel value="Destino/Localização:" for="localidade"
+									styleClass="form-label" />
+								<p:autoComplete styleClass="font12-vi" id="localidade"
+									panelStyle="width:180px"
+									value="#{adiantamentoController.filtro.localidade}"
+									completeMethod="#{adiantamentoController.completeLocalidade}"
+									var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+									converter="localConverterVI" minQueryLength="3">
+								</p:autoComplete>
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+								<p:outputLabel value="Fornecedor:" styleClass="form-label"
+									for="fornecedor" />
+								<p:inputText
+									value="#{adiantamentoController.filtro.nomeFornecedor}"
+									id="fornecedor" />
+
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+								<p:outputLabel value="Descrição:" style="margin-left:5px"
+									for="descricao" styleClass="form-label" />
+								<p:inputText value="#{adiantamentoController.filtro.descricao}"
+									id="descricao" style="margin-left:5px"></p:inputText>
+
+							</div>
+
+						</div>
+
+						<div class="ui-g ui-fluid">
+							<div class="ui-g-12 ui-lg-6 form-group">
+								<p:outputLabel value="Projeto:" style="margin-left:4px"
+									for="projeto" styleClass="form-label" />
+								<p:autoComplete value="#{adiantamentoController.filtro.projeto}"
+									completeMethod="#{adiantamentoController.completeProjetos}"
+									var="projeto" itemLabel="#{projeto.nome}" id="projeto"
+									itemValue="#{projeto}" converter="projetoConverter">
+
+									<p:column>
+										<h:outputText value="#{projeto.codigo}" />
+									</p:column>
+
+									<p:column>
+										<h:outputText value="#{projeto.nome}" />
+									</p:column>
+
+								</p:autoComplete>
+
+							</div>
+							<div class="ui-g-12 ui-lg-6 " style="text-align: right">
+								<p:commandLink styleClass="btn btn-primary btn-sm"
+									action="#{adiantamentoController.filtrar()}" onclick="start()"
+									onsuccess="stop()" onerror="stop()" update="table"
+									style="color:#fff; margin: 8px 2px;">
+									<span class="fa fa-fw fa-search"></span>
+									<span>Buscar</span>
+								</p:commandLink>
+
+								<p:commandLink styleClass="btn btn-danger btn-sm"
+									action="#{adiantamentoController.limparFiltro()}"
+									onclick="start()" onsuccess="stop()" onerror="stop()"
+									update="@form" process="@this"
+									style="color:#fff; margin: 8px 2px;">
+									<span class="fa fa-fw fa-trash-o"></span>
+									<span>Limpar</span>
+								</p:commandLink>
+
+
+								<p:link styleClass="btn btn-success btn-sm"
+									style="color:#fff;margin: 8px 2px;"
+									outcome="/main/adiantamento_cadastro"
+									title="Adicionar solicitação de compra">
+									<span class="fa fa-fw fa-plus" style="font-size: 12px"></span>
+									<span style="margin: 3px;">Novo</span>
+								</p:link>
+
+
+							</div>
+
+							<div id="div-table" class="ui-g-12">
+								<p:dataTable emptyMessage="Não há solicitações de pagamento"
+									id="table" value="#{adiantamentoController.pagamentos}"
+									var="pagamento" paginator="true" widgetVar="comprasTable"
+									rows="10"
+									paginatorTemplate="{Exporters}  {CurrentPageReport}  
+						{FirstPageLink} {PreviousPageLink} {PageLinks} 
+						{NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+
+
+									<f:facet name="{Exporters}">
+										<h:commandLink style="margin:3px">
+											<p:graphicImage library="image" name="excel.png" width="30" />
+											<p:dataExporter type="xls" target="table"
+												fileName="Pagamentos" />
+										</h:commandLink>
+									</f:facet>
+
+									<p:column headerText="Código" filterBy="#{pagamento.id}"
+										filterMatchMode="contains">
+
+										<p:link style="text-align:center"
+											outcome="/main/adiantamento_cadastro"
+											title="Editar adiantamento">
+											<span style="margin: 3px;">SA#{pagamento.id}</span>
+											<f:param name="lanc" value="#{pagamento.id}" />
+										</p:link>
+
+									</p:column>
+
+									<p:column headerText="Descrição">
+										<h:outputText id="motivo"
+											value="#{pagamento.descricao.length() > 30 ? pagamento.descricao.substring(0,30) : pagamento.descricao} . . ." />
+										<p:tooltip id="toolTipGrow" for="motivo" style="width:600px;"
+											showDelay="10" showEffect="clip" hideEffect="explode"
+											position="left">
+											<h:outputText value="#{pagamento.descricao}" />
+										</p:tooltip>
+									</p:column>
+
+									<p:column headerText="Destino"
+										filterBy="#{pagamento.nomeDestino}" filterMatchMode="contains">
+										<h:outputText value="#{pagamento.nomeDestino}" />
+									</p:column>
+
+									<p:column headerText="Gestão"
+										filterBy="#{pagamento.nomeGestao}" filterMatchMode="contains">
+										<h:outputText value="#{pagamento.nomeGestao}" />
+									</p:column>
+
+									<p:column headerText="Fornecedor"
+										filterBy="#{pagamento.nomeFornecedor}"
+										filterMatchMode="contains">
+										<h:outputText value="#{pagamento.nomeFornecedor}" />
+									</p:column>
+
+									<p:column headerText="Status"
+										filterBy="#{pagamento.statusCompra.nome}"
+										filterMatchMode="contains">
+										<h:outputText value="#{pagamento.statusCompra.nome}" />
+									</p:column>
+
+									<p:column headerText="Data">
+										<h:outputText value="#{pagamento.dataEmissao}">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss " />
+										</h:outputText>
+									</p:column>
+
+
+									<p:column headerText="Solicitante"
+										filterBy="#{pagamento.nomeSolicitante}"
+										filterMatchMode="contains">
+										<h:outputText
+											value="#{pagamento.nomeSolicitante.toLowerCase()}" />
+									</p:column>
+
+									<p:column headerText="valor">
+										<h:outputText value="#{pagamento.valorTotalComDesconto}">
+											<f:convertNumber type="currency" maxFractionDigits="2"
+												currencySymbol="R$" />
+
+										</h:outputText>
+									</p:column>
+
+									<p:column headerText="Opções">
+
+										<p:menuButton value="Opções">
+
+											<p:menuitem value="Notas" icon="fa fa-fw fa-search"
+												oncomplete="PF('dialog_arquivo').show();"
+												update=":form-arquivo"
+												action="#{adiantamentoController.carregarArquivos()}"
+												style="margin: 8px 2px;" onclick="start()" onerror="stop()"
+												onsuccess="stop()" process="@this">
+												<f:setPropertyActionListener value="#{pagamento}"
+													target="#{adiantamentoController.lancamentoAux}" />
+
+											</p:menuitem>
+
+											<p:menuitem value="Imprimir" icon="fa fa-fw fa-print"
+												target="_blank" update="panel-content"
+												style="margin: 8px 2px;" ajax="false"
+												action="#{adiantamentoController.imprimir()}">
+												<span class="glyphicon glyphicon-print"></span>
+												<f:setPropertyActionListener value="#{pagamento}"
+													target="#{adiantamentoController.pagamento}" />
+											</p:menuitem>
+
+
+											<p:menuitem value="Mudar Status"
+												icon="fa fa-fw fa-rotate-left" style="margin: 8px 2px;"
+												update="formDialogAlterarStatus"
+												oncomplete="PF('dialogAlterarStatus').show()"
+												rendered="#{adiantamentoController.usuarioSessao.usuario.perfil.id == 1}">
+												<span class="glyphicon glyphicon-sort"></span>
+												<f:setPropertyActionListener value="#{pagamento}"
+													target="#{adiantamentoController.pagamento}" />
+											</p:menuitem>
+
+
+											<p:menuitem value="Prestar contas" icon="fa fa-fw fa-dollar"
+												outcome="/main/prestacaodecontas_cadastro?faces-redirect=true">
+												<f:param name="ad" value="#{pagamento.id}" />
+											</p:menuitem>
+
+
+										</p:menuButton>
+
+									</p:column>
+								</p:dataTable>
+
+							</div>
+						</div>
+					</p:panel>
+				</h:form>
+			</h:panelGroup>
+
+		</h:panelGroup>
+
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog header="Anexos" modal="true" widgetVar="dialog_arquivo"
+			hideEffect="clip" closeOnEscape="true" showEffect="clip">
+			<h:form id="form-arquivo" enctype="multipart/form-data">
+				<p:messages id="msg_aprouve" showIcon="true" showSummary="false"
+					showDetail="true" closable="true" />
+
+				<p:panelGrid columns="2" styleClass="ui-fluid">
+
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+								<h:outputLabel value="Nome:" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{adiantamentoController.arquivo.nome}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column>
+								<h:outputLabel value="Arquivo:" />
+							</p:column>
+							<p:column>
+								<p:fileUpload update="panel_path" label="Anexo"
+									fileUploadListener="#{adiantamentoController.handleFileUpload}"
+									mode="advanced" auto="true" sizeLimit="100000000"
+									allowTypes="/(\.|\/)(doc|docx|xls|xlsx|pdf)$/" />
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column colspan="2">
+								<p:panel id="panel_path">
+									<p:outputLabel value="#{adiantamentoController.path}" />
+								</p:panel>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column colspan="2">
+								<p:commandLink
+									action="#{adiantamentoController.adicionarArquivo()}"
+									style="color:#FFF" update="table-arquivo form-arquivo"
+									styleClass="btn btn-block btn-primary" value="Salvar" />
+							</p:column>
+
+						</p:row>
+
+					</p:panelGrid>
+
+					<p:dataTable id="table-arquivo"
+						value="#{adiantamentoController.lancamentoAux.arquivos}" var="arq">
+
+						<p:column headerText="Nome">
+							<h:outputText value="#{arq.nome}" />
+						</p:column>
+
+
+
+						<p:column style="width:200px">
+							<p:panelGrid columns="2">
+								<p:commandLink style="color:#FFF" styleClass="btn btn-primary"
+									action="#{adiantamentoController.visualizarArquivo()}"
+									ajax="false" process="@this">
+									<span style="width: 40px;" class="glyphicon glyphicon-search"></span>
+									<f:setPropertyActionListener value="#{arq}"
+										target="#{adiantamentoController.arqAuxiliar}" />
+								</p:commandLink>
+
+								<p:commandLink style="color:#FFF" styleClass="btn  btn-primary"
+									action="#{adiantamentoController.removerArquivo()}"
+									process="@this"
+									update="table-arquivo :form-arquivo:msg_aprouve">
+									<span style="width: 40px;" class="fa fa-remove"></span>
+									<f:setPropertyActionListener value="#{arq}"
+										target="#{adiantamentoController.arqAuxiliar}" />
+								</p:commandLink>
+							</p:panelGrid>
+						</p:column>
+
+					</p:dataTable>
+
+
+				</p:panelGrid>
+			</h:form>
+
+		</p:dialog>
+
+
+		<p:dialog header="Filtro" widgetVar="dlg_filtro" modal="false"
+			height="50%" width="50%" showEffect="clip" hideEffect="clip">
+			<div class="ui-fluid">
+				<h:form id="form-filtro">
+					<p:messages id="msg_filter" showDetail="true" showSummary="false"
+						showIcon="true" closable="true" />
+					<p:panelGrid columns="1" layout="grid">
+						<p:outputLabel value="Código:" />
+						<p:inputText value="#{adiantamentoController.filtro.codigo}" />
+						<p:outputLabel value="Solicitante:" />
+						<p:inputText value="#{adiantamentoController.filtro.nome}" />
+
+						<p:outputLabel value="Data ínicio:" />
+						<p:calendar id="dt_inicio"
+							value="#{adiantamentoController.filtro.dataInicio}"
+							navigator="true" pattern="dd/MM/yyyy" />
+
+						<p:outputLabel value="Data final:" />
+						<p:calendar id="dt_final"
+							value="#{adiantamentoController.filtro.dataFinal}"
+							navigator="true" pattern="dd/MM/yyyy" />
+
+						<p:outputLabel value="Tipo de gestão:" />
+						<h:panelGroup id="panel-gestao-filtro">
+
+							<p:selectOneMenu id="tipo_gestao_filtro"
+								value="#{adiantamentoController.filtro.tipoGestao}">
+								<p:ajax
+									listener="#{adiantamentoController.onTipoGestaoChangeFiltro()}"
+									process="@this" update="panel-gestao-filtro" />
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{adiantamentoController.tiposGestao}"
+									var="tipoGestao" itemLabel="#{tipoGestao.nome}"
+									itemValue="#{tipoGestao}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="sup_filtro"
+								value="#{adiantamentoController.filtro.gestaoID}"
+								rendered="#{adiantamentoController.tipoGestao.equals('Superintendencia')}"
+								required="true"
+								requiredMessage="Campo 'Superintendencia' obrigatório">
+								<f:selectItems value="#{adiantamentoController.gestoes}"
+									var="gest" itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="coord_filtro" filter="true"
+								filterMatchMode="contains"
+								value="#{adiantamentoController.filtro.gestaoID}"
+								rendered="#{adiantamentoController.tipoGestao.equals('Coordenadoria')}"
+								required="true"
+								requiredMessage="Campo 'Coordenadoria' obrigatório">
+								<f:selectItems value="#{adiantamentoController.gestoes}"
+									var="gest" itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="reg_filtro" filter="true"
+								filterMatchMode="contains"
+								value="#{adiantamentoController.filtro.gestaoID}"
+								rendered="#{adiantamentoController.tipoGestao.equals('Regional')}"
+								required="true" requiredMessage="Campo 'Regional' obrigatório">
+								<f:selectItems value="#{adiantamentoController.gestoes}"
+									var="gest" itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+
+
+						<p:outputLabel value="Destino/Localização:" for="local_filtro" />
+
+						<h:panelGroup id="panel-loc-filtro">
+
+							<p:selectOneMenu id="local_filtro"
+								value="#{adiantamentoController.filtro.tipoLocalidade}">
+								<p:ajax
+									listener="#{adiantamentoController.onLocalChangeFilter()}"
+									process="@this" update="panel-loc-filtro" />
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{adiantamentoController.tipoLocais}"
+									var="local" itemLabel="#{local.nome}" itemValue="#{local}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="estado_filtro" filter="true"
+								filterMatchMode="contains"
+								value="#{adiantamentoController.idEstado}"
+								rendered="#{adiantamentoController.local.equals('Municipio')}"
+								required="true" requiredMessage="Campo 'Estado' obrigatório">
+								<p:ajax listener="#{adiantamentoController.onEstadoChange()}"
+									process="@this" update="municipio_filtro" />
+								<f:selectItem itemLabel="Selecione um estado" itemValue="0" />
+								<f:selectItems value="#{adiantamentoController.estados}"
+									var="estado" itemLabel="#{estado.nome}"
+									itemValue="#{estado.id}" />
+							</p:selectOneMenu>
+
+
+
+							<p:selectOneMenu id="municipio_filtro" filter="true"
+								filterMatchMode="contains"
+								value="#{adiantamentoController.filtro.localidadeID}"
+								rendered="#{adiantamentoController.local.equals('Municipio')}"
+								required="true" requiredMessage="Campo 'Municipio' obrigatório">
+								<f:selectItems value="#{adiantamentoController.localidades}"
+									var="loc" itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+							</p:selectOneMenu>
+
+
+							<p:selectOneMenu id="comunidade_filtro"
+								value="#{adiantamentoController.filtro.localidadeID}"
+								filter="true" filterMatchMode="contains"
+								rendered="#{adiantamentoController.local.equals('Comunidade')}"
+								required="true" requiredMessage="Campo 'Comunidade' obrigatório">
+								<f:selectItems value="#{adiantamentoController.localidades}"
+									var="loc" itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+							</p:selectOneMenu>
+
+
+							<p:selectOneMenu id="uc_filtro"
+								value="#{adiantamentoController.filtro.localidadeID}"
+								filter="true" filterMatchMode="contains"
+								rendered="#{adiantamentoController.local.equals('Uc')}">
+								<f:selectItems value="#{adiantamentoController.localidades}"
+									var="loc" itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="sede_filtro"
+								value="#{adiantamentoController.filtro.localidadeID}"
+								filter="true" filterMatchMode="contains"
+								rendered="#{adiantamentoController.local.equals('Sede')}"
+								required="true" requiredMessage="Campo 'Sede' obrigatório">
+								<f:selectItems value="#{adiantamentoController.localidades}"
+									var="loc" itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="nucleo_filtro"
+								value="#{adiantamentoController.filtro.localidadeID}"
+								filter="true" filterMatchMode="contains"
+								rendered="#{adiantamentoController.local.equals('Nucleo')}"
+								required="true" requiredMessage="Campo 'Núcleo' obrigatório">
+								<f:selectItems value="#{adiantamentoController.localidades}"
+									var="loc" itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+							</p:selectOneMenu>
+
+
+						</h:panelGroup>
+
+					</p:panelGrid>
+
+					<div class="botao_central" align="left">
+						<p:commandLink styleClass="btn btn-primary btn-sm" ajax="false"
+							action="#{adiantamentoController.filtrar()}" onclick="start()"
+							onsuccess="stop()" onerror="stop()"
+							update="msg_filter :form-listagem:table"
+							style="color:#fff; margin: 8px 2px;">
+							<span style="width: 40px;" class="glyphicon glyphicon-search"></span>
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							action="#{adiantamentoController.limparFiltro()}"
+							update="form-filtro" process="@this"
+							style="color:#fff; margin: 8px 2px;">
+						Limpar
+						</p:commandLink>
+
+					</div>
+				</h:form>
+			</div>
+		</p:dialog>
+
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+		<p:dialog header="Mudança de Status" widgetVar="dialogAlterarStatus"
+			modal="false" resizable="false" showEffect="clip" hideEffect="clip">
+			<div class="ui-fluid">
+				<h:form id="formDialogAlterarStatus">
+
+					<p:panelGrid columns="1" layout="grid">
+
+
+						<p:selectOneMenu
+							value="#{adiantamentoController.pagamento.statusCompra}"
+							filter="true" filterMatchMode="contains">
+							<f:selectItems value="#{adiantamentoController.status}"
+								var="status" itemLabel="#{status.nome}" itemValue="#{status}" />
+						</p:selectOneMenu>
+
+
+
+					</p:panelGrid>
+					<center>
+						<div class="botao_central" align="left">
+							<p:commandLink styleClass="btn btn-primary btn-sm" ajax="false"
+								action="#{adiantamentoController.mudarStatusLancamento(adiantamentoController.pagamento)}"
+								onclick="start()" onsuccess="stop()" onerror="stop()"
+								oncomplete="PF('dialogAlterarStatus').hide()"
+								update="form-listagem:table"
+								style="color:#fff; margin: 8px 2px;">
+								Salvar
+							</p:commandLink>
+
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								action="#{adiantamentoController.filtrar()}"
+								onclick="PF('dialogAlterarStatus').hide()" ajax="false"
+								process="@this" style="color:#fff; margin: 8px 2px;">
+							Cancelar
+							</p:commandLink>
+
+						</div>
+					</center>
+				</h:form>
+			</div>
+		</p:dialog>
+
+
+	</ui:define>
+
+
+</ui:composition>

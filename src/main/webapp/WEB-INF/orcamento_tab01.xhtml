@@ -1,0 +1,276 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<div style="padding: 2px 2px">
+
+
+
+		<p:panel id="panel-info-geral">
+
+			<div id="info-geral" class="ui-g ui-fluid">
+
+				<div class="ui-g-4 form-group">
+					<p:outputLabel for="input-fonte" value="Parceiro/Fonte/Doação:"
+						styleClass="form-label" />
+					<p:autoComplete id="input-fonte"
+						value="#{orcamento_controller.orcamento.fonte}"
+						completeMethod="#{orcamento_controller.completeFonte}"
+						var="fontePagadora" itemLabel="#{fontePagadora.nome}"
+						itemValue="#{fontePagadora}" converter="fontePagadoraConverter"
+						forceSelection="true" />
+				</div>
+
+				<div class="ui-g-3 form-group">
+					<p:outputLabel for="input-titulo" value="Título/Identificação"
+						style="width:100px" styleClass="form-label" />
+
+					<p:inputText id="input-titulo"
+						value="#{orcamento_controller.orcamento.titulo}" />
+				</div>
+
+				<div class="ui-g-3 form-group">
+					<p:outputLabel for="input-contrato" value="Contrato"
+						styleClass="form-label" />
+					<p:inputText id="input-contrato"
+						value="#{orcamento_controller.orcamento.contrato}" />
+				</div>
+
+				<div class="ui-g-2 form-group">
+					<p:outputLabel for="input-vl-orcado" value="Valor orçado"
+						styleClass="form-label" />
+					<p:inputText id="input-vl-orcado"
+						value="#{orcamento_controller.orcamento.valor}"
+						onkeydown="mascaraMoeda(this,moeda)">
+						<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+							locale="pt_BR" />
+					</p:inputText>
+				</div>
+
+				<div class="ui-g-3 form-group">
+					<p:outputLabel for="input-conta" value="Conta"
+						styleClass="form-label" />
+					<p:selectOneMenu id="input-conta" converter="contaConverter"
+						filter="true" filterMatchMode="contains" autoWidth="false"
+						value="#{orcamento_controller.orcamento.contaBancaria}">
+						<f:selectItem noSelectionOption="true" />
+						<f:selectItems value="#{orcamento_controller.contas}" var="conta"
+							itemLabel="#{conta.nomeConta}" itemValue="#{conta}" />
+					</p:selectOneMenu>
+				</div>
+
+				<div class="ui-g-3 form-group">
+					<p:outputLabel for="input-tipo-orcamento" value="Tipo de Projeto"
+						styleClass="form-label" />
+					<p:selectOneMenu id="input-tipo-orcamento"
+						value="#{orcamento_controller.orcamento.tipoProjetoOrcamento}"
+						required="true" requiredMessage="Tipo do Projeto é obrigatório">
+						<f:selectItem itemLabel="Selecione um tipo de projeto"
+							itemValue="" />
+						<f:selectItems
+							value="#{orcamento_controller.tiposProjetosOrcamento}" var="item"
+							itemLabel="#{item.nome}" itemValue="#{item}" />
+					</p:selectOneMenu>
+				</div>
+
+				<div class="ui-g-3 form-group">
+					<p:outputLabel for="input-dt-inicio" value="Data início"
+						styleClass="form-label" />
+					<p:calendar id="input-dt-inicio"
+						value="#{orcamento_controller.orcamento.dataInicio}"
+						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+				</div>
+
+				<div class="ui-g-3 form-group">
+					<p:outputLabel for="input-dt-final" value="Data final"
+						styleClass="form-label" />
+
+					<p:calendar id="input-dt-final" placeholder="Data final"
+						value="#{orcamento_controller.orcamento.dataFinal}"
+						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+				</div>
+
+				<div class="ui-g-6 form-group">
+					<p:outputLabel for="input-resp-tec" value="Responsável Técnico"
+						styleClass="form-label" />
+					<p:autoComplete id="input-resp-tec" rendered="true"
+						value="#{orcamento_controller.orcamento.responsavelTecnico}"
+						completeMethod="#{orcamento_controller.completeColaborador}"
+						var="colaborador" itemLabel="#{colaborador.nome}"
+						itemValue="#{colaborador}" converter="colaboradorConverter"
+						minQueryLength="2" forceSelection="true" />
+				</div>
+
+				<div class="ui-g-6 form-group">
+					<p:outputLabel for="input-colaborador" value="Analista Financeiro"
+						styleClass="form-label" />
+					<p:autoComplete id="input-colaborador"
+						requiredMessage="Analista financeiro é obrigatório"
+						rendered="true" required="true"
+						value="#{orcamento_controller.orcamento.colaborador}"
+						completeMethod="#{orcamento_controller.completeColaborador}"
+						var="colaborador" itemLabel="#{colaborador.nome}"
+						itemValue="#{colaborador}" converter="colaboradorConverter"
+						minQueryLength="2" forceSelection="true" />
+				</div>
+
+				<div class="ui-g-12 form-group">
+					<p:selectBooleanCheckbox
+						value="#{orcamento_controller.orcamento.permiteEmprestimo}" />
+					<h:outputText value="Permite empréstimo?" />
+
+				</div>
+
+				<div class="ui-g-3">
+					<p:selectBooleanCheckbox
+						value="#{orcamento_controller.orcamento.permiteRemanejamentoCategoria}" />
+					<h:outputText value="Permite remanejamento entre categorias? " />
+				</div>
+
+				<div class="ui-g-3 form-group">
+					<p:selectBooleanCheckbox
+						value="#{orcamento_controller.orcamento.permiteRemanejoRecurso}" />
+					<h:outputText value="Permite remanejo de recursos entre linhas? " />
+				</div>
+
+				<div class="ui-g-3 form-group">
+					<p:outputLabel for="input-tipo-doacao" value="Tipo da Doação"
+						styleClass="form-label" />
+					<p:selectOneMenu id="input-tipo-doacao"
+						value="#{orcamento_controller.orcamento.tipoDoacao}"
+						required="true" requiredMessage="Tipo da doação é obrigatório">
+						<f:selectItem itemLabel="Selecione um tipo"
+							noSelectionOption="true" />
+						<f:selectItem itemLabel="Vinculada" itemValue="V" />
+						<f:selectItem itemLabel="Desvinculada" itemValue="D" />
+
+					</p:selectOneMenu>
+				</div>
+
+				<div class="ui-g-3 form-group">
+					<p:selectBooleanCheckbox
+						value="#{orcamento_controller.orcamento.pagaTarifaBancaria}">
+						<p:ajax update="input-tipo-projeto-desp"
+							listener="#{orcamento_controller.limparProjetoDespesa()}" />
+					</p:selectBooleanCheckbox>
+
+					<h:outputText value="Paga tarifa bancária? " />
+				</div>
+
+				<div class="ui-g-3 form-group">
+
+					<p:outputLabel for="input-tipo-projeto-desp"
+						value="Projeto Despesa" styleClass="form-label" />
+					<p:selectOneMenu id="input-tipo-projeto-desp"
+						value="#{orcamento_controller.orcamento.tipoProjetoDespesa}"
+						disabled="#{!orcamento_controller.orcamento.pagaTarifaBancaria}">
+						<f:selectItem itemLabel="Selecione um tipo" itemValue="" />
+						<f:selectItems value="#{orcamento_controller.tiposProjetoDespesa}"
+							var="item" itemLabel="#{item.nome}" itemValue="#{item}" />
+						<p:ajax event="change"
+							listener="#{orcamento_controller.limparProjetoDespesaTipo()}" />
+					</p:selectOneMenu>
+
+				</div>
+
+				<div class="ui-g-3 form-group">
+
+					<p:outputLabel for="input-projeto" value="Projeto"
+						styleClass="form-label" />
+					<p:autoComplete id="input-projeto"
+						value="#{orcamento_controller.projetoDespesa}"
+						completeMethod="#{orcamento_controller.completeProjetos}"
+						var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}"
+						converter="projetoConverter"
+						disabled="#{!orcamento_controller.orcamento.tipoProjetoDespesa.toString().equals('OUTRO')}">
+						<p:ajax event="itemSelect"
+							listener="#{orcamento_controller.carregarRubricasProjetoDespesa()}" />
+						<p:ajax event="clear"
+							listener="#{orcamento_controller.carregarRubricasProjetoDespesa()}" />
+						<p:column>
+							<h:outputText value="#{projeto.codigo}" />
+						</p:column>
+
+						<p:column>
+							<h:outputText value="#{projeto.nome}" />
+						</p:column>
+
+					</p:autoComplete>
+				</div>
+
+				<div class="ui-g-3 form-group">
+
+					<p:outputLabel for="input-linha-orc" value="Linha orçamentária"
+						styleClass="form-label" />
+					<p:selectOneMenu id="input-linha-orc" autoWidth="false"
+						value="#{orcamento_controller.orcamento.projetoRubrica}"
+						filter="true" filterMatchMode="contains" var="categoria"
+						converter="projetoRubricaConverter"
+						disabled="#{!orcamento_controller.orcamento.tipoProjetoDespesa.toString().equals('OUTRO')}">
+
+						<f:selectItems
+							value="#{orcamento_controller.listaDeRubricasProjeto}" var="ru"
+							itemLabel="#{ru.nomeCategoria}" itemValue="#{ru}" />
+
+						<p:column headerText="Código">
+							<h:outputText value="#{categoria.codigo}" />
+						</p:column>
+
+						<p:column headerText="Fonte">
+							<h:outputText value="#{categoria.nomeFonte}" />
+						</p:column>
+
+						<p:column headerText="Projeto">
+							<h:outputText value="#{categoria.nomeProjeto}" />
+						</p:column>
+
+						<p:column headerText="Componente">
+							<h:outputText value="#{categoria.nomeComponente}" />
+						</p:column>
+
+						<p:column headerText="SubComponente">
+							<h:outputText value="#{categoria.nomeSubComponente}" />
+						</p:column>
+
+						<p:column headerText="Linha orçamentária">
+							<h:outputText value="#{categoria.nomeCategoria}" />
+						</p:column>
+
+						<p:column headerText="Saldo">
+							<h:outputText value="#{categoria.valorSaldo}">
+								<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+									maxFractionDigits="2" locale="pt_BR" />
+							</h:outputText>
+						</p:column>
+
+
+					</p:selectOneMenu>
+
+				</div>
+
+			</div>
+			
+			<div id="desc-subtitle" class="ui-g" >
+
+				<label for="code-sc" class="label-subtitle">Data de criação:</label> <small
+					id="code-sc" class="form-text text-muted" style="margin-left: 5px;">#{orcamento_controller.orcamento.dataCriacao}</small>
+				<label for="code-date" class="label-subtitle">Última atualização:</label> <small
+					id="code-date" class="form-text text-muted"
+					style="margin-left: 5px;">#{orcamento_controller.orcamento.dataCriacao}</small>
+
+				<label for="code-solic" class="label-subtitle">Usuário:</label>
+				<small id="code-solic" class="form-text text-muted"
+					style="margin-left: 5px;">#{orcamento_controller.orcamento.usuarioEdicao.nomeUsuario}</small>
+
+			</div>
+
+		</p:panel>
+	</div>
+
+
+
+</ui:fragment>

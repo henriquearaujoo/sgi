@@ -1,0 +1,612 @@
+	<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<style type="text/css">
+.ui-datatable-scrollable-body::-webkit-scrollbar-thumb {
+	border-radius: 8px;
+	border: 1px solid white;
+	background-color: green;
+}
+</style>
+
+	<script type="text/javascript">
+	function start() {
+	    PF('statusDialog').show();
+	}
+	 
+	function stop() {
+	    PF('statusDialog').hide();
+	}
+</script>
+
+
+
+	<ui:define name="content">
+
+
+		<h:form id="form-controle-expedicao-listagem">
+		
+		<br/>
+
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Controle de Expedição" />
+			</p:breadCrumb>
+
+			<p:panel>
+
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Código:" />
+						<p:inputText
+							value="#{controle_expedicao_controller.filtro.lancamentoID}" />
+					</div>
+
+					<div class="ui-g-3">
+						<p:outputLabel value="Data início:" style="margin-left:5px" />
+						<p:calendar id="dt_inicio" required="true"
+							requiredMessage="Preencha o campo de data 'Ínicio'"
+							style="margin-left:5px"
+							value="#{controle_expedicao_controller.filtro.dataInicio}"
+							placeholder="Ínicio" timeZone="America/Manaus" navigator="true"
+							pattern="dd/MM/yyyy" />
+					</div>
+
+					<div class="ui-g-3">
+						<p:outputLabel value="Data final:" style="margin-left:5px;margin-right:5px" />
+						<p:calendar id="dt_final" required="true"
+							requiredMessage="Preencha o campo de data 'Fim'"
+							value="#{controle_expedicao_controller.filtro.dataFinal}"
+							placeholder="Fim" timeZone="America/Manaus" navigator="true"
+							pattern="dd/MM/yyyy" />
+
+					</div>
+					
+					<div class="ui-g-3">
+						<p:outputLabel value="Rastreamento:" />
+							<p:selectOneMenu
+								value="#{controle_expedicao_controller.filtro.localizacaoPedido}">
+								<f:selectItem itemLabel="" noSelectionOption="true" />
+								<f:selectItems
+									value="#{controle_expedicao_controller.localizacoesPedidos}"
+									var="rastreamento" itemLabel="#{rastreamento.nome}"
+									itemValue="#{rastreamento}">
+								</f:selectItems>
+						</p:selectOneMenu>
+					</div>
+
+				</div>
+				
+					<div class="ui-g ui-fluid">
+					
+						<div class="ui-g-3 ">
+							<p:outputLabel value="Gestão:" />
+							
+							<p:autoComplete  styleClass="font12-vi" panelStyle="width:180px"
+									placeholder="Superintendencia/Coordenadoria/Regional"
+									value="#{controle_expedicao_controller.filtro.gestao}"
+									completeMethod="#{controle_expedicao_controller.completeGestao}"
+									var="gestao" itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+									converter="gestaoConverterVI" minQueryLength="3" />
+						</div>
+						
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Destino/Localização:" for="local_filtro" />
+						<p:autoComplete id="local_filtro"
+							 styleClass="font12-vi" panelStyle="width:180px"
+									placeholder="Destino"
+									value="#{controle_expedicao_controller.filtro.localidade}"
+									completeMethod="#{controle_expedicao_controller.completeLocalidade}"
+									var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+									converter="localConverterVI" minQueryLength="3">
+							
+					</p:autoComplete>
+					</div>
+					
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Responsável expedição:"	 />
+						<p:inputText value="#{controle_expedicao_controller.filtro.nome}" />
+					</div>
+					
+					<div class="ui-g-3 ">
+					
+						<p:outputLabel value="Fornecedor:" />
+						<p:autoComplete id="fornecedor-filter" placeholder="Fornecedor"
+							value="#{controle_expedicao_controller.fornecedor}"
+							completeMethod="#{controle_expedicao_controller.completeFornecedor}"
+							var="fornecedor" itemLabel="#{fornecedor.nomeFantasia}"
+							itemValue="#{fornecedor}" converter="fornecedorConverter"
+							forceSelection="true" />
+					</div>
+						
+				</div>
+				
+
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-12 ui-lg-6">
+						<p:outputLabel value="Solicitante:"/>
+						<p:autoComplete id="solicitante-filter" placeholder="Solicitante"
+							value="#{controle_expedicao_controller.solicitante}"
+							completeMethod="#{controle_expedicao_controller.completeSolicitante}"
+							var="solicitante" itemLabel="#{solicitante.nome}"
+							itemValue="#{solicitante}" converter="colaboradorConverter"
+							forceSelection="true" />
+					</div>
+					
+					<div class="ui-g-12 ui-lg-6" style="text-align: right">
+						<p:commandLink styleClass="btn btn-danger"
+							update="form-controle-expedicao-listagem"
+							action="#{controle_expedicao_controller.limparFiltro()}">
+							<span class="fa fa-fw fa-trash-o" ></span>
+							<span> Limpar</span>
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-primary"
+							update="table-controle-expedicao"
+							action="#{controle_expedicao_controller.filtrar()}"
+							onclick="start()" onsuccess="stop()" onerror="stop()">
+							<span class="fa fa-fw fa-search"></span>
+							<span>Buscar</span>
+						</p:commandLink>
+						
+						<p:commandLink styleClass="btn btn-primary"
+							 oncomplete="PF('dlg_novo_termo').show();" style="color:#fff; margin: 30px 2px;"
+							action="#{controle_expedicao_controller.prepararTermo()}"
+							update=":form-cadastro-termo" onclick="start()"
+							onsuccess="stop()" onerror="stop()">
+							<p:resetInput
+								target=":form-cadastro-termo :form-cadastro-termo:msg_termo" />
+							<span class="fa fa-fw fa-copy" ></span>
+							<span>Gerar termo</span>
+						</p:commandLink>
+
+					</div>
+				</div>
+				
+
+				<p:messages  showSummary="false" showDetail="true"
+				showIcon="true" closable="true" />
+	<p:separator>	</p:separator>
+
+			<p:dataTable id="table-controle-expedicao" rowIndexVar="index"
+				value="#{controle_expedicao_controller.expedicoes}" var="expedicao"
+				selection="#{controle_expedicao_controller.selectExpedicoes}"
+				rowKey="#{expedicao.id}" style="margin-bottom:0">
+
+				<f:facet name="header">
+
+				
+					<h:commandLink style="margin:3px">
+						<p:graphicImage library="image" name="excel.png" width="30" />
+						<p:dataExporter type="xls" target="table-controle-expedicao"
+							fileName="controle_expedicao" />
+					</h:commandLink>
+
+					<h:commandLink style="margin:3px">
+						<p:graphicImage library="image" name="pdf.png" width="30" />
+						<p:dataExporter type="pdf" target="table-controle-expedicao"
+							fileName="controle_expedicao" />
+					</h:commandLink>
+
+				</f:facet>
+
+				<p:column style="width:36px;">
+					<h:outputText value="#{index + 1}" />
+				</p:column>
+
+				<p:column selectionMode="multiple"
+					style="width:36px;text-align:center" />
+
+				<p:column style="width:55px">
+					<p:commandLink title="Imprimir" target="_blank"
+						style="font-size:14px;margin-left:9px;" ajax="false"
+						action="#{controle_expedicao_controller.imprimirPedido()}">
+						<span class="glyphicon glyphicon-print"></span>
+						<f:setPropertyActionListener value="#{expedicao.idPedido}"
+							target="#{controle_expedicao_controller.idPedido}" />
+					</p:commandLink>
+				</p:column>
+
+				<p:column headerText="Pedido" style="width:100px;font-size:13px">
+					<p:commandLink value="#{expedicao.idCompra}/#{expedicao.idPedido}"
+						oncomplete="PF('dlg_controle_expedicao').show();"
+						action="#{controle_expedicao_controller.prepararControleExpedicao()}"
+						update=":form-controle-expedicao-cadastro" style="font-size:12px">
+						<f:setPropertyActionListener value="#{expedicao}"
+							target="#{controle_expedicao_controller.controleExpedicao}" />
+					</p:commandLink>
+				</p:column>
+
+				<p:column headerText="Termo" style="width:100px;font-size:13px">
+					<p:commandLink value="#{expedicao.idTermo}" rendered="#{expedicao.idTermo != null}"
+						action="#{controle_expedicao_controller.imprimirTermo(expedicao.idTermo)}"
+						style="font-size:12px" ajax="false" target="_blank">
+					</p:commandLink>
+				</p:column>
+
+				<p:column headerText="Entrada logística"
+					style="width:100px;font-size:12px">
+					<h:outputText value="#{expedicao.dataAceitacaoExpedicao}"
+						style="font-size:12px">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Solicitante"
+					style="width:150px;font-size:12px">
+					<h:outputText value="#{expedicao.nomeSolicitante}"
+						style="font-size:10px" />
+				</p:column>
+
+				<p:column style="width:300px;font-size:12px"
+					headerText="Discriminação">
+					<h:outputText
+						value="#{controle_expedicao_controller.listaItens(expedicao.itens)}"
+						style="font-size:10px" />
+
+				</p:column>
+
+				<p:column headerText="Responsável pela expedição"
+					style="width:150px;font-size:12px">
+					<h:outputText
+						value="#{expedicao.nomeGestaoResponsavel}/#{expedicao.nomeResponsavel}"
+						style="font-size:12px" />
+				</p:column>
+
+				<p:column headerText="Destino" style="width:150px;font-size:12px">
+					<h:outputText value="#{expedicao.mascara}"
+						rendered="#{!expedicao.tipoLocalidade.nome.equals('Comunidade')}"
+						style="font-size:12px" />
+					<h:outputText value="#{expedicao.unidadeDeConservacao}"
+						rendered="#{expedicao.tipoLocalidade.nome.equals('Comunidade')}"
+						style="font-size:12px" />
+				</p:column>
+
+				<p:column headerText="Comunidade destino"
+					style="width:150px;font-size:12px">
+					<h:outputText value="#{expedicao.mascara}"
+						rendered="#{expedicao.tipoLocalidade.nome.equals('Comunidade')}"
+						style="font-size:12px" />
+				</p:column>
+
+				<p:column headerText="Rastreamento"
+					style="width:150px;font-size:12px">
+					<h:outputText value="#{expedicao.localizacaoPedido.nome}"
+						style="font-size:12px" />
+				</p:column>
+
+				<p:column headerText="Valor total"
+					style="width:150px;font-size:12px">
+					<h:outputText value="#{expedicao.valorTotalComDesconto}"
+						style="font-size:12px">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+							currencySymbol="R$" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Fornecedor" style="width:150px;font-size:12px">
+					<h:outputText value="#{expedicao.nomeFantasia}"
+						style="font-size:12px" />
+				</p:column>
+
+				<p:column headerText="Prazo entrega"
+					style="width:150px;font-size:12px">
+					<h:outputText value="#{expedicao.dataEntrega}"
+						style="font-size:12px">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Entrada de mercadoria"
+					style="width:150px;font-size:12px">
+					<h:outputText value="#{expedicao.entradaMercadoria}"
+						style="font-size:12px">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Saída de mercadoria"
+					style="width:150px;font-size:12px">
+					<h:outputText value="#{expedicao.saidaMercadoria}"
+						style="font-size:12px">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Protocolo NF"
+					style="width:150px;font-size:12px">
+					<h:outputText value="#{expedicao.protocoloNf}"
+						style="font-size:12px" />
+				</p:column>
+
+				<p:column headerText="Recebimento no destino"
+					style="width:150px;font-size:12px">
+					<h:outputText value="#{expedicao.dataRecebimento}"
+						style="font-size:12px">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+			</p:dataTable>
+			
+			
+			</p:panel>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+		<p:dialog header="Controle de expedição" closable="true"
+			widgetVar="dlg_controle_expedicao" modal="true" height="60%"
+			showEffect="clip" hideEffect="clip">
+			<h:form id="form-controle-expedicao-cadastro">
+
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Solicitação:" />
+						<br/>
+						<h:outputText style="font-weight:bold"
+							value="#{controle_expedicao_controller.controleExpedicao.pedido.compra.id}" />
+					</div>
+
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Pedido:" />
+						<br/>
+						<h:outputText style="font-weight:bold"
+							value="#{controle_expedicao_controller.controleExpedicao.pedido.id}" />
+					</div>
+
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Entrada mercadoria:" />
+						<p:calendar
+							value="#{controle_expedicao_controller.controleExpedicao.entradaMercadoria}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+					</div>
+
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Saída mercadoria:" />
+						<p:calendar
+							value="#{controle_expedicao_controller.controleExpedicao.saidaMercadoria}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+					</div>
+
+				</div>
+
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Recebimento:" />
+						<p:calendar
+							value="#{controle_expedicao_controller.controleExpedicao.dataRecebimento}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+					</div>
+
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Nota fiscal:" />
+						<p:inputText
+							value="#{controle_expedicao_controller.controleExpedicao.notaFiscal}" />
+					</div>
+
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Protocolo NF:" />
+						<p:inputText
+							value="#{controle_expedicao_controller.controleExpedicao.protocoloNf}" />
+					</div>
+
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Transporte:" />
+						<p:inputText
+							value="#{controle_expedicao_controller.controleExpedicao.transporte}" />
+					</div>
+
+				</div>
+
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Valor do frete:" />
+						<p:inputText
+							value="#{controle_expedicao_controller.controleExpedicao.valorTransporte}">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+								locale="pt_BR" />
+						</p:inputText>
+					</div>
+
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Rastreamento:" />
+						<p:selectOneMenu
+							value="#{controle_expedicao_controller.controleExpedicao.localizacaoPedido}">
+							<f:selectItems
+								value="#{controle_expedicao_controller.localizacoes}" var="loc"
+								itemLabel="#{loc.nome}" itemValue="#{loc}" />
+						</p:selectOneMenu>
+					</div>
+
+					<div class="ui-g-12" style="text-align: right">
+						<p:commandLink value="Salvar"
+							process="form-controle-expedicao-cadastro" style="color:#fff"
+							update=":form-controle-expedicao-listagem"
+							styleClass="btn btn-primary btn-sm"
+							action="#{controle_expedicao_controller.salvarControleExpedicao()}" />
+					</div>
+
+
+				</div>
+					
+
+			</h:form>
+
+		</p:dialog>
+
+								<!-- ADICIONAR TERMO -->
+
+		<p:dialog header="Adicionar termo" 
+			widgetVar="dlg_novo_termo" modal="true" height="90%" width="90%">
+
+			<h:form id="form-cadastro-termo">
+			<p:panel>
+
+				<p:messages id="msg_termo"  showDetail="true"
+					showIcon="true" showSummary="false" closable="true" />
+				
+				
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Ano Referência:" />
+						<p:inputText
+							value="#{controle_expedicao_controller.termo.anoReferencia}" />
+					</div>
+					
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Tipo:" />
+						<p:selectOneMenu
+							value="#{controle_expedicao_controller.termo.tipo}">
+							<f:selectItems
+								value="#{controle_expedicao_controller.tiposTermos}"
+								var="tiposTermos" itemLabel="#{tiposTermos.nome}"
+								itemValue="#{tiposTermos}" />
+						</p:selectOneMenu>
+					</div>
+					
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Aprovador:" />
+						<p:selectOneMenu
+							value="#{controle_expedicao_controller.termo.aprovador}">
+							<f:selectItems
+								value="#{controle_expedicao_controller.aprovadores}"
+								var="aprovador" itemLabel="#{aprovador.nome}"
+								itemValue="#{aprovador}" />
+						</p:selectOneMenu>
+					</div>
+					
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Status:" />
+						<p:selectOneMenu
+							value="#{controle_expedicao_controller.termo.statusTermo}">
+							<f:selectItem itemLabel="N/ Assinado" itemValue="n_assinado" />
+							<f:selectItem itemLabel="Assinado" itemValue="assinado" />
+						</p:selectOneMenu>
+					</div>
+
+				</div>
+				
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Destino:" />
+								
+						<p:autoComplete styleClass="font12-vi" panelStyle="width:180px"
+									placeholder="Destino/Localização"
+									value="#{controle_expedicao_controller.termo.tipoLocalidade}"
+									completeMethod="#{controle_expedicao_controller.completeLocalidade}"
+									var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+									converter="localConverterVI" minQueryLength="3">
+								</p:autoComplete>		
+					</div>
+					
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Associação:" />
+						<p:inputText disabled="true"></p:inputText>
+					</div>
+
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Descrição Material:" />
+						<p:inputText	value="#{controle_expedicao_controller.termo.descricao}" />
+					</div>
+					
+					<div class="ui-g-3 ">
+						<p:outputLabel value="Data envio:" />
+						<p:calendar id="dt_inicio"
+							value="#{controle_expedicao_controller.termo.dataEnvio}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+					</div>
+		
+				</div>
+				
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-12" style="text-align: right">
+					<p:commandLink value="Salvar" styleClass="btn btn-primary btn-sm"
+							style="color:#fff"
+							action="#{controle_expedicao_controller.salvarTermo()}"
+							update="form-cadastro-termo" >
+							<span class=""></span>
+							</p:commandLink>
+					
+					</div>
+					
+				</div>		
+				
+					<p:dataTable id="table-lista-pedidos" rowIndexVar="indexRow"
+						paginator="true" rows="5"
+						value="#{controle_expedicao_controller.termo.pedidos}"
+						var="pedido">
+
+
+						<p:column headerText="Nº Pedido">
+							<h:outputText value="#{pedido.compra.id}/#{pedido.id}" />
+						</p:column>
+
+						<p:column headerText="Fornecedor">
+							<h:outputText value="#{pedido.fornecedor.nomeFantasia}" />
+						</p:column>
+
+						<p:column headerText="Localidade">
+							<h:outputText value="#{pedido.localidade.mascara}" />
+						</p:column>
+
+						<p:column headerText="Valor">
+							<h:outputText value="#{pedido.valorTotalComDesconto}">
+								<f:convertNumber type="currency" maxFractionDigits="2"
+									currencySymbol="R$" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Expedição">
+							<h:outputText
+								value="#{pedido.termo != null ? pedido.termo.statusTermo : 'N_Iniciado'}" />
+						</p:column>
+
+						<p:column style="width:65px">
+							<p:commandLink styleClass="btn btn-danger"
+								action="#{controle_expedicao_controller.removerPedidoDoTermo(indexRow)}"
+								update="table-lista-pedidos">
+								<span class="fa fa-fw fa-times-circle" ></span>
+							</p:commandLink>
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+
+
+		</p:dialog>
+
+
+
+	</ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="menu_lateral">
+
+		<style type="text/css">
+
+.semBorda tr, .semBorda td {
+	border: none !important;
+}
+</style>
+
+
+		<f:event listener="#{configController.validar()}" type="preRenderView" />
+
+
+		<h:form id="tabela_projeto">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{configController.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{pagamentoController.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{pagamentoController.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right;" class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+
+
+		<h:panelGroup id="panel-content">
+
+
+			<h:panelGroup id="panel-blocc"
+				rendered="#{configController.panelBlock}">
+				<h4 align="center">Você não tem permissão para acessar este
+					conteúdo</h4>
+				<i class="fa fa-exclamation-triangle" aria-hidden="true"
+					style="margin-left: 500px; font-size: 40px;"></i>
+
+
+			</h:panelGroup>
+
+
+
+
+
+			<h:panelGroup id="panel-listagem"
+				rendered="#{configController.panelListagem}">
+
+
+
+				<h:form id="form-listagem">
+
+
+					<p:messages id="msg-pagamento" showSummary="false"
+						showDetail="true" showIcon="true" />
+
+					<p:dataTable emptyMessage="Não há Relatorios de Campo"
+						id="table-compras" value="#{configController.usuarios}"
+						var="usuario" paginator="ture" widget="comprasTable" rows="15">
+
+
+						<f:facet name="header">
+
+							<p:outputLabel>
+
+								<h:outputText value="Procura:" />
+								<p:inputText id="globalFilter"
+									onkeyup="PF('viagemsTable').filter()" style="width:150px"
+									placeholder="palavra-chave" />
+
+								<p:commandLink id="add" styleClass="link-content"
+									action="#{configController.novoUsuario()}"
+									update="panel-content" title="Adicionar Relatorio">
+									<span style="color: green; font-size: 25px;"
+										class="icon-plus-alt"> </span>
+								</p:commandLink>
+
+
+
+							</p:outputLabel>
+
+
+						</f:facet>
+
+
+						<p:column headerText="Codigo" filterBy="#{usuario.id}"
+							filterMatchMode="contains">
+
+							<p:commandLink value="#{usuario.id}"
+								action="#{configController.editarUsuario()}"
+								update="panel-content">
+								<f:setPropertyActionListener value="#{relatorio}"
+									target="#{relatorioCampo.relatorio}" />
+							</p:commandLink>
+						</p:column>
+
+						<p:column headerText="Nome">
+							<h:outputText value="#{usuario.nomeUsuario}" />
+						</p:column>
+
+						<p:column headerText="email">
+							<h:outputText value="#{usuario.email}" />
+						</p:column>
+
+
+					</p:dataTable>
+
+
+
+
+				</h:form>
+
+
+
+			</h:panelGroup>
+
+			<h:panelGroup id="panel-cadastro"
+				rendered="#{configController.panelCadastro}">
+
+				<h:form id="form-cadastro" prependId="false">
+
+					<p:messages id="msgs"  showSummary="false"
+						showDetail="true" showIcon="true" closable="true" />
+
+					<div class="botao_central" align="left"
+						style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+						<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+							action="#{configController.salvarUsuario()}"
+							update="panel-content" style="color:#fff; margin: 2px 2px;"
+							value="Salvar" />
+
+						<p:commandLink action="#{configController.voltarListagem()}"
+							value="voltar" update="panel-content" process="@this"
+							styleClass="btn btn-info btn-sm" />
+
+
+
+					</div>
+
+
+					<h:panelGrid columns="2" layout="grid" id="grid-if"
+						style="width:100%;">
+
+
+						<p:column>
+							<p:row>
+								<p:outputLabel value="Nome" />
+								<br />
+							</p:row>
+							<p:row>
+								<p:inputText value="#{configController.usuario.nomeUsuario}" />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:outputLabel value="Senha" />
+								<br />
+							</p:row>
+							<p:row>
+								<p:inputText value="#{configController.usuario.senha}" />
+							</p:row>
+						</p:column>
+						<p:column>
+							<p:row>
+								<p:outputLabel value="Status" />
+								<br />
+							</p:row>
+							<p:row>
+								<p:selectBooleanButton id="value1"
+									value="#{configController.usuario.ativo}" onLabel="Ativo"
+									offLabel="Desativado" style="width:100px" />
+							</p:row>
+						</p:column>
+
+						<p:column>
+							<p:row>
+								<p:outputLabel value="Gestão" />
+								<br />
+							</p:row>
+							<p:row>
+								<h:panelGroup id="panel-gestao-compra">
+
+									<p:selectOneMenu id="tipo_gestao_compra"
+										value="#{configController.usuario.tipoGestao}">
+										<p:ajax listener="#{configController.onTipoGestaoChange()}"
+											process="@this" update="panel-gestao-compra" />
+										<f:selectItem noSelectionOption="true" />
+										<f:selectItems value="#{configController.tiposGestao}"
+											var="tipoGestao" itemLabel="#{tipoGestao.nome}"
+											itemValue="#{tipoGestao}" />
+									</p:selectOneMenu>
+
+									<p:selectOneMenu id="sup_compra"
+										value="#{configController.usuario.coordenadoria}"
+										rendered="#{configController.tipoGestao.equals('Superintendencia')}"
+										required="true"
+										requiredMessage="Campo 'Superintendencia' obrigatório"
+										converter="gestaoConverter">
+										<f:selectItems value="#{configController.gestoes}" var="gest"
+											itemLabel="#{gest.nome}" itemValue="#{gest}" />
+									</p:selectOneMenu>
+
+									<p:selectOneMenu id="coord_compra" filter="true"
+										filterMatchMode="contains"
+										value="#{configController.usuario.coordenadoria}"
+										rendered="#{configController.tipoGestao.equals('Coordenadoria')}"
+										required="true"
+										requiredMessage="Campo 'Coordenadoria' obrigatório"
+										converter="gestaoConverter">
+										<f:selectItems value="#{configController.gestoes}" var="gest"
+											itemLabel="#{gest.nome}" itemValue="#{gest}" />
+									</p:selectOneMenu>
+
+									<p:selectOneMenu id="reg_compra" filter="true"
+										filterMatchMode="contains"
+										value="#{configController.usuario.coordenadoria}"
+										rendered="#{compraController.tipoGestao.equals('Regional')}"
+										required="true" requiredMessage="Campo 'Regional' obrigatório"
+										converter="gestaoConverter">
+										<f:selectItems value="#{configController.gestoes}" var="gest"
+											itemLabel="#{gest.nome}" itemValue="#{gest}" />
+									</p:selectOneMenu>
+								</h:panelGroup>
+
+							</p:row>
+						</p:column>
+						<p:row>
+							<p:column>
+								<h:outputLabel value="Colaborador" />
+								<br />
+								<p:selectOneMenu id="colaborador"
+									value="#{configController.usuario.colaborador}" filter="true">
+
+									<f:selectItems value="#{configController.colaboradores}"
+										var="coord" itemLabel="#{coord.nome}" itemValue="#{coord}" />
+								</p:selectOneMenu>
+
+							</p:column>
+						</p:row>
+
+
+
+
+
+
+					</h:panelGrid>
+
+				</h:form>
+
+			</h:panelGroup>
+
+
+
+
+		</h:panelGroup>
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+
+
+
+
+</ui:composition>

@@ -1,0 +1,125 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+	<p:panel id="map" style="margin-top:2px">
+
+		<div id="choose-fornec" class="ui-g ui-fluid">
+			<div id="div-input-fornec" class="ui-g-12 form-group">
+				<div class="ui-inputgroup">
+					<p:selectOneMenu value="#{escolhaCotacao.idFornecedor}"
+						style="vertical-align:middle;" id="fornecedor">
+
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione um fornecedor" />
+						<f:selectItems value="#{escolhaCotacao.cotacoesAuxiliares}"
+							var="cot" itemLabel="#{cot.fornecedor}"
+							itemValue="#{cot.fornecedorId}" />
+					</p:selectOneMenu>
+
+					<p:commandButton icon="pi pi-check" 
+						update="panel-recurso,table-mapa-comparativo,table-recurso"
+						title="Escolher fornecedor para itens selecionados"
+						style="color:#fff" process="map"
+						onclick="start(); setarWidthHeight('form-forma-pagamento-mode01');"
+						onerror="stop()" onsuccess="stop()"
+						action="#{escolhaCotacao.gerarPedido()}" styleClass="green-button" />
+				</div>
+
+			</div>
+
+			<div id="div-map-values" class="ui-g-12">
+				<p:dataTable id="table-mapa-comparativo" var="item"
+					selection="#{escolhaCotacao.listaItensDeCompraAuxiliar}"
+					rowKey="#{item.id}" value="#{escolhaCotacao.itens}">
+
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column rowspan="1" selectionMode="multiple"
+								style="width:34px;text-align: center" />
+
+							<p:column rowspan="1" style="width:34px;" headerText="Qtd." />
+							<p:column rowspan="1" headerText="Itens" style="width:60%;" />
+							<ui:repeat value="#{escolhaCotacao.cotacoesAuxiliares}"
+								var="fornecedor">
+								<p:column colspan="1" headerText="#{fornecedor.fornecedor}" />
+							</ui:repeat>
+
+						</p:row>
+
+
+						<!-- 						<p:row> -->
+						<!-- 							<ui:repeat value="#{escolhaCotacao.cotacoesAuxiliares}" -->
+						<!-- 								var="fornecedor"> -->
+						<!-- 								<p:column headerText="Valor" /> -->
+						<!-- 								<p:column headerText="Valor" /> -->
+						<!-- 							</ui:repeat> -->
+						<!-- 						</p:row> -->
+
+					</p:columnGroup>
+
+
+					<p:column selectionMode="multiple"
+						rendered="#{!escolhaCotacao.verificarSeHouvePedidoNoItem(item.id)}"
+						style="width:36px;text-align:center" />
+
+					<p:column
+						rendered="#{escolhaCotacao.verificarSeHouvePedidoNoItem(item.id)}"
+						style="width:36px;text-align:center" />
+
+					<p:column>
+						<h:outputText value="#{item.quantidade}" />
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{item.produto.descricao.toLowerCase()}" />
+					</p:column>
+
+					<p:columns colspan="1" style="text-align:right"
+						styleClass="#{escolhaCotacao.getHouveEscolhaCotacao(fornecedor1.fornecedorId, item.compra.id, item.id) ? 'highlight' : null}"
+						value="#{escolhaCotacao.cotacoesAuxiliares}" var="fornecedor1">
+
+						<table>
+							<tr>
+								<!-- 								<td style="border: 0px"><h:outputText -->
+								<!-- 										rendered="#{escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id) > 0}" -->
+								<!-- 										value="#{escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id)}"> -->
+								<!-- 										<f:convertNumber type="currency" maxFractionDigits="3" -->
+								<!-- 											currencySymbol="R$" /> -->
+								<!-- 									</h:outputText></td> -->
+
+								<td style="border: 0"><h:outputText
+										rendered="#{item.quantidade * escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id) > 0}"
+										value="#{item.quantidade * escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id)}">
+										<f:convertNumber type="currency" maxFractionDigits="2"
+											currencySymbol="R$" />
+									</h:outputText></td>
+							</tr>
+						</table>
+
+					</p:columns>
+
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column footerText="#" style="text-align:center" />
+							<p:column></p:column>
+							<p:column footerText="Totais:" />
+							<p:columns colspan="1"
+								value="#{escolhaCotacao.cotacoesAuxiliares}" var="fornecedor1"
+								footerText="#{escolhaCotacao.getTotais(fornecedor1.totalDesconto)}" />
+						</p:row>
+					</p:columnGroup>
+
+				</p:dataTable>
+			</div>
+		</div>
+
+	</p:panel>
+
+</ui:fragment>

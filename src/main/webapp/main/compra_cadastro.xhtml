@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="content">
+
+		<h:form id="form-cadastro" prependId="false">
+			<p:messages id="messages" showSummary="false" style="margin-top:10px"
+				showDetail="true" closable="true" showIcon="true">
+
+				<p:autoUpdate disabled="true" />
+			</p:messages>
+
+			<f:metadata>
+				<o:viewParam name="lanc" value="#{compraController.compra}" />
+				<f:viewAction onPostback="setarFocused('info-geral');"
+					action="#{compraController.initCadastro()}" />
+
+			</f:metadata>
+
+			<p:breadCrumb>
+				<p:menuitem value="Categories" process="@this" url="home_new.xhtml" />
+				<p:menuitem value="Compras" process="@this" url="compra_new.xhtml" />
+				<p:menuitem value="Cadastro / edição de compra" process="@this"
+					url="#" />
+			</p:breadCrumb>
+
+			<div id="steps">
+				<p:steps widgetVar="tabViewVar" rendered="true" id="step"
+					activeIndex="#{compraController.stepIndex}" styleClass="custom"
+					style="margin-bottom:10px" readonly="false">
+					<p:menuitem value="Informações gerais" />
+					<p:menuitem id="menu_doc" value="Itens/Produtos" />
+					<p:menuitem value="Definição de Recursos" />
+					<p:menuitem value="Anexos" />
+				</p:steps>
+			</div>
+
+
+
+			<div id="panel-geral">
+
+				<p:panel id="panel-info-geral" styleClass="tab-menu-item-vi">
+
+					<ui:include src="/main/compra/info_geral.xhtml" />
+
+				</p:panel>
+
+				<p:panel id="panel-info-items" styleClass="tab-menu-item-vi"
+					style="display: none;">
+
+					<ui:include src="/main/compra/itens.xhtml" />
+
+				</p:panel>
+
+				<p:panel id="info-recurso-panel-pf" style="display: none"
+					styleClass="tab-menu-item-vi">
+
+					<ui:include src="/main/compra/recursos.xhtml" />
+
+				</p:panel>
+
+				<p:panel id="panel-info-anexo" styleClass="tab-menu-item-vi"
+					style="display: none">
+
+					<ui:include src="/main/compra/anexos.xhtml" />
+
+				</p:panel>
+			</div>
+
+
+
+			<div class="fixed-btn">
+
+				<p:panel id="btn-panel-p">
+
+					<ui:include src="/main/compra/buttons.xhtml" />
+
+				</p:panel>
+			</div>
+
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" styleClass="ui-confirmdialog-yes"
+					icon="pi pi-check" />
+				<p:commandButton value="Não" styleClass="ui-confirmdialog-no"
+					icon="pi pi-times" />
+			</p:confirmDialog>
+
+			<p:dialog header="Confirmação de e-mail" width="65%" height="50%"
+				widgetVar="dlg_email" modal="true" closable="true"
+				closeOnEscape="true" showEffect="clip" hideEffect="clip">
+				<ui:include src="/main/dialog/compras/confirmacao_email.xhtml" />
+			</p:dialog>
+
+			<p:dialog header="Salvar" width="40%" height="50%"
+				widgetVar="dlg_salvar" modal="true" closable="true"
+				closeOnEscape="true" showEffect="clip" hideEffect="clip">
+				<ui:include src="/main/dialog/compras/salvar.xhtml" />
+
+			</p:dialog>
+
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<script type="text/javascript">
+			function setarWidthHeight(id) {
+				var htmlTag = document.getElementById(id);
+				htmlTag.style.height = Math.floor(window.innerHeight*0.98)+"px";	
+				htmlTag.style.width = Math.floor(window.innerWidth*0.98)+"px";	
+				
+			}
+		</script>
+
+
+
+		<p:dialog header="Arquivo" height="100%" width="400px" widgetVar="dlg_arq"
+			modal="true" closable="true" closeOnEscape="true" showEffect="clip"
+			hideEffect="clip">
+			<h:form id="form-arq">
+
+				<div class="ui-g-12 ui-fluid" style="padding: 8px">
+
+					<div class="ui-g-6" style="text-align: center">
+						<p:commandLink  action="#{compraController.visualizarArquivo()}"
+							target="_blank" process="@this" ajax="false" value="Visualizar"
+							onclick="PF('dlg_arq').hide();">
+							<span class="pi pi-search"></span>
+						</p:commandLink>
+					</div>
+
+					<div class="ui-g-6" style="text-align: center">
+						<p:commandLink  action="#{compraController.baixarArquivo()}"
+							process="@this" ajax="false" value="Baixar"
+							onclick="PF('dlg_arq').hide();">
+							<span class="pi pi-download"></span>
+						</p:commandLink>
+					</div>
+
+				</div>
+
+			</h:form>
+		</p:dialog>
+
+		<p:dialog header="
+							Autorização" width="100%" height="100%"
+			widgetVar="dlg_aprovacao_coordenador" modal="true" closable="true"
+			closeOnEscape="true" showEffect="clip" hideEffect="clip">
+			<h:form id="form_aprovacao" prependId="false">
+
+				<p:messages closable="true" showDetail="true" showIcon="true"
+					showSummary="false">
+					<p:autoUpdate></p:autoUpdate>
+				</p:messages>
+
+
+				<div class="ui-g ui-fluid"
+					style="width: 25%; height: 25%; margin-left: auto; margin-right: auto; margin-top: 125px">
+
+					<div class="ui-g-12 form-group">
+						<p:outputLabel value="Senha" styleClass="form-label" />
+						<p:password value="#{compraController.aprouve.senha}" />
+					</div>
+
+					<div class="ui-g-12">
+						<p:commandButton id="btn-autorizacao" process="form_aprovacao"
+							update="panel-info-geral, btn-panel-p"
+							styleClass="btn btn-block btn-primary" style="color:#ffffff"
+							onclick="PrimeFaces.monitorDownload(start, stop);"
+							oncomplete="setarFocused('info-geral');"
+							action="#{compraController.autorizar()}" value="Autorizar" />
+					</div>
+				</div>
+
+				<p:defaultCommand target="btn-autorizacao"></p:defaultCommand>
+
+			</h:form>
+		</p:dialog>
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+
+
+	</ui:define>
+
+
+</ui:composition>

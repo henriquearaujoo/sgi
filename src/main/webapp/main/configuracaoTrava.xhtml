@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="menu_lateral">
+
+		<h:form id="tabela_menu">
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{configuracaoController.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{configuracaoController.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{configuracaoController.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right; color: #849A39"
+						class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="formUsuario">
+			<p:dataTable id="list" editable="true" 
+				value="#{configuracaoController.list}" var="bean"
+				paginator="true"
+				>
+				
+				<f:facet name="header">
+				
+
+			    </f:facet>
+			    
+			    <p:ajax event="rowEdit" listener="#{configuracaoController.salvar(bean)}" />
+        		<p:ajax event="rowEditCancel" listener="#{configuracaoController.onRowCancel}"/>
+        		
+        		<p:column headerText="Ação" style="width:55px"  rendered="#{configuracaoController.verificaAdmin()}" >
+		            <p:rowEditor />
+		        </p:column>
+
+
+
+				<p:column filterBy="#{bean.tempoSC}" filterStyle="display:none"
+					headerText="Solicitação de Compra" style="text-align:center">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{bean.tempoSC} dias">
+							</h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{bean.tempoSC}" style="width:100%"
+								label="Year" required="true">
+							</p:inputText>
+						</f:facet>
+					</p:cellEditor>
+
+
+				</p:column>
+
+				<p:column filterBy="#{bean.tempoSP}" filterStyle="display:none"
+					headerText="Solicitação de Pagamento" style="text-align:center">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{bean.tempoSP} dias">
+							</h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{bean.tempoSP}" style="width:100%"
+								label="Year" required="true">
+							</p:inputText>
+						</f:facet>
+					</p:cellEditor>
+
+				</p:column>
+
+				<p:column filterBy="#{bean.tempoSD}" filterStyle="display:none"
+					headerText="Solicitação de Diária" style="text-align:center">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{bean.tempoSD} dias">
+							</h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{bean.tempoSD}" style="width:100%" required="true">
+							</p:inputText>
+						</f:facet>
+					</p:cellEditor>
+
+				</p:column>
+
+				<p:column filterBy="#{bean.valorTarifaBancaria}"
+					filterStyle="display:none" headerText="Valor da Tarifa Bancaria" style="text-align:center">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{bean.valorTarifaBancaria}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+									currencySymbol="R$" />
+							</h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText id="modelInput" value="#{bean.valorTarifaBancaria}"
+							 	required="true" style="width:100%">
+							</p:inputText>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+
+
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="content">
+
+		<f:view>
+
+			<h:form id="form-cotacao" prependId="false">
+
+				<f:metadata>
+					<o:viewParam name="comp"
+						value="#{cotacaoCadastroController.compra}" />
+					<o:viewParam name="forn"
+						value="#{cotacaoCadastroController.fornecedor}" />
+					<f:viewAction action="#{cotacaoCadastroController.carregarItens()}" />
+				</f:metadata>
+
+				<script type="text/javascript">
+					function preencherDesconto(ObjForm, value){
+						document.getElementById("table_cotacao:"+value+":vl_desc").value = ObjForm.value;
+					}
+				</script>
+
+
+				<p:messages showDetail="true" showSummary="false" closable="true">
+					<p:autoUpdate></p:autoUpdate>
+				</p:messages>
+
+
+				<div id="panel-geral">
+
+					<p:panel id="info-panel-geral">
+
+						<div id="info-geral" class="ui-g ui-fluid">
+
+							<div class="ui-g-3 form-group">
+								<p:outputLabel for="fornecedor-cotacao" value="Fornecedor" />
+								<p:autoComplete id="fornecedor-cotacao" required="true"
+									requiredMessage="Preencha o campo Fornecedor"
+									value="#{cotacaoCadastroController.fornecedor}"
+									completeMethod="#{cotacaoCadastroController.completeFornecedor}"
+									var="fornecedor" itemLabel="#{fornecedor.nomeFantasia}"
+									itemValue="#{fornecedor}" converter="fornecedorConverter"
+									forceSelection="true" />
+							</div>
+
+							<div class="ui-g-3 form-group">
+								<p:outputLabel for="desconto-real" value="Desconto R$" />
+								<p:inputText id="desconto-real"
+									value="#{cotacaoCadastroController.cotacaoParent.valorTotalDesconto}"
+									onkeypress="return formatarNumero(this,event,19,2);">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+										locale="pt_BR" />
+								</p:inputText>
+							</div>
+
+							<div class="ui-g-3 form-group">
+								<p:outputLabel value="Desconto %" />
+								<p:inputText style="margin-left:2px"
+									value="#{cotacaoCadastroController.cotacaoParent.valorTotalDescontoPorcentagem}"
+									onkeypress="return formatarNumero(this,event,19,2);">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+										locale="pt_BR" />
+								</p:inputText>
+
+							</div>
+
+							<div class="ui-g-3 form-group">
+								<br />
+								<p:commandButton style="margin-left:3px"
+									process="info-panel-geral" icon="fa fa-play-circle"
+									onclick="start();" oncomplete="stop();" onerror="stop();"
+									update="@this ,table_cotacao, info-panel-geral"
+									value="Atualizar"
+									action="#{cotacaoCadastroController.distribuirDesconto()}" />
+
+
+							</div>
+
+							<div class="ui-g-12">
+
+								<p:dataTable id="table_cotacao"
+									value="#{cotacaoCadastroController.cotacoes}" var="cotacao"
+									rowIndexVar="indexRow">
+
+									<p:column headerText="#" style="width:3%">
+										<h:outputText value="#{indexRow + 1}" />
+									</p:column>
+
+									<p:column headerText="produto">
+										<h:outputText value="#{cotacao.itemCompra.produto.descricao}" />
+									</p:column>
+
+									<p:column headerText="Qtd." style="width:10%">
+										<h:outputText value="#{cotacao.quantidade}" />
+									</p:column>
+
+									<p:column style="width:10%" headerText="valor">
+										<p:inputText id="vl"
+											onblur="preencherDesconto(this, #{indexRow});"
+											required="true"
+											requiredMessage="Preencha o valor de #{cotacao.itemCompra.produto.descricao}, linha: (#{indexRow + 1});"
+											style="width:100px;height:25px" value="#{cotacao.valor}"
+											onkeypress="return formatarNumero(this,event,19,3);">
+
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="3"
+												locale="pt_BR" />
+										</p:inputText>
+									</p:column>
+
+									<p:column style="width:10%" headerText="valor c/ desconto">
+										<p:inputText id="vl_desc" style="width:100px;height:25px"
+											onkeypress="return formatarNumero(this,event,19,3);"
+											required="true"
+											requiredMessage="Preencha o valor com desconto de #{cotacao.itemCompra.produto.descricao}, linha: (#{indexRow + 1});"
+											value="#{cotacao.valorDesconto}">
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="3"
+												locale="pt_BR" />
+										</p:inputText>
+									</p:column>
+
+									<p:column style="width:10%" headerText="total s/ desconto">
+										<p:outputLabel
+											value="#{cotacao.valor.multiply(cotacaoCadastroController.pegarDecimal(cotacao.quantidade))}">
+											<f:convertNumber type="currency" maxFractionDigits="2"
+												currencySymbol="R$" />
+										</p:outputLabel>
+									</p:column>
+
+									<p:column style="width:10%" headerText="total c/ desconto">
+										<p:outputLabel
+											value="#{cotacao.valorDesconto.multiply(cotacaoCadastroController.pegarDecimal(cotacao.quantidade))}">
+											<f:convertNumber type="currency" maxFractionDigits="2"
+												currencySymbol="R$" />
+										</p:outputLabel>
+									</p:column>
+
+									<p:columnGroup type="footer">
+										<p:row>
+											<p:column colspan="5" footerText="Totais: "
+												style="text-align:right" />
+											<p:column
+												footerText="#{cotacaoCadastroController.getTotais(cotacaoCadastroController.cotacaoParent.valorTotalSemDesconto)}" />
+											<p:column
+												footerText="#{cotacaoCadastroController.getTotais(cotacaoCadastroController.cotacaoParent.valorTotalComDesconto)}" />
+										</p:row>
+									</p:columnGroup>
+
+
+
+								</p:dataTable>
+
+							</div>
+
+						</div>
+
+					</p:panel>
+
+					<div class="fixed-btn">
+
+						<p:panel id="btn-panel-p">
+
+							<div id="btn-panel-wizard" class="ui-g ui-fluid"
+								style="margin-bottom: 10px">
+
+								<div class="ui-g-6">
+
+									<p:commandLink styleClass="btn btn-primary btn-sm"
+										update="info-panel-geral" onclick="start()" onerror="stop();"
+										process="form-cotacao, form-detalhe-cotacao"
+										action="#{cotacaoCadastroController.salvar()}"
+										oncomplete="setarFocused('info-geral');stop()"
+										style="color:#fff; margin: 2px 2px;" value="Salvar">
+										<f:param name="comp"
+											value="#{cotacaoCadastroController.compra.id}"></f:param>
+
+									</p:commandLink>
+
+									<p:commandLink styleClass="btn btn-primary btn-sm"
+										update="panel-detalhe-cotacao"
+										onclick="setarWidthHeight('form-detalhe-cotacao'); PF('dlg_detalhe_cotacao').show();"
+										oncomplete="setarFocused('div-detalhe-cotacao');"
+										style="color:#fff; margin: 2px 2px;"
+										value="Adicionar informações">
+
+									</p:commandLink>
+
+								</div>
+
+								<div class="ui-g-6">
+									<p:commandLink styleClass="btn btn-danger btn-sm"
+										style="color:#fff; margin: 2px 2px;float:right"
+										action="#{cotacaoCadastroController.voltar()}" process="@this"
+										value="Voltar" onclick="start();" onerror="stop();"
+										onsuccess="stop();">
+
+										<f:param name="comp"
+											value="#{cotacaoCadastroController.compra.id}"></f:param>
+									</p:commandLink>
+
+								</div>
+
+
+
+								<div id="actions-button" class="ui-g-12" style="display: none">
+
+									<div class="ui-g-12" style="text-align: right;"></div>
+								</div>
+
+							</div>
+
+						</p:panel>
+					</div>
+
+
+				</div>
+
+
+			</h:form>
+		</f:view>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<script type="text/javascript">
+			function setarWidthHeight(id) {
+				var htmlTag = document.getElementById(id);
+				htmlTag.style.height = Math.floor(window.innerHeight*0.98)+"px";	
+				htmlTag.style.width = Math.floor(window.innerWidth*0.98)+"px";	
+				
+			}
+		</script>
+
+		<p:dialog header="Informações sobre cotação" width="100%"
+			height="100%" widgetVar="dlg_detalhe_cotacao" modal="true"
+			closable="true" closeOnEscape="true" showEffect="clip"
+			hideEffect="clip">
+
+			<h:form id="form-detalhe-cotacao" prependId="false">
+
+				<p:panel id="panel-detalhe-cotacao">
+
+					<div id="div-detalhe-cotacao" class="ui-g ui-fluid">
+
+						<div class="ui-g-12">
+							<p:messages closable="true" showDetail="true" showIcon="true"
+								showSummary="false">
+								<p:autoUpdate></p:autoUpdate>
+							</p:messages>
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<p:outputLabel for="input-fm-pgto" styleClass="form-label"
+								value="Forma de pagamento" />
+							<p:selectOneMenu id="input-fm-pgto"
+								value="#{cotacaoCadastroController.cotacaoParent.condicaoPagamentoEnum}">
+								<f:selectItems value="#{escolhaCotacao.condicoes}"
+									var="condicao" itemLabel="#{condicao.nome}"
+									itemValue="#{condicao}" />
+							</p:selectOneMenu>
+
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<p:outputLabel for="input-parcelamento" styleClass="form-label"
+								value="Parcelamento" />
+							<p:selectOneMenu id="input-parcelamento"
+								value="#{cotacaoCadastroController.cotacaoParent.tipoParcelamento}">
+								<f:selectItems value="#{escolhaCotacao.tiposParcelas}"
+									var="parcela" itemLabel="#{parcela.nome}"
+									itemValue="#{parcela}" />
+							</p:selectOneMenu>
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<p:outputLabel for="input-parcela" styleClass="form-label"
+								value="Quantidade de parcelas" />
+							<p:inputText id="input-parcela"
+								value="#{cotacaoCadastroController.cotacaoParent.quantidadeParcela}" />
+						</div>
+
+
+						<div class="ui-g-3 form-group">
+							<p:outputLabel for="input-dt-pgto" styleClass="form-label"
+								value="Dt 1º pagamento" />
+							<p:calendar id="input-dt-pgto"
+								value="#{cotacaoCadastroController.cotacaoParent.dataPagamentoPedido}"
+								navigator="true" pattern="dd/MM/yyyy" />
+						</div>
+
+						<div class="ui-g-12">
+							<p:commandLink process="form-detalhe-cotacao"
+								update=":info-panel-geral" value="Aplicar" onclick="start();"
+								onerror="stop();" onsuccess="stop();"
+								styleClass="btn btn-primary btn-block">
+							</p:commandLink>
+						</div>
+
+					</div>
+
+
+				</p:panel>
+
+
+
+
+			</h:form>
+		</p:dialog>
+
+
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

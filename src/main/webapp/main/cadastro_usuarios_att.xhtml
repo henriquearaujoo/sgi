@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="content">
+	
+	
+		<h:form id="formUsuario">
+		 <br/>
+		
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Usuarios" url="cadastro_usuarios_att.xhtml" />
+			</p:breadCrumb>
+			
+			<p:panel id="panel-content">
+
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-2">
+						<h:outputText value="Nome:" />
+						<p:inputText id="globalFilter"
+							onkeyup="PF('filteredUsuario').filter()" />
+					</div>
+				
+				</div>
+				
+				<div class="ui-g ui-fluid" >
+					<div class="ui-g-12 ui-lg-12 " style="text-align: right">
+
+						<p:commandLink styleClass="btn btn-primary btn-sm">
+							<span class="fa fa-fw fa-search"></span>
+							<span>Procurar</span>
+						</p:commandLink>
+						<p:commandLink id="add" styleClass="btn btn-success btn-sm"
+							action="#{usuario_controller.novo()}"
+							rendered="#{usuario_controller.poderEditar()}"
+							title="Adicionar Usuário">
+							<span class="fa fa-fw fa-plus"></span>
+							<span>Novo</span>
+						</p:commandLink>
+
+					</div>
+				</div>
+
+			<p:separator></p:separator>
+			
+		<div class="ui-g ui-fluid">
+			<p:dataTable id="list" 
+				value="#{usuario_controller.usuarios}" var="bean"
+				paginator="true" widgetVar="filteredUsuario"
+				filteredValue="#{usuario_controller.listaFiltroUsuarios}">
+				
+			
+				<p:column filterBy="#{bean.colaborador.nome}"
+					filterStyle="display:none" headerText="Nome">
+					<h:outputText value="#{bean.colaborador.nome}" />
+				</p:column>
+				
+				<p:column filterBy="#{bean.nomeUsuario}" filterStyle="display:none"
+					headerText="Usuário">
+					<h:outputText value="#{bean.nomeUsuario}" />
+				</p:column>
+				
+
+				<p:column filterBy="#{bean.email}" filterStyle="display:none"
+					headerText="Email">
+					<h:outputText value="#{bean.email}" />
+				</p:column>
+				
+				<p:column headerText="Opções" style="width:10%;text-align: center;">
+					
+					<p:link  outcome="/main/cadastro_usuarios_edit_att"
+					style="color:#fff;margin-left:4px"
+								styleClass="btn btn-primary btn-sm" process="@this"	
+					>
+					<span class="fa fa-fw fa-edit"></span>
+						<f:param name="idUser" value="#{bean.id}" />
+					</p:link>
+					
+					<p:commandLink title="Excluir" rendered="true" update="list"
+						styleClass="btn btn-danger btn-xs"
+						 action="#{usuario_controller.delete(bean)}" >
+						<span class="fa fa-fw fa-trash-o"></span>
+						</p:commandLink>
+						
+					<p:spacer width="10px" />
+				
+				</p:column>
+			</p:dataTable>
+		</div>
+			
+			</p:panel>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

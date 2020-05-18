@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="menu_lateral">
+
+
+		<h:form id="tabela_projeto">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+				<p:graphicImage style="width:120px;height:70px" library="image" name="logofas.png" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{categoria_controller.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{categoria_controller.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{categoria_controller.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right;" class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form-categoria">
+			<p:dataTable styleClass="ui-fluid"
+				value="#{categoria_controller.categorias}" var="categoria" rows="12"
+				paginator="true" rowIndexVar="index">
+
+				<f:facet name="header">
+								
+					<p:commandLink 
+						action="#{categoria_controller.preparaCategoria()}"
+						update=":form_cadastro_categoria:panel_cadastro :form_cadastro_categoria:message_categoria"
+						oncomplete="PF('cadastro_categoria').show()"
+						style="margin: 2px 2px;float:right">
+						<p:resetInput target=":form_cadastro_categoria:message_categoria" />
+						<span style="color: green; font-size: 25px" class="icon-plus-alt"></span>
+					</p:commandLink>
+
+				</f:facet>
+
+				<p:column style="width:60px" headerText="#">
+					<h:outputText value="#{index + 1}" />
+				</p:column>
+
+
+				<p:column  headerText="Chave enum">
+					<h:outputText value="#{categoria.chaveEnum}" />
+				</p:column>
+
+				<p:column headerText="Nome" filterBy="#{categoria.nome}" filterMatchMode="contains">
+					<h:outputText value="#{categoria.nome}" />
+				</p:column>
+
+				
+				<p:column>
+					<p:commandLink value="Editar" update=":form_cadastro_categoria"
+						oncomplete="PF('cadastro_categoria').show()"
+						action="#{categoria_controller.editar()}">
+						<f:setPropertyActionListener value="#{categoria}"
+							target="#{categoria_controller.categoria}" />
+					</p:commandLink>
+					
+					<p:commandLink  value="Excluir" style="margin-left:5px" update=":form_cadastro_categoria" 
+						action="#{categoria_controller.removerCategoria(categoria)}">
+					</p:commandLink>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="adicionais">
+		<p:dialog header="Cadastro/Edição" widgetVar="cadastro_categoria"
+			width="40%" closable="false" modal="true" showEffect="clip"
+			hideEffect="clip">
+
+			<h:form id="form_cadastro_categoria">
+				<p:messages id="message_categoria"  showIcon="true"
+					showSummary="false" />
+				<p:panelGrid id="panel_cadastro" columns="2" styleClass="ui-fluid">
+
+					<h:outputText value="Descrição:" />
+					<p:inputText value="#{categoria_controller.categoria.nome}"
+						style="width:400px" />
+
+					<h:outputText value="Chave Enum:" />
+					<p:inputText value="#{categoria_controller.categoria.chaveEnum}" />
+
+					
+			 	</p:panelGrid>
+				<p:separator style="margin-bottom:4px;margin-top:4px;"></p:separator>
+				<p:commandLink style="color:#FFF" value="Salvar"
+						styleClass="btn btn-primary"
+						action="#{categoria_controller.salvar()}"
+						update="form_cadastro_categoria :form-categoria"
+						oncomplete="PF('cadastro_categoria').hide()"
+						>
+					
+					</p:commandLink>
+					
+				<p:commandLink style="color:#FFF;margin-left:4px" value="Fechar"
+						styleClass="btn btn-danger" oncomplete="PF('cadastro_categoria').hide()"
+						action="#{categoria_controller.preparaCategoria()}"
+						update="form_cadastro_categoria :form-categoria">
+					</p:commandLink>	
+					
+				
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+
+</ui:composition>

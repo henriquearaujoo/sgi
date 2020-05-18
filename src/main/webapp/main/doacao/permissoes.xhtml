@@ -1,0 +1,150 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+	
+	<style>
+	 .check-permission .ui-outputlabel{
+	    margin-left: 5px;
+	 }
+	
+	</style>
+
+	<p:panel id="panel-info-permissoes">
+
+		<div id="info-permissoes" class="ui-g ui-fluid check-permission">
+
+			<div class="ui-g-12">
+				<p:selectBooleanCheckbox
+					value="#{orcamento_controller.orcamento.permiteEmprestimo}" />
+				<p:outputLabel value="Permite empréstimo?" />
+
+			</div>
+
+			<div class="ui-g-12">
+				<p:selectBooleanCheckbox
+					value="#{orcamento_controller.orcamento.permiteRemanejamentoCategoria}" />
+				<p:outputLabel value="Permite remanejamento entre categorias?" />
+			</div>
+
+			<div class="ui-g-12">
+				<p:selectBooleanCheckbox
+					value="#{orcamento_controller.orcamento.permiteRemanejoRecurso}" />
+				<p:outputLabel value="Permite remanejo de recursos entre linhas? " />
+			</div>
+
+
+
+			<div class="ui-g-12">
+				<p:selectBooleanCheckbox
+					value="#{orcamento_controller.orcamento.pagaTarifaBancaria}">
+					<p:ajax update="input-tipo-projeto-desp"
+						listener="#{orcamento_controller.limparProjetoDespesa()}" />
+				</p:selectBooleanCheckbox>
+
+				<p:outputLabel value="Paga tarifa bancária? " />
+			</div>
+
+		</div>
+
+		<div id="info-permissoes-input-text" class="ui-g ui-fluid" style="margin-top: 15px">
+			<div class="ui-g-4 form-group">
+
+				<p:outputLabel for="input-tipo-projeto-desp" value="Tipo de controle"
+					styleClass="form-label" />
+				<p:selectOneMenu id="input-tipo-projeto-desp"
+					value="#{orcamento_controller.orcamento.tipoProjetoDespesa}"
+					disabled="#{!orcamento_controller.orcamento.pagaTarifaBancaria}">
+					<f:selectItem noSelectionOption="true"/>
+					<f:selectItems value="#{orcamento_controller.tiposProjetoDespesa}"
+						var="item" itemLabel="#{item.nome}" itemValue="#{item}" />
+					<p:ajax event="change" update="input-projeto"
+						listener="#{orcamento_controller.limparProjetoDespesaTipo()}" />
+				</p:selectOneMenu>
+
+			</div>
+
+			<div class="ui-g-4 form-group">
+
+				<p:outputLabel for="input-projeto" value="Projeto"
+					styleClass="form-label" />
+				<p:autoComplete id="input-projeto"
+					value="#{orcamento_controller.projetoDespesa}"
+					completeMethod="#{orcamento_controller.completeProjetos}"
+					var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}"
+					converter="projetoConverter"
+					disabled="#{!orcamento_controller.orcamento.tipoProjetoDespesa.toString().equals('OUTRO')}">
+					<p:ajax event="itemSelect" update="input-linha-orc"
+						listener="#{orcamento_controller.carregarRubricasProjetoDespesa()}" />
+					<p:ajax event="clear" update="input-linha-orc"
+						listener="#{orcamento_controller.carregarRubricasProjetoDespesa()}" />
+					<p:column>
+						<h:outputText value="#{projeto.codigo}" />
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{projeto.nome}" />
+					</p:column>
+
+				</p:autoComplete>
+			</div>
+
+			<div class="ui-g-4 form-group">
+
+				<p:outputLabel for="input-linha-orc" value="Linha orçamentária"
+					styleClass="form-label" />
+				<p:selectOneMenu id="input-linha-orc" autoWidth="false"
+					value="#{orcamento_controller.orcamento.projetoRubrica}"
+					filter="true" filterMatchMode="contains" var="categoria"
+					converter="projetoRubricaConverter"
+					disabled="#{!orcamento_controller.orcamento.tipoProjetoDespesa.toString().equals('OUTRO')}">
+
+					<f:selectItems
+						value="#{orcamento_controller.listaDeRubricasProjeto}" var="ru"
+						itemLabel="#{ru.nomeCategoria}" itemValue="#{ru}" />
+
+					<p:column headerText="Código">
+						<h:outputText value="#{categoria.codigo}" />
+					</p:column>
+
+					<p:column headerText="Fonte">
+						<h:outputText value="#{categoria.nomeFonte}" />
+					</p:column>
+
+					<p:column headerText="Projeto">
+						<h:outputText value="#{categoria.nomeProjeto}" />
+					</p:column>
+
+					<p:column headerText="Componente">
+						<h:outputText value="#{categoria.nomeComponente}" />
+					</p:column>
+
+					<p:column headerText="SubComponente">
+						<h:outputText value="#{categoria.nomeSubComponente}" />
+					</p:column>
+
+					<p:column headerText="Linha orçamentária">
+						<h:outputText value="#{categoria.nomeCategoria}" />
+					</p:column>
+
+					<p:column headerText="Saldo">
+						<h:outputText value="#{categoria.valorSaldo}">
+							<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+								maxFractionDigits="2" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+
+				</p:selectOneMenu>
+
+			</div>
+
+		</div>
+
+
+	</p:panel>
+
+</ui:fragment>

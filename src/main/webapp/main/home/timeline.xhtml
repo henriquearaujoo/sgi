@@ -1,0 +1,121 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<style type="text/css">
+.fc-view-container *, .fc-view-container *:before, .fc-view-container *:after
+	{
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	color: #fff !important;
+}
+</style>
+
+
+	<p:inputSwitch value="#{home_controller.showCalendar}"
+		onLabel="Linha do tempo" offLabel="Calendário">
+		<p:ajax update="timeline-panel" />
+	</p:inputSwitch>
+
+	<p:outputPanel id="timeline-panel">
+		<div class="ui-g ui-fluid">
+			<div class="ui-g-12">
+
+				<p:timeline id="timeline" value="#{home_controller.model}"
+					rendered="#{home_controller.showCalendar}" locale="pt"
+					height="200px" selectable="#{home_controller.selectable}"
+					zoomable="#{home_controller.zoomable}"
+					start="#{home_controller.initDateTimeLine}"
+					end="#{home_controller.endDateTimeLine}"
+					moveable="#{home_controller.moveable}"
+					stackEvents="#{home_controller.stackEvents}"
+					axisOnTop="#{home_controller.axisOnTop}" eventStyle="box"
+					showCurrentTime="#{home_controller.showCurrentTime}">
+
+					<p:ajax onstart="start()" oncomplete="stop();" onerror="stop();"
+						update="resume-event" event="select"
+						listener="#{home_controller.onSelect}" />
+
+				</p:timeline>
+
+
+				<p:schedule id="schedule"
+					rendered="#{!home_controller.showCalendar}"
+					value="#{home_controller.eventModel}" widgetVar="myschedule"
+					locale="pt" style="width:70%;margin-left:auto;margin-right:auto">
+
+					<p:ajax event="dateSelect"
+						listener="#{home_controller.onDateSelect}" />
+					<p:ajax event="eventSelect"
+						listener="#{home_controller.onEventSelect}" />
+					<p:ajax event="eventMove" listener="#{home_controller.onEventMove}" />
+					<p:ajax event="eventResize"
+						listener="#{home_controller.onEventResize}" />
+
+				</p:schedule>
+
+			</div>
+
+		</div>
+
+	</p:outputPanel>
+
+	<p:outputPanel id="resume-event">
+
+		<div class="ui-g ui-fluid">
+
+			<div class="ui-g-12 comments-container timelineclass">
+
+				<ul id="comments-list" class="comments-list">
+					<li>
+						<div class="comment-main-level">
+							<!-- Avatar -->
+							<div class="comment-avatar">
+								<img style="border-radius: 50%"
+									src="../resources/image/logofas2020.jpg" alt="" />
+							</div>
+							<!-- Contenedor del Comentario -->
+							<div class="comment-box">
+								<div class="comment-head-article">
+									<h6 class="comment-name-article">
+										#{home_controller.evento.titulo}</h6>
+
+									<h:outputText styleClass="label-date"
+										value="#{home_controller.evento.dataInicio}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+									</h:outputText>
+
+									<h:outputLabel value="Reunião:" style="margin-left:15px" />
+
+									<p:link value="#{home_controller.evento.linkReuniao}"
+										style="margin-left:5px" href="#{home_controller.link}"
+										target="_blank"></p:link>
+
+									<h:outputLabel value="Documentos:" style="margin-left:15px" />
+
+									<p:link value="#{home_controller.evento.linkArquivo}"
+										style="margin-left:5px" href="#" target="_blank"></p:link>
+
+								</div>
+								<div class="comment-content">#{home_controller.evento.descricao}</div>
+							</div>
+						</div>
+					</li>
+
+
+				</ul>
+			</div>
+
+		</div>
+	</p:outputPanel>
+
+
+
+
+</ui:fragment>

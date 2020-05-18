@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+
+	<ui:define name="content">
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+			function stopDlgfilter() {
+			    PF('dlg_filtro_compra').hide();
+			}
+		</script>
+
+
+		<h:form id="form_rel_contas" style="width:100%">
+
+			<p:notificationBar id="not" style="height:200px" position="bottom"
+				effect="slide" styleClass="top" widgetVar="info">
+				<h:outputText value="#{report_atividade.textoInformativo}"
+					style="font-size:12px;" />
+				<p:commandLink process="@this" styleClass="link-content"
+					title="Informações" oncomplete="PF('info').hide();">
+					<span style="color: black; font-size: 25px"
+						class="glyphicon glyphicon-remove"></span>
+
+				</p:commandLink>
+			</p:notificationBar>
+
+			<p:messages showIcon="false"  closable="true" />
+
+
+
+			<p:panel style="with:100%">
+
+
+				<p:panelGrid columns="1" style="with:100%" cellpadding="5"
+					cellspacing="5">
+
+					<p:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
+						<p:outputLabel value="Tipo de relatório:" />
+						<p:selectOneRadio id="tipo"
+							value="#{report_atividade.filtro.tipoRelatorio}">
+							<f:selectItem itemLabel="Detalhado" itemValue="ATIVIDADE" />
+							<f:selectItem itemLabel="Consolidado" itemValue="PROJETO" />
+							
+						</p:selectOneRadio>
+
+						<p:commandLink process="@this" styleClass="link-content"
+							title="Informações" oncomplete="PF('info').show();" update="not"
+							action="#{report_atividade.modificarTexto('tipo')}">
+							<span style="color: black; font-size: 15px"
+								class="glyphicon glyphicon-question-sign"></span>
+
+						</p:commandLink>
+					</p:panelGrid>
+
+					<p:panelGrid columns="3" style="width:100%">
+
+
+						<p:outputLabel value="Gestão:" for="gestao" />
+						<p:selectOneMenu id="gestao" filter="true"
+							filterMatchMode="startsWith"
+							value="#{report_atividade.filtro.gestaoID}">
+							<f:selectItem noSelectionOption="true" />
+							<f:selectItems value="#{report_atividade.gestoes}" var="gest"
+								itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+							<p:ajax listener="#{report_atividade.carregarProjetos()}"
+								update="projeto" onstart="start()" onsuccess="stop()"></p:ajax>
+						</p:selectOneMenu>
+						
+						<p:commandLink process="@this" styleClass="link-content"
+							title="Informações" oncomplete="PF('info').show();" update="not"
+							action="#{report_atividade.modificarTexto('coluna')}">
+							<span style="color: black; font-size: 15px"
+								class="glyphicon glyphicon-question-sign"></span>
+
+						</p:commandLink>	
+						
+						<p:outputLabel value="Plano de trabalho:" for="pt" />
+						<p:selectOneMenu id="pt"
+							value="#{report_atividade.filtro.idPlano}" style="width:150px">
+							<f:selectItem noSelectionOption="true" />
+							<f:selectItems value="#{report_atividade.planos}" var="plano"
+								itemLabel="#{plano.titulo}" itemValue="#{plano.id}" />
+
+							<p:ajax listener="#{report_atividade.carregarProjetos()}"
+								update="projeto" onstart="start()" onsuccess="stop()"></p:ajax>
+						</p:selectOneMenu>
+						
+						<p:commandLink process="@this" styleClass="link-content"
+							title="Informações" oncomplete="PF('info').show();" update="not"
+							action="#{report_atividade.modificarTexto('coluna')}">
+							<span style="color: black; font-size: 15px"
+								class="glyphicon glyphicon-question-sign"></span>
+
+						</p:commandLink>
+
+						
+
+						<p:outputLabel value="Projeto:" />
+						<p:selectCheckboxMenu id="projeto" style="width:150px"
+							panelStyle="width:350px" required="true"
+							requiredMessage="Escolha um projeto ou mais para gerar o relatório"
+							value="#{report_atividade.filtro.projetos}" label="Projetos"
+							filter="true" filterMatchMode="contains">
+							<f:selectItems value="#{report_atividade.projetos}" var="projeto"
+								itemLabel="#{projeto.codigo} - #{projeto.nome}"
+								itemValue="#{projeto.id}">
+
+							</f:selectItems>
+						</p:selectCheckboxMenu>
+
+						<p:commandLink process="@this" styleClass="link-content"
+							update="not"
+							action="#{report_atividade.modificarTexto('projeto')}"
+							title="Informações" oncomplete="PF('info').show();">
+							<span style="color: black; font-size: 15px"
+								class="glyphicon glyphicon-question-sign"></span>
+
+						</p:commandLink>
+
+
+
+					</p:panelGrid>
+
+
+				</p:panelGrid>
+
+				<p:commandLink styleClass="btn btn-primary btn-sm fa fa-search"
+					onstart="start()" onsuccess="stop()" onerror="stop()" ajax="false"
+					action="#{report_atividade.gerarRelatorioAtividade()}"
+					style="color:#fff; margin: 8px 2px;">
+					<span style="width: 40px; font-family: Arial">Gerar
+						relatório</span>
+				</p:commandLink>
+
+			</p:panel>
+
+
+
+
+		</h:form>
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sc" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c7897267-7e41-442c-9688-80036b1ba6a5">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="solicitacao" class="java.lang.String"/>
+	<parameter name="tipo_gestao" class="java.lang.String"/>
+	<parameter name="gestao" class="java.lang.String"/>
+	<parameter name="tipo_localidade" class="java.lang.String"/>
+	<parameter name="localidade" class="java.lang.String"/>
+	<parameter name="acao" class="java.lang.String"/>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="observ" class="java.lang.String"/>
+	<field name="id" class="java.lang.Long"/>
+	<field name="quantidade" class="java.lang.Double"/>
+	<field name="descricao" class="java.lang.String"/>
+	<field name="categoria" class="java.lang.String"/>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="unidade" class="java.lang.String"/>
+	<field name="descricaoComplementar" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="30" splitType="Stretch">
+			<image scaleImage="FillFrame">
+				<reportElement x="0" y="1" width="58" height="28" uuid="8bbf82c2-6352-40ca-b94a-ecbff45f872b"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="0" y="0" width="555" height="30" uuid="5f279ccf-f92f-4972-b820-cddaa3645e26"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Cotação de solicitação de compras Nº "+$P{solicitacao}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="67" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-153" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="10" width="90" height="16" isPrintWhenDetailOverflows="true" backcolor="#CCCCCC" uuid="a002cdaa-a089-4325-8ffc-8d90939666f5"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Fornecedor:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-163" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="26" width="90" height="16" isPrintWhenDetailOverflows="true" backcolor="#CCCCCC" uuid="80b7ef41-b570-41c3-b030-3d0ee31df616"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Contato:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-163" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="42" width="90" height="16" isPrintWhenDetailOverflows="true" backcolor="#CCCCCC" uuid="975880d1-e7f4-4a60-b9ee-4ee9ba911ad6"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Fone/Fax:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-153" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="90" y="10" width="465" height="16" isPrintWhenDetailOverflows="true" backcolor="#CCCCCC" uuid="e828138d-8adf-4b7f-956e-c6e6172b68f3"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Fundação Amazonas Sustentável]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-153" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="90" y="26" width="465" height="16" isPrintWhenDetailOverflows="true" backcolor="#CCCCCC" uuid="03463e96-1539-4516-a384-83dc7faa0790"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Kleiane dos anjos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-153" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="90" y="42" width="465" height="16" isPrintWhenDetailOverflows="true" backcolor="#CCCCCC" uuid="efb21b41-4426-4c38-80da-fe596a12986c"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[4009-8925/40098900]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-175" mode="Opaque" x="0" y="12" width="27" height="13" backcolor="#CCCCCC" uuid="720d3f03-6316-4333-ad4b-40df71ca1b84"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[#]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-162" mode="Opaque" x="27" y="12" width="41" height="13" backcolor="#CCCCCC" uuid="372f4231-f41f-4e9f-86a9-0cdf9f9d5cab"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Qtde]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-160" mode="Opaque" x="130" y="12" width="210" height="13" backcolor="#CCCCCC" uuid="0b2a7909-88b0-4314-a79e-6c50bed83ebd"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Descrição]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-162" mode="Opaque" x="68" y="12" width="62" height="13" backcolor="#CCCCCC" uuid="19ec5b2a-ea75-4df7-b2f6-84373d625de8"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Und.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-160" mode="Opaque" x="340" y="12" width="215" height="13" backcolor="#CCCCCC" uuid="f80e85eb-2c50-4de7-bd33-e0f47956a927"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Desc. Complementar]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="27" y="0" width="41" height="15" isPrintWhenDetailOverflows="true" uuid="ac21c381-57ea-40a2-a8b6-7ad8fa31df5f"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{quantidade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="68" y="0" width="62" height="15" uuid="3a21ba0b-a633-49be-858d-b0a81be8a988"/>
+				<box leftPadding="3">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{unidade}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="130" y="0" width="210" height="15" isPrintWhenDetailOverflows="true" uuid="a38a1e0e-99fe-4f85-bf75-3a7871aaad1e"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{descricao}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="27" height="15" uuid="5cd699ac-75e4-4b37-ad48-cf897c4fe309">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="340" y="0" width="215" height="15" isPrintWhenDetailOverflows="true" uuid="76e816a1-9c92-4b32-9517-cdde31ecdc0c"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{descricaoComplementar}.toUpperCase()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="29" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="193" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="177" uuid="fe49bbd8-06c2-4e9b-8889-e347ff926f8b"/>
+			</rectangle>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-88" x="0" y="181" width="555" height="12" uuid="b4c8fa4d-4406-4c69-a6d1-25fc1c62c5fb"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["EMITENTE: "+$P{usuario}]]></textFieldExpression>
+			</textField>
+			<line direction="BottomUp">
+				<reportElement key="line-2" x="0" y="177" width="555" height="1" uuid="4c26aa18-fd02-4ccd-ab18-2a2e35a3a1fc"/>
+			</line>
+			<staticText>
+				<reportElement key="staticText-167" x="0" y="0" width="555" height="31" uuid="f21ca514-b8f2-444a-8039-8f96c04966e8"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="11" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Enviar para: Fundação Amazonas Sustentável, CNPJ 09.351.359/0001-88, Rua Alvaro Braga 351,  Parque Dez, CEP 69055-660 - Manaus-AM, Fone/Fax: 4009-8929]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-179" x="0" y="36" width="555" height="69" uuid="a0ec8f0c-f7ad-4c07-890b-0d211f3e8264"/>
+				<box leftPadding="4" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font size="11" isBold="false" pdfFontName="Helvetica"/>
+				</textElement>
+				<text><![CDATA[Solicitamos cotação de preços para os itens acima, a qual poderá ser enviada através do número 4009-8926 ou via email: compra@fas-amazonas.org.
+
+Solicitamos ainda, que nos seja informado o prazo para pagamento bem como sua forma. Certos de sua atenção, aguardamos retorno com a máxima brevidade.
+
+
+
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-180" x="9" y="151" width="173" height="20" uuid="10943407-081e-4acc-ad9d-42a348a51f2a"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Fundação Amazonas Sustentável]]></text>
+			</staticText>
+			<line>
+				<reportElement x="7" y="148" width="184" height="1" uuid="ec95143f-1260-427b-ba11-85daee0608d1"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

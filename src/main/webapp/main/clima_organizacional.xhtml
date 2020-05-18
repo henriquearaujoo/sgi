@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+
+	<ui:define name="content">
+
+
+		<h:panelGroup id="panel-content">
+
+
+			<h:panelGroup id="panel-listagem">
+
+				<h:form id="form-listagem"
+					style="margin-left: auto;margin-right: auto; width:70%">
+
+
+					<p:ajaxStatus onstart="PF('statusDialog').show()"
+						onsuccess="PF('statusDialog').hide()" />
+
+					<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+						closable="false" resizable="false" showHeader="false"
+						style="background-color:#FFFFFF; z-index:1009">
+						<p:graphicImage library="image" name="aguarde.gif" />
+					</p:dialog>
+
+
+					<p:messages showIcon="true" showSummary="false" showDetail="true"
+						closable="true" ></p:messages>
+
+					<h1 style="margin-left: auto; margin-right: auto">Clima Organizacional</h1>
+					<p:separator></p:separator>
+
+					<p:panel id="painel-formulario">
+					 <p:focus context="form-listagem" />
+					 
+						<p:panelGrid styleClass="ui-fluid" columns="1" style="width:100%">
+
+							<h:outputLabel 
+								value="1.Você tem interesse em participar da missão FAS em 2022?" />
+							
+							
+							<p:selectOneMenu id="p1" 
+								value="#{clima_controller.formulario.pergunta01}">
+								<f:selectItems value="#{clima_controller.nivelSatisfacao}"
+									var="nivel" itemLabel="#{nivel}" itemValue="#{nivel}"></f:selectItems>
+							</p:selectOneMenu>
+							<p:separator></p:separator>
+							<p:commandLink styleClass="btn btn-primary btn-block"
+								style="color:#fff" update="form-listagem"
+								action="#{clima_controller.salvar()}" value="Enviar"></p:commandLink>
+							<p:messages showIcon="true" showSummary="false" showDetail="true"
+								closable="true" ></p:messages>
+						</p:panelGrid>
+					
+					</p:panel>
+
+				</h:form>
+			</h:panelGroup>
+
+
+
+
+		</h:panelGroup>
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+
+
+
+
+</ui:composition>

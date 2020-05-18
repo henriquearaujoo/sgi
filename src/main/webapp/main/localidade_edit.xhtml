@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+<ui:define name="menu_lateral">
+
+		<f:metadata>
+			<o:viewParam name="idLocalidade"
+				value="#{localidadeController.localidade}" />
+			<f:viewAction action="#{localidadeController.init()}"></f:viewAction>
+
+		</f:metadata>
+
+		<h:form id="tabela_menu">
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{localidadeController.menus}" var="menu">
+				
+				<p:column>
+					<p:commandLink action="#{localidadeController.redirecionar(menu)}" process="@this"
+						style="font-size:1em;" value="#{menu.nome}">f
+						
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right; color: #849A39"
+						class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="formLocalidade" acceptcharset="ISO-8859-1">
+	<p:tabView id="cadastroUsuario" prependId="false">
+				<p:tab title="Cadastrando Usuário">
+					<br/>
+					<p:messages id="msgs"  showSummary="false"
+						showDetail="true" showIcon="true" closable="true" />
+
+					<div class="botao_central" align="left"
+						style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+
+						<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
+							action="#{localidadeController.salvar()}"
+							style="color:#fff; margin: 2px 2px;" value="Salvar" />
+						<p:commandLink action="#{localidadeController.redirect()}" value="Voltar"
+							ajax="false" immediate="true" styleClass="btn btn-info btn-sm" />
+
+					</div>
+
+
+					<p:panelGrid columns="2" styleClass="ui-noborder" style="width:100%">
+						<p:outputLabel value="Nome: " style="font-size:12px" />
+						<p:inputText value="#{localidadeController.localidade.nome}">
+						
+						</p:inputText>
+						
+
+						<p:outputLabel value="Máscara:" style="font-size:12px"/>
+						<p:inputText value="#{localidadeController.localidade.mascara}">
+						</p:inputText>
+						
+		
+						<p:outputLabel value="Estado:" style="font-size:12px"/>
+						<p:selectOneMenu value="#{localidadeController.localidade.estado}"
+							converter="estadoConverter">
+							<f:selectItems value="#{localidadeController.listaEstado()}"
+								var="estado" itemLabel="#{estado.nome}"
+								itemValue="#{estado}" />
+						</p:selectOneMenu>
+						
+						
+						<p:outputLabel value="País:" style="font-size:12px"/> 
+						<p:selectOneMenu
+							value="#{localidadeController.localidade.pais}"
+							converter="paisConverter">
+							<f:selectItems value="#{localidadeController.listaPais()}"
+								var="pais" itemLabel="#{pais.nome}" itemValue="#{pais}" />
+			
+						</p:selectOneMenu>
+						
+						<p:outputLabel value="Unidade Conservação:" style="font-size:12px" />
+						<p:selectOneMenu
+							value="#{localidadeController.localidade.unidadeConservacao}"
+							converter="uc_converter">
+							<f:selectItems value="#{localidadeController.listaUc()}"
+								var="uc" itemLabel="#{uc.nome}" itemValue="#{uc}" />
+						</p:selectOneMenu>
+						
+<!-- 					Agrupar -->
+						<p:commandButton value="Adicionar País" id="btPais" onclick="PF('dlg1').show()"/>
+						
+						
+						
+
+
+
+
+
+					</p:panelGrid>
+				</p:tab>
+			</p:tabView>
+		</h:form>
+	</ui:define>
+	
+	<ui:define name="adicionais">
+
+		<p:dialog header="Basic Dialog" widgetVar="dlg1" minHeight="40">
+			<h:outputText value="Resistance to PrimeFaces is futile!" />
+		</p:dialog>
+
+
+	</ui:define>
+
+</ui:composition>

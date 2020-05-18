@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:viewAction action="#{diversos_coontroller.initCadastro()}" />
+			<o:viewParam name="lanc" value="#{diversos_coontroller.lancamento}" />
+		</f:metadata>
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+			function stopDlgfilter() {
+			    PF('dlg_filtro_compra').hide();
+			}
+		</script>
+
+
+
+		<h:form id="form_cadastro_diversos" style="width:100%">
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Lancamentos avulsos"
+					url="lancamentos_diversos.xhtml" />
+				<p:menuitem value="Lancamentos avulsos - Cadastro"
+					url="lancamentos_diversos_cadastro.xhtml" />
+			</p:breadCrumb>
+
+
+			<p:messages id="msg_diversos" showSummary="false" showDetail="true"
+				showIcon="true" closable="true"/>
+				
+			<div class="botao_central" align="left"
+				style="width: 100%;background-color: rgba(51, 122, 183, 0.18);">
+				
+				<p:commandLink styleClass="btn btn-primary btn-sm"
+					rendered="#{pagamentoController.poderEditar()}"
+					action="#{diversos_coontroller.salvarLancamento()}"
+					onclick="start()" onerror="stop()" oncomplete="stop()"
+					update="form_cadastro_diversos:msg_diversos" style="color:#fff; margin: 2px 2px;">
+					<span style="font-family: Arial;">Salvar</span>
+				</p:commandLink>
+				
+				<p:link styleClass="btn btn-info btn-sm"
+					style="margin: 2px 2px;"
+					outcome="/main/lancamentos_diversos" title="Volar">
+					<span style="font-family: Arial">Voltar</span>
+				</p:link>
+				
+			
+			</div>
+
+			
+
+				
+
+				<p:panel id="panel_info_geral">
+
+					<p:panelGrid columns="4" styleClass="ui-noborder" >
+						<h:outputText value="Pagador:" />
+						<p:autoComplete id="conta_banco" required="true"
+							placeholder="Pagador" requiredMessage="Preencha o campo Pagador"
+							size="40" value="#{diversos_coontroller.lancamento.contaPagador}"
+							completeMethod="#{diversos_coontroller.completeConta}"
+							var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+							converter="contaConverter" forceSelection="true" />
+
+						<h:outputText value="Recebedor:" />
+						<p:autoComplete id="pagador_recebedor" required="true"
+							placeholder="Recebedor"
+							requiredMessage="Preencha o campo Recebedor" size="40"
+							value="#{diversos_coontroller.lancamento.contaRecebedor}"
+							completeMethod="#{diversos_coontroller.completeConta}"
+							var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+							converter="contaConverter" forceSelection="true" />
+
+						<h:outputText value="Dt. de Pagamento:" />
+						<p:calendar placeholder="Ex:10/12/2023" required="true" size="10"
+							requiredMessage="Por favor preencha o campo 'Vencto/Pagamento'."
+							value="#{diversos_coontroller.lancamento.dataPagamento}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+
+
+
+						<p:outputLabel value="Doc fiscal:" />
+						<p:selectOneMenu
+							value="#{diversos_coontroller.lancamento.tipoDocumentoFiscal}">
+							<f:selectItems
+								value="#{diversos_coontroller.tipoDocumentoFiscal}"
+								var="tipoDocumento" itemValue="#{tipoDocumento}"
+								itemLabel="#{tipoDocumento.nome}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Nº do Documento:" />
+						<p:inputText value="#{diversos_coontroller.lancamento.notaFiscal}" />
+
+						<p:outputLabel value="Dt.do Documento:" />
+						<p:calendar required="true"
+							requiredMessage="Preencha a 'Data do documento' caso não tenha data preencha com a data corrente."
+							value="#{diversos_coontroller.lancamento.dataDocumentoFiscal}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+						<h:outputText value="Dt. de Emissão:" />
+						<p:calendar placeholder="Ex:10/12/2023" required="true" size="10"
+							requiredMessage="Por favor preencha o campo 'Emissão'."
+							value="#{diversos_coontroller.lancamento.dataEmissao}"
+							timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+						<h:outputText value="Descrição:" />
+						<p:inputText value="#{diversos_coontroller.lancamento.descricao}"
+							size="50" />
+
+
+						<p:outputLabel value="Categoria:" />
+						<p:selectOneMenu style="font-size:12px" filter="true"
+							required="true" requiredMessage="Preencha o campo 'Categoria'"
+							filterMatchMode="contains" converter="categoriaFinConverter"
+							value="#{diversos_coontroller.lancamento.categoriaFinanceira}">
+							<f:selectItem noSelectionOption="true" />
+							<f:selectItems
+								value="#{diversos_coontroller.listCategoriaFinanceira}"
+								var="categoria" itemLabel="#{categoria.nome}"
+								itemValue="#{categoria}" />
+
+						</p:selectOneMenu>
+
+
+
+
+						<p:outputLabel value="Parcelamento:" />
+						<p:selectOneMenu style="font-size:12px"
+							value="#{diversos_coontroller.lancamento.tipoParcelamento}">
+							<f:selectItems value="#{diversos_coontroller.tiposParcelas()}"
+								var="tp" itemLabel="#{tp.nome}" itemValue="#{tp}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Qtd. parcelas:" />
+						<p:inputText size="10"
+							value="#{diversos_coontroller.lancamento.quantidadeParcela}"
+							style="font-size:12px" placeholder="Parcelas" />
+
+				
+						<p:outputLabel style="width:120px"
+							value="Selecione esta opção caso seja uma transferência  entre contas que não deve duplicar o valor:" />
+						<p:selectOneMenu
+							value="#{diversos_coontroller.lancamento.tipoLancamento}">
+							<f:selectItem itemLabel="N/ se aplica" noSelectionOption="true" />
+							<f:selectItem itemLabel="Transferência entre contas"
+								itemValue="reemb_conta" />
+						</p:selectOneMenu>
+
+						
+					</p:panelGrid>
+
+
+				
+
+				<p:separator></p:separator>
+				
+				<p:outputLabel style="font-size:38px"
+					value="#{diversos_coontroller.lancamento.valorTotalComDesconto}">
+					<f:convertNumber type="currency" maxFractionDigits="2"
+						currencySymbol="R$" />
+				</p:outputLabel>
+
+				
+
+				<p:dataTable id="tab_lanc_acao" var="lac_acao"
+					rowIndexVar="indexRow" paginator="true" rows="12"
+					value="#{diversos_coontroller.lancamento.lancamentosAcoes}">
+					<f:facet name="header">
+						<p:outputPanel id="lancamento_acao">
+
+							<p:messages id="msg_lancamento_acao" showDetail="true"
+								showSummary="false"  closable="true" />
+
+							<p:panelGrid columns="4" styleClass="semBorda">
+								<h:panelGrid id="projeto" columns="1">
+									<h:outputText value="Projetos:" />
+									<p:selectOneMenu  value="#{diversos_coontroller.projetoAux}" style="width:180px"   filter="true" filterMatchMode="contains" converter="projetoConverter" >
+										<f:selectItem noSelectionOption="true"/>
+										<f:selectItems value="#{diversos_coontroller.listaProjeto}" var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}" />
+										<p:ajax update="tab_lanc_acao" onstart="start()" onerror="stop()" onsuccess="stop()" listener="#{diversos_coontroller.listaRubricasAndAtividades()}" />
+									</p:selectOneMenu>
+								</h:panelGrid>
+
+								<h:panelGrid id="panel_linha" columns="1" rendered="#{diversos_coontroller.projetoAux != null}" >
+									<h:outputText value="Linha orçamentária:" />
+
+									<p:selectOneMenu id="cate_compra" style="width:180px"
+										placeholder="Entre com o código/nome do projeto."
+										size="25" value="#{diversos_coontroller.lancamentoAcao.projetoRubrica}"
+										filter="true" filterMatchMode="contains"
+										var="categoria"
+										converter="projetoRubricaConverter">
+										
+										<f:selectItems value="#{diversos_coontroller.listaDeRubricasProjeto}" var="ru" itemLabel="#{ru.nomeCategoria}" itemValue="#{ru}" />
+										
+										
+										<p:column headerText="Código">
+											<h:outputText value="#{categoria.codigo}" />
+										</p:column>
+
+										<p:column headerText="Fonte">
+											<h:outputText value="#{categoria.nomeFonte}" />
+										</p:column>
+
+										<p:column headerText="Projeto">
+											<h:outputText value="#{categoria.nomeProjeto}" />
+										</p:column>
+
+										<p:column headerText="Componente">
+											<h:outputText
+												value="#{categoria.nomeComponente}" />
+										</p:column>
+
+										<p:column headerText="SubComponente">
+											<h:outputText
+												value="#{categoria.nomeSubComponente}" />
+										</p:column>
+
+										<p:column headerText="Linha orçamentária">
+											<h:outputText
+												value="#{categoria.nomeCategoria}" />
+										</p:column>
+										
+										<p:column headerText="Saldo">
+											<h:outputText value="#{categoria.valorSaldo}" >
+												<f:convertNumber currencySymbol="R$:" minFractionDigits="2" maxFractionDigits="2" locale="pt_BR" />
+											</h:outputText>
+										</p:column>
+										
+										
+									</p:selectOneMenu>
+								</h:panelGrid>
+
+								
+
+								<h:panelGrid columns="1" styleClass="width-100-vi" rendered="#{diversos_coontroller.projetoAux.id != null}" >
+
+									<h:outputText value="Valor:"  />
+									<p:inputText
+										onkeypress="return formatarNumero(this,event,19,2);"
+										placeholder="valor"
+										value="#{diversos_coontroller.lancamentoAcao.valor}">
+										<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="pt_BR" />
+
+									</p:inputText>
+
+								</h:panelGrid>
+
+								<h:panelGrid columns="1" styleClass="width-100-vi" rendered="#{diversos_coontroller.projetoAux != null}" >
+									<h:outputText value="::" />
+									<p:commandLink styleClass="btn btn-primary btn-sm" onclick="start()" onerror="stop()" oncomplete="stop()"
+										type="button"
+										update="@form"
+										action="#{diversos_coontroller.adicionarNovaAcao()}"
+										style="color:#fff; margin: 2px 2px;" value="Adicionar" />
+								</h:panelGrid>
+
+							</p:panelGrid>
+
+						</p:outputPanel>
+					</f:facet>
+					
+
+					<p:column headerText="Fonte">
+						<h:outputText
+							value="#{lac_acao.projetoRubrica.rubricaOrcamento.orcamento.fonte.nome}" />
+					</p:column>
+
+
+					<p:column headerText="Doação">
+						<h:outputText
+							value="#{lac_acao.projetoRubrica.rubricaOrcamento.orcamento.titulo}" />
+					</p:column>
+
+					<p:column headerText="Categoria">
+						<h:outputText
+							value="#{lac_acao.projetoRubrica.rubricaOrcamento.rubrica.nome}" />
+					</p:column>
+
+					<p:column headerText="Valor" style="width:100px">
+						<h:outputText value="#{lac_acao.valor}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+
+					
+					<p:column style="width:50px;">
+						<p:commandLink
+							action="#{diversos_coontroller.removerAcao(lac_acao)}"
+							rendered="#{diversos_coontroller.poderEditar()}"
+							update="tab_lanc_acao :form_cadastro_diversos">
+
+							<span class="fa fa-times"></span>
+						</p:commandLink>
+					</p:column>
+					
+
+				</p:dataTable>
+			</p:panel>
+
+		</h:form>
+
+
+		<p:separator />
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+
+	</ui:define>
+
+
+</ui:composition>

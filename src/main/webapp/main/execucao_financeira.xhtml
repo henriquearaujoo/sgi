@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<style type="text/css">
+.valorPropaganda {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(80, 80, 80, 0.79);
+}
+
+.valorPropagandaRED {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(234, 15, 15, 0.79);
+}
+
+.ui-progressbar .ui-progressbar-label {
+	text-align: center;
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	display: none;
+	font-weight: bold;
+	font-size: 14px;
+}
+</style>
+
+	<ui:define name="content">
+
+		<div style="padding: 2px 2px">
+
+
+			<h:form id="form_extrato">
+
+				<f:metadata>
+					<f:viewAction
+						action="#{orcamento_controller.gerarExecucaoFinanceira()}" />
+				</f:metadata>
+
+
+				<p:panelGrid columns="6">
+					<h:outputText value="Lançamento:" />
+					<p:inputText placeholder="Nº lançamento"
+						value="#{orcamento_controller.filtro.lancamentoID}" />
+
+					<h:outputText value="Período de Pgto:" style="float:right" />
+					<h:panelGroup>
+						<p:calendar size="10"
+							value="#{orcamento_controller.filtro.dataInicio}"
+							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+						-
+						<p:calendar size="10"
+							value="#{orcamento_controller.filtro.dataFinal}" navigator="true"
+							timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+					</h:panelGroup>
+					<h:outputText value="Paríodo de Emissão:" style="float:right" />
+					<h:panelGroup>
+						<p:calendar size="10"
+							value="#{orcamento_controller.filtro.dataInicioEmissao}"
+							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+							-
+						<p:calendar size="10"
+							value="#{orcamento_controller.filtro.dataFinalEmissao}"
+							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+					</h:panelGroup>
+
+
+				</p:panelGrid>
+
+				<p:panelGrid columns="4">
+
+					<h:outputText value="Projeto:" />
+					<p:autoComplete placeholder="Projeto" size="80"
+						value="#{orcamento_controller.filtro.projeto}"
+						completeMethod="#{orcamento_controller.completeProjetos}"
+						var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}"
+						converter="projetoConverter">
+
+						<p:column>
+							<h:outputText value="#{projeto.codigo}" />
+						</p:column>
+
+						<p:column>
+							<h:outputText value="#{projeto.nome}" />
+						</p:column>
+
+					</p:autoComplete>
+
+					<h:outputText value="Fornecedor:" />
+					<p:autoComplete placeholder="Fornecedor" size="80"
+						value="#{orcamento_controller.filtro.contaFiltro}"
+						completeMethod="#{orcamento_controller.completeConta}" var="conta"
+						itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+						converter="contaConverter" />
+
+				</p:panelGrid>
+
+				<h:panelGroup>
+
+					<p:commandLink styleClass="btn btn-primary btn-sm fa fa-search"
+						onstart="start()" onsuccess="stop()" onerror="stop()"
+						action="#{orcamento_controller.gerarExecucaoFinanceira()}"
+						update="form_extrato table-lancamentos"
+						style="color:#fff; margin: 8px 2px;">
+						<span style="width: 40px; font-family: Arial">Buscar</span>
+					</p:commandLink>
+
+					<p:commandLink styleClass="btn btn-primary btn-sm fa fa-remove"
+						title="Limpar" process="@this" onstart="start()"
+						onsuccess="stop()" onerror="stop()"
+						action="#{orcamento_controller.limpar()}"
+						update="form_extrato table-lancamentos"
+						style="color:#fff; margin: 8px 2px;">
+						<span style="width: 40px; font-family: Arial">Limpar</span>
+					</p:commandLink>
+
+				</h:panelGroup>
+
+				<p:dataTable id="table-lancamentos"
+					value="#{orcamento_controller.lancamentos}" var="lancamento"
+					paginator="true" rows="10"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+					style="margin-bottom:20px">
+
+					<f:facet name="{Exporters}">
+						<h:commandLink style="margin:3px">
+							<p:graphicImage library="image" name="excel.png" width="30" />
+							<p:dataExporter type="xls" target="table-lancamentos"
+								fileName="controle_expedicao" />
+						</h:commandLink>
+					</f:facet>
+
+					<p:column headerText="Nº" style="width:75px;text-align:center">
+						<h:outputText value="#{lancamento.codigoLancamento}" />
+					</p:column>
+
+					<p:column headerText="Emissão" style="width:90px;text-align:center">
+						<h:outputText value="#{lancamento.dataEmissao}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Pagamento"
+						style="width:90px;text-align:center">
+						<h:outputText value="#{lancamento.dataPagamento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Pagador/Recebedor"
+						style="width:220px;text-align:center">
+						<h:outputText rendered="#{lancamento.sinalizador.equals('+')}"
+							value="#{lancamento.contaPagadorLbl}" />
+							
+						<h:outputText rendered="#{lancamento.sinalizador.equals('-')}"
+							value="#{lancamento.contaRecebedorLbl}" />	
+					</p:column>
+				
+					<p:column rendered="false" headerText="Status"
+						style="width:120px;text-align:center">
+						<h:outputText styleClass="tamanho-status status-verde"
+							style="color:#fff" rendered="#{lancamento.statusPagamento == 0}"
+							value="Validado" />
+						<h:outputText styleClass="tamanho-status status-vermelho"
+							style="color:#fff" rendered="#{lancamento.statusPagamento == 1}"
+							value="Não validado" />
+
+					</p:column>
+					
+					<p:column headerText="Descrição"
+						style="width:100px;text-align:center">
+						<h:outputText value="#{lancamento.descricao}" />
+					</p:column>
+
+					<p:column headerText="Fonte de recurso"
+						style="width:100px;text-align:center">
+						<h:outputText value="#{lancamento.fonte}" />
+					</p:column>
+
+					<p:column headerText="Projeto"
+						style="width:100px;text-align:center">
+						<h:outputText value="#{lancamento.nomeProjeto}" />
+					</p:column>
+
+					<p:column headerText="Entrada" style="width:75px;text-align:center">
+						<h:outputText rendered="#{lancamento.sinalizador.equals('+')}"
+							style="color:green;float:right"
+							value="#{lancamento.valorPagoAcao}">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+
+					</p:column>
+
+					<p:column headerText="Saída" style="width:75px;text-align:center">
+						<h:outputText rendered="#{lancamento.sinalizador.equals('-')}"
+							style="color:red;float:right" value="#{lancamento.valorPagoAcao}">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+
+					</p:column>
+
+					<p:column headerText="Valor nulo"
+						style="width:75px;text-align:center">
+						<h:outputText value="#{lancamento.valorNulo}" style="float:right">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+		</div>
+
+	</ui:define>
+
+</ui:composition>

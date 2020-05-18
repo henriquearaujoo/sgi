@@ -1,0 +1,318 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<style type="text/css">
+/* .ui-widget-header { */
+/* 	border: 1px solid #eeeeee; */
+/* 	background: #4b5b35; */
+/* 	color: #fff; */
+/* 	font-weight: normal; */
+/* 	font-size: 13px !important; */
+/* 	font-family: 'Open Sans', sans-serif; */
+/* }	 */
+.border_grid {
+	border: 1px solid #dfd7d747;
+	border-radius: 2px
+}
+</style>
+
+	<div class="ui-g">
+
+		<div class="ui-g-2 border_grid">
+
+			<p:outputLabel styleClass="font-label-totais"
+				value="#{dist_orcamentaria_controller.coordenadoria.nome}"
+				style="text-align:center;font-size:16px" />
+
+			<p:panelGrid style="width:100%;margin-top:1px" styleClass="semBorda">
+
+				<p:row>
+					<p:column>
+						<h:outputText value="Gestor:" />
+					</p:column>
+
+					<p:column>
+						<h:outputText
+							value="#{dist_orcamentaria_controller.coordenadoria.colaborador.nome}" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column>
+						<h:outputText value="Fontes:" />
+					</p:column>
+
+					<p:column>
+						<h:outputText value="8" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column>
+						<h:outputText value="Projetos:" />
+					</p:column>
+
+					<p:column>
+						<h:outputText value="8" />
+					</p:column>
+				</p:row>
+
+			</p:panelGrid>
+
+		</div>
+
+		<div class="ui-g-4 border_grid">
+			<p:panelGrid id="panel_totais" style="width:100%;margin-top:1px">
+
+				<p:row>
+
+					<p:column>
+
+						<p:outputLabel value="Orçamento aprovado"
+							style="text-align:center;" />
+
+					</p:column>
+
+					<p:column style="width:160px">
+
+						<p:outputLabel styleClass="font-label-totais"
+							value="#{dist_orcamentaria_controller.orcamentoAprovado}"
+							style="text-align:center;">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+
+						</p:outputLabel>
+					</p:column>
+
+					<p:column style="text-align:center">
+						<p:commandLink style="color:#FFF;margin-left:5px"
+							styleClass="btn btn-primary btn-xs glyphicon glyphicon-plus"
+							process="@this" update=":form-orc-aprovado"
+							action="#{dist_orcamentaria_controller.carregarOrcamentoAprovado()}"
+							oncomplete="PF('dlg_orcamento_aprovado').show()"
+							onsuccess="stop();" onclick="start();" onerror="stop();">
+						</p:commandLink>
+					</p:column>
+
+				</p:row>
+
+
+				<p:row>
+
+					<p:column>
+
+						<p:outputLabel styleClass="font-label-totais"
+							value="Orçamento liberado" style="text-align:center;" />
+
+					</p:column>
+
+					<p:column>
+
+						<p:outputLabel styleClass="font-label-totais"
+							value="#{dist_orcamentaria_controller.orcamentoLiberado}"
+							style="text-align:center;">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+
+						</p:outputLabel>
+					</p:column>
+
+					<p:column style="text-align:center">
+						<p:commandLink style="color:#FFF;margin-left:5px"
+							styleClass="btn btn-primary btn-xs glyphicon glyphicon-plus"
+							process="@this" update=":form-cadastro-recurso" onclick="start()"
+							onsuccess="stop()" onerror="stop()"
+							oncomplete="PF('dlg_cadastro_recurso').show();"
+							action="#{dist_orcamentaria_controller.carregarDoacoes()}">
+						</p:commandLink>
+
+					</p:column>
+
+				</p:row>
+
+				<p:row>
+
+					<p:column>
+
+						<p:outputLabel styleClass="font-label-totais"
+							value="Orçamento distribuído" style="text-align:center;" />
+
+					</p:column>
+
+					<p:column>
+
+						<p:outputLabel styleClass="font-label-totais"
+							value="#{dist_orcamentaria_controller.orcamentoDistribuido}"
+							style="text-align:center;">
+
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+
+						</p:outputLabel>
+					</p:column>
+
+					<p:column></p:column>
+
+				</p:row>
+
+				<p:row>
+
+					<p:column>
+
+						<p:outputLabel styleClass="font-label-totais"
+							value="Orçamento a distribuir" style="text-align:center;">
+
+						</p:outputLabel>
+
+					</p:column>
+
+					<p:column>
+
+						<p:outputLabel styleClass="font-label-totais"
+							value="#{dist_orcamentaria_controller.orcamentoADistribuir}"
+							style="text-align:center;">
+
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+
+						</p:outputLabel>
+					</p:column>
+
+					<p:column></p:column>
+
+				</p:row>
+
+				<p:row>
+
+					<p:column>
+
+						<p:outputLabel styleClass="font-label-totais"
+							value="Orçamento remanejado (-)" style="text-align:center;">
+
+						</p:outputLabel>
+
+					</p:column>
+
+					<p:column>
+
+						<p:outputLabel styleClass="font-label-totais"
+							value="#{dist_orcamentaria_controller.saidaRemanejada}"
+							style="text-align:center;">
+
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+
+						</p:outputLabel>
+					</p:column>
+
+					<p:column></p:column>
+
+				</p:row>
+
+				<p:row>
+
+					<p:column>
+
+						<p:outputLabel styleClass="font-label-totais"
+							value="Orçamento remanejado (+)" style="text-align:center;">
+						</p:outputLabel>
+
+					</p:column>
+
+					<p:column>
+
+						<p:outputLabel styleClass="font-label-totais"
+							value="#{dist_orcamentaria_controller.entradaRemanejada}"
+							style="text-align:center;">
+
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+
+						</p:outputLabel>
+					</p:column>
+
+					<p:column></p:column>
+
+				</p:row>
+
+			</p:panelGrid>
+
+
+		</div>
+
+		<div class="ui-g-6 border_grid"></div>
+
+		<div class="ui-g-12 border_grid">
+			<p:dataTable id="table-recursos"
+				value="#{dist_orcamentaria_controller.recursosAportados}"
+				var="recurso">
+
+				<p:column headerText="Fonte">
+					<h:outputText
+						value="#{recurso.rubricaOrcamento.orcamento.fonte.nome}" />
+				</p:column>
+
+				<p:column headerText="Doação">
+					<h:outputText value="#{recurso.rubricaOrcamento.orcamento.titulo}" />
+				</p:column>
+
+				<p:column headerText="Linha Orçamentária">
+					<h:outputText value="#{recurso.rubricaOrcamento.rubrica.nome}" />
+				</p:column>
+
+				<p:column headerText="valor" style="width:120px">
+					<p:outputLabel value="#{recurso.valor}" style="text-align:center;">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+							currencySymbol="R$" />
+					</p:outputLabel>
+
+				</p:column>
+
+				<p:column headerText="Ações" style="width:120px">
+					<p:commandLink
+						styleClass="btn btn-default btn-xs glyphicon glyphicon-edit"
+						update=":form-cadastro-recurso" process="@this" style="color:#000"
+						onclick="start();" onsuccess="stop();" onerror="stop()"
+						action="#{dist_orcamentaria_controller.editarRecurso()}"
+						oncomplete="PF('dlg_cadastro_recurso').show();">
+
+						<f:setPropertyActionListener value="#{recurso}"
+							target="#{dist_orcamentaria_controller.gestaoRecurso}" />
+					</p:commandLink>
+
+					<p:commandLink style="color:#FFF;margin-left:5px"
+						styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove-circle"
+						action="#{dist_orcamentaria_controller.removerRecurso()}"
+						process="@this" onclick="start();" onsuccess="stop();"
+						onerror="stop()"
+						update="table-recursos :form_gestao_orcamentaria:panel_totais">
+						<f:setPropertyActionListener value="#{recurso}"
+							target="#{dist_orcamentaria_controller.gestaoRecurso}" />
+
+						<p:confirm header="Confirmar exclusão do recurso"
+							icon="ui-icon-alert" message="Excluir recurso. Deseja continuar?" />
+					</p:commandLink>
+
+				</p:column>
+
+			</p:dataTable>
+		</div>
+
+
+
+	</div>
+
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		<p:commandButton value="Sim" type="button"
+			styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		<p:commandButton value="Não" type="button"
+			styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+	</p:confirmDialog>
+
+</ui:fragment>

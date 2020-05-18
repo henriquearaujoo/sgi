@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+	<ui:define name="content">
+
+		<style type="text/css">
+.ui-widget {
+	font-size: 85%;
+}
+</style>
+
+		<script type="text/javascript">
+
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+		</script>
+
+		<h:form id="form_adiantamento">
+		
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Lista de Adiantamentos"  />
+			</p:breadCrumb>	
+
+			<p:panelGrid columns="2" style="width:100%">
+				<h:panelGrid columns="1" styleClass="semBorda ui-fluid"
+					style="width:100%">
+					<h:outputText value="Conta:" />
+					<p:autoComplete placeholder="Conta adiantamento" style="width:100%"
+						value="#{prestacao_conta_controller.filtro.contaFiltro}"
+						completeMethod="#{pagamentoLancController.completeConta}"
+						var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+						converter="contaConverter" />
+
+				</h:panelGrid>
+
+				<h:panelGrid>
+					<h:outputText value="Filtrar:" />
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						action="#{prestacao_conta_controller.carregarAdiantamentos()}"
+						onclick="start()" onsuccess="stop()" onerror="stop()"
+						style="color:#fff; margin: 8px 2px;" update="table_adiantamento">
+						<span class="glyphicon glyphicon-search" ></span><span  style="margin: 3px;">Procurar</span>
+					</p:commandLink>
+				</h:panelGrid>
+			</p:panelGrid>
+
+			<p:dataTable id="table_adiantamento" rows="30"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                 paginator="true"
+				tableStyle="#{prestacao_conta_controller.listAdiantamentos.size() > 0} ?  width:auto : ''"
+				styleClass="ui-fluid"
+				emptyMessage="Sem Registros!"
+				value="#{prestacao_conta_controller.listAdiantamentos}"
+				var="adiantamento">
+
+				<f:facet name="{Exporters}">
+		            <h:commandLink>
+		               <p:graphicImage library="image" name="excel.png"  />
+		                <p:dataExporter type="xls" target="table_adiantamento" fileName="Adiantamentos" />
+		            </h:commandLink>
+		        </f:facet>
+				
+				
+				<p:column headerText="Data emissão" 
+					style="text-align: center;">
+					<h:outputText value="#{adiantamento.dataEmissao}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Dias em aberto" width="60" style="text-align: center;">
+					<h:outputText value="#{adiantamento.diasEmAberto}" />
+				</p:column>
+				
+				<p:column headerText="Pagador"  style="text-align: center;">
+					<h:outputText value="#{adiantamento.nomePagador}" />
+				</p:column>
+				
+				<p:column headerText="Recebedor"  style="text-align: center;">
+					<h:outputText value="#{adiantamento.nomeRecebedor}" />
+				</p:column>
+				
+				<p:column headerText="Lançamento"  style="text-align:center;" >
+					<h:outputText value="#{adiantamento.idAdiantamento}" />
+				</p:column>
+				
+				<p:column headerText="Docucmento"  style="text-align:center;" >
+					<h:outputText value="#{adiantamento.numeroDocumento}" />
+				</p:column>
+				<p:column headerText="Status"  style="text-align:center;" >
+					<h:outputText value="#{adiantamento.statusAdiantamento.nome}" />
+				</p:column>
+					
+				<p:column headerText="Descrição" style="text-align:center;"  >
+					<h:outputText value="#{adiantamento.descricao}" />
+				</p:column>
+				<p:column headerText="Valor Adiantado" style="text-align:center;"  >
+					<h:outputText value="#{adiantamento.valorAdiantado}" >
+						<f:convertNumber type="currency" locale="pt_BR" />
+					</h:outputText>
+				</p:column>
+				
+				<p:column headerText="Linha Orçamentaria" style="text-align:center;"  >
+					<h:outputText value="#{adiantamento.codigo} | #{adiantamento.orcamentoTitulo} | #{adiantamento.nomeProjeto} | #{adiantamento.componenteNome} | #{adiantamento.subComponenteNome} | #{adiantamento.nomeRubrica} "  >
+						<f:convertNumber type="currency" locale="pt_BR" />
+					</h:outputText>
+				</p:column>
+				
+
+				<p:column headerText="Valor Prestado Conta"  style="text-align:center;"  >
+					<h:outputText value="#{adiantamento.valorPrestado}">
+						<f:convertNumber type="currency" locale="pt_BR" />
+					</h:outputText>
+				</p:column>
+				
+				<p:column headerText="Saldo"  style="text-align:center;"  >
+					<h:outputText value="#{adiantamento.saldo}">
+						<f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="R$" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="opções" width="150" exportable="false" style="text-align:center">
+					
+					<p:link title="Prestar contas" style="color:#fff;margin-left:9px;"
+						styleClass="btn btn-success btn-xs fa fa-money"
+						outcome="/main/prestacaodecontas_cadastro">
+						<f:param name="ad" value="#{adiantamento.idAdiantamento}" />
+						<span style="font-family: Arial; margin-left: 3px">prestar
+							contas</span>
+					</p:link>
+
+					<p:commandLink style="margin-left:4px;color:#000"
+						styleClass="btn btn-default btn-xs fa fa-print">
+						<span style="font-family: Arial; margin-left: 3px">imprimir</span>
+					</p:commandLink>
+
+				</p:column>
+
+			</p:dataTable>
+
+
+		</h:form>
+	</ui:define>
+
+	<ui:define name="adicionais">
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+
+	</ui:define>
+
+
+</ui:composition>

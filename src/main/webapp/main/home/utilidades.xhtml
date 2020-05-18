@@ -1,0 +1,56 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<p:outputPanel id="utilidade-panel">
+
+		<div class="ui-g ui-fluid">
+			<div class="ui-g-5">
+				<h:outputText for="input_desc" value="Descrição" />
+				<p:inputText id="input_desc"
+					value="#{home_controller.filtro.descricao}" />
+			</div>
+
+			<div class="ui-g-5">
+				<h:outputText for="input_categoria" value="Categoria" />
+				<p:selectOneMenu value="#{home_controller.filtro.categoriaID}">
+					<f:selectItem noSelectionOption="true" />
+					<f:selectItem itemValue="1" itemLabel="Educação (Cursos)" />
+					<f:selectItem itemValue="2" itemLabel="Saúde e Bem-estar" />
+				</p:selectOneMenu>
+			</div>
+
+			<div class="ui-g-2">
+				<p:commandLink update="tbl-utilidade"
+				 	onclick="start();" oncomplete="stop();" onerror="stop();"
+					action="#{home_controller.carregarUtilidades()}"
+					styleClass="btn btn-primary btn-sm">
+					<span class="fa fa-fw fa-search"></span>
+				</p:commandLink>
+
+			</div>
+		</div>
+
+		<p:dataTable id="tbl-utilidade" value="#{home_controller.utilidades}"
+			var="utilidade">
+
+			<p:column headerText="Assunto/Instituição" width="40%">
+				<h:outputText value="#{utilidade.descricao}" />
+			</p:column>
+
+
+			<p:column headerText="Link" width="40%">
+				<p:link value="#{utilidade.link}" href="#{utilidade.link}"
+					target="_blank" />
+			</p:column>
+
+		</p:dataTable>
+
+	</p:outputPanel>
+
+
+</ui:fragment>

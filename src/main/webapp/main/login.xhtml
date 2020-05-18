@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+<h:head id="head">
+	<title>OnClick</title>
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+	<link rel="stylesheet"
+		href="../resources/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="../resources/bootsnip/css/style.css" />
+
+
+	<h:outputScript name="jquery-1.12.0.min.js" library="jquery" />
+	<h:outputScript name="js/bootstrap.min.js" library="bootstrap" />
+
+	<h:outputStylesheet library="algaworks" name="styles/custom.css" />
+	<h:outputStylesheet library="algaworks" name="styles/layout.css" />
+	<h:outputStylesheet library="algaworks" name="styles/components.css" />
+
+	<link rel="stylesheet" href="../resources/css/estilos.css" />
+	<link rel="stylesheet" href="../resources/css/global.css" />
+	<link rel="stylesheet" href="../resources/css/menu.css" />
+
+	<link rel="stylesheet"
+		href="../resources/bootstrap-4.3.1-dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="../resources/bootsnip/css/style.css" />
+	<link rel="stylesheet" href="../resources/icomoon/style.css" />
+
+	<link rel="stylesheet" href="../resources/css/primefaces_alter.css" />
+	<link rel="stylesheet" href="../resources/css/bootstrap_alter.css" />
+	<link rel="stylesheet" href="../resources/css/teste.css" />
+
+
+	<h:outputScript library="bootstrap-4.3.1-dist"
+		name="js/bootstrap.min.js" target="body" />
+
+	<h:outputScript library="primefaces" name="jquery/jquery.js"
+		target="body" />
+
+	<h:outputScript target="body" library="algaworks"
+		name="javascripts/app.js" />
+
+	<h:outputScript library="primefaces" name="jquery/jquery-plugins.js"
+		target="body" />
+
+	<h:outputScript library="js" name="app.js" target="body" />
+
+
+	<h:panelGroup id="panel-script">
+		<h:outputScript library="js" name="tabs.js" target="body" />
+		<h:outputScript library="js" name="menu.js" target="body" />
+		<h:outputScript library="js" name="teste.js" target="body" />
+		<h:outputScript name="mascaras.js" library="js" />
+	</h:panelGroup>
+
+	<h:outputScript library="js" name="app.js" target="body" />
+
+
+	<style type="text/css">
+</style>
+
+</h:head>
+<h:body>
+	<div class="container login-container">
+
+
+		<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+			closable="false" resizable="false" showHeader="false"
+			style="background-color:#FFFFFF; margin-left:45%; margin-right:50%;margin-top:20%">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+		<div id="loginbox" style="margin-top: 50px;"
+			class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+
+			<div class="row">
+				<div class="iconmelon">
+					<img src="../resources/image/logofas.png" width="200px" />
+
+				</div>
+			</div>
+
+
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">Sign In</div>
+					<div
+						style="float: right; font-size: 80%; position: relative; top: -10px">
+						<a href="#"></a>
+					</div>
+				</div>
+
+				<div style="padding-top: 30px" class="panel-body">
+
+					<div style="display: none" id="login-alert"
+						class="alert alert-danger col-sm-12"></div>
+
+
+					<h:form id="loginform" class="form-horizontal">
+
+
+
+						<p:messages id="message" showDetail="true" showSummary="false"
+							closable="true">
+							<p:autoUpdate disabled="true"></p:autoUpdate>
+						</p:messages>
+
+						<div class="ui-g ui-fluid">
+
+							<div class="ui-g-12 form-group"
+								style="margin-left: auto; margin-right: auto">
+
+								<p:outputLabel styleClass="form-label" value="Usuário"
+									for="login-username" />
+								<p:inputText id="login-username"
+									requiredMessage="Informe o nome de usuário"
+									value="#{loginBean.nomeUsuario}" type="text"
+									class="form-control" name="username" required="true" />
+
+							</div>
+
+							<div class="ui-g-12 form-group"
+								style="margin-left: auto; margin-right: auto">
+
+								<p:outputLabel styleClass="form-label" value="Senha"
+									for="login-password" />
+
+								<p:inputText id="login-password"
+									requiredMessage="Informe uma senha"
+									value="#{loginBean.senhaUsuario}" type="password"
+									class="form-control" name="password" required="true" />
+							</div>
+
+							<div class="ui-g-12">
+								<p:commandButton id="btn-login" value="Log in" update="message"
+									process="loginform" action="#{loginBean.logar()}"
+									onclick="start()" onerror="stop()" oncomplete="stop()"
+									styleClass="btn btn-success btn-block">
+
+								</p:commandButton>
+
+								<p:defaultCommand target="btn-login"></p:defaultCommand>
+							</div>
+						</div>
+
+
+					</h:form>
+
+				</div>
+
+				<div class="form-group"
+					style="margin-bottom: 40px; padding-left: 20px; padding-right: 20px;">
+					<div class="col-md-12 control">
+
+<!-- 						<div style="border-top: 0px solid #888; font-size: 85%;"> -->
+<!-- 							<a href="#" style="float: left" -->
+<!-- 								onClick="$('#loginbox').hide(); $('#signupbox').show()"> -->
+<!-- 								Cadastra-se </a> -->
+<!-- 						</div> -->
+
+						<div style="border-top: 0px solid #888; font-size: 85%;">
+							<a href="#" style="float: right"
+								onClick="$('#loginbox').hide(); $('#signupbox').show()">
+								Esqueci minha senha </a>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+		<div id="signupbox" style="display: none; margin-top: 150px"
+			class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<div class="panel-title">Recuperação de senha</div>
+					<div
+						style="float: right; font-size: 85%; position: relative; top: -10px">
+						<a id="signinlink" href="#"
+							onclick="$('#signupbox').hide(); $('#loginbox').show()">Voltar</a>
+					</div>
+				</div>
+				<div class="panel-body">
+
+					<h:form id="signupform">
+					
+						
+						<div class="ui-g ui-fluid">
+						
+							<div class="ui-g-12">
+							<p:messages id="message-recuperar" showDetail="true"
+								showSummary="false"  closable="true">
+								<p:autoUpdate disabled="true"></p:autoUpdate>
+							</p:messages>
+							</div>
+
+
+							<div class="ui-g-12 form-group">
+								<label for="email" class="col-md-3 control-label">Email</label>
+								<div class="col-md-9">
+									<p:inputText required="true"
+										requiredMessage="informe um e-mail válido"
+										class="form-control" name="email" value="#{loginBean.toEmail}"
+										placeholder="Email Address" />
+								</div>
+							</div>
+
+							<div class="ui-g-12 form-group">
+								<!-- Button -->
+								<p:commandButton id="btn-recuperar" value="enviar"
+									update="message-recuperar" process="signupform"
+									action="#{loginBean.recuperarNovaSenha()}"
+									class="btn btn-success btn-block" onclick="start();"
+									onerror="stop();" oncomplete="stop();">
+								</p:commandButton>
+
+								<p:defaultCommand target="btn-recuperar"></p:defaultCommand>
+
+							</div>
+
+						</div>
+					</h:form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+
+</h:body>
+
+
+
+</html>

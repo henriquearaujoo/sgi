@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+
+
+
+	<ui:define name="content">
+
+		<br />
+
+		<f:metadata>
+			<o:viewParam name="event" value="#{evento_controller.evento}" />
+		</f:metadata>
+
+		<p:messages>
+			<p:autoUpdate />
+		</p:messages>
+
+		<h:form id="form_evento_cadastro">
+
+
+			<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+
+
+			PrimeFaces.locales ['pt'] = {
+				    closeText: 'Fechar',
+				    prevText: 'Anterior',
+				    nextText: 'Próximo',
+				    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+				    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun', 'Jul','Ago','Set','Out','Nov','Dez'],
+				    dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+				    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],
+				    dayNamesMin: ['D','S','T','Q','Q','S','S'],
+				    weekHeader: 'Semana',
+				    weekNumberTitle: 'Sm',
+				    firstDay: 0,
+				    isRTL: false,
+				    showMonthAfterYear: false,
+				    yearSuffix:'',
+				    timeOnlyTitle: 'Só Horas',
+				    timeText: 'Tempo',
+				    hourText: 'Hora',
+				    minuteText: 'Minuto',
+				    secondText: 'Segundo',
+				    currentText: 'Começo',
+				    ampm: false,
+				    month: 'Mês',
+				    week: 'Semana',
+				    day: 'Dia',
+				    allDayText: 'Todo o Dia'
+				 
+				}			
+			
+		</script>
+
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Eventos" url="eventos.xhtml" />
+				<p:menuitem value="Cadastro/Edição de eventos" />
+			</p:breadCrumb>
+
+			<p:panel>
+
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-6">
+						<p:outputLabel value="Título" for="input-titulo" />
+						<p:inputText id="input-titulo" required="true"
+							requiredMessage="Preencha o título"
+							value="#{evento_controller.evento.titulo}" />
+					</div>
+
+					<div class="ui-g-3">
+						<p:outputLabel for="input_dt_init" value="Dt. Início" />
+						<p:calendar id="input_dt_init" required="true" locale="pt"
+							requiredMessage="Preencha a 'Dt. Início'"
+							value="#{evento_controller.evento.dataInicio}" navigator="true"
+							pattern="dd/MM/yyyy HH:mm" />
+
+					</div>
+
+					<div class="ui-g-3">
+						<p:outputLabel for="input_dt_end" value="Dt. final" />
+						<p:calendar id="input_dt_end" locale="pt" required="true"
+							requiredMessage="Preencha a 'Dt. Início'"
+							value="#{evento_controller.evento.dataFim}" navigator="true"
+							pattern="dd/MM/yyyy HH:mm" />
+
+					</div>
+
+					<div class="ui-g-12">
+						<p:outputLabel value="Descrição" for="input-desc" />
+						<p:inputTextarea id="input-desc" rows="3"
+							value="#{evento_controller.evento.descricao}" required="true"
+							requiredMessage="Preencha o título" />
+					</div>
+
+
+
+					<div class="ui-g-4">
+						<p:outputLabel value="Gestão" for="input-gestao" />
+						<p:autoComplete id="input-gestao" required="true"
+							requiredMessage="Preencha o campo 'Gestão'"
+							value="#{evento_controller.evento.gestao}"
+							completeMethod="#{projetoBean.completeGestao}" var="gestao"
+							itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+							converter="gestaoConverterVI" minQueryLength="3" />
+					</div>
+
+					<div class="ui-g-4">
+						<p:outputLabel value="Link de reunião" for="input-link-reuniao" />
+						<p:inputText id="input-link-reuniao"
+							value="#{evento_controller.evento.linkReuniao}" />
+					</div>
+
+					<div class="ui-g-4">
+						<p:outputLabel value="Link de arquivo (drive,docs,etc)"
+							for="input-link-arquivo" />
+						<p:inputText id="input-link-arquivo"
+							value="#{evento_controller.evento.linkArquivo}" />
+					</div>
+
+
+				</div>
+
+				<br />
+				<p:commandLink styleClass="btn btn-primary "
+					action="#{evento_controller.salvar()}">
+					<span style="font-family: Arial; margin-left: 4px">Salvar</span>
+				</p:commandLink>
+
+				<p:link outcome="/main/eventos" styleClass="btn btn-danger">
+					<span style="margin: 3px;">Cancelar</span>
+				</p:link>
+
+
+
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+	</ui:define>
+
+
+</ui:composition>

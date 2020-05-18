@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:viewAction action="#{conta_controller.initListagem()}" />
+		</f:metadata>
+
+
+
+
+
+		<h:form id="form_conta_lista">
+			<br />
+
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Contas" url="contas.xhtml" />
+			</p:breadCrumb>
+			<p:panel id="panel-content">
+
+				<div class="ui-g ui-fluid">
+
+					<div class="ui-g-12 ui-md-6 ui-lg-3">
+						<h:outputText value="Conta:" />
+						<p:inputText placeholder="Conta"
+							value="#{conta_controller.filtro.conta}" />
+					</div>
+
+					<div class="ui-g-12 ui-md-6 ui-lg-3">
+						<h:outputText value="Agência:" />
+						<p:inputText style="margin-left:5px" placeholder="Agência"
+							value="#{conta_controller.filtro.agencia}" />
+					</div>
+
+					<div class="ui-g-12 ui-md-6 ui-lg-3">
+						<h:outputText value="Tipo de conta:" />
+						<p:selectOneMenu value="#{conta_controller.filtro.tipoConta}">
+							<f:selectItem noSelectionOption="true" itemLabel="Selecione" />
+							<f:selectItem itemLabel="CC - Conta corrente" itemValue="CB" />
+							<f:selectItem itemLabel="CA - Conta adiantamento" itemValue="CA" />
+							<f:selectItem itemLabel="AP - Conta aplicação" itemValue="CAP" />
+							<f:selectItem itemLabel="CF - Conta fornecedor" itemValue="CF" />
+							<f:selectItem itemLabel="RDT - Baixa de rendimento"
+								itemValue="RDT" />
+						</p:selectOneMenu>
+					</div>
+
+					<div class="ui-g-12 ui-md-6 ui-lg-3">
+						<h:outputText value="Status:" />
+						<p:selectOneMenu value="#{conta_controller.filtro.statusConta}">
+							<f:selectItem noSelectionOption="true" itemLabel="Selecione" />
+							<f:selectItem itemLabel="Ativa" itemValue="ATIVA" />
+							<f:selectItem itemLabel="Inativa" itemValue="INATIVA" />
+						</p:selectOneMenu>
+					</div>
+
+				</div>
+
+				<div class="ui-g ui-fluid">
+					<div class="ui-g-12 ui-lg-6 "></div>
+
+					<div class="ui-g-12 ui-lg-6 " style="text-align: right">
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							style="margin-left:5px;color:#fff" update="table_conta"
+							action="#{conta_controller.carregarContas()}">
+							<span class="fa fa-fw fa-search"></span>
+							<span>Procurar</span>
+						</p:commandLink>
+
+						<p:link styleClass="btn btn-success btn-sm "
+							style="margin-left:5px;color:#fff" title="Novo"
+							outcome="/main/conta_cadastro">
+							<span class="fa fa-fw fa-plus"></span>
+							<span>Novo</span>
+						</p:link>
+					</div>
+
+				</div>
+
+				<p:separator></p:separator>
+
+				<p:dataTable id="table_conta" paginator="true" rows="12"
+					value="#{conta_controller.contas}" var="conta">
+
+					<p:column headerText="Status" style="text-align:center;">
+						<h:outputText styleClass="tamanho-status status-verde"
+							style="color:#fff"
+							rendered="#{conta.status == null or conta.status.nome != 'Desativada'}"
+							value="ATIVA" />
+						<h:outputText styleClass="tamanho-status status-vermelho"
+							style="color:#fff"
+							rendered="#{conta.status.nome == 'Desativada'}" value="INATIVA" />
+					</p:column>
+
+					<p:column headerText="Nome da conta">
+						<h:outputText value="#{conta.nomeConta}" />
+					</p:column>
+
+					<p:column headerText="Número da conta">
+						<h:outputText value="#{conta.numeroConta}" />
+					</p:column>
+
+					<p:column headerText="Número da agência">
+						<h:outputText value="#{conta.numeroAgencia}" />
+					</p:column>
+
+					<p:column headerText="Banco">
+						<h:outputText value="#{conta.banco.nomeBanco}" />
+					</p:column>
+
+					<p:column headerText="Tipo de conta">
+						<h:outputText value="#{conta.tipoConta}" />
+					</p:column>
+
+					<p:column headerText="Opções" style="width:150px">
+
+						<p:link title="Editar" outcome="/main/conta_cadastro"
+							icon="" styleClass="btn btn-primary btn-sm">
+							<span class="fa fa-fw fa-edit"></span>
+							<f:param name="cont" value="#{conta.id}" />
+						</p:link>
+
+						<p:commandLink title="Excluir" styleClass="btn btn-danger btn-xs"
+							process="@this" update="table_conta"
+							action="#{conta_controller.removerConta()}">
+							<span class="fa fa-fw fa-trash-o"></span>
+							<f:setPropertyActionListener value="#{conta}"
+								target="#{conta_controller.contaBancaria}" />
+						</p:commandLink>
+
+						<p:commandLink title="Ativar/Desativar" process="@this"
+							styleClass="btn btn-primary btn-xs" update="table_conta"
+							action="#{conta_controller.mudarStatus(conta)}">
+							<span class="fa fa-fw fa-edit"></span>
+						</p:commandLink>
+
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+
+</ui:composition>

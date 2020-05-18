@@ -1,0 +1,143 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<p:panel id="panel-info-requisitos">
+
+		<div id="info-requisitos" class="ui-g ui-fluid">
+
+			<div class="ui-g-12">
+				<p:commandLink styleClass="btn btn-primary btn-sm"
+					onclick="setarWidthHeight('form-nova-linha');start()"
+					onerror="stop()" style="margin-left:5px" title="Incluir nova linha"
+					update="panel-form-nova-linha" process="@this"
+					action="#{orcamento_controller.limparVar()}"
+					oncomplete="PF('dlg-nova-linha').show();stop()">
+					<i class="pi pi-check"></i>
+					<span style="margin: 3px;">Incluir nova linha</span>
+				</p:commandLink>
+
+				<p:commandLink styleClass="btn btn-primary btn-sm"
+					onclick="setarWidthHeight('form-detalhe-values');start()"
+					onerror="stop()" style="margin-left:5px" title="Divisão"
+					process="@this" oncomplete="PF('dlg-detalhe-values').show();stop()">
+					<i class="pi pi-check"></i>
+					<span style="margin: 3px;">Divisão de orçamento</span>
+				</p:commandLink>
+
+			</div>
+
+			<div class="ui-g-12">
+				<p:dataTable id="table_rubrica" rowIndexVar="index"
+					styleClass="ui-fluid" value="#{orcamento_controller.rubricas}"
+					var="rubrica">
+
+					<p:column headerText="Componente" style="width:120px">
+						<h:outputText value="#{rubrica.nomeComponente}" />
+					</p:column>
+
+					<p:column headerText="SubComponente">
+						<h:outputText value="#{rubrica.nomeSubComponente}" />
+					</p:column>
+
+					<p:column headerText="Categoria">
+						<h:outputText value="#{rubrica.rubrica.nome}" />
+					</p:column>
+
+					<p:column headerText="Valor Disponível"
+						style="text-align:right;width:120px">
+						<h:outputText value="#{rubrica.saldoOrcamento}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Valor Empenhado"
+						style="text-align:right;width:120px">
+						<h:outputText value="#{rubrica.valorEmpenhado}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Valor" style="text-align:right;width:120px">
+						<h:outputText value="#{rubrica.valor}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Opções" style="text-align:center;width:110px">
+
+						<p:menuButton value="Opções">
+
+							<p:menuitem icon="pi pi-pencil" process="@this"
+								oncomplete="PF('dialogMoviementacao').show()"
+								value="Movimentações" onstart="start()" onsuccess="stop()"
+								onerror="stop()"
+								action="#{orcamento_controller.abrirMovimentacao(rubrica)}" />
+
+							<p:menuitem icon="pi pi-pencil" process="@this"
+								oncomplete="PF('dialogProjetosEmpenhados').show()"
+								value="Projetos" onstart="start()" onsuccess="stop()"
+								onerror="stop()"
+								action="#{orcamento_controller.listarProjetosEmpenhados(rubrica)}" />
+
+							<p:menuitem icon="pi pi-pencil" process="@this" value="Editar"
+								onsuccess="stop()" onerror="stop()"
+								onclick="setarWidthHeight('form-nova-linha');start()"
+								update="panel-form-nova-linha"
+								oncomplete="PF('dlg-nova-linha').show();stop()"
+								action="#{orcamento_controller.preparEdicaoRubrica()}">
+								<f:setPropertyActionListener value="#{rubrica}"
+									target="#{orcamento_controller.rubricaOrcamento}"></f:setPropertyActionListener>
+
+							</p:menuitem>
+
+							<p:menuitem icon="pi pi-pencil" value="Remover" onstart="start()"
+								onsuccess="stop()" onerror="stop()" process="@this"
+								update="table_rubrica"
+								action="#{orcamento_controller.removerRubrica(index)}">
+
+								<f:setPropertyActionListener value="#{rubrica}"
+									target="#{orcamento_controller.rubricaOrcamento}" />
+
+							</p:menuitem>
+
+						</p:menuButton>
+
+					</p:column>
+
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column colspan="5" footerText="Total: "
+								style="text-align:right" />
+							<p:column style="text-align:right"
+								footerText="#{orcamento_controller.buscarValorTotal()}" />
+							<p:column></p:column>
+						</p:row>
+
+					</p:columnGroup>
+
+				</p:dataTable>
+
+
+			</div>
+
+
+		</div>
+
+	</p:panel>
+
+
+
+
+
+
+
+
+</ui:fragment>

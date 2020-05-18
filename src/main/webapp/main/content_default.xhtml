@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:define name="content">
+
+		<h:form id="form-cadastro" prependId="false">
+
+
+			<p:messages id="messages" showSummary="false" style="margin-top:10px"
+				showDetail="true" closable="true" showIcon="true">
+
+				<p:autoUpdate />
+			</p:messages>
+
+			<f:metadata>
+				<o:viewParam name="lanc" value="#{compraController.compra}" />
+				<f:viewAction onPostback="setarFocused('info-geral');"
+					action="#{compraController.initCadastro()}" />
+
+			</f:metadata>
+
+			<p:breadCrumb>
+				<p:menuitem value="Categories" process="@this" url="home_new.xhtml" />
+				<p:menuitem value="Compras" process="@this" url="compra_new.xhtml" />
+				<p:menuitem value="Cadastro de compra" process="@this" url="#" />
+			</p:breadCrumb>
+
+			<div id="steps">
+				<p:steps widgetVar="tabViewVar" rendered="true" id="step"
+					activeIndex="#{compraController.stepIndex}" styleClass="custom"
+					style="margin-bottom:10px" readonly="false">
+					<p:menuitem value="Informações gerais" />
+					<p:menuitem id="menu_doc" value="Itens/Produtos" />
+					<p:menuitem value="Definição de Recursos" />
+					<p:menuitem value="Confirmação de Solicitação" />
+				</p:steps>
+			</div>
+
+
+
+			<div id="panel-geral">
+
+				<p:panel id="panel-info-geral" styleClass="tab-menu-item-vi">
+
+					<div id="info-geral" class="ui-g ui-fluid">
+						
+
+					</div>
+
+				</p:panel>
+
+				<p:panel id="panel-info-items" styleClass="tab-menu-item-vi"
+					style="display: none;">
+						<div id="info-items" class="ui-g ui-fluid">
+						
+						</div>
+
+				</p:panel>
+
+				<p:panel id="info-recurso-panel-pf" style="display: none"
+					styleClass="tab-menu-item-vi">
+
+					<div id="info-recurso" class="ui-g ui-fluid">
+
+						
+					</div>
+
+				</p:panel>
+
+				<p:panel id="panel-info-confirmacao" styleClass="tab-menu-item-vi"
+					style="display: none">
+					<div id="info-confirmacao" class="tab-menu-item-vi"></div>
+				</p:panel>
+			</div>
+
+
+
+			<div class="fixed-btn">
+
+				<p:panel id="btn-panel-p">
+
+					<div id="btn-panel-wizard" class="ui-g ui-fluid"
+						style="margin-bottom: 10px">
+
+
+						<div class="ui-g-6">
+							
+						</div>
+
+						<div class="ui-g-6" style="text-align: right">
+
+							<p:commandLink id="btn-back" styleClass="btn btn-primary"
+								update="step, btn-back, btn-next, btn-panel-p" value="Voltar"
+								process="@this"
+								onclick="steping(#{compraController.stepIndex - 1})"
+								action="#{compraController.steping('back')}"></p:commandLink>
+
+							<p:commandLink id="btn-next" styleClass="btn btn-primary"
+								update="step, btn-back, btn-next, btn-panel-p" value="Próximo"
+								onclick="steping(#{compraController.stepIndex + 1})"
+								process="@this" action="#{compraController.steping('next')}"></p:commandLink>
+
+
+						</div>
+
+						<div id="actions-button" class="ui-g-12" style="display: none">
+
+							<div class="ui-g-12" style="text-align: right;"></div>
+						</div>
+
+					</div>
+
+				</p:panel>
+			</div>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" styleClass="ui-confirmdialog-yes"
+					icon="pi pi-check" />
+				<p:commandButton value="Não" styleClass="ui-confirmdialog-no"
+					icon="pi pi-times" />
+			</p:confirmDialog>
+
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<script type="text/javascript">
+			function setarWidthHeight(id) {
+				var htmlTag = document.getElementById(id);
+				htmlTag.style.height = Math.floor(window.innerHeight*0.98)+"px";	
+				htmlTag.style.width = Math.floor(window.innerWidth*0.98)+"px";	
+				
+			}
+		</script>
+
+		
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+
+
+	</ui:define>
+
+
+</ui:composition>

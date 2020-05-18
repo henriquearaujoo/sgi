@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<o:viewParam name="ad"
+				value="#{prestacao_conta_controller.idAdiantamento}" />
+			<f:viewAction
+				action="#{prestacao_conta_controller.carregarDetalheDoAdiantamento()}" />
+		</f:metadata>
+
+		<style type="text/css">
+.ui-widget {
+	font-size: 85%;
+}
+</style>
+
+		<script type="text/javascript">
+
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+		</script>
+
+		<h:form id="form_adiantamento" prependId="false">
+			
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Listagem de Solicitação de Adiantamento"
+							url="adiantamentos.xhtml" />
+				<p:menuitem value="Prestação de contas" />
+			</p:breadCrumb>
+			
+			<div id="steps">
+				<p:steps widgetVar="tabViewVar" rendered="true" id="step"
+					activeIndex="#{prestacao_conta_controller.stepIndex}"
+					styleClass="custom" style="margin-bottom:10px" readonly="false">
+					<p:menuitem value="Informações gerais" />
+					<p:menuitem value="Confirmação de Solicitação" />
+				</p:steps>
+			</div>
+
+			<p:messages showSummary="false" showDetail="true" 
+				closable="true" escape="true" />
+			<div id="panel-geral">
+
+				<p:panel id="panel-info-geral" styleClass="tab-menu-item-vi">
+					<div id="info-geral" class="ui-g ui-fluid">
+
+						<div class="ui-g-2 form-group">
+							<p:outputLabel value="Documento:" />
+							<h:outputText
+								value="#{prestacao_conta_controller.adiantamento.numeroDocumento}" />
+						</div>
+
+						<div class="ui-g-2 form-group">
+							<p:outputLabel value="Conta:" />
+							<h:outputText
+								value="#{prestacao_conta_controller.adiantamento.recebedor}" />
+						</div>
+
+						<div class="ui-g-2 form-group">
+							<p:outputLabel value="Valor adiantado:" />
+							<h:outputText
+								value="#{prestacao_conta_controller.adiantamento.valorTotalComDesconto}">
+								<f:convertNumber type="currency" maxFractionDigits="2"
+									currencySymbol="R$" />
+							</h:outputText>
+						</div>
+
+						<div class="ui-g-2 form-group">
+							<p:outputLabel value="Valor de saída:" />
+							<h:outputText value="#{prestacao_conta_controller.totalSaida}">
+								<f:convertNumber type="currency" maxFractionDigits="2"
+									currencySymbol="R$" />
+							</h:outputText>
+						</div>
+
+
+						<div class="ui-g-2 form-group">
+							<p:outputLabel value="Valor de entrada:" />
+							<h:outputText value="#{prestacao_conta_controller.totalEntrada}">
+								<f:convertNumber type="currency" maxFractionDigits="2"
+									currencySymbol="R$" />
+							</h:outputText>
+						</div>
+
+						<div class="ui-g-2 form-group">
+							<p:outputLabel value="Valor do saldo:" />
+							<h:outputText
+								value="#{prestacao_conta_controller.adiantamento.valorTotalComDesconto.
+							subtract(prestacao_conta_controller.totalSaida).add(prestacao_conta_controller.totalEntrada)}">
+								<f:convertNumber type="currency" maxFractionDigits="2"
+									currencySymbol="R$" />
+							</h:outputText>
+						</div>
+
+						<div class="ui-g-2 form-group">
+							<p:outputLabel value="Projeto:" />
+							<h:outputText
+								value="#{prestacao_conta_controller.lancamentoAcao.projetoRubrica.projeto.nome}" />
+						</div>
+
+						<div class="ui-g-2 form-group">
+							<p:outputLabel value="Doação:" />
+							<h:outputText
+								value="#{prestacao_conta_controller.lancamentoAcao.projetoRubrica.rubricaOrcamento.orcamento.titulo}" />
+						</div>
+
+						<div class="ui-g-2 form-group">
+							<p:outputLabel value="Categoria:" />
+							<h:outputText
+								value="#{prestacao_conta_controller.lancamentoAcao.projetoRubrica.rubricaOrcamento.rubrica.nome}" />
+						</div>
+
+						<div class="ui-g-2 form-group">
+							<p:outputLabel value="Status:" />
+							<h:outputText
+								value="#{prestacao_conta_controller.adiantamento.statusAdiantamento.nome}" />
+						</div>
+
+						<div class="ui-g-2 form-group">
+							<p:outputLabel value="Data de pagamento:" />
+							<h:outputText
+								value="#{prestacao_conta_controller.adiantamento.dataPagamento}">
+								<f:convertDateTime pattern="dd/MM/yyyy"
+									timeZone="America/Manaus" />
+							</h:outputText>
+						</div>
+
+
+					</div>
+				
+
+					<div id="info-items" class="ui-g ui-fluid">
+
+						<div class="ui-g-6 form-group">
+
+							<h:outputText value="Doc fiscal:" />
+							<p:selectOneMenu required="false"
+								requiredMessage="Preencha o campo 'Doc fiscal'"
+								value="#{prestacao_conta_controller.prestacaoDeContas.tipoDocumentoFiscal}">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems
+									value="#{prestacao_conta_controller.tipoDocumentoFiscal}"
+									var="tipoDocumento" itemValue="#{tipoDocumento}"
+									itemLabel="#{tipoDocumento.nome}" />
+
+							</p:selectOneMenu>
+						</div>
+
+						<div class="ui-g-6 form-group">
+							<h:outputText value="Nota fiscal:" />
+							<p:inputText required="false"
+								requiredMessage="Preencha o campo Nota fiscal."
+								value="#{prestacao_conta_controller.prestacaoDeContas.notaFiscal}"
+								placeholder="Nota fiscal" />
+						</div>
+
+
+
+
+						<div class="ui-g-6 form-group">
+							<h:outputText value="Descrição:" />
+							<p:inputText required="false"
+								requiredMessage="Preencha o campo 'Descrição'."
+								value="#{prestacao_conta_controller.prestacaoDeContas.descricao}"
+								placeholder="Descrição" />
+						</div>
+
+
+
+						<div class="ui-g-6 form-group">
+							<h:outputText value="Categoria:" />
+
+							<p:selectOneMenu style="font-size:12px" filter="true"
+								filterMatchMode="contains" converter="categoriaFinConverter"
+								value="#{prestacao_conta_controller.prestacaoDeContas.categoriaFinanceira}">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems
+									value="#{prestacao_conta_controller.listCategoriaFinanceira}"
+									var="categoria" itemLabel="#{categoria.nome}"
+									itemValue="#{categoria}" />
+
+							</p:selectOneMenu>
+
+						</div>
+
+						<div class="ui-g-6 form-group">
+							<h:outputText value="Data de pagamento:" />
+							<p:calendar id="dt_inicio" placeholder="Data do pagamento"
+								required="false"
+								requiredMessage="Preencha o campo 'Data do pagamento'."
+								value="#{prestacao_conta_controller.prestacaoDeContas.dataPagamentoPrestacao}"
+								timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+						</div>
+
+						<div class="ui-g-6 form-group">
+							<h:outputText value="Favorecido:" />
+							<p:autoComplete placeholder="Favorecido" required="false"
+								requiredMessage="Preencha o campo 'Favorecido'."
+								value="#{prestacao_conta_controller.prestacaoDeContas.contaRecebedor}"
+								completeMethod="#{pagamentoLancController.completeConta}"
+								var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+								converter="contaConverter" />
+						</div>
+
+						<div class="ui-g-12 form-group">
+							<h:outputText value="Valor:" />
+							<p:inputText onkeypress="return formatarNumero(this,event,19,2);"
+								required="false" requiredMessage="Preencha o campo 'Valor'."
+								value="#{prestacao_conta_controller.prestacaoDeContas.valorTotalComDesconto}"
+								placeholder="Valor">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" />
+							</p:inputText>
+						</div>
+						<div class="ui-g-12">
+
+							<p:dataTable id="table-prestacao"
+								value="#{prestacao_conta_controller.listPrestacoes}"
+								var="prestacao">
+
+								<p:column headerText="Pagador/Recebedor">
+									<h:outputText value="#{prestacao.contaEnvolvida}" />
+								</p:column>
+
+								<p:column style="width:180px">
+									<h:outputText value="#{prestacao.valorTotalComDesconto}"
+										rendered="#{prestacao.saidaPrestacao}"
+										style="color:red;float:right">
+										<f:convertNumber type="currency" maxFractionDigits="2"
+											currencySymbol="R$" />
+									</h:outputText>
+
+									<h:outputText value="#{prestacao.valorTotalComDesconto}"
+										rendered="#{!prestacao.saidaPrestacao}"
+										style="color:green;float:right">
+										<f:convertNumber type="currency" maxFractionDigits="2"
+											currencySymbol="R$" />
+									</h:outputText>
+
+
+
+								</p:column>
+
+
+								<p:column style="width:150px">
+									<p:commandLink title="Editar" value="Editar"
+										rendered="#{prestacao_conta_controller.adiantamento.statusAdiantamento.nome.equals('Em aberto') || prestacao_conta_controller.adiantamento.statusAdiantamento.nome.equals('Devolução de documentos')}"
+										styleClass="btn btn-primary btn-sm" 
+										process="@this" update="form_adiantamento">
+
+										<f:setPropertyActionListener value="#{prestacao}"
+											target="#{prestacao_conta_controller.prestacaoDeContas}" />
+
+									</p:commandLink>
+
+									<p:commandLink title="excluir"
+										style="color:#fff;margin-left:5px" value="Excluir"
+										rendered="#{prestacao_conta_controller.adiantamento.statusAdiantamento.nome.equals('Em aberto') || prestacao_conta_controller.adiantamento.statusAdiantamento.nome.equals('Devolução de documentos')}"
+										styleClass="btn btn-danger btn-sm"
+										action="#{prestacao_conta_controller.removerPrestacao()}"
+										process="@this" update="form_adiantamento">
+										<p:confirm message="Excluir item?" />
+										<f:setPropertyActionListener value="#{prestacao}"
+											target="#{prestacao_conta_controller.prestacaoDeContas}" />
+									</p:commandLink>
+								</p:column>
+
+
+							</p:dataTable>
+
+
+						</div>
+
+
+					</div>
+				</p:panel>
+
+				
+
+			</div>
+
+
+
+			<div class="fixed-btn">
+				<p:panel id="btn-panel-p">
+
+					<div id="btn-panel-wizard" class="ui-g ui-fluid"
+						style="margin-bottom: 20px">
+
+
+						<div class="ui-g-9">
+							<p:commandLink style="color:#fff" onstart="start()"
+								onsuccess="stop()" onerror="stop()"
+								rendered="#{prestacao_conta_controller.adiantamento.statusAdiantamento.nome.equals('Em aberto') 
+						|| prestacao_conta_controller.adiantamento.statusAdiantamento.nome.equals('Devolução de documentos')}"
+								action="#{prestacao_conta_controller.salvarPrestacao()}"
+								styleClass="btn btn-success btn-sm "
+								update="panel-info-geral">
+								<span style="font-family: Arial">Salvar</span>
+							</p:commandLink>
+
+
+							
+
+
+							<p:commandLink style="color:#fff" onstart="start()"
+								onsuccess="stop()" onerror="stop()" process="@this"
+								rendered="#{prestacao_conta_controller.verificarPrivilegioADT()}"
+								action="#{prestacao_conta_controller.devolverAdiantamento()}"
+								styleClass="btn btn-secondary btn-sm "
+								update="panel-info-geral">
+								<span style="font-family: Arial">Devolução de documentos</span>
+							</p:commandLink>
+							
+							<p:commandLink style="color:#fff" onstart="start()"
+								onsuccess="stop()" onerror="stop()" process="@this"
+								rendered="#{prestacao_conta_controller.verificarPrivilegioADT()}"
+								action="#{prestacao_conta_controller.analisarAdiantamento()}"
+								styleClass="btn btn-info btn-sm"
+								update="panel-info-geral">
+								<span style="font-family: Arial">Mandar pra análise</span>
+							</p:commandLink>
+
+							<p:commandLink style="color:#fff" onstart="start()"
+								onsuccess="stop()" onerror="stop()" process="@this"
+								rendered="#{prestacao_conta_controller.verificarPrivilegioADT()}"
+								action="#{prestacao_conta_controller.prepararDevolucao(
+						prestacao_conta_controller.adiantamento.valorTotalComDesconto.
+							subtract(prestacao_conta_controller.totalSaida).add(prestacao_conta_controller.totalEntrada))}"
+								styleClass="btn btn-warning btn-sm "
+								update=":form_devolucao">
+								<span style="font-family: Arial">Devolução de recurso</span>
+							</p:commandLink>
+
+							<p:commandLink  onstart="start()"
+								onsuccess="stop()" onerror="stop()" process="@this"
+								rendered="#{prestacao_conta_controller.verificarPrivilegioADT()}"
+								action="#{prestacao_conta_controller.prepararReembolso(
+						prestacao_conta_controller.adiantamento.valorTotalComDesconto.
+							subtract(prestacao_conta_controller.totalSaida).add(prestacao_conta_controller.totalEntrada))}"
+								styleClass="btn btn-light btn-sm "
+								update=":form_reembolso">
+								<span style="font-family: Arial">Reembolso de prestação</span>
+							</p:commandLink>
+
+
+							<p:commandLink style="color:#fff" onstart="start()"
+								onsuccess="stop()" onerror="stop()" process="@this"
+								rendered="#{prestacao_conta_controller.verificarPrivilegioADT()}"
+								action="#{prestacao_conta_controller.validarAdiantamento()}"
+								styleClass="btn btn-primary btn-sm "
+								update="panel-info-geral">
+								<span style="font-family: Arial">Validar</span>
+							</p:commandLink>
+
+							<p:commandLink style="color:#fff" ajax="false" target="_blank"
+								process="@this" onstart="start()" onsuccess="stop()"
+								onerror="stop()"
+								action="#{prestacao_conta_controller.gerarRelatorioAdiantamento()}"
+								styleClass="btn btn-dark btn-sm ">
+								<span style="font-family: Arial">Gerar relatório</span>
+							</p:commandLink>
+
+							<p:commandLink action="#{prestacao_conta_controller.voltarListagem()}"
+								value="Sair" process="@this" styleClass="btn btn-danger btn-sm"
+								style="color:#fff; margin: 2px 2px;" />
+
+
+						</div>
+
+						<div class="ui-g-3" style="text-align: right">
+
+							<p:commandLink id="btn-back" styleClass="btn btn-primary"
+								update="step  btn-back btn-next" value="Voltar" process="@this"
+								onclick="steping(#{prestacao_conta_controller.stepIndex - 1})"
+								action="#{prestacao_conta_controller.steping('back')}"></p:commandLink>
+
+							<p:commandLink id="btn-next" styleClass="btn btn-primary"
+								update="step btn-back btn-next" value="Próximo"
+								onclick="steping(#{prestacao_conta_controller.stepIndex + 1})"
+								process="@this"
+								action="#{prestacao_conta_controller.steping('next')}"></p:commandLink>
+
+
+						</div>
+
+						
+					</div>
+				</p:panel>
+
+			</div>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="adicionais">
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+
+		<p:dialog header="Devolução de recurso" showHeader="false"
+			widgetVar="dlg_devolucao" modal="true" showEffect="clip"
+			hideEffect="clip" closable="true" closeOnEscape="true">
+
+			<h:form id="form_devolucao">
+
+				<p:panelGrid columns="3">
+
+					<f:facet name="header">
+						Devolução de recurso.				     
+				   </f:facet>
+
+					<h:panelGrid columns="1">
+						<p:outputLabel value="Pagador:" />
+						<h:outputText
+							value="#{prestacao_conta_controller.devolucao.contaPagador.nomeConta}" />
+
+					</h:panelGrid>
+
+					<h:panelGrid columns="1">
+						<p:outputLabel value="Recebedor:" />
+						<h:outputText
+							value="#{prestacao_conta_controller.devolucao.contaRecebedor.nomeConta}" />
+					</h:panelGrid>
+
+					<h:panelGrid columns="1">
+						<p:outputLabel value="Valor:" />
+						<h:outputText
+							value="#{prestacao_conta_controller.devolucao.valorTotalComDesconto}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+					</h:panelGrid>
+
+				</p:panelGrid>
+
+				<p:separator></p:separator>
+
+				<p:commandLink style="color:#fff"
+					oncomplete="PF('dlg_devolucao').hide();"
+					action="#{prestacao_conta_controller.salvarDevolucao()}"
+					styleClass="btn btn-success btn-xs fa fa-check-square-o"
+					update=":form_adiantamento">
+					<span style="font-family: Arial">Confirmar devolução</span>
+				</p:commandLink>
+
+
+
+			</h:form>
+
+		</p:dialog>
+
+
+		<p:dialog showHeader="false" widgetVar="dlg_reembolso" modal="true"
+			showEffect="clip" hideEffect="clip" closable="true"
+			closeOnEscape="true">
+
+			<h:form id="form_reembolso">
+
+				<p:panelGrid columns="3">
+
+					<f:facet name="header">
+						Reembolso				     
+				   </f:facet>
+
+					<h:panelGrid columns="1">
+						<p:outputLabel value="Pagador:" />
+						<h:outputText
+							value="#{prestacao_conta_controller.reembolso.contaPagador.nomeConta}" />
+
+					</h:panelGrid>
+
+					<h:panelGrid columns="1">
+						<p:outputLabel value="Recebedor:" />
+						<h:outputText
+							value="#{prestacao_conta_controller.reembolso.contaRecebedor.nomeConta}" />
+					</h:panelGrid>
+
+					<h:panelGrid columns="1">
+						<p:outputLabel value="Valor:" />
+						<h:outputText
+							value="#{prestacao_conta_controller.reembolso.valorTotalComDesconto.abs()}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</h:outputText>
+					</h:panelGrid>
+
+				</p:panelGrid>
+
+				<p:separator></p:separator>
+
+				<p:commandLink style="color:#fff"
+					oncomplete="PF('dlg_reembolso').hide();"
+					action="#{prestacao_conta_controller.salvarReembolso()}"
+					styleClass="btn btn-success btn-xs fa fa-check-square-o"
+					update=":form_adiantamento">
+					<span style="font-family: Arial">Confirmar reembolso</span>
+				</p:commandLink>
+
+
+
+			</h:form>
+
+		</p:dialog>
+
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+
+
+
+	</ui:define>
+
+
+</ui:composition>

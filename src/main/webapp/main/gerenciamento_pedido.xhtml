@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="menu_lateral">
+
+		<h:form id="tabela_projeto">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{gerenciador_pedido_controller.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink
+						action="#{gerenciador_pedido_controller.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{gerenciador_pedido_controller.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right;" class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+
+		<p:tabView id="tab">
+			<p:tab title="Pedidos">
+				<h:form id="form-gerenciamento-pedido" styleClass="form-inline">
+
+					<script type="text/javascript">
+							function start() {
+							    PF('statusDialog').show();
+							}
+				 
+							function stop() {
+							    PF('statusDialog').hide();
+							}
+
+					</script>
+
+					<style type="text/css">
+						.semBorda tr, .semBorda td {
+							border: none !important;
+						}
+					</style>
+
+					<p:messages  showSummary="false" showDetail="true"
+						showIcon="true" />
+
+					<p:dataTable value="#{gerenciador_pedido_controller.pedidos}"
+						var="pedido" editable="true" editMode="cell"
+						rowsPerPageTemplate="5,10,15,20,25,50,100" paginator="true"
+						rows="10"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+						<f:facet name="header">
+							<p:panel id="toggleable_pedido" header="Filtro" toggleable="true"
+								closable="false" toggleSpeed="500" closeSpeed="500"
+								widgetVar="panel" style="margin-bottom:20px">
+
+								<p:panelGrid columns="1" styleClass="semBorda">
+									<p:panelGrid columns="2" styleClass="semBorda"
+										style="width:900px"
+										columnClasses="ui-grid-col-2,ui-grid-col-10">
+
+										<h:outputText value="Código:" />
+										<h:panelGroup>
+											<p:inputText
+												value="#{gerenciador_pedido_controller.filtro.codigo}"
+												style="width:80px" />
+											<h:outputText value="Solicitante:" style="margin-left:5px;" />
+											<p:inputText
+												value="#{gerenciador_pedido_controller.filtro.nome}"
+												style="margin-left:5px;" />
+										</h:panelGroup>
+
+
+										<h:outputText value="Dt. ínicio:" />
+										<h:panelGroup>
+											<p:calendar id="dt_inicio"
+												value="#{gerenciador_pedido_controller.filtro.dataInicio}"
+												timeZone="America/Manaus" navigator="true"
+												pattern="dd/MM/yyyy" />
+
+											<h:outputText value="Dt. final:" style="margin-left:5px;" />
+											<p:calendar id="dt_final" style="margin-left:5px;"
+												value="#{gerenciador_pedido_controller.filtro.dataFinal}"
+												timeZone="America/Manaus" navigator="true"
+												pattern="dd/MM/yyyy" />
+
+										</h:panelGroup>
+
+										<h:outputText value="Gestão:" />
+										<h:panelGroup id="panel-gestao-filtro">
+
+											<p:selectOneMenu id="tipo_gestao_filtro"
+												value="#{gerenciador_pedido_controller.filtro.tipoGestao}">
+												<p:ajax
+													listener="#{gerenciador_pedido_controller.onTipoGestaoChangeFiltro()}"
+													process="@this" update="panel-gestao-filtro" />
+												<f:selectItem noSelectionOption="true" />
+												<f:selectItems
+													value="#{gerenciador_pedido_controller.tiposGestao}"
+													var="tipoGestao" itemLabel="#{tipoGestao.nome}"
+													itemValue="#{tipoGestao}" />
+											</p:selectOneMenu>
+
+											<p:selectOneMenu id="sup_filtro"
+												value="#{gerenciador_pedido_controller.filtro.gestaoID}"
+												style="margin-left:5px"
+												rendered="#{gerenciador_pedido_controller.tipoGestao.equals('Superintendencia')}">
+												<f:selectItems
+													value="#{gerenciador_pedido_controller.gestoes}" var="gest"
+													itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+											</p:selectOneMenu>
+
+											<p:selectOneMenu id="coord_filtro" filter="true"
+												filterMatchMode="contains" style="margin-left:5px"
+												value="#{gerenciador_pedido_controller.filtro.gestaoID}"
+												rendered="#{gerenciador_pedido_controller.tipoGestao.equals('Coordenadoria')}">
+												<f:selectItems
+													value="#{gerenciador_pedido_controller.gestoes}" var="gest"
+													itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+											</p:selectOneMenu>
+
+											<p:selectOneMenu id="reg_filtro" filter="true"
+												filterMatchMode="contains" style="margin-left:5px"
+												value="#{gerenciador_pedido_controller.filtro.gestaoID}"
+												rendered="#{gerenciador_pedido_controller.tipoGestao.equals('Regional')}">
+												<f:selectItems
+													value="#{gerenciador_pedido_controller.gestoes}" var="gest"
+													itemLabel="#{gest.nome}" itemValue="#{gest.id}" />
+											</p:selectOneMenu>
+
+										</h:panelGroup>
+
+
+										<h:outputText value="Destino/Localização:" for="local_filtro" />
+
+										<h:panelGroup id="panel-loc-filtro">
+
+											<p:selectOneMenu id="local_filtro"
+												value="#{gerenciador_pedido_controller.filtro.tipoLocalidade}">
+												<p:ajax
+													listener="#{gerenciador_pedido_controller.onLocalChangeFilter()}"
+													process="@this" update="panel-loc-filtro" />
+												<f:selectItem noSelectionOption="true" />
+												<f:selectItems
+													value="#{gerenciador_pedido_controller.tipoLocais}"
+													var="local" itemLabel="#{local.nome}" itemValue="#{local}" />
+											</p:selectOneMenu>
+
+											<p:selectOneMenu id="estado_filtro" filter="true"
+												filterMatchMode="contains" style="margin-left:5px"
+												value="#{gerenciador_pedido_controller.idEstado}"
+												rendered="#{gerenciador_pedido_controller.local.equals('Municipio')}">
+												<p:ajax
+													listener="#{gerenciador_pedido_controller.onEstadoChange()}"
+													process="@this" update="municipio_filtro" />
+												<f:selectItem itemLabel="Selecione um estado" itemValue="0" />
+												<f:selectItems
+													value="#{gerenciador_pedido_controller.estados}"
+													var="estado" itemLabel="#{estado.nome}"
+													itemValue="#{estado.id}" />
+											</p:selectOneMenu>
+
+
+
+											<p:selectOneMenu id="municipio_filtro" filter="true"
+												filterMatchMode="contains" style="margin-left:5px"
+												value="#{gerenciador_pedido_controller.filtro.localidadeID}"
+												rendered="#{gerenciador_pedido_controller.local.equals('Municipio')}">
+												<f:selectItems
+													value="#{gerenciador_pedido_controller.localidades}"
+													var="loc" itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+											</p:selectOneMenu>
+
+
+											<p:selectOneMenu id="comunidade_filtro"
+												value="#{gerenciador_pedido_controller.filtro.localidadeID}"
+												filter="true" filterMatchMode="contains"
+												rendered="#{gerenciador_pedido_controller.local.equals('Comunidade')}"
+												style="margin-left:5px">
+												<f:selectItems
+													value="#{gerenciador_pedido_controller.localidades}"
+													var="loc" itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+											</p:selectOneMenu>
+
+
+											<p:selectOneMenu id="uc_filtro"
+												value="#{gerenciador_pedido_controller.filtro.localidadeID}"
+												filter="true" filterMatchMode="contains"
+												style="margin-left:5px"
+												rendered="#{gerenciador_pedido_controller.local.equals('Uc')}">
+												<f:selectItems
+													value="#{gerenciador_pedido_controller.localidades}"
+													var="loc" itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+
+											</p:selectOneMenu>
+
+											<p:selectOneMenu id="sede_filtro"
+												value="#{gerenciador_pedido_controller.filtro.localidadeID}"
+												filter="true" filterMatchMode="contains"
+												style="margin-left:5px"
+												rendered="#{gerenciador_pedido_controller.local.equals('Sede')}">
+												<f:selectItems
+													value="#{gerenciador_pedido_controller.localidades}"
+													var="loc" itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+											</p:selectOneMenu>
+
+											<p:selectOneMenu id="nucleo_filtro"
+												value="#{gerenciador_pedido_controller.filtro.localidadeID}"
+												filter="true" filterMatchMode="contains"
+												style="margin-left:5px"
+												rendered="#{gerenciador_pedido_controller.local.equals('Nucleo')}">
+												<f:selectItems
+													value="#{gerenciador_pedido_controller.localidades}"
+													var="loc" itemLabel="#{loc.mascara}" itemValue="#{loc.id}" />
+											</p:selectOneMenu>
+
+										</h:panelGroup>
+
+										<h:outputText value="Produto:" />
+										<h:panelGroup>
+											<p:inputText
+												value="#{gerenciador_pedido_controller.filtro.descricaoProduto}" />
+											<h:outputText value="Fornecedor:" style="margin-left:5px" />
+											<p:inputText
+												value="#{gerenciador_pedido_controller.filtro.nomeFornecedor}"
+												style="margin-left:5px" />
+										</h:panelGroup>
+
+									</p:panelGrid>
+									<h:panelGroup>
+
+										<p:commandLink
+											styleClass="btn btn-primary btn-sm"
+											action="#{gerenciador_pedido_controller.filtrar()}"
+											onclick="start()" onsuccess="stop()" onerror="stop()"
+											update=":tab:form-gerenciamento-pedido"
+											style="color:#fff; margin: 8px 2px;">
+											<span class="glyphicon glyphicon-search" ></span><span  style="margin: 3px;">Procurar</span>
+										</p:commandLink>
+
+										<p:commandLink
+											styleClass="btn btn-danger"
+											action="#{gerenciador_pedido_controller.limparFiltro()}"
+											process="@this" update=":tab:form-gerenciamento-pedido"
+											style="color:#fff; margin: 8px 2px;">
+											<span class="glyphicon glyphicon-trash"></span><span  style="margin: 3px;">Limpar filtro</span>
+										</p:commandLink>
+
+									</h:panelGroup>
+								</p:panelGrid>
+
+							</p:panel>
+
+						</f:facet>
+
+
+
+						<p:ajax event="cellEdit"
+							listener="#{gerenciador_pedido_controller.editarPedido(pedido)}" />
+
+						<p:column headerText="Nº Pedido" filterBy="#{pedido.id}"
+							filterMatchMode="contains" style="width:150px">
+							<h:outputText value="#{pedido.id}" />
+						</p:column>
+
+						<p:column headerText="Nota fiscal" filterBy="#{pedido.notaFiscal}"
+							filterMatchMode="contains" style="width:10%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{pedido.notaFiscal}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="modelInputNF" value="#{pedido.notaFiscal}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+
+						<p:column headerText="Descrição" filterBy="#{pedido.descricao}"
+							filterMatchMode="contains" style="width:20%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{pedido.descricao}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="modelInput" value="#{pedido.descricao}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Fornecedor"
+							filterBy="#{pedido.nomeFornecedor}" filterMatchMode="contains"
+							style="width:20%">
+							<h:outputText value="#{pedido.nomeFornecedor}" />
+						</p:column>
+
+						<p:column headerText="Localidade" filterBy="#{pedido.destino}"
+							style="width:20%">
+							<h:outputText value="#{pedido.destino}" />
+						</p:column>
+
+						<p:column headerText="Valor"
+							filterBy="#{pedido.valorTotalComDesconto}" style="width:150px">
+							<h:outputText value="#{pedido.valorTotalComDesconto}" />
+						</p:column>
+
+
+						<p:column style="width:100px">
+							<p:commandLink title="Imprimir"
+								styleClass="glyphicon glyphicon-print" target="_blank"
+								style="font-size:14px;margin-left:9px;" ajax="false"
+								action="#{gerenciador_pedido_controller.imprimirPedido()}">
+								<f:setPropertyActionListener value="#{pedido}"
+									target="#{gerenciador_pedido_controller.pedido}" />
+							</p:commandLink>
+						</p:column>
+
+					</p:dataTable>
+
+
+				</h:form>
+			</p:tab>
+				
+			<p:tab title="Pedidos detalhados">
+				<ui:include src="/main/pedido_detalhado.xhtml" />
+			</p:tab>	
+	
+		</p:tabView>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+	</ui:define>
+
+
+</ui:composition>

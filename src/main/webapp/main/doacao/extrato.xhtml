@@ -1,0 +1,204 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<p:panel id="panel-info-extrato">
+
+
+		<div class="ui-g ui-fluid">
+
+
+			<div class="ui-g-3 form-group">
+				<p:outputLabel for="input-filter-lanc" value="Nº Lançamento" styleClass="form-label" />
+				<p:inputText id="input-filter-lanc"
+					value="#{orcamento_controller.filtro.lancamentoID}" />
+			</div>
+
+			<div class="ui-g-3 form-group">
+				<p:outputLabel for="input-filter-dt-i"  value="Dt. Início" styleClass="form-label" />
+				<p:calendar id="input-filter-dt-i"
+					value="#{orcamento_controller.filtro.dataInicio}" navigator="true"
+					timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+			</div>
+
+			<div class="ui-g-3 form-group">
+				<p:outputLabel for="input-filter-dt-f" value="Dt. Final" styleClass="form-label" />
+				<p:calendar id="input-filter-dt-f"
+					value="#{orcamento_controller.filtro.dataFinal}" navigator="true"
+					timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+			</div>
+
+			<div class="ui-g-3 form-group">
+				<p:outputLabel for="input-filter-projeto" value="Projeto:" styleClass="form-label" />
+				<p:autoComplete id="input-filter-projeto" 
+					value="#{orcamento_controller.filtro.projeto}"
+					completeMethod="#{orcamento_controller.completeProjetos}"
+					var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}"
+					converter="projetoConverter">
+
+					<p:column>
+						<h:outputText value="#{projeto.codigo}" />
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{projeto.nome}" />
+					</p:column>
+
+				</p:autoComplete>
+			</div>
+
+			<div class="ui-g-3 form-group">
+				<p:outputLabel for="input-filter-fornecedor" value="Fornecedor" styleClass="form-label" />
+				<p:autoComplete id="input-filter-fornecedor"
+					value="#{orcamento_controller.filtro.contaFiltro}"
+					completeMethod="#{orcamento_controller.completeConta}" var="conta"
+					itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+					converter="contaConverter" />
+			</div>
+
+			<div class="ui-g-3 form-group">
+				<p:commandLink styleClass="btn btn-primary btn-sm" onstart="start()"
+					onsuccess="stop()" onerror="stop()" process="@this,panel-info-extrato"
+					action="#{orcamento_controller.carregarExtatoDoacao()}"
+					update="table-lancamentos"
+					style="color:#fff; margin: 8px 2px;">
+					<span class="glyphicon glyphicon-search"></span>
+					<span style="margin: 3px;">Buscar</span>
+				</p:commandLink>
+
+				<p:commandLink styleClass="btn btn-danger btn-sm" title="Limpar"
+					process="@this" onstart="start()" onsuccess="stop()"
+					onerror="stop()" action="#{orcamento_controller.limpar()}"
+					update="table-lancamentos, panel-info-extrato"
+					style="color:#fff; margin: 8px 2px;">
+					<span class="glyphicon glyphicon-trash"></span>
+					<span style="margin: 3px;">Limpar</span>
+				</p:commandLink>
+
+
+			</div>
+
+
+
+			<div class="ui-g-12">
+
+				<p:dataTable id="table-lancamentos"
+					value="#{orcamento_controller.lancamentos}" var="lancamento"
+					paginator="true" rows="5">
+
+					<p:column headerText="Nº" style="width:75px;text-align:center">
+						<h:outputText value="#{lancamento.codigoLancamento}" />
+					</p:column>
+
+					<p:column headerText="Emissão" style="width:90px;text-align:center">
+						<h:outputText value="#{lancamento.dataEmissao}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+
+					<p:column headerText="Pagamento"
+						style="width:90px;text-align:center">
+						<h:outputText value="#{lancamento.dataPagamento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Pagador/Recebedor"
+						style="width:220px;text-align:center">
+						<h:outputText rendered="#{lancamento.sinalizador.equals('+')}"
+							value="#{lancamento.contaPagadorLbl}" />
+						<h:outputText rendered="#{lancamento.sinalizador.equals('-')}"
+							value="#{lancamento.contaRecebedorLbl}" />
+					</p:column>
+
+
+					<p:column rendered="false" headerText="Status"
+						style="width:120px;text-align:center">
+						<h:outputText styleClass="tamanho-status status-verde"
+							style="color:#fff" rendered="#{lancamento.statusPagamento == 0}"
+							value="Validado" />
+						<h:outputText styleClass="tamanho-status status-vermelho"
+							style="color:#fff" rendered="#{lancamento.statusPagamento == 1}"
+							value="Não validado" />
+
+
+					</p:column>
+
+
+					<p:column headerText="Projeto"
+						style="width:100px;text-align:center">
+						<h:outputText value="#{lancamento.nomeProjeto}" />
+					</p:column>
+
+					<p:column headerText="Valor" style="width:75px;text-align:center">
+						<h:outputText rendered="#{lancamento.sinalizador.equals('+')}"
+							style="color:green;float:right"
+							value="#{lancamento.valorPagoAcao}">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+						<h:outputText rendered="#{lancamento.sinalizador.equals('-')}"
+							style="color:red;float:right" value="#{lancamento.valorPagoAcao}">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+
+					<p:column headerText="Valor nulo"
+						style="width:75px;text-align:center">
+						<h:outputText value="#{lancamento.valorNulo}" style="float:right">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column colspan="5" footerText="Entradas: "
+								style="text-align:right" />
+							<p:column style="text-align:right"
+								footerText="#{orcamento_controller.buscarValorTotalEntrada()}" />
+							<p:column style="text-align:right" footerText="" />
+
+						</p:row>
+
+						<p:row>
+							<p:column colspan="5" footerText="Saídas: "
+								style="text-align:right" />
+							<p:column style="text-align:right"
+								footerText="#{orcamento_controller.buscarValorTotalSaida()}" />
+							<p:column style="text-align:right" footerText="" />
+
+						</p:row>
+
+						<p:row>
+							<p:column colspan="5" footerText="Saldo:"
+								style="text-align:right" />
+							<p:column style="text-align:right"
+								footerText="#{orcamento_controller.buscarValorSaldo()}" />
+							<p:column style="text-align:right" footerText="" />
+
+						</p:row>
+
+
+					</p:columnGroup>
+
+				</p:dataTable>
+			</div>
+
+		</div>
+
+
+	</p:panel>
+
+
+
+
+
+
+</ui:fragment>

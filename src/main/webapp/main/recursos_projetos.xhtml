@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+
+
+	<ui:define name="content">
+	
+			<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+			function stopDlgfilter() {
+			    PF('dlg_filtro_compra').hide();
+			}
+		</script>
+		
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Recursos do Projeto"
+					url="#" />
+			</p:breadCrumb>
+		</h:form>
+
+		<p:panel id="toggleable_orcamento"
+			header="Filtros de Recursos do Projeto" toggleable="true"
+			collapsed="false" closable="false" toggleSpeed="500" closeSpeed="500"
+			widgetVar="panel_projetos" style="margin-bottom:20px;">
+
+
+			<h:form id="form-lancamento-pagamento"  prependId="false" >
+
+				
+
+
+				<p:panelGrid columns="6">
+					<h:outputText value="Doação:" />
+					<p:autoComplete placeholder="Doação" size="80"
+						value="#{recursosProjetoBean.filtro.doacao}"
+						completeMethod="#{recursosProjetoBean.completeOrcamentos}" minQueryLength="2" var="doacao"
+						itemLabel="#{doacao.titulo}" itemValue="#{doacao}"
+						converter="orcamentoConverter">
+	
+						<p:column headerText="Doação" >
+							<h:outputText value="#{doacao.titulo}" />
+						</p:column>
+	
+						<p:column headerText="Contrato">
+							<h:outputText value="#{doacao.contrato}" />
+						</p:column>
+	
+					</p:autoComplete>
+
+					<h:outputText value="Período de Aprovação:" style="float:right" />
+					<h:panelGroup>
+						<p:calendar size="10" value="#{recursosProjetoBean.filtro.dataInicialRecurso}"
+							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+						-
+						<p:calendar size="10" value="#{recursosProjetoBean.filtro.dataFinalRecurso}"
+							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+					</h:panelGroup>
+					
+
+
+				
+
+				
+
+				<p:panelGrid columns="2">
+					<h:outputText value="Status:" />
+
+					<p:selectOneMenu id="Status" value="#{recursosProjetoBean.filtro.statusRecurso}"  >
+						<f:selectItem itemLabel="Selecione:" />
+						<f:selectItem  itemLabel="Reprovado" itemValue="Reprovado" />
+						<f:selectItem  itemLabel="Aprovado" itemValue="Aprovado" />
+						<f:selectItem  itemLabel="Em Análise" itemValue="Em Análise" />
+					</p:selectOneMenu>
+				</p:panelGrid>
+				
+				<p:panelGrid columns="2">
+					<h:outputText value="Tipo:" />
+
+					<p:selectOneMenu id="Tipo" value="#{recursosProjetoBean.filtro.tipo}"  >
+						<f:selectItem itemLabel="Selecione:" />
+						<f:selectItem  itemLabel="Suplementação" itemValue="Suplementação" />
+						<f:selectItem  itemLabel="Convencional" itemValue="Convencional" />
+					</p:selectOneMenu>
+				</p:panelGrid>
+			</p:panelGrid>
+				<h:panelGroup>
+
+					
+					<p:commandLink styleClass="btn btn-primary btn-sm fa fa-search"
+						onstart="start()" onsuccess="stop()" onerror="stop()"
+						action="#{recursosProjetoBean.filtraRecurosProjeto()}"
+						update="table-relacao"
+						style="color:#fff; margin: 8px 2px;">
+						<span style="width: 40px; font-family: Arial">Buscar</span>
+					</p:commandLink>
+					
+					<p:commandLink styleClass="btn btn-primary btn-sm fa fa-remove"
+						title="Limpar" process="@this" onstart="start()"
+						onsuccess="stop()" onerror="stop()"
+						action="#{recursosProjetoBean.limpar()}"
+						update="form-lancamento-pagamento"
+						style="color:#fff; margin: 8px 2px;">
+						<span style="width: 40px; font-family: Arial">Limpar</span>
+					</p:commandLink>
+
+					
+
+
+
+				</h:panelGroup>
+			</h:form>
+
+		</p:panel>
+
+
+		<p:fieldset legend="Recursos do projeto">
+
+			<p:dataTable id="table-relacao"
+				value="#{recursosProjetoBean.listaInit}" var="relacao">
+				<p:column headerText="Doação">
+					<h:outputText value="#{relacao.orcamento.titulo}" />
+				</p:column>
+
+				<p:column headerText="Contrato">
+					<h:outputText value="#{relacao.orcamento.contrato}" />
+				</p:column>
+
+				<p:column headerText="Parceiro">
+					<h:outputText value="#{relacao.orcamento.fonte.nome}" />
+				</p:column>
+
+				<p:column headerText="Valor">
+					<h:outputText value="#{relacao.valor}">
+						<f:convertNumber type="currency" locale="pt_BR" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Tipo" >
+					<p:outputLabel value="#{relacao.tipo}" />
+				</p:column>
+
+				<p:column headerText="Status" >
+					<p:outputLabel value="#{relacao.status}" rendered="#{relacao.status != null or relacao.status != ''}" />
+					<p:outputLabel value="Em Análise" rendered="#{relacao.status == null or relacao.status == ''}" />
+				</p:column>
+
+				<p:column headerText="Data de Cadastro" >
+					<p:outputLabel value="#{relacao.dataInsercao}">
+
+						<f:convertDateTime pattern="dd/MM/YYYY" />
+					</p:outputLabel>
+				</p:column>
+
+				<p:column headerText="Ação">
+					
+						<p:commandLink value="Aprovar" update="table-relacao"
+							style="background:#008000;color:#fff"
+							styleClass="btn btn-success btn-sm"
+							action="#{recursosProjetoBean.aprovaStatusRecursos(relacao)}" disabled="#{relacao.status == 'Aprovado'}" />
+						<p:commandLink value="Reprovar" update="table-relacao"
+							style="color:#fff"
+							styleClass="btn btn-danger btn-sm"
+							action="#{recursosProjetoBean.reprovaStatusRecursos(relacao)}" disabled="#{relacao.status == 'Reprovado'}" />
+					
+				</p:column>
+
+			</p:dataTable>
+
+		</p:fieldset>
+
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

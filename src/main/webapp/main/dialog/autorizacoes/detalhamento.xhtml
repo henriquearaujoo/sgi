@@ -1,0 +1,40 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<h:form id="form-detalhe-lancamento" prependId="false">
+
+
+		
+			<p:tabView id="tab-detalhe-lancamento" prependId="false"
+				binding="#{autorizacao_controller.tabview}">
+
+				<p:ajax event="tabChange" onstart="start();" onsuccess="stop();"
+					onerror="stop();"
+					listener="#{autorizacao_controller.carregarDadosTab()}"
+					update="tab-detalhe-lancamento" />
+
+				<p:tab id="tab-info-geral" title="Info geral">
+					<ui:include src="/main/dialog/autorizacoes/tabs/info_geral.xhtml" />
+				</p:tab>
+
+				<p:tab id="tab-anexos" title="Anexos">
+					<ui:include src="/main/dialog/autorizacoes/tabs/anexos.xhtml" />
+				</p:tab>
+
+
+			</p:tabView>
+
+		
+
+	</h:form>
+
+
+
+
+</ui:fragment>

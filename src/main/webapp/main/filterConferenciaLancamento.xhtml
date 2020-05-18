@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+<h:head>
+	<title>Conferência de lançamentos</title>
+	<style type="text/css">
+		.ui-widget {
+			font-size: 100%;
+		}
+		
+		.semBorda tr, .semBorda td {
+		border: none !important;
+		}
+	</style>
+
+	<link rel="stylesheet"
+		href="../resources/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="../resources/bootsnip/css/style.css" />
+	<link rel="stylesheet" href="../resources/icomoon/style.css" />
+	<link rel="stylesheet" href="../resources/css/estilos.css" />
+	<link rel="stylesheet" href="../resources/css/global.css" />
+	<link rel="stylesheet" href="../resources/css/primefaces_alter.css" />
+
+	<h:outputScript name="js/menu.js" library="resources" />
+	<h:outputScript library="primefaces" name="jquery/jquery.js"
+		target="head" />
+	<h:outputScript library="primefaces" name="jquery/jquery-plugins.js"
+		target="head" />
+
+
+</h:head>
+
+<h:body>
+	<h:form style="margin-bottom:5px;margin-left:5px;">
+		<p:panelGrid columns="2" styleClass="semBorda">
+
+			<h:outputText value="Dt. Início:" />
+			<p:calendar navigator="true"
+				value="#{cp_controler.filtro.dataInicio}" timeZone="America/Manaus"
+				pattern="dd/MM/yyyy" />
+
+			<h:outputText value="Dt. Fim:" />
+			<p:calendar navigator="true" value="#{cp_controler.filtro.dataFinal}"
+				timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+			<h:outputText value="Projeto:" />
+			<p:selectOneMenu value="#{cp_controler.filtro.projetoId}"
+				filter="true" panelStyle="width:270px" filterMatchMode="contains">
+				<f:selectItem itemLabel="Selecione um projeto" itemValue="0" />
+				<f:selectItems value="#{cp_controler.listProjetos}" var="project"
+					itemLabel="#{project.nome}" itemValue="#{project.id}" />
+				<p:ajax listener="#{cp_controler.carregarAções()}" process="@this"
+						update="menu" />
+			</p:selectOneMenu>
+			
+			<h:outputText value="Gestão:" />
+			<p:selectCheckboxMenu id="gestao" value="#{cp_controler.filtro.gestoes}"
+				label="Gestão" filter="true" filterMatchMode="contains"
+				panelStyle="width:270px">
+				<f:selectItems value="#{cp_controler.gestoes}" var="gestao"
+					itemLabel="#{gestao.nome}" itemValue="#{gestao.id}"/>
+				<p:ajax listener="#{cp_controler.carregarAções()}" process="@this"
+					update="menu" />
+			</p:selectCheckboxMenu>
+			
+
+			<h:outputText value="Componente:" />
+			<p:selectCheckboxMenu id="componente" value="#{cp_controler.filtro.componentes}"
+				label="Componente" filter="true" filterMatchMode="contains"
+				panelStyle="width:270px">
+				<f:selectItems value="#{cp_controler.componentes}" var="componente"
+					itemLabel="#{componente.nome}" itemValue="#{componente}"/>
+				<p:ajax listener="#{cp_controler.carregarAções()}" process="@this"
+					update="menu" />
+			</p:selectCheckboxMenu>
+
+
+			<h:outputText value="Ação:"/>
+			<p:selectCheckboxMenu id="menu" value="#{cp_controler.filtro.acoes}"
+				label="Ações" filter="true" filterMatchMode="contains"
+				panelStyle="width:270px">
+				<f:selectItems value="#{cp_controler.acoes}" var="ac"
+					itemLabel="#{ac.codigo}" itemValue="#{ac.id}" />
+			</p:selectCheckboxMenu>
+			
+			<h:outputText  value="Fornecedor:" />
+        	<p:autoComplete  multiple="true" value="#{cp_controler.filtro.fornecedores}" completeMethod="#{cp_controler.completeFornecedor}"
+                        var="forneced" itemLabel="#{forneced.nomeFantasia}" itemValue="#{forneced}" converter="fornecedorConverter">
+            <p:column>
+                <h:outputText value="#{forneced.nomeFantasia}" />
+            </p:column>
+        </p:autoComplete>
+
+			<p:commandLink style="color:#fff" ajax="false"
+				action="#{cp_controler.gerarConferenciaDeLancamentos()}"
+				styleClass="btn btn-primary btn-xs" value="Gerar" />
+
+		</p:panelGrid>
+	</h:form>
+
+
+</h:body>
+
+
+
+</html>

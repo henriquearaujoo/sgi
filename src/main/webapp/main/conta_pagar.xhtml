@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<ui:define name="menu_lateral">
+
+		<h:form id="tabela_projeto">
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false"
+				style="background-color:#FFFFFF; z-index:1009">
+				<p:graphicImage library="image" name="aguarde.gif" />
+			</p:dialog>
+
+			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
+				scrollHeight="300" styleClass="table table-hover"
+				value="#{cp_controler.menus}" var="menu">
+
+				<p:column>
+					<p:commandLink action="#{cp_controler.redirecionar()}"
+						style="font-size:1em;" value="#{menu.nome}">
+						<f:setPropertyActionListener value="#{menu}"
+							target="#{cp_controler.menu}" />
+					</p:commandLink>
+					<span style="margin-left: 4px; float: right;" class="#{menu.icon}"></span>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+
+	<ui:define name="content">
+
+
+		<h:form id="form-relatorio-cp"
+			style="margin-top: 99px;margin-left: auto;margin-right: auto;width: 80%;">
+
+
+			<h:panelGrid columns="3" cellpadding="10">
+				<h:outputText value="Relatórios:" />
+				<p:selectOneMenu value="#{cp_controler.tipoRelatorio}"
+					style="width:170px;margin-left:4px;font-size:11px">
+					<f:selectItems value="#{cp_controler.tipoRelatorios}"
+						var="relatorio" itemLabel="#{relatorio.nome}"
+						itemValue="#{relatorio}">
+					</f:selectItems>
+				</p:selectOneMenu>
+
+				<p:commandLink styleClass="btn btn-primary btn-xs fa fa-search"
+					action="#{cp_controler.carregarFiltroRelatorio()}"
+					style="color:#fff;margin-left:4px" />
+
+			</h:panelGrid>
+
+			<p:separator>
+
+			</p:separator>
+
+			<p:panelGrid columns="2">
+
+				<h:outputText value="Dt. Inicio Pgto:" />
+
+				<p:calendar navigator="true"
+					value="#{cp_controler.filtro.dataInicio}" pattern="dd/MM/yyyy" />
+
+				<h:outputText value="Dt. Fim Pagto:" />
+
+				<p:calendar navigator="true"
+					value="#{cp_controler.filtro.dataFinal}" pattern="dd/MM/yyyy" />
+
+				<h:outputText value="Contas:" />
+				<p:selectCheckboxMenu id="menu"
+					value="#{cp_controler.filtro.contas}" label="Contas" filter="true"
+					filterMatchMode="contains" panelStyle="width:270px">
+					<f:selectItems value="#{cp_controler.contas}" var="conta"
+						itemLabel="#{conta.nomeConta}" itemValue="#{conta.id}" />
+				</p:selectCheckboxMenu>
+
+				<p:commandLink style="color:#fff" ajax="false"
+					action="#{cp_controler.gerarContasApagar()}"
+					styleClass="btn btn-primary btn-xs" value="Gerar" />
+
+			</p:panelGrid>
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+
+</ui:composition>

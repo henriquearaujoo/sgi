@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
+
+
+	<ui:define name="content">
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+			function stopDlgfilter() {
+			    PF('dlg_filtro_compra').hide();
+			}
+		</script>
+		
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Reclassificação"
+					url="#" />
+			</p:breadCrumb>
+		</h:form>
+
+		<p:panel id="toggleable" header="RECLASSIFICAÇÃO" toggleable="true"
+			closable="false" toggleSpeed="500" closeSpeed="500" widgetVar="panel"
+			style="margin-bottom:20px">
+
+			<h:form id="form-lancamento-pagamento">
+			
+			 <p:messages id="msg_valid" showSummary="false" showDetail="true" showIcon="true" closable="true"/>
+
+				<p:panelGrid columns="6">
+					<h:outputText value="Lançamento:" />
+					<p:inputText placeholder="Nº lançamento"
+						value="#{reclassificacaoController.filtro.lancamentoID}" />
+						
+					
+					<h:outputText value="Documento:" />
+					<p:inputText placeholder="Nº documento"
+						value="#{reclassificacaoController.filtro.numeroDocumento}" />	
+
+					<h:outputText value="Período de Pgto:" style="float:right" />
+					<h:panelGroup>
+						<p:calendar size="10"
+							value="#{reclassificacaoController.filtro.dataInicio}"
+							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+						-
+						<p:calendar size="10"
+							value="#{reclassificacaoController.filtro.dataFinal}"
+							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+					</h:panelGroup>
+					<h:outputText value="Paríodo de Emissão:" style="float:right" />
+					<h:panelGroup>
+						<p:calendar size="10"
+							value="#{reclassificacaoController.filtro.dataInicioEmissao}"
+							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+							-
+						<p:calendar size="10"
+							value="#{reclassificacaoController.filtro.dataFinalEmissao}"
+							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+					</h:panelGroup>
+
+
+				</p:panelGrid>
+
+				<p:panelGrid columns="4">
+
+					<h:outputText value="Ação:" />
+					<p:autoComplete placeholder="Ação" size="80"
+						value="#{reclassificacaoController.filtro.acao}"
+						completeMethod="#{reclassificacaoController.completeAcoes}"
+						var="acao" itemLabel="#{acao.codigo}" itemValue="#{acao}"
+						converter="acaoConverter">
+					</p:autoComplete>
+
+					<h:outputText value="Conta/Fornecedor:" />
+					<p:autoComplete placeholder="Conta/Fornecedor" size="80"
+						value="#{reclassificacaoController.filtro.contaFiltro}"
+						completeMethod="#{reclassificacaoController.completeConta}"
+						var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+						converter="contaConverter" />
+
+				</p:panelGrid>
+
+				<h:panelGroup>
+
+					<p:commandLink styleClass="btn btn-primary btn-sm fa fa-search"
+						onstart="start()" onsuccess="stop()" onerror="stop()"
+						action="#{reclassificacaoController.carregarLancamentosNãoProvisionados()}"
+						update=":form-lancamento-pagamento:table-lancamentos"
+						style="color:#fff; margin: 8px 2px;">
+						<span style="width: 40px; font-family: Arial">Buscar</span>
+					</p:commandLink>
+
+					<p:commandLink styleClass="btn btn-primary btn-sm fa fa-remove"
+						title="Limpar" process="@this" onstart="start()"
+						onsuccess="stop()" onerror="stop()"
+						action="#{reclassificacaoController.limpar()}"
+						update=":form-lancamento-pagamento"
+						style="color:#fff; margin: 8px 2px;">
+						<span style="width: 40px; font-family: Arial">Limpar</span>
+					</p:commandLink>
+
+					<p:commandLink
+						styleClass="btn btn-primary btn-sm fa fa-check-square-o"
+						action="#{reclassificacaoController.validarMultiplos()}"
+						onstart="start()" onsuccess="stop()" onerror="stop()"
+						update=":form-lancamento-pagamento:table-lancamentos :form-lancamento-pagamento:msg_valid"
+						style="color:#fff; margin: 8px 2px;">
+						<span style="font-family: Arial">Reclassificar</span>
+					</p:commandLink>
+
+
+
+				</h:panelGroup>
+
+				<p:dataTable id="table-lancamentos"
+					rowKey="#{lancamento.idPagamento}"
+					selection="#{reclassificacaoController.lancamentosSelected}"
+					value="#{reclassificacaoController.lancamentos}" var="lancamento"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} 
+					{PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+					rows="10">
+
+					<f:facet name="{Exporters}">
+
+						<h:commandLink style="margin:3px">
+							<p:graphicImage library="image" name="excel.png" width="30" />
+							<p:dataExporter type="xls" target="table-lancamentos"
+								fileName="Reclassificação" />
+						</h:commandLink>
+					</f:facet>
+
+					<p:column headerText="Nº" style="width:75px">
+						<h:outputText value="#{lancamento.codigoLancamento}" />
+					</p:column>
+
+
+
+					<p:column headerText="Pagamento" style="width:90px">
+						<h:outputText value="#{lancamento.dataPagamento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Pagador" style="width:250px">
+						<h:outputText value="#{lancamento.contaPagadorLbl}" />
+					</p:column>
+
+					<p:column headerText="Recebedor" style="width:250px">
+						<h:outputText value="#{lancamento.contaRecebedorLbl}" />
+					</p:column>
+
+					<p:column headerText="Fonte de recurso" style="width:100px">
+						<h:outputText value="#{lancamento.fonte}" />
+					</p:column>
+
+					<p:column headerText="Projeto" style="width:100px">
+						<h:outputText value="#{lancamento.nomeProjeto}" />
+					</p:column>
+
+					<p:column headerText="Fonte V1" style="width:100px">
+						<h:outputText value="#{lancamento.fonteV1}" />
+					</p:column>
+
+					<p:column headerText="Ação V1" style="width:100px">
+						<h:outputText value="#{lancamento.acaoV1}" />
+					</p:column>
+
+					<p:column headerText="Valor lançamento" style="width:75px">
+						<h:outputText value="#{lancamento.valorLancamento}">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Valor pago" style="width:75px">
+						<h:outputText value="#{lancamento.valorPagoAcao}">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Opções" style="width:70px">
+						<p:commandLink style="margin-right:5px"
+							styleClass="btn btn-default btn-xs glyphicon glyphicon-edit"
+							update=":form-edit-pagamento-tab2"
+							oncomplete="PF('dlg_edt_pagamento_tab2').show()"
+							action="#{reclassificacaoController.prepararEdicao(lancamento.idPagamento)}">
+
+						</p:commandLink>
+					</p:column>
+
+					<p:column selectionMode="multiple" style="width:35px" />
+
+				</p:dataTable>
+
+
+			</h:form>
+
+		</p:panel>
+		<p:separator />
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+
+		<p:dialog widgetVar="dlg_edt_pagamento_tab2" closable="true"
+			resizable="true" header="Pagamento" showEffect="clip"
+			hideEffect="clip">
+			<h:form id="form-edit-pagamento-tab2">
+				<p:panelGrid columns="2">
+					<p:outputLabel value="Lançamento:" />
+					<h:outputText
+						value="#{reclassificacaoController.pagamentoLancAuxiliar.lancamento.id}" />
+
+					<p:outputLabel value="Conta:" />
+					<p:autoComplete id="conta_banco" placeholder="Conta" size="40"
+						value="#{reclassificacaoController.pagamentoLancAuxiliar.conta}"
+						completeMethod="#{reclassificacaoController.completeConta}"
+						var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+						converter="contaConverter" />
+
+					<p:outputLabel value="Data:" />
+					<p:calendar navigator="true"
+						value="#{reclassificacaoController.pagamentoLancAuxiliar.dataPagamento}"
+						timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+					<p:outputLabel value="Valor:" />
+					<p:inputText
+						value="#{reclassificacaoController.pagamentoLancAuxiliar.valor}">
+						<f:convertNumber type="currency" locale="pt_BR" />
+					</p:inputText>
+
+					<p:outputLabel value="Linhas orçamentária DOAÇÃO:" />
+					<p:autoComplete id="cate_compra" placeholder="DOAÇÃO" size="40"
+						value="#{reclassificacaoController.pagamentoLancAuxiliar.lancamentoAcao.rubricaOrcamento}"
+						completeMethod="#{custo_pessoal_controller.completeRubricasDeOrcamento}"
+						var="categoria" itemLabel="#{categoria.rubrica.nome}"
+						itemValue="#{categoria}" converter="rubricaOrcamentoConverter">
+
+						<p:column headerText="Doação">
+							<h:outputText value="#{categoria.orcamento.fonte.nome}" />
+						</p:column>
+
+						<p:column headerText="Doação">
+							<h:outputText value="#{categoria.orcamento.titulo}" />
+						</p:column>
+
+						<p:column headerText="Componente">
+							<h:outputText value="#{categoria.componente.nome}" />
+						</p:column>
+
+						<p:column headerText="SubComponente">
+							<h:outputText value="#{categoria.subComponente.nome}" />
+						</p:column>
+
+						<p:column headerText="Categoria">
+							<h:outputText value="#{categoria.rubrica.nome}" />
+						</p:column>
+
+					</p:autoComplete>
+					
+					
+					
+					<h:outputText value="Projetos:" />
+					<p:selectOneMenu  value="#{reclassificacaoController.projetoAux}" style="width:180px"   filter="true" filterMatchMode="contains" converter="projetoConverter" >
+						<f:selectItem noSelectionOption="true"/>
+						<f:selectItems value="#{reclassificacaoController.listaProjeto}" var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}" />
+						<p:ajax update="form-edit-pagamento-tab2" onstart="start()" onerror="stop()" onsuccess="stop()" listener="#{reclassificacaoController.listaRubricas()}" />
+					</p:selectOneMenu>
+					
+					<p:outputLabel value="Linhas orçamentária PROJETO:" rendered="#{reclassificacaoController.projetoAux != null}" />
+
+					<p:selectOneMenu  style="width:180px" rendered="#{reclassificacaoController.projetoAux != null}"
+						placeholder="Entre com o código/nome do projeto."
+						size="25" value="#{reclassificacaoController.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica}"
+						filter="true" filterMatchMode="contains"
+						var="categoria"
+						converter="projetoRubricaConverter">
+						
+						<f:selectItems value="#{reclassificacaoController.listaDeRubricasProjeto}" var="ru" itemLabel="#{ru.nomeCategoria}" itemValue="#{ru}" />
+						
+						
+						<p:column headerText="Código">
+							<h:outputText value="#{categoria.codigo}" />
+						</p:column>
+
+						<p:column headerText="Fonte">
+							<h:outputText value="#{categoria.nomeFonte}" />
+						</p:column>
+
+						<p:column headerText="Projeto">
+							<h:outputText value="#{categoria.nomeProjeto}" />
+						</p:column>
+
+						<p:column headerText="Componente">
+							<h:outputText
+								value="#{categoria.nomeComponente}" />
+						</p:column>
+
+						<p:column headerText="SubComponente">
+							<h:outputText
+								value="#{categoria.nomeSubComponente}" />
+						</p:column>
+
+						<p:column headerText="Linha orçamentária">
+							<h:outputText
+								value="#{categoria.nomeCategoria}" />
+						</p:column>
+						
+						<p:column headerText="Saldo">
+							<h:outputText value="#{categoria.valorSaldo}" >
+								<f:convertNumber currencySymbol="R$:" minFractionDigits="2" maxFractionDigits="2" locale="pt_BR" />
+							</h:outputText>
+						</p:column>
+						
+						
+					</p:selectOneMenu>
+					
+
+				</p:panelGrid>
+				<p:separator />
+				<p:commandLink style="color:#fff" value="Salvar"
+					update=":form-lancamento-pagamento :form-lancamento-pagamento:msg_valid"
+					process="form-edit-pagamento-tab2"
+					styleClass="btn btn-primary btn-default"
+					action="#{reclassificacaoController.editarPagamentoTab2()}"
+					oncomplete="PF('dlg_edt_pagamento_tab2').hide()" />
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="pagamentoConta" header="Pagamento"
+			closable="true" width="700" modal="true" showEffect="clip"
+			hideEffect="clip" resizable="false">
+
+			<h:form id="form-pagamento">
+				<p:messages  showIcon="true" showSummary="false"
+					showDetail="true" />
+				<p:panelGrid columns="2">
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Tipo:" />
+						<p:selectOneMenu
+							value="#{reclassificacaoController.pagamento.tipoParcelamento}">
+
+							<f:selectItems value="#{reclassificacaoController.parcelamentos}"
+								var="parcelamento" itemValue="#{parcelamento}"
+								itemLabel="#{parcelamento.nome}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Nº Parcelas:" />
+						<p:inputText
+							value="#{reclassificacaoController.pagamento.quantidadeParcela}"
+							style="width:40px" />
+
+
+						<p:outputLabel value="Conta:" />
+						<p:selectOneMenu filter="true" filterMatchMode="contains"
+							value="#{reclassificacaoController.pagamento.conta}"
+							converter="contaConverter">
+							<f:selectItems value="#{reclassificacaoController.contas}"
+								var="conta" itemValue="#{conta}" itemLabel="#{conta.nomeConta}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Pagamento:" />
+						<p:calendar navigator="true"
+							value="#{reclassificacaoController.pagamento.dataPagamento}"
+							timeZone="America/Manaus" pattern="dd/MM/yyyy">
+						</p:calendar>
+
+						<p:outputLabel value="Valor:" />
+						<p:inputText placeholder="Valor" required="true"
+							requiredMessage="Preencha o campo Valor."
+							onkeypress="return formatarNumero(this,event,19,2);"
+							value="#{reclassificacaoController.pagamento.valor}"
+							style="width:150px;margin-left:5px">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+								locale="pt_BR" />
+						</p:inputText>
+
+
+						<p:commandLink styleClass="btn btn-primary"
+							action="#{reclassificacaoController.salvarPagamento()}"
+							update="totais :form-pagamento"
+							style="color:#fff;margin-left:5px;" value="Enviar" />
+
+					</p:panelGrid>
+
+					<p:panelGrid id="totais" columns="2">
+
+						<p:outputLabel value="Total a pagar:" />
+						<p:inputText id="total-a-pagar" disabled="true"
+							value="#{reclassificacaoController.totalApagar}">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+								locale="pt_BR" />
+						</p:inputText>
+
+						<p:outputLabel value="Total pago:" />
+						<p:inputText id="total-pago" disabled="true" style="color:'red'"
+							value="#{reclassificacaoController.totalPago}">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+								locale="pt_BR" />
+						</p:inputText>
+
+						<p:outputLabel id="total-falta" value="Falta pagar:" />
+						<p:inputText disabled="true"
+							value="#{reclassificacaoController.totalFaltaPagar}">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+								locale="pt_BR" />
+						</p:inputText>
+					</p:panelGrid>
+
+				</p:panelGrid>
+
+				<p:dataTable value="#{reclassificacaoController.pagamentos}"
+					var="pagamento">
+
+					<p:column headerText="Conta">
+						<h:outputText value="#{pagamento.conta.nomeConta}" />
+					</p:column>
+
+					<p:column headerText="Valor">
+						<h:outputText value="#{pagamento.valor}">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Emissão">
+						<h:outputText value="#{pagamento.dataEmissao}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Pagamento">
+						<h:outputText value="#{pagamento.dataPagamento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column>
+						<p:commandLink style="margin-right:5px" value="editar"
+							process="@this" onclick="PF('dlg_edt_pagamento').show()"
+							update=":form-edit-pagamento">
+							<f:setPropertyActionListener value="#{pagamento}"
+								target="#{reclassificacaoController.pagamentoLancAuxiliar}" />
+						</p:commandLink>
+
+						<p:commandLink value="excluir" process="@this"
+							action="#{reclassificacaoController.removerPagamento()}"
+							update=":form-pagamento">
+							<p:confirm header="Confirmação" icon="ui-icon-alert"
+								message="Desejar excluir pagamento?" />
+							<f:setPropertyActionListener value="#{pagamento}"
+								target="#{reclassificacaoController.pagamento}" />
+						</p:commandLink>
+					</p:column>
+
+				</p:dataTable>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlg_edt_pagamento" closable="true"
+			resizable="true" header="Pagamento" showEffect="clip"
+			hideEffect="clip">
+			<h:form id="form-edit-pagamento">
+				<p:panelGrid columns="2">
+					<p:outputLabel value="Lançamento:" />
+					<h:outputText
+						value="#{reclassificacaoController.pagamentoLancAuxiliar.lancamento.id}" />
+
+					<p:outputLabel value="Data:" />
+					<p:calendar navigator="true"
+						value="#{reclassificacaoController.pagamentoLancAuxiliar.dataPagamento}"
+						timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+					<p:outputLabel value="Valor:" />
+					<p:inputText
+						value="#{reclassificacaoController.pagamentoLancAuxiliar.valor}">
+						<f:convertNumber type="currency" locale="pt_BR" />
+					</p:inputText>
+				</p:panelGrid>
+				<p:separator />
+				<p:commandLink style="color:#fff" value="Salvar"
+					update=":form-pagamento" styleClass="btn btn-primary btn-default"
+					action="#{reclassificacaoController.editarPagamento()}"
+					oncomplete="PF('dlg_edt_pagamento').hide()" />
+			</h:form>
+		</p:dialog>
+
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+
+
+	</ui:define>
+
+
+</ui:composition>
