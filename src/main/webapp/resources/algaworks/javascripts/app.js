@@ -37,7 +37,7 @@ $(document).on('focus','input',function() {
 $(document).on('blur','input',function() {
 	
 	var inputValue = $(this).val();
-	console.log($(this));
+	//console.log($(this));
 	if (inputValue == "") {
 //		$(this).removeClass('filled');
 //		$(this).parents('.form-group').removeClass('focused');

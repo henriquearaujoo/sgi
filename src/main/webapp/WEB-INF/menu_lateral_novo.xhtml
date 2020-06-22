@@ -13,7 +13,7 @@
 
 			<p:panelMenu id="panel-menu-p">
 
-				<p:submenu label="Solicitações">
+				<p:submenu label="Solicitações" rendered="true">
 					<p:menuitem value="Compras" url="compra_new.xhtml"
 						onclick="start()" onerror="stop()" />
 					<p:menuitem value="Pagamentos" url="pagamento.xhtml"
@@ -42,13 +42,13 @@
 						rendered="false" />
 				</p:submenu>
 
-				<p:submenu label="Logística" rendered="false">
+				<p:submenu label="Logística" rendered="true">
 					<p:menuitem value="Termos" url="termo_expedicao.xhtml"
 						rendered="false" />
 					<p:menuitem value="Logística" url="controle_expedicao.xhtml" />
 				</p:submenu>
 
-				<p:submenu label="Financeiro">
+				<p:submenu label="Financeiro" rendered="true">
 					<p:menuitem value="Custo pessoal" url="custo_pessoal.xhtml"
 						rendered="false" />
 					<p:menuitem value="Lançamentos OLD" url="lancamentos.xhtml"
@@ -61,7 +61,7 @@
 						url="liberacao_lancamento.xhtml" />
 				</p:submenu>
 
-				<p:submenu label="Cadastro">
+				<p:submenu label="Cadastro" rendered="true">
 					<p:menuitem value="Produtos" url="produtos.xhtml" onclick="start()"
 						onerror="stop()" />
 					<p:menuitem value="Contas" url="contas.xhtml" rendered="false" />

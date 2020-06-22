@@ -43,7 +43,7 @@ import util.Util;
 
 @Named(value = "report_financ_controller")
 @ViewScoped
-public class GeradorRelatorioFinanceiroController implements Serializable {
+public class ExecucaoFinanceiraController implements Serializable {
 
 	/**
 	 * 
@@ -88,7 +88,7 @@ public class GeradorRelatorioFinanceiroController implements Serializable {
 
 	private List<PlanoDeTrabalho> listPlanoDeTrabalho = new ArrayList<>();
 
-	public GeradorRelatorioFinanceiroController() {
+	public ExecucaoFinanceiraController() {
 
 	}
 
@@ -197,17 +197,12 @@ public class GeradorRelatorioFinanceiroController implements Serializable {
 	// TODO: ORÇADO X EXECUTADO
 	public void gerarOrcamentoExecutado() throws WriteException, IOException, NumberFormatException, ParseException {
 		
-		
-//		if (!(filtro.getProjetos() != null && filtro.getProjetos().length > 0)) {
-//			addMessage("","Escolha um projeto ou mais para gerar o relatório", FacesMessage.SEVERITY_ERROR);
-//			
-//		}
-		
+				
 		if (filtro.getTipoRelatorio() == null || filtro.getTipoRelatorio().equals("")) {
 			filtro.setTipoRelatorio("default");
 		}
 
-		GeradorRelatorioLinhaOrcamentaria geradorLinha;
+		GeradorRelatorioLinhaOrcamentaria geradorLinha; 
 		String path = "C:/temp/relatorios/orcamentoExecutado.xls";
 		switch (filtro.getTipoRelatorio()) {
 		case "LINHA":
@@ -226,26 +221,30 @@ public class GeradorRelatorioFinanceiroController implements Serializable {
 			geradorLinha.gerarXLSdeOrcamentoExecutadoLinhaOrcamentaria(filtro, projetoService);
 			break;
 		}
-
-		// if (filtro.getDetalhado()) {
-		// GeradorRelatorioLinhaOrcamentaria gerador = new
-		// GeradorRelatorioLinhaOrcamentaria();
-		// gerador.setOutputFile("C:/temp/relatorios/orcamentoExecutado.xls");
-		// //gerador.gerarXLSdeOrcamentoExecutadoLinhaOrcamentaria(filtro,
-		// projetoService);
-		// gerador.gerarRelatorioPORL(filtro, projetoService);
-		// } else {
-		// GeradorRelatorioUtilXLS gerador = new GeradorRelatorioUtilXLS();
-		// gerador.setOutputFile("C:/temp/relatorios/orcamentoExecutado.xls");
-		// if (filtro.getConsolidado()) {
-		// gerador.gerarXLSdeOrcamentoExecutadoConsolidado(filtro, projetoService);
-		// }else {
-		// gerador.gerarXLSdeOrcamentoExecutado(filtro, projetoService);
-		// }
-		//
-		//
-		// }
-
+	}
+	
+	public void gerarRelatorioDeExecucao() throws WriteException, IOException, NumberFormatException, ParseException {
+		
+		
+		GeradorRelatorioLinhaOrcamentaria geradorLinha; 
+		String path = "C:/temp/relatorios/orcamentoExecutado.xls";
+		switch (filtro.getTipoRelatorio()) {
+		case "LINHA":
+			geradorLinha = new GeradorRelatorioLinhaOrcamentaria();
+			geradorLinha.setOutputFile(path);
+			geradorLinha.gerarRelatorioPORL(filtro, projetoService);
+			break;
+		case "CONSOLIDADO":
+			GeradorRelatorioUtilXLS gerador = new GeradorRelatorioUtilXLS();
+			gerador.setOutputFile(path);
+			gerador.gerarXLSdeOrcamentoExecutadoConsolidado(filtro, projetoService);
+			break;
+		default:
+			geradorLinha = new GeradorRelatorioLinhaOrcamentaria();
+			geradorLinha.setOutputFile(path);
+			geradorLinha.gerarXLSdeOrcamentoExecutadoLinhaOrcamentaria(filtro, projetoService);
+			break;
+		}
 	}
 
 	// TODO ATUALIZAR DOAÇÕES

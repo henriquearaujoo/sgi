@@ -193,6 +193,16 @@
 
 									</p:commandLink>
 
+									<p:commandLink styleClass="btn btn-primary btn-sm"
+										onstart="start()" onsuccess="stop()" onerror="stop()"
+										process="@this" onclick="setarWidthHeight('id-anexo')"
+										oncomplete="PF('dialog_arquivo').show();"
+										update="main-panel-anexo"
+										action="#{cotacaoCadastroController.carregarArquivos(cotacaoCadastroController.compra.id)}"
+										value="Anexos">
+
+									</p:commandLink>
+
 								</div>
 
 								<div class="ui-g-6">
@@ -239,6 +249,14 @@
 				
 			}
 		</script>
+
+		<p:dialog header="Anexos" widgetVar="dialog_arquivo" hideEffect="clip"
+			closeOnEscape="true" showEffect="clip" width="100%" height="100%"
+			modal="true">
+
+			<ui:include src="/main/dialog/cotacao/anexos.xhtml" />
+
+		</p:dialog>
 
 		<p:dialog header="Informações sobre cotação" width="100%"
 			height="100%" widgetVar="dlg_detalhe_cotacao" modal="true"
@@ -288,7 +306,6 @@
 								value="#{cotacaoCadastroController.cotacaoParent.quantidadeParcela}" />
 						</div>
 
-
 						<div class="ui-g-3 form-group">
 							<p:outputLabel for="input-dt-pgto" styleClass="form-label"
 								value="Dt 1º pagamento" />
@@ -299,7 +316,9 @@
 
 						<div class="ui-g-12">
 							<p:commandLink process="form-detalhe-cotacao"
-								update=":info-panel-geral" value="Aplicar" onclick="start();"
+								update=":info-panel-geral" value="Aplicar" 
+								action="#{cotacaoCadastroController.aplicarDetalhes()}"
+								onclick="start();"
 								onerror="stop();" onsuccess="stop();"
 								styleClass="btn btn-primary btn-block">
 							</p:commandLink>

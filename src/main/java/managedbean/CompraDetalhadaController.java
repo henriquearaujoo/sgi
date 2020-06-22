@@ -10,6 +10,13 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.FillPatternType;
+
 import model.Estado;
 import model.Gestao;
 import model.ItemPedido;
@@ -62,6 +69,38 @@ public class CompraDetalhadaController implements Serializable{
 		filtro.setDataInicio(DataUtil.getDataInicio(new Date()));
 		filtro.setDataFinal(DataUtil.getDataFinal(new Date()));
 		
+	}
+	
+	public void postProcessXLS(Object document) {
+	    HSSFWorkbook wb = (HSSFWorkbook) document;
+	    HSSFSheet sheet = wb.getSheetAt(0);
+	    HSSFRow header = sheet.getRow(0);
+	    HSSFCellStyle cellStyle = wb.createCellStyle();
+	    cellStyle.setFillForegroundColor(HSSFColor.GREEN.index);
+	    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);;
+	  
+	    for(int i=0; i < header.getPhysicalNumberOfCells();i++) {
+	        header.getCell(i).setCellStyle(cellStyle);
+	    }
+	}
+	
+	public void preProcessXLS(Object document) {
+	    
+		HSSFWorkbook wb = (HSSFWorkbook) document;
+	    HSSFSheet sheet = wb.getSheetAt(0);
+	    HSSFRow header = sheet.getRow(0);
+	    
+	    
+	    
+	    
+	    /*HSSFCellStyle cellStyle = wb.createCellStyle();
+	    cellStyle.setFillForegroundColor(HSSFColor.GREEN.index);
+	    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);*/
+	  
+	    /*for(int i=0; i < header.getPhysicalNumberOfCells();i++) {
+	        header.getCell(i).setCellStyle(cellStyle);
+	        
+	    }*/
 	}
 
 	public void carregarItensPedido() {

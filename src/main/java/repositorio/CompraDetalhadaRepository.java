@@ -23,89 +23,135 @@ public class CompraDetalhadaRepository implements Serializable {
 	public List<ItemPedido> getItensPedidosDetalhados(Filtro filtro) {
 
 		StringBuilder jpql = new StringBuilder("select ");
-		jpql.append("compra.id AS sc");
-		jpql.append(",pedido.id as pedido");
-		jpql.append(",to_char(compra.data_emissao,'dd/MM/yyyy')  as data_sc");
+		jpql.append("compra.id AS sc_00");
+		jpql.append(",pedido.id as pedido_01");
+		jpql.append(",to_char(compra.data_emissao,'dd/MM/yyyy')  as data_sc_02");
 		jpql.append(
-				", to_char((select log.data from log_status log where log.lancamento_id = compra.id and log.statuslog = 2 LIMIT 1),'dd/MM/yyyy') as data_aprovacao");
-		jpql.append(",to_char(pedido.data_emissao,'dd/MM/yyyy')  as data_pedido");
+				", to_char((select log.data from log_status log where log.lancamento_id = compra.id and log.statuslog = 2 LIMIT 1),'dd/MM/yyyy') as data_aprovacao_03");
+		jpql.append(",to_char(pedido.data_emissao,'dd/MM/yyyy')  as data_pedido_04");
 		jpql.append(
-				",(select colab.nome from colaborador colab where colab.id = compra.solicitante_id) as solicitante");
+				",(select colab.nome from colaborador colab where colab.id = compra.solicitante_id) as solicitante_05");
 		// jpql.append(",CASE WHEN (pedido is null) ");
 		// jpql.append("THEN (select cat.nome from categoria_despesa cat where cat.id =
 		// (select po.categoriadespesa_id from produto po where po.id = (select
 		// produto_id from item_compra tc where ip.item_compra_id = tc.id)) ");
 		// jpql.append("ELSE ip.categoria END as categoria");
-		jpql.append(", (select po.categoria from produto po where po.id = ic.produto_id) as categoria");
-		jpql.append(",compra.statuscompra");
+		
+		jpql.append(", (select po.categoria from produto po where po.id = ic.produto_id) as categoria_06");
+		
+		jpql.append(",compra.statuscompra as status_07");
+		
 		jpql.append(",CASE WHEN (pedido is null) ");
 		jpql.append("THEN (select gest.nome from gestao gest where gest.id = compra.gestao_id) ");
-		jpql.append("ELSE (select gest.nome from gestao gest where gest.id = pedido.gestao_id) END as gestao ");
+		jpql.append("ELSE (select gest.nome from gestao gest where gest.id = pedido.gestao_id) END as gestao_08 ");
+		
 		jpql.append(",CASE WHEN (pedido is null) ");
 		jpql.append("THEN  (select loc.mascara from localidade loc where loc.id = compra.localidade_id) ");
 		jpql.append(
-				"ELSE (select loc.mascara from localidade loc where loc.id = pedido.localidade_id) END as destino ");
+				"ELSE (select loc.mascara from localidade loc where loc.id = pedido.localidade_id) END as destino_09 ");
+		
 		jpql.append(",CASE WHEN (pedido is null) ");
 		jpql.append("THEN ic.quantidade ");
-		jpql.append("ELSE ip.quantidade END as quantidade ");
+		jpql.append("ELSE ip.quantidade END as quantidade_10 ");
+		
 		jpql.append(",CASE WHEN (pedido is null) ");
 		jpql.append("THEN (select po.descricao from produto po where po.id = ic.produto_id) ");
-		jpql.append("ELSE ip.descricaoproduto END as descricao ");
+		jpql.append("ELSE ip.descricaoproduto END as descricao_11 ");
 		jpql.append(
-				",(select forn.nome_fantasia from fornecedor forn where forn.id = pedido.fornecedor_id) as fornecedor");
+				",(select forn.nome_fantasia from fornecedor forn where forn.id = pedido.fornecedor_id) as fornecedor_12");
+		
 		jpql.append(",CASE WHEN (pedido is null) ");
 		jpql.append("THEN ic.unidade ");
-		jpql.append("ELSE ip.unidade END as unidade_medida ");
-		jpql.append(
-				",(select usu.nomeusuario from usuario usu where usu.id = pedido.usuariogeradorpedido_id) as comprador ");
-		jpql.append(", compra.booturgencia, to_char(compra.data_conclusao,'dd/MM/yyyy') as data_conclusao, ");
-		jpql.append(
-				"CASE WHEN (pedido is null) THEN 0 ELSE (ip.quantidade * ip.valor_unitario_com_desconto) END as valor_total,");
-		jpql.append(
-				"CASE WHEN (pedido is null) THEN 0 ELSE pedido.valor_total_com_desconto END as valor_total_pedido, ");
-		jpql.append("CASE WHEN (pedido is null) THEN 0 ELSE ip.valor_unitario_com_desconto END as valor_unitario, ");
-
-		jpql.append("CASE WHEN (pedido is null) THEN 'Não Informado' ELSE pedido.nota_fiscal END as notaFiscal, ");
-		jpql.append("CASE WHEN (pedido is null) THEN 'Não Informado' ELSE to_char((select max(datapagamento) from pagamento_lancamento where lancamento_id = pedido.id and stt = 'EFETIVADO'),'dd/MM/yyyy') END as dataPagamento, ");
-
-		jpql.append("(select p.tipo from produto p where p.id = (select it.produto_id from item_compra as it where it.id = ic.id)) as tipo, ");
+		jpql.append("ELSE ip.unidade END as unidade_medida_13 ");
 		
+		jpql.append(
+				",(select usu.nomeusuario from usuario usu where usu.id = pedido.usuariogeradorpedido_id) as comprador_14 ");
+		
+		jpql.append(", compra.booturgencia as booturgencia_15,  ");
+		jpql.append("to_char(compra.data_conclusao,'dd/MM/yyyy') as data_conclusao_16, ");
+		
+		jpql.append(
+				"CASE WHEN (pedido is null) THEN 0 ELSE (ip.quantidade * ip.valor_unitario_com_desconto) END as valor_total_17,");
+		
+		jpql.append(
+				"CASE WHEN (pedido is null) THEN 0 ELSE pedido.valor_total_com_desconto END as valor_total_pedido_18, ");
+		
+		jpql.append("CASE WHEN (pedido is null) THEN 0 ELSE ip.valor_unitario_com_desconto END as valor_unitario_19, ");
 
+		jpql.append("CASE WHEN (pedido is null) THEN 'Não Informado' ELSE pedido.nota_fiscal END as notaFiscal_20, ");
+		
+		jpql.append("CASE WHEN (pedido is null) THEN 'Não Informado' ELSE to_char((select max(datapagamento)  ");
+		jpql.append("from pagamento_lancamento where lancamento_id = pedido.id and stt = 'EFETIVADO'),'dd/MM/yyyy') END as dataPagamento_21, ");
+			
+		jpql.append("(select p.tipo from produto p where p.id = (select it.produto_id from item_compra as it where it.id = ic.id)) as tipo_22, ");
+		
+		
 		jpql.append("CASE WHEN (pedido is null) ");
-		jpql.append("THEN (CASE WHEN (lac.projetorubrica_id is null) ");
-		jpql.append("THEN (select o.titulo from orcamento o where o.id = (select orcamento_id from rubrica_orcamento where id = lac.rubricaorcamento_id)) ");
-		jpql.append("ELSE (select oo.titulo from orcamento oo where oo.id = (select orcamento_id from rubrica_orcamento where id =(select rubricaorcamento_id from projeto_rubrica where id = (lac.projetorubrica_id ) ))) END	) ");
-		jpql.append("ELSE (CASE WHEN (lap.projetorubrica_id is null) ");
-		jpql.append("THEN (select o.titulo from orcamento o where o.id = (select orcamento_id from rubrica_orcamento where id = lap.rubricaorcamento_id)) ");
-		jpql.append("ELSE (select oo.titulo from orcamento oo where oo.id = (select orcamento_id from rubrica_orcamento where id =(select rubricaorcamento_id from projeto_rubrica where id = (lap.projetorubrica_id ) ))) END	)END as orcamento ,");
+		jpql.append(" THEN (CASE WHEN (lac.projetorubrica_id is null) ");
+		jpql.append(" THEN (select o.titulo from orcamento o where o.id = (select orcamento_id from rubrica_orcamento where id = lac.rubricaorcamento_id)) ");
+		jpql.append(" ELSE (select oo.titulo from orcamento oo where oo.id = ");
+		jpql.append(" (select orcamento_id from rubrica_orcamento where id = (select rubricaorcamento_id from projeto_rubrica where id = (lac.projetorubrica_id ) ))) END	) ");
+		jpql.append(" ELSE (CASE WHEN (lap.projetorubrica_id is null) ");
+		jpql.append(" THEN (select o.titulo from orcamento o where o.id = (select orcamento_id from rubrica_orcamento where id = lap.rubricaorcamento_id)) ");
+		jpql.append("ELSE (select oo.titulo from orcamento oo where oo.id = (select orcamento_id from rubrica_orcamento where id = ");
+		jpql.append(" (select rubricaorcamento_id from projeto_rubrica where id = (lap.projetorubrica_id ) ))) END	) ");
+		jpql.append("END as orcamento_23 ,");
+		
 		jpql.append("CASE WHEN (pedido is null) ");
-		jpql.append("THEN (CASE WHEN (lac.projetorubrica_id is null) ");
-		jpql.append("THEN (select c.nome from componente_class c where c.id = (select componente_id from rubrica_orcamento where id = lac.rubricaorcamento_id)) ");
-		jpql.append("ELSE (select cc.nome from componente_class cc where cc.id =(select componente_id from projeto_rubrica where id = lac.projetorubrica_id)) END	) ");
+		jpql.append(" THEN (CASE WHEN (lac.projetorubrica_id is null) ");
+		jpql.append(" THEN (select c.nome from componente_class c where c.id = (select componente_id from rubrica_orcamento where id = lac.rubricaorcamento_id)) ");
+		jpql.append(" ELSE (select cc.nome from componente_class cc where cc.id =(select componente_id from projeto_rubrica where id = lac.projetorubrica_id)) END	) ");
 		jpql.append("ELSE (CASE WHEN (lap.projetorubrica_id is null) ");
-		jpql.append("THEN (select c.nome from componente_class c where c.id = (select componente_id from rubrica_orcamento where id = lap.rubricaorcamento_id)) ");
-		jpql.append("ELSE (select cc.nome from componente_class cc where cc.id =(select componente_id from projeto_rubrica where id = lap.projetorubrica_id)) END	) ");
-		jpql.append("END  as componente, ");
+		jpql.append(" THEN (select c.nome from componente_class c where c.id = (select componente_id from rubrica_orcamento where id = lap.rubricaorcamento_id)) ");
+		jpql.append(" ELSE (select cc.nome from componente_class cc where cc.id =(select componente_id from projeto_rubrica where id = lap.projetorubrica_id)) END	) ");
+		jpql.append("END  as componente_24, ");
+		
 		jpql.append("CASE WHEN (pedido is null) ");
-		jpql.append("THEN (CASE WHEN (lac.projetorubrica_id is null) ");
-		jpql.append("THEN (select s.nome from sub_componente s where s.id = (select subcomponente_id from rubrica_orcamento where id = lac.rubricaorcamento_id)) ");
-		jpql.append("ELSE (select ss.nome from sub_componente ss where ss.id =(select subcomponente_id from projeto_rubrica where id = lac.projetorubrica_id)) END	) ");
+		jpql.append(" THEN (CASE WHEN (lac.projetorubrica_id is null) ");
+		jpql.append(" THEN (select s.nome from sub_componente s where s.id = (select subcomponente_id from rubrica_orcamento where id = lac.rubricaorcamento_id)) ");
+		jpql.append(" ELSE (select ss.nome from sub_componente ss where ss.id =(select subcomponente_id from projeto_rubrica where id = lac.projetorubrica_id)) END	) ");
 		jpql.append("ELSE (CASE WHEN (lap.projetorubrica_id is null) ");
-		jpql.append("THEN (select s.nome from sub_componente s where s.id = (select subcomponente_id from rubrica_orcamento where id = lap.rubricaorcamento_id)) ");
-		jpql.append("ELSE (select ss.nome from sub_componente ss where ss.id = (select subcomponente_id from projeto_rubrica where id = lap.projetorubrica_id)) END	) ");
-		jpql.append("END sub_componente ,");
+		jpql.append(" THEN (select s.nome from sub_componente s where s.id = (select subcomponente_id from rubrica_orcamento where id = lap.rubricaorcamento_id)) ");
+		jpql.append(" ELSE (select ss.nome from sub_componente ss where ss.id = (select subcomponente_id from projeto_rubrica where id = lap.projetorubrica_id)) END	) ");
+		jpql.append("END sub_componente_25,");
+		
 		jpql.append("CASE WHEN (pedido is null) ");
 		jpql.append("THEN (CASE WHEN (lac.projetorubrica_id is null) ");
 		jpql.append("THEN (select r.nome from rubrica r where r.id = (select rubrica_id from rubrica_orcamento where id = lac.rubricaorcamento_id)) ");
-		jpql.append("ELSE (select rr.nome from rubrica rr where rr.id = (select rubrica_id from rubrica_orcamento where id = (select rubricaorcamento_id from projeto_rubrica where id = lac.projetorubrica_id))) END	) ");
+		jpql.append("ELSE (select rr.nome from rubrica rr where rr.id = (select rubrica_id from rubrica_orcamento where id =  ");
+		jpql.append("(select rubricaorcamento_id from projeto_rubrica where id = lac.projetorubrica_id))) END) ");
 		jpql.append("ELSE (CASE WHEN (lap.projetorubrica_id is null) ");
 		jpql.append("THEN (select r.nome from rubrica r where r.id = (select rubrica_id from rubrica_orcamento where id = lap.rubricaorcamento_id)) ");
-		jpql.append("ELSE (select rr.nome from rubrica rr where rr.id = (select rubrica_id from rubrica_orcamento where id = (select rubricaorcamento_id from projeto_rubrica where id = lap.projetorubrica_id))) END	) END  as rubrica ");
+		jpql.append("ELSE (select rr.nome from rubrica rr where rr.id = (select rubrica_id from rubrica_orcamento where id =  ");
+		jpql.append("(select rubricaorcamento_id from projeto_rubrica where id = lap.projetorubrica_id))) END	) END  as rubrica_26");
+		
+		
 		jpql.append(",CASE WHEN (pedido is null) ");
+		
 		jpql.append("THEN '' ");
-		jpql.append("ELSE ip.descricaocomplementar END as descricaoComplementar ");
 		
+		jpql.append("ELSE ip.descricaocomplementar END as descricaoComplementar_27, ");
 		
+	
+		jpql.append("CASE WHEN (pedido is null) ");
+		jpql.append("THEN (CASE WHEN (lac.projetorubrica_id is null) ");
+		jpql.append("THEN (select f.nome from fonte_pagadora f where f.id = (select o.fonte_id from orcamento o where o.id = ");
+		jpql.append("(select orcamento_id from rubrica_orcamento where id = lac.rubricaorcamento_id))) ");
+		jpql.append("ELSE (select f.nome from fonte_pagadora f where f.id =  (select oo.fonte_id from orcamento oo where oo.id = ");
+		jpql.append("(select orcamento_id from rubrica_orcamento where id = (select rubricaorcamento_id from projeto_rubrica where id = (lac.projetorubrica_id ) )))) END) ");
+		jpql.append("ELSE (CASE WHEN (lap.projetorubrica_id is null) ");
+		jpql.append("THEN (select f.nome from fonte_pagadora f where f.id = (select o.fonte_id from orcamento o where o.id = ");
+		jpql.append("(select orcamento_id from rubrica_orcamento where id = lap.rubricaorcamento_id))) ");
+		jpql.append("ELSE (select f.nome from fonte_pagadora f where f.id = (select oo.fonte_id from orcamento oo where oo.id = (select orcamento_id from rubrica_orcamento where id = ");
+		jpql.append("(select rubricaorcamento_id from projeto_rubrica where id = (lap.projetorubrica_id ) )))) END) ");
+		jpql.append("END as fonte_28,");
+		
+		jpql.append("CASE WHEN (pedido is null) ");
+		jpql.append("THEN  (select p.nome from projeto p where p.id = ");
+		jpql.append("(select projeto_id from projeto_rubrica where id = lac.projetorubrica_id)) ");
+		jpql.append("ELSE (select p.nome from projeto p where p.id = ");
+		jpql.append("(select projeto_id from projeto_rubrica where id = lap.projetorubrica_id)) ");
+		jpql.append("END  as projeto_29 ");
 		
 		
 		jpql.append("from lancamento compra ");
@@ -259,6 +305,8 @@ public class CompraDetalhadaRepository implements Serializable {
 			item.setValorTotalPedido(objects[18] != null ? new BigDecimal(objects[18].toString()) : BigDecimal.ZERO);
 			item.setValorUnitarioComDesconto(
 					objects[19] != null ? new BigDecimal(objects[19].toString()) : BigDecimal.ZERO);
+			
+			
 			item.setTipo(objects[22] != null ? objects[22].toString() : "");
 
 			item.setNotaFiscal(objects[20] != null ? objects[20].toString() : "");
@@ -268,6 +316,8 @@ public class CompraDetalhadaRepository implements Serializable {
 			item.setSubComponente(objects[25] != null ? objects[25].toString() : "");
 			item.setRubrica(objects[26] != null ? objects[26].toString() : "");
 			item.setDescricaoProdutoComplementar(objects[27] != null ? objects[27].toString() : "");
+			item.setFonte(objects[28] != null ? objects[28].toString() : "");
+			item.setProjeto(objects[29] != null ? objects[29].toString() : "");
 
 			itens.add(item);
 

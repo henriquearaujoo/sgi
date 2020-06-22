@@ -51,179 +51,134 @@
 			</p:breadCrumb>
 
 
+			<div id="info-geral" class="ui-g ui-fluid">
+				<div class="ui-g-12 form-group">
+
+					<p:outputLabel value="Tipo de relatório" />
+					<p:selectOneRadio id="tipo"
+						value="#{report_financ_controller.filtro.tipoRelatorio}">
+						<f:selectItem itemLabel="Padrão" itemValue="PADRAO" />
+						<f:selectItem itemLabel="Consolidado" itemValue="CONSOLIDADO" />
+						<f:selectItem itemLabel="Linha orçamentária" itemValue="LINHA" />
+						<p:ajax event="change" update="coluna"
+							listener="#{report_financ_controller.atualizarColunas()}"></p:ajax>
+					</p:selectOneRadio>
+
+				</div>
+
+				<div class="ui-g-3 form-group">
+					<p:outputLabel value="Data início (pgto)" />
+					<p:calendar styleClass="font12-vi"
+						value="#{report_financ_controller.filtro.dataInicio}"
+						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+				</div>
+
+				<div class="ui-g-3 form-group">
+
+					<p:outputLabel value="Data fim (pgto)" />
+					<p:calendar styleClass="font12-vi"
+						value="#{report_financ_controller.filtro.dataFinal}"
+						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+				</div>
+
+				<div class="ui-g-3 form-group">
+
+					<p:outputLabel value="Fonte" />
+					<p:selectCheckboxMenu id="fonte" 
+						value="#{report_financ_controller.filtro.fontes}"
+						label="Fonte/Parceiro" filter="true" filterMatchMode="contains">
+						<f:selectItems value="#{report_financ_controller.fontes}"
+							var="fonte" itemLabel="#{fonte.nome}" itemValue="#{fonte.id}" />
+
+						<p:ajax update="doacoes"
+							listener="#{report_financ_controller.atualizarDoacoes()}" />
+
+						<p:ajax event="toggleSelect" update="doacoes"
+							listener="#{report_financ_controller.atualizarDoacoes()}" />
+					</p:selectCheckboxMenu>
+
+				</div>
+
+				<div class="ui-g-3 form-group">
+					<p:outputLabel value="Doação" />
+					<p:selectOneMenu id="doacoes" 
+						panelStyle="width:350px"
+						value="#{report_financ_controller.filtro.idDoacao}"
+						label="Doações" filter="true" filterMatchMode="contains">
+						<f:selectItem itemValue="0" noSelectionOption="true"
+							itemLabel="Doação" />
+						<f:selectItems value="#{report_financ_controller.orcamentos}"
+							var="orc" itemLabel="#{orc.titulo}" itemValue="#{orc.id}" />
+						<p:ajax update="projeto"
+							listener="#{report_financ_controller.carregarProjetos()}" />
+
+					</p:selectOneMenu>
+
+				</div>
+
+			
+				<div class="ui-g-3 form-group">
+					<p:outputLabel value="Projeto" />
+					<p:selectCheckboxMenu id="projeto" 
+						panelStyle="width:350px" required="true"
+						requiredMessage="Escolha um projeto ou mais para gerar o relatório"
+						value="#{report_financ_controller.filtro.projetos}"
+						label="Projetos" filter="true" filterMatchMode="contains">
+						<f:selectItems value="#{report_financ_controller.projetos}"
+							var="projeto" itemLabel="#{projeto.codigo} - #{projeto.nome}"
+							itemValue="#{projeto.id}">
+
+						</f:selectItems>
+					</p:selectCheckboxMenu>
+
+				</div>
+
+				<div class="ui-g-3 form-group">
+
+					<p:outputLabel value="Colunas de relatório:" />
+					<p:selectCheckboxMenu id="coluna" 
+						panelStyle="width:350px"
+						disabled="#{!report_financ_controller.displayColunas}"
+						value="#{report_financ_controller.filtro.colunasRelatorio}"
+						label="Colunas">
+						<f:selectItems value="#{report_financ_controller.listaColunas}"
+							var="col" itemLabel="#{col.label}" itemValue="#{col.valor}" />
+
+					</p:selectCheckboxMenu>
+
+				</div>
+
+				<div class="ui-g-12 form-group">
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						onstart="start()" onsuccess="stop()" onerror="stop()" ajax="false"
+						action="#{report_financ_controller.gerarOrcamentoExecutado()}"
+						style="color:#fff; margin: 8px 2px;">
+						<span style="width: 40px; font-family: Arial">Gerar
+							relatório</span>
+					</p:commandLink>
+
+				</div>
+
+				<div class="ui-g-12">
+					<p:commandLink rendered="false"
+						styleClass="btn btn-primary btn-sm fa fa-search" onstart="start()"
+						onsuccess="stop()" onerror="stop()" update="tbl_exec_financeira"
+						action="#{report_financ_controller.filtrarByProject()}"
+						style="color:#fff; margin: 8px 2px;">
+						<span style="width: 40px; font-family: Arial">Visualizar</span>
+
+					</p:commandLink>
+
+				</div>
 
 
-			<div id="info-geral" class="ui-g ui-fluid"></div>
+			</div>
 
 
 
 
-			<p:outputLabel value="Tipo de relatório:" />
-			<p:selectOneRadio id="tipo"
-				value="#{report_financ_controller.filtro.tipoRelatorio}">
-				<f:selectItem itemLabel="Padrão" itemValue="PADRAO" />
-				<f:selectItem itemLabel="Consolidado" itemValue="CONSOLIDADO" />
-				<f:selectItem itemLabel="Linha orçamentária" itemValue="LINHA" />
-				<p:ajax event="change" update="coluna"
-					listener="#{report_financ_controller.atualizarColunas()}"></p:ajax>
-			</p:selectOneRadio>
-
-			<p:commandLink process="@this" styleClass="link-content"
-				title="Informações" oncomplete="PF('info').show();" update="not"
-				action="#{report_financ_controller.modificarTexto('tipo')}">
-				<span style="color: black; font-size: 15px"
-					class="glyphicon glyphicon-question-sign"></span>
-
-			</p:commandLink>
 
 
-
-			<p:outputLabel value="Data início:" />
-			<p:calendar styleClass="font12-vi"
-				value="#{report_financ_controller.filtro.dataInicio}"
-				timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
-
-			<p:outputLabel value="Data fim:" />
-			<p:calendar styleClass="font12-vi"
-				value="#{report_financ_controller.filtro.dataFinal}"
-				timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
-
-			<p:commandLink process="@this" styleClass="link-content"
-				title="Informações" oncomplete="PF('info').show();" update="not"
-				action="#{report_financ_controller.modificarTexto('data')}">
-				<span style="color: black; font-size: 15px"
-					class="glyphicon glyphicon-question-sign"></span>
-
-			</p:commandLink>
-
-
-
-			<p:outputLabel value="Fonte:" />
-			<p:selectCheckboxMenu id="fonte" style="width:120px"
-				value="#{report_financ_controller.filtro.fontes}"
-				label="Fonte/Parceiro" filter="true" filterMatchMode="contains">
-				<f:selectItems value="#{report_financ_controller.fontes}"
-					var="fonte" itemLabel="#{fonte.nome}" itemValue="#{fonte.id}" />
-
-				<p:ajax update="doacoes"
-					listener="#{report_financ_controller.atualizarDoacoes()}" />
-
-				<p:ajax event="toggleSelect" update="doacoes"
-					listener="#{report_financ_controller.atualizarDoacoes()}" />
-			</p:selectCheckboxMenu>
-
-			<p:commandLink process="@this" styleClass="link-content"
-				title="Informações" oncomplete="PF('info').show();" update="not"
-				action="#{report_financ_controller.modificarTexto('fonte')}">
-				<span style="color: black; font-size: 15px"
-					class="glyphicon glyphicon-question-sign"></span>
-
-			</p:commandLink>
-
-			<p:outputLabel value="Doação:" />
-			<p:selectOneMenu id="doacoes" style="width:150px"
-				panelStyle="width:350px"
-				value="#{report_financ_controller.filtro.idDoacao}" label="Doações"
-				filter="true" filterMatchMode="contains">
-				<f:selectItem itemValue="0" noSelectionOption="true"
-					itemLabel="Doação" />
-				<f:selectItems value="#{report_financ_controller.orcamentos}"
-					var="orc" itemLabel="#{orc.titulo}" itemValue="#{orc.id}" />
-				<p:ajax update="projeto"
-					listener="#{report_financ_controller.carregarProjetos()}" />
-
-			</p:selectOneMenu>
-
-			<p:commandLink process="@this" styleClass="link-content"
-				title="Informações" oncomplete="PF('info').show();" update="not"
-				action="#{report_financ_controller.modificarTexto('doacao')}">
-				<span style="color: black; font-size: 15px"
-					class="glyphicon glyphicon-question-sign"></span>
-
-			</p:commandLink>
-
-
-			<p:outputLabel value="Plano de trabalho:" />
-			<p:selectCheckboxMenu id="plano" style="width:120px"
-				value="#{report_financ_controller.filtro.planos}" label="Planos"
-				filter="true" filterMatchMode="contains">
-				<f:selectItems
-					value="#{report_financ_controller.listPlanoDeTrabalho}" var="plano"
-					itemLabel="#{plano.titulo}" itemValue="#{plano.id}" />
-				<p:ajax listener="#{report_financ_controller.carregarProjetos()}"
-					update="projeto" />
-
-				<p:ajax event="toggleSelect"
-					listener="#{report_financ_controller.carregarProjetos()}"
-					update="projeto" />
-
-			</p:selectCheckboxMenu>
-
-			<p:commandLink process="@this" styleClass="link-content"
-				title="Informações" oncomplete="PF('info').show();" update="not"
-				action="#{report_financ_controller.modificarTexto('plano')}">
-				<span style="color: black; font-size: 15px"
-					class="glyphicon glyphicon-question-sign"></span>
-
-			</p:commandLink>
-
-
-			<p:outputLabel value="Projeto:" />
-			<p:selectCheckboxMenu id="projeto" style="width:150px"
-				panelStyle="width:350px" required="true"
-				requiredMessage="Escolha um projeto ou mais para gerar o relatório"
-				value="#{report_financ_controller.filtro.projetos}" label="Projetos"
-				filter="true" filterMatchMode="contains">
-				<f:selectItems value="#{report_financ_controller.projetos}"
-					var="projeto" itemLabel="#{projeto.codigo} - #{projeto.nome}"
-					itemValue="#{projeto.id}">
-
-				</f:selectItems>
-			</p:selectCheckboxMenu>
-
-			<p:commandLink process="@this" styleClass="link-content" update="not"
-				action="#{report_financ_controller.modificarTexto('projeto')}"
-				title="Informações" oncomplete="PF('info').show();">
-				<span style="color: black; font-size: 15px"
-					class="glyphicon glyphicon-question-sign"></span>
-
-			</p:commandLink>
-
-			<p:outputLabel value="Colunas de relatório:" />
-			<p:selectCheckboxMenu id="coluna" style="width:150px"
-				panelStyle="width:350px"
-				disabled="#{!report_financ_controller.displayColunas}"
-				value="#{report_financ_controller.filtro.colunasRelatorio}"
-				label="Colunas">
-				<f:selectItems value="#{report_financ_controller.listaColunas}"
-					var="col" itemLabel="#{col.label}" itemValue="#{col.valor}" />
-
-			</p:selectCheckboxMenu>
-
-			<p:commandLink process="@this" styleClass="link-content"
-				title="Informações" oncomplete="PF('info').show();" update="not"
-				action="#{report_financ_controller.modificarTexto('coluna')}">
-				<span style="color: black; font-size: 15px"
-					class="glyphicon glyphicon-question-sign"></span>
-
-			</p:commandLink>
-
-
-			<p:commandLink styleClass="btn btn-primary btn-sm fa fa-search"
-				onstart="start()" onsuccess="stop()" onerror="stop()" ajax="false"
-				action="#{report_financ_controller.gerarOrcamentoExecutado()}"
-				style="color:#fff; margin: 8px 2px;">
-				<span style="width: 40px; font-family: Arial">Gerar relatório</span>
-			</p:commandLink>
-
-			<p:commandLink rendered="false"
-				styleClass="btn btn-primary btn-sm fa fa-search" onstart="start()"
-				onsuccess="stop()" onerror="stop()" update="tbl_exec_financeira"
-				action="#{report_financ_controller.filtrarByProject()}"
-				style="color:#fff; margin: 8px 2px;">
-				<span style="width: 40px; font-family: Arial">Visualizar</span>
-
-			</p:commandLink>
 
 
 			<p:dataTable id="tbl_exec_financeira" rendered="false"

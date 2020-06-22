@@ -458,12 +458,6 @@ public class GeradorContasAPagar implements Serializable {
 	public void createStyleHeader(HSSFSheet sheetOrcamento) {
 		Font f = sheetOrcamento.getWorkbook().createFont();
 		f.setBold(true);
-		// styleHeader.setBorderBottom(CellStyle.BORDER_THIN);
-		// styleHeader.setBorderLeft(CellStyle.BORDER_THIN);
-		// styleHeader.setBorderRight(CellStyle.BORDER_THIN);
-		// styleHeader.setBorderTop(CellStyle.BORDER_THIN);
-		// styleHeader.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-		// styleHeader.setAlignment(CellStyle.ALIGN_CENTER);
 		styleHeader.setFont(f);
 
 	}

@@ -46,7 +46,7 @@ public class AutorizacaoRepositorio implements Serializable {
 			stb.append("(select ad.status_before from aprovadordocumento ad where ad.documento = l.tipo_v4 and ad.colaborador = :id_colaborador ");
 			stb.append("and ad.gestao = l.gestao_id and ad.ordem = 2) END), statusadiantamento = (case when statuscompra = 'CONCLUIDO' THEN ");
 			stb.append("(select ad.status_before from aprovadordocumento ad where ad.documento = l.tipo_v4 and ad.colaborador = :id_colaborador and ad.gestao = l.gestao_id and ad.ordem = 2) ");
-			stb.append("ELSE null END) where id in (:identifys); ");
+			stb.append("ELSE l.statusadiantamento END) where id in (:identifys); ");
 			
 			Query query = manager.createNativeQuery(stb.toString());
 			query.setParameter("id_colaborador", idCol);
@@ -75,7 +75,7 @@ public class AutorizacaoRepositorio implements Serializable {
 			stb.append("(select ad.status from aprovadordocumento ad where ad.documento = l.tipo_v4 and ad.colaborador = :id_colaborador ");
 			stb.append("and ad.gestao = l.gestao_id and ad.ordem = 2) END), statusadiantamento = (case when statuscompra = 'CONCLUIDO' THEN ");
 			stb.append("(select ad.status from aprovadordocumento ad where ad.documento = l.tipo_v4 and ad.colaborador = :id_colaborador and ad.gestao = l.gestao_id and ad.ordem = 2) ");
-			stb.append("ELSE null END) where id in (:identifys); ");
+			stb.append("ELSE l.statusadiantamento END) where id in (:identifys); ");
 			
 			
 			

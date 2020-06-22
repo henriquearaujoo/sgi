@@ -2619,72 +2619,83 @@ public class LancamentoRepository implements Serializable {
 	// SolicitacaoPagamento(Long id, String nomeDestino, StatusCompra status,
 	// Date data, String nomeSolicitante){
 	public List<SolicitacaoPagamento> getPagamentos(Filtro filtro) {
+		
 		StringBuilder jpql = new StringBuilder(
-				"SELECT NEW SolicitacaoPagamento(c.id, c.gestao.nome, c.solicitante.nome, c.localidade.mascara, c.dataEmissao,c.statusCompra, forn.nomeFantasia, c.descricao, c.valorTotalComDesconto) from SolicitacaoPagamento c ");
-		jpql.append("left join c.fornecedor forn ");
+				"SELECT NEW SolicitacaoPagamento(p.id, p.gestao.nome, p.solicitante.nome, p.localidade.mascara,  ");
+		jpql.append("p.dataEmissao,p.statusCompra, forn.nomeFantasia, p.descricao, p.valorTotalComDesconto) from SolicitacaoPagamento p");
+		
+		jpql.append(" left join p.contaRecebedor recebedor ");
+		jpql.append(" left join recebedor.fornecedor forn ");
+		
+		
+		
 		// jpql.append(" left join c.lancamentosAcoes la left join la.projetoRubrica pr
 		// join pr.projeto p ");
+		
 		jpql.append(" where 1  = 1 ");
 
-		jpql.append(" and c.versionLancamento = 'MODE01' ");
+		jpql.append(" and p.versionLancamento = 'MODE01' ");
 
 		if (filtro.getSp() != null && !filtro.getSp().equals("")) {
-			jpql.append(" and c.tipoLancamento != 'ad' ");
+			jpql.append(" and p.tipoLancamento != 'ad' ");
 		}
 
 		if (filtro.getTipoLancamento() != null && !filtro.getTipoLancamento().equals("")) {
-			jpql.append(" and c.tipoLancamento = 'ad' ");
+			jpql.append(" and p.tipoLancamento = 'ad' ");
 
 		}
 
 		if (filtro.getCodigo() != null && !filtro.getCodigo().equals("")) {
-			jpql.append(" and c.id = :codigo ");
+			jpql.append(" and p.id = :codigo ");
 
 		}
 
 		if (filtro.getNome() != null && !filtro.getNome().equals("")) {
-			jpql.append(" and lower(c.solicitante.nome) like lower(:nome)");
+			jpql.append(" and lower(p.solicitante.nome) like lower(:nome)");
 
 		}
 
 		if (filtro.getDataInicio() != null) {
 			if (filtro.getDataFinal() != null) {
-				jpql.append(" and c.dataEmissao between :data_inicio and :data_final");
+				jpql.append(" and p.dataEmissao between :data_inicio and :data_final");
 			} else {
-				jpql.append(" and c.dataEmissao > :data_inicio");
+				jpql.append(" and p.dataEmissao > :data_inicio");
 			}
 		}
 
 		if (filtro.getGestaoID() != null) {
-			jpql.append(" and c.gestao.id = :gestaoID ");
+			jpql.append(" and p.gestao.id = :gestaoID ");
 		}
 		
 		if (filtro.getGestao() != null) {
-			jpql.append(" and c.gestao = :gestao");
+			jpql.append(" and p.gestao = :gestao");
 		}
 
 		if (filtro.getLocalidadeID() != null) {
-			jpql.append(" and c.localidade.id = :localidadeID ");
+			jpql.append(" and p.localidade.id = :localidadeID ");
 		}
 		
 		if (filtro.getLocalidade() != null) {
-			jpql.append(" and c.localidade = :localidade ");
+			jpql.append(" and p.localidade = :localidade ");
 		}
 
 		if (filtro.getNomeFornecedor() != null && !filtro.getNomeFornecedor().equals("")) {
 			jpql.append(
-					" and (lower(c.contaRecebedor.nomeConta) like lower(:fornecedor) or lower(c.contaRecebedor.razaoSocial) like lower(:fornecedor) or lower(c.contaRecebedor.cnpj) like lower(:fornecedor) or lower(c.contaRecebedor.cpf) like lower(:fornecedor)) ");
+					" and (lower(p.contaRecebedor.nomeConta) like lower(:fornecedor) or lower(p.contaRecebedor.razaoSocial)  ");
+			jpql.append("like lower(:fornecedor) or lower(p.contaRecebedor.cnpj) like lower(:fornecedor) ");
+			jpql.append("or lower(p.contaRecebedor.cpf) like lower(:fornecedor)) ");
+			
 		}
 
 		if (filtro.getDescricao() != null && !filtro.getDescricao().equals("")) {
-			jpql.append(" and lower(c.descricao) like lower(:descricao)");
+			jpql.append(" and lower(p.descricao) like lower(:descricao)");
 		}
 
 		if (filtro.getProjeto() != null && filtro.getProjeto().getId() != null) {
 			jpql.append(" and :pProjetoID = p.id");
 		}
 
-		jpql.append(" order by c.dataEmissao desc");
+		jpql.append(" order by p.dataEmissao desc");
 
 		Query query = manager.createQuery(jpql.toString());
 

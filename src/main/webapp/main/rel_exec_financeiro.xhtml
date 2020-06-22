@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:define name="content">
+
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+			
+			function stopDlgfilter() {
+			    PF('dlg_filtro_compra').hide();
+			}
+		</script>
+
+
+		<h:form id="form_rel_contas" prependId="false">
+			<style type="text/css">
+body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-selectcheckboxmenu-filter-container .ui-inputfield
+	{
+	padding: .429em;
+	width: 100%;
+	text-indent: 2.429em;
+}
+</style>
+
+
+			<p:messages showIcon="false" showSummary="false" showDetail="true"
+				closable="true" />
+
+			<p:breadCrumb>
+				<p:menuitem value="home" url="home_new.xhtml" />
+				<p:menuitem value="Relatórios" url="relatorios_fin.xhtml" />
+				<p:menuitem value="Relatório de execução de projetos" />
+			</p:breadCrumb>
+
+
+			<div id="info-geral" class="ui-g ui-fluid"
+				style="width: 70%; margin-left: auto; margin-right: auto">
+
+
+				<div class="ui-g-6 form-group">
+					<p:outputLabel value="Data início (pgto)" />
+					<p:calendar styleClass="font12-vi" required="true"
+						requiredMessage="Data início é obrigatório"
+						value="#{execucaoController.filtro.dataInicio}"
+						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+				</div>
+
+				<div class="ui-g-6 form-group">
+
+					<p:outputLabel value="Data fim (pgto)" />
+					<p:calendar styleClass="font12-vi" required="true"
+						requiredMessage="Data fim é obrigatório"
+						value="#{execucaoController.filtro.dataFinal}"
+						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+				</div>
+
+				<div class="ui-g-6 form-group">
+
+					<p:outputLabel value="Fonte" />
+					<p:selectCheckboxMenu id="fonte"
+						value="#{execucaoController.filtro.fontes}" label="Fonte/Parceiro"
+						filter="true" filterMatchMode="contains">
+						<f:selectItems value="#{execucaoController.fontes}" var="fonte"
+							itemLabel="#{fonte.nome}" itemValue="#{fonte.id}" />
+
+						<p:ajax update="projeto" onstart="start()" oncomplete="stop()"
+							onerror="stop()"
+							listener="#{execucaoController.carregarProjetos()}" />
+
+
+					</p:selectCheckboxMenu>
+
+				</div>
+
+				<div class="ui-g-6 form-group">
+					<p:outputLabel value="Projeto" />
+					<p:selectCheckboxMenu id="projeto" panelStyle="width:350px"
+						value="#{execucaoController.filtro.projetos}" label="Projetos"
+						filter="true" filterMatchMode="contains">
+						<f:selectItems value="#{execucaoController.projetos}"
+							var="projeto" itemLabel="#{projeto.nome}"
+							itemValue="#{projeto.id}">
+
+						</f:selectItems>
+					</p:selectCheckboxMenu>
+
+				</div>
+
+
+				<div class="ui-g-12 form-group" style="text-align: center;">
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						onstart="start()" onsuccess="stop()" onerror="stop()" ajax="false"
+						action="#{execucaoController.gerarOrcamentoExecutado()}"
+						style="color:#fff; margin: 8px 2px;">
+						<span style="width: 40px; font-family: Arial">Gerar
+							relatório</span>
+					</p:commandLink>
+
+				</div>
+
+
+			</div>
+
+
+			<p:dataTable id="tbl_exec_financeira" rendered="false"
+				sortBy="#{lancamento.nomeProjeto}" expandableRowGroups="true"
+				value="#{execucaoController.lancamentos}" var="lancamento">
+
+				<f:facet name="header">
+ 
+ 	 			Execução
+       				 <p:commandButton id="toggler" type="button" value="Columns"
+						style="float:right" icon="ui-icon-calculator" />
+					<p:columnToggler datasource="tbl_exec_financeira" trigger="toggler" />
+				</f:facet>
+
+				<p:headerRow>
+					<p:column colspan="8">
+						<h:outputText style="padding:8px;font-size:11px"
+							value="#{lancamento.nomeProjeto}" />
+					</p:column>
+				</p:headerRow>
+
+
+				<p:column headerText="Dt. de Pagamento">
+					<h:outputText value="#{lancamento.dataPagamento}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Dt. de Emissão">
+					<h:outputText value="#{lancamento.dataEmissao}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Nº de documento">
+					<h:outputText value="#{lancamento.numeroDocumento}" />
+				</p:column>
+
+				<p:column headerText="Nº de lançamento">
+					<h:outputText value="#{lancamento.id}" />
+				</p:column>
+
+				<p:column headerText="Nota fiscal">
+					<h:outputText value="#{lancamento.notaFiscal}" />
+				</p:column>
+
+				<p:column headerText="Pagador" style="width:15%">
+					<h:outputText value="#{lancamento.contaPagadorLbl}" />
+				</p:column>
+
+				<p:column headerText="Recebedor" style="width:15%">
+					<h:outputText value="#{lancamento.contaRecebedorLbl}" />
+				</p:column>
+
+				<p:column headerText="Descrição" style="width:15%">
+					<h:outputText value="#{lancamento.descricao}" />
+				</p:column>
+
+				<p:column headerText="Projeto">
+					<h:outputText value="#{lancamento.nomeProjeto}" />
+				</p:column>
+				<p:column headerText="Fonte">
+					<h:outputText value="#{lancamento.fonte}" />
+				</p:column>
+
+				<p:column headerText="Status" style="text-align:center">
+					<h:outputText value="P"
+						rendered="#{lancamento.status.equals('PROVISIONADO')}" />
+					<h:outputText value="E"
+						rendered="#{lancamento.status.equals('EFETIVADO')}" />
+				</p:column>
+
+				<p:column headerText="Entrada">
+					<h:outputText value="#{lancamento.entrada}">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+							currencySymbol="R$" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Saída">
+					<h:outputText value="#{lancamento.saida}">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+							currencySymbol="R$" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+
+			<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+				showHeader="false" draggable="false" closable="false"
+				resizable="false">
+				<p:graphicImage library="image" name="aguarde.gif" />
+				<p:graphicImage style="width:120px;height:70px" library="image"
+					name="logofas.png" />
+			</p:dialog>
+
+		</h:form>
+	</ui:define>
+
+	<ui:define name="adicionais">
+
+
+
+
+	</ui:define>
+
+
+</ui:composition>

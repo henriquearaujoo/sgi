@@ -1,13 +1,19 @@
 package managedbean;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -15,14 +21,22 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.primefaces.event.FileUploadEvent;
+
 import model.Compra;
 import model.Cotacao;
 import model.CotacaoAuxiliar;
 import model.CotacaoParent;
 import model.Fornecedor;
 import model.ItemCompra;
+import model.Lancamento;
 import model.MenuLateral;
+import model.Pedido;
 import service.CotacaoService;
+import service.PagamentoService;
+import util.ArquivoLancamento;
+import util.DiretorioUtil;
+import util.DownloadUtil;
 import util.MakeMenu;
 import util.UsuarioSessao;
 
@@ -105,6 +119,89 @@ public class CotacaoCadastroController implements Serializable {
 		return format.format(total);
 		// return new DecimalFormat("###,###.###").format(total);
 	}
+	
+	private Lancamento lancamento = new Lancamento();
+	private @Inject PagamentoService service;
+	public void carregarArquivos(Long id) {
+		lancamento = service.getLancamentoById(id);
+		lancamento.setArquivos(new ArrayList<ArquivoLancamento>());
+		
+		if (lancamento instanceof Pedido) {
+			System.out.println();
+			lancamento.setArquivos(service.getArquivoByLancamento(id, ((Pedido) lancamento).getCompra().getId()));
+		}else {
+			lancamento.setArquivos(service.getArquivoByLancamento(id));
+		}
+	}
+	
+	private ArquivoLancamento arquivo = new ArquivoLancamento();
+	private byte[] conteudo;
+	private String path = "";
+	
+	public void adicionarArquivo() {
+
+		File file = new File(arquivo.getPath());
+		FileOutputStream fot;
+		try {
+			fot = new FileOutputStream(file);
+			fot.write(conteudo);
+			fot.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		arquivo.setLancamento(lancamento);
+		// lancamentoAux.getArquivos().add(arquivo);
+		service.salvarArquivo(arquivo);
+
+		path = "";
+
+		arquivo = new ArquivoLancamento();
+
+		carregarArquivos(lancamento.getId());
+	}
+	
+	private @Inject ArquivoLancamento arqAuxiliar;
+	
+//	public void visualizarArquivo() throws IOException {
+//
+//		ArquivoLancamento arqAuxiliar = new ArquivoLancamento();
+//
+//		DownloadUtil.downloadFile(arqAuxiliar.getNome(), arqAuxiliar.getPath(), "application/pdf",
+//				FacesContext.getCurrentInstance());
+//		arqAuxiliar = new ArquivoLancamento();
+//	}
+	
+	public void visualizarArquivo() throws IOException {
+		DownloadUtil.downloadFile(arqAuxiliar.getNome(), arqAuxiliar.getPath(), "application/pdf",
+				FacesContext.getCurrentInstance());
+		arqAuxiliar = new ArquivoLancamento();
+	}
+	
+	public void removerArquivo() {
+
+		service.removerArquivo(arqAuxiliar);
+		arqAuxiliar = new ArquivoLancamento();
+		carregarArquivos(lancamento.getId());
+
+	}
+	
+	public void handleFileUpload(FileUploadEvent event) throws IOException {
+		// String pathFinal = DiretorioUtil.DIRECTORY_UPLOAD_LINUX;
+		// System.out.println(inputNomeArquivo.getValue());
+		String pathFinal = DiretorioUtil.DIRECTORY_UPLOAD;
+		// arquivo.setConteudo(event.getFile().getContents());
+
+		conteudo = event.getFile().getContents();
+		arquivo.setNome(event.getFile().getFileName());
+		arquivo.setPath(pathFinal + lancamento.getId() + "." + event.getFile().getFileName());
+		arquivo.setData(new Date());
+		arquivo.setUsuario(usuarioSessao.getUsuario());
+		// adicionarArquivo();
+	}
+
 
 	public void distribuirPorcentagemTotalSobreUnitarios() {
 		cotacaoParent.setValorTotalSemDesconto(BigDecimal.ZERO);
@@ -218,10 +315,23 @@ public class CotacaoCadastroController implements Serializable {
 		}
 
 	}
+	
+	public void aplicarDetalhes() {
+		addMessage("", "", FacesMessage.SEVERITY_INFO);
+	}
+	
+	public void addMessage(String summary, String detail, Severity severity) {
+		FacesMessage message = new FacesMessage(severity, summary, detail);
+		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
 
 	public String salvar() {
 		cotacaoService.salvar(cotacoes, fornecedor, cotacaoParent);
 		return "cotacao?faces-redirect=true&amp;includeViewParams=true";
+	}
+	
+	public boolean verificarParent() {
+		return true;
 	}
 	
 	public String voltar() {
@@ -322,6 +432,38 @@ public class CotacaoCadastroController implements Serializable {
 
 	public void setCotacaoParent(CotacaoParent cotacaoParent) {
 		this.cotacaoParent = cotacaoParent;
+	}
+
+	public Lancamento getLancamento() {
+		return lancamento;
+	}
+
+	public void setLancamento(Lancamento lancamento) {
+		this.lancamento = lancamento;
+	}
+
+	public ArquivoLancamento getArquivo() {
+		return arquivo;
+	}
+
+	public void setArquivo(ArquivoLancamento arquivo) {
+		this.arquivo = arquivo;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public ArquivoLancamento getArqAuxiliar() {
+		return arqAuxiliar;
+	}
+
+	public void setArqAuxiliar(ArquivoLancamento arqAuxiliar) {
+		this.arqAuxiliar = arqAuxiliar;
 	}
 
 }

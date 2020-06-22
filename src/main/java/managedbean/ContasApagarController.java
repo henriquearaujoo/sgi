@@ -231,11 +231,13 @@ public class ContasApagarController implements Serializable {
 	}
 
 	public void carregarListaDeRelatorios() {
-		if (usuario.getUsuario().getPerfil().getDescricao().equals("admin")) {
+		/*if (usuario.getUsuario().getPerfil().getDescricao().equals("admin")) {
 			ListarRelatoriosFinanceiro();
 		}else {
 			listarRelatorios();
-		}
+		}*/
+		
+		ListarRelatoriosFinanceiro();
 	}
 
 	public void listarRelatorios() {
@@ -275,7 +277,7 @@ public class ContasApagarController implements Serializable {
 	public void ListarRelatoriosFinanceiro() {
 		LinkRelatorio link = new LinkRelatorio();
 
-		link = new LinkRelatorio();
+/*		link = new LinkRelatorio();
 		link.setLabel("Orçado e Realizado");
 		link.setLink("orcado_realizadoMODE01");
 		listaDeRelatorios.add(link);
@@ -289,15 +291,20 @@ public class ContasApagarController implements Serializable {
 		link = new LinkRelatorio();
 		link.setLabel("Contas a pagar");
 		link.setLink("conta_pagarMODE01");
-		listaDeRelatorios.add(link);
+		listaDeRelatorios.add(link);*/
 
 		link = new LinkRelatorio();
 		link.setLabel("Execução Financeira");
-		link.setLink("conferencia_lancamentos_MODE01");
+		link.setLink("rel_exec_financeiro");
+		listaDeRelatorios.add(link);
+		
+		link = new LinkRelatorio();
+		link.setLabel("Compras detalhadas");
+		link.setLink("rel_compra_detail");
 		listaDeRelatorios.add(link);
 
 		
-		link = new LinkRelatorio();
+		/*link = new LinkRelatorio();
 		link.setLabel("Saving");
 		link.setLink("saving");
 		listaDeRelatorios.add(link);
@@ -310,8 +317,9 @@ public class ContasApagarController implements Serializable {
 
 		link = new LinkRelatorio();
 		link.setLabel("Relatório de lançamentos de contas");
-		link.setLink("relatorio_lancamentos_contas");
-		listaDeRelatorios.add(link);
+		link.setLink("relatorio_lancamentos_contas");*/
+		
+		//listaDeRelatorios.add(link);
 	}
 
 	public String redirecionarRelatorio() {

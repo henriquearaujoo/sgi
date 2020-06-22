@@ -31,6 +31,11 @@ public class RelatorioContasAPagar {
 	private String tipo;
 	private String componente;
 	private String subcomponente;
+	private String sinalizador;
+	private String numeroParcela;
+	private String localidade;
+	private String localidadeUC;
+	private String localidadeProjeto;
 	
 	private String tipoDocumento;
 	private BigDecimal valor = BigDecimal.ZERO;
@@ -405,5 +410,45 @@ public class RelatorioContasAPagar {
 
 	public void setCpfcnpj(String cpfcnpj) {
 		this.cpfcnpj = cpfcnpj;
+	}
+
+	public String getSinalizador() {
+		return sinalizador;
+	}
+
+	public void setSinalizador(String sinalizador) {
+		this.sinalizador = sinalizador;
+	}
+
+	public String getNumeroParcela() {
+		return numeroParcela;
+	}
+
+	public void setNumeroParcela(String numeroParcela) {
+		this.numeroParcela = numeroParcela;
+	}
+
+	public String getLocalidade() {
+		return localidade;
+	}
+
+	public void setLocalidade(String localidade) {
+		this.localidade = localidade;
+	}
+
+	public String getLocalidadeUC() {
+		return localidadeUC;
+	}
+
+	public void setLocalidadeUC(String localidadeUC) {
+		this.localidadeUC = localidadeUC;
+	}
+
+	public String getLocalidadeProjeto() {
+		return localidadeProjeto;
+	}
+
+	public void setLocalidadeProjeto(String localidadeProjeto) {
+		this.localidadeProjeto = localidadeProjeto;
 	}
 }
