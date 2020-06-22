@@ -697,18 +697,18 @@ public class LancamentoRepository implements Serializable {
 		query.setParameter("id", id);
 		return query.getResultList().size() > 0 ? query.getResultList() : new ArrayList<>();
 	}
-	
+
 	public List<ArquivoLancamento> getArquivosByLancamento(Long id, Long idCompra) {
 		StringBuilder jpql = new StringBuilder("from ArquivoLancamento al where al.lancamento.id = :id ");
 		jpql.append("or ");
 		jpql.append("al.lancamento.id = :id_compra");
-		
+
 		Query query = this.manager.createQuery(jpql.toString());
 		query.setParameter("id", id);
 		query.setParameter("id_compra", idCompra);
 		return query.getResultList().size() > 0 ? query.getResultList() : new ArrayList<>();
 	}
-	
+
 	public List<ArquivoLancamento> getNewArquivosByLancamento(Long id) {
 		StringBuilder jpql = new StringBuilder(
 				"SELECT NEW ArquivoLancamento(aq.nome, aq.conteudo, aq.path) FROM ArquivoLancamento aq where aq.lancamento.id =  :id  ");
@@ -1203,12 +1203,12 @@ public class LancamentoRepository implements Serializable {
 	public Pedido getPedidoPorId(Long id) {
 		return this.manager.find(Pedido.class, id);
 	}
-	
+
 	public List<LancamentoAcao> getLancamentoAcaoPorLancamento(Long id, String args) {
 		String jpql = "from LancamentoAcao where lancamento.id = :id";
 		Query query = this.manager.createQuery(jpql);
 		query.setParameter("id", id);
-		return  query.getResultList().size() > 0 ? query.getResultList() : new ArrayList<>();
+		return query.getResultList().size() > 0 ? query.getResultList() : new ArrayList<>();
 	}
 
 	public SolicitacaoPagamento getPagamentoPorId(Long id) {
@@ -1290,9 +1290,8 @@ public class LancamentoRepository implements Serializable {
 	public void salvarItemPedido(ItemPedido itemPedido) {
 		this.manager.merge(itemPedido);
 	}
-	
-	public SolicitacaoPagamento salvarSolicitacaoAdiantamento(Lancamento lancamento, User usuario) {
 
+	public SolicitacaoPagamento salvarSolicitacaoAdiantamento(Lancamento lancamento, User usuario) {
 
 		LogStatus log = new LogStatus();
 		log.setUsuario(usuario);
@@ -1430,13 +1429,10 @@ public class LancamentoRepository implements Serializable {
 		}
 		log.setLancamento(lancamento);
 		this.manager.merge(log);
-		
-		
+
 		return (SolicitacaoPagamento) lancamento;
-	
-		
+
 	}
-	
 
 	public SolicitacaoPagamento salvarSolicitacaoPagamento(Lancamento lancamento, User usuario) {
 
@@ -1576,8 +1572,7 @@ public class LancamentoRepository implements Serializable {
 		}
 		log.setLancamento(lancamento);
 		this.manager.merge(log);
-		
-		
+
 		return (SolicitacaoPagamento) lancamento;
 	}
 
@@ -1607,7 +1602,7 @@ public class LancamentoRepository implements Serializable {
 
 		log.setLancamento(lancamento);
 		this.manager.merge(log);
-		
+
 		return (Compra) lancamento;
 	}
 
@@ -1616,10 +1611,10 @@ public class LancamentoRepository implements Serializable {
 		lancamento.setNumeroDocumento(lancamento.getId().toString());
 		lancamento.setTipov4("PC");
 		if (lancamento.getDescricao() == null) {
-			lancamento.setDescricao(lancamento.getId().toString()+" - "+lancamento.getItensPedidos().get(0).getCategoria());
+			lancamento.setDescricao(
+					lancamento.getId().toString() + " - " + lancamento.getItensPedidos().get(0).getCategoria());
 		}
-		
-		
+
 		return lancamento;
 	}
 
@@ -1864,7 +1859,7 @@ public class LancamentoRepository implements Serializable {
 				dataBase = pagto.getDataPagamento();
 			}
 		}
-		
+
 		lancamento.setTipov4("PC");
 		this.manager.merge(lancamento);
 
@@ -1872,8 +1867,8 @@ public class LancamentoRepository implements Serializable {
 
 	}
 
-	public Pedido salvarPedido(Pedido lancamento, ControleExpedicao controle, User usuario){
-		//rtr
+	public Pedido salvarPedido(Pedido lancamento, ControleExpedicao controle, User usuario) {
+		// rtr
 		controle.setPedido(lancamento);
 
 		List<LancamentoAcao> lList = getLancamentosDoPedido(lancamento);
@@ -2165,9 +2160,17 @@ public class LancamentoRepository implements Serializable {
 
 	public LancamentoAvulso salvarLancamentoAvulso(LancamentoAvulso lancamento, User usuario) {
 
-		if (lancamento.getId() != null)
-			this.manager.createQuery("delete from PagamentoLancamento as pl where pl.lancamento.id = :id")
+		/*
+		 * if (lancamento.getId() != null) this.manager.
+		 * createNativeQuery("delete from PagamentoLancamento as pl where pl.lancamentoAcao.lancamento = :lanc"
+		 * ) .setParameter("lanc", lancamento).executeUpdate();
+		 */
+
+		if (lancamento.getId() != null) {
+			this.manager.createNativeQuery(
+					"delete from pagamento_lancamento pl where lancamentoacao_id in (select la.id from lancamento_acao la where la.lancamento_id = :id)")
 					.setParameter("id", lancamento.getId()).executeUpdate();
+		}
 
 		LogStatus log = new LogStatus();
 		log.setUsuario(usuario);
@@ -2619,19 +2622,18 @@ public class LancamentoRepository implements Serializable {
 	// SolicitacaoPagamento(Long id, String nomeDestino, StatusCompra status,
 	// Date data, String nomeSolicitante){
 	public List<SolicitacaoPagamento> getPagamentos(Filtro filtro) {
-		
+
 		StringBuilder jpql = new StringBuilder(
 				"SELECT NEW SolicitacaoPagamento(p.id, p.gestao.nome, p.solicitante.nome, p.localidade.mascara,  ");
-		jpql.append("p.dataEmissao,p.statusCompra, forn.nomeFantasia, p.descricao, p.valorTotalComDesconto) from SolicitacaoPagamento p");
-		
+		jpql.append(
+				"p.dataEmissao,p.statusCompra, forn.nomeFantasia, p.descricao, p.valorTotalComDesconto) from SolicitacaoPagamento p");
+
 		jpql.append(" left join p.contaRecebedor recebedor ");
 		jpql.append(" left join recebedor.fornecedor forn ");
-		
-		
-		
+
 		// jpql.append(" left join c.lancamentosAcoes la left join la.projetoRubrica pr
 		// join pr.projeto p ");
-		
+
 		jpql.append(" where 1  = 1 ");
 
 		jpql.append(" and p.versionLancamento = 'MODE01' ");
@@ -2666,7 +2668,7 @@ public class LancamentoRepository implements Serializable {
 		if (filtro.getGestaoID() != null) {
 			jpql.append(" and p.gestao.id = :gestaoID ");
 		}
-		
+
 		if (filtro.getGestao() != null) {
 			jpql.append(" and p.gestao = :gestao");
 		}
@@ -2674,7 +2676,7 @@ public class LancamentoRepository implements Serializable {
 		if (filtro.getLocalidadeID() != null) {
 			jpql.append(" and p.localidade.id = :localidadeID ");
 		}
-		
+
 		if (filtro.getLocalidade() != null) {
 			jpql.append(" and p.localidade = :localidade ");
 		}
@@ -2684,7 +2686,7 @@ public class LancamentoRepository implements Serializable {
 					" and (lower(p.contaRecebedor.nomeConta) like lower(:fornecedor) or lower(p.contaRecebedor.razaoSocial)  ");
 			jpql.append("like lower(:fornecedor) or lower(p.contaRecebedor.cnpj) like lower(:fornecedor) ");
 			jpql.append("or lower(p.contaRecebedor.cpf) like lower(:fornecedor)) ");
-			
+
 		}
 
 		if (filtro.getDescricao() != null && !filtro.getDescricao().equals("")) {
@@ -2733,7 +2735,7 @@ public class LancamentoRepository implements Serializable {
 			/* jpql.append(" and c.localidade.id = :localidadeID "); */
 			query.setParameter("localidadeID", filtro.getLocalidadeID());
 		}
-		
+
 		if (filtro.getGestao() != null) {
 			query.setParameter("gestao", filtro.getGestao());
 		}
@@ -2741,7 +2743,6 @@ public class LancamentoRepository implements Serializable {
 		if (filtro.getLocalidade() != null) {
 			query.setParameter("localidade", filtro.getLocalidade());
 		}
-		
 
 		if (filtro.getNomeFornecedor() != null && !filtro.getNomeFornecedor().equals("")) {
 			query.setParameter("fornecedor", "%" + filtro.getNomeFornecedor() + "%");
@@ -2838,8 +2839,7 @@ public class LancamentoRepository implements Serializable {
 
 		return true;
 	}
-	
-	
+
 	public boolean mudarStatusPagamento(Long id, StatusCompra statusCompra) {
 
 		try {
@@ -2847,14 +2847,14 @@ public class LancamentoRepository implements Serializable {
 			SolicitacaoPagamento pagamento = manager.find(SolicitacaoPagamento.class, id);
 			pagamento.setStatusCompra(statusCompra);
 			manager.merge(pagamento);
-		
+
 		} catch (Exception e) {
 			return false;
 		}
 
 		return true;
 	}
-	
+
 	public boolean mudarStatusAdiantamento(Long id, StatusCompra statusCompra) {
 
 		try {
@@ -2862,7 +2862,7 @@ public class LancamentoRepository implements Serializable {
 			SolicitacaoPagamento pagamento = manager.find(SolicitacaoPagamento.class, id);
 			pagamento.setStatusCompra(statusCompra);
 			manager.merge(pagamento);
-		
+
 		} catch (Exception e) {
 			return false;
 		}
@@ -2909,8 +2909,6 @@ public class LancamentoRepository implements Serializable {
 			return new Compra();
 		}
 	}
-
-	
 
 	public boolean salvarLog(LogStatus logStatus) {
 		manager.merge(logStatus);

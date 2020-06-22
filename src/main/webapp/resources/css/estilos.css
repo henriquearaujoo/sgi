@@ -1,20 +1,28 @@
 * {
-	margin:0;
-	padding:0;
-	
+	margin: 0;
+	padding: 0;
 }
 
-.div-after{
+.label_bold {
+	font-weight: bold;
+	margin-left: 5px;
+}
+
+.label_price_value {
+	margin-left: 5px;
+}
+
+.div-after {
 	border-bottom: 1px solid #0000008f;
-	margin-top:6px	
+	margin-top: 6px
 }
 
-.text-margin-top{
-	margin-top:10px	
+.text-margin-top {
+	margin-top: 10px
 }
 
-.text-width-full{
-	width: 100%	
+.text-width-full {
+	width: 100%
 }
 
 .field_border_red {
@@ -25,7 +33,6 @@
 	background-color: #66FF66 !important;
 }
 
-
 .highlight_orange {
 	background-color: orange !important;
 }
@@ -35,14 +42,13 @@
 }
 
 .highlight_green {
-    background-color: #7cfc00!important;
-    color: #000000 !important;
-   
+	background-color: #7cfc00 !important;
+	color: #000000 !important;
 }
 
 .highlight_red {
 	background-color: red !important;
-	color:#fff;
+	color: #fff;
 }
 
 .highlight_red_font {
@@ -57,71 +63,67 @@
 	color: #FFFFFF;
 }
 
-.icon-plus2:hover{
+.icon-plus2:hover {
 	text-decoration: none;
 }
 
 .hd {
-	width:100%;
+	width: 100%;
 }
 
 .hd .nav-main {
-	width:100%;
-	margin:0px auto;
-	background:#849A39;
+	width: 100%;
+	margin: 0px auto;
+	background: #849A39;
 }
 
 .menu_bar {
-	display:none;
+	display: none;
 }
 
-.hd .nav-main > ul {
-	overflow:hidden;
-	list-style:none;
+.hd .nav-main>ul {
+	overflow: hidden;
+	list-style: none;
 	margin: 0;
 }
 
-.hd .nav-main > ul > li {
-	float:left;
-	
+.hd .nav-main>ul>li {
+	float: left;
 }
 
-.logout{
+.logout {
 	float: right;
 	border-left: 0px;
 }
 
-.hd  .nav-main > ul > li > a {
-	color:#fff;
-	padding:15px;
-	display:block;
-	text-decoration:none;
+.hd  .nav-main>ul>li>a {
+	color: #fff;
+	padding: 15px;
+	display: block;
+	text-decoration: none;
 }
 
-.hd .nav-main > ul > li > span {
-	margin-right:10px;
+.hd .nav-main>ul>li>span {
+	margin-right: 10px;
 }
 
-.hd .nav-main > ul > li a:hover {
-	background:#BDA660;
+.hd .nav-main>ul>li a:hover {
+	background: #BDA660;
 	text-decoration: none;
 	color: #fff;
 }
 
-
-.hd .nav-main > ul > li > img{
+.hd .nav-main>ul>li>img {
 	height: 50px;
 	width: 150px;
 	margin-right: 6px;
 }
 
-.logo_fas{
-
+.logo_fas {
 	background: #FFFFFF;
-
 }
 
-.logo{
+.logo {
 	float: left;
 	height: 50px;
 	padding: 10px 10px;
@@ -130,24 +132,22 @@
 	color: #fff;
 }
 
-.crumb-menu{
+.crumb-menu {
 	width: 100%;
 	background: #FFFFFF;
-	border-bottom:1px solid #E6E7DD;
+	border-bottom: 1px solid #E6E7DD;
 	border-right: 1px solid #E6E7DD;
-	
 }
 
-.crumb-menu span{
-	color:grey;
+.crumb-menu span {
+	color: grey;
 	padding: 5px;
 	font-size: 16px;
 	font-family: "Times New Roman", Times, serif;
 }
 
-.separador{
+.separador {
 	background: #E6E7DD;
 	width: 100%;
 	height: 2px;
 }
-

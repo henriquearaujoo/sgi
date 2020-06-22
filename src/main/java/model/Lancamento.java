@@ -95,8 +95,8 @@ public  class Lancamento implements Serializable {
 	@OneToMany(mappedBy = "lancamento", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<ArquivoLancamento> arquivos = new ArrayList<ArquivoLancamento>();
 	
-	//@OneToMany(mappedBy = "lancamento", cascade = CascadeType.ALL, orphanRemoval = true)
-	//private List<LogStatus> logs = new ArrayList<LogStatus>();
+	@OneToMany(mappedBy = "lancamento", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<LogStatus> logs = new ArrayList<LogStatus>();
 	
 	
 	@Column
