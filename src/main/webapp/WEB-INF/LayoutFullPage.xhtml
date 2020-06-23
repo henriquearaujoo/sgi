@@ -11,6 +11,14 @@
 <h:head>
 
 	<style type="text/css">
+	
+
+	
+.item-selected-bc {
+	background: #caccc645;
+	font-weight: bold;
+}
+
 .ui-outputlabel .ui-outputlabel-rfi {
 	margin-left: .4em;
 	color: red;
@@ -237,7 +245,6 @@ body .ui-panelmenu .ui-panelmenu-header {
 body .ui-fileupload .ui-fileupload-content {
 	display: none !important;
 }
-
 </style>
 
 
@@ -337,11 +344,7 @@ body .ui-fileupload .ui-fileupload-content {
 			</div>
 			<a href="#" id="link-bar" class="aw-toggle  js-toggle"> <i
 				id="bar" style="font-size: 18px;" class="fa  fa-bars"> </i>
-			</a> 
-			
-			<a href="#" class="profile-menu-button js-menu-toggle"> 
-				 
-				<img
+			</a> <a href="#" class="profile-menu-button js-menu-toggle"> <img
 				src="../resources/image/#{loginBean.nome}.jpg" />
 			</a>
 
@@ -388,7 +391,7 @@ body .ui-fileupload .ui-fileupload-content {
 
 	<ui:insert name="adicionais">
 
-		
+
 
 
 	</ui:insert>

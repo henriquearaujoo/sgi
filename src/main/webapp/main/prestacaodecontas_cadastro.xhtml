@@ -19,11 +19,6 @@
 				action="#{prestacao_conta_controller.carregarDetalheDoAdiantamento()}" />
 		</f:metadata>
 
-		<style type="text/css">
-.ui-widget {
-	font-size: 85%;
-}
-</style>
 
 		<script type="text/javascript">
 
@@ -40,28 +35,30 @@
 		<h:form id="form_adiantamento" prependId="false">
 
 
-			<p:messages showSummary="false" showDetail="true" closable="true"
-				escape="true" />
+			<div id="panel-geral" class="container">
 
-			<p:breadCrumb>
-				<p:menuitem value="Categories" url="home_new.xhtml" />
-				<p:menuitem value="Listagem de Solicitação de Adiantamento"
-					url="adiantamentos.xhtml" />
-				<p:menuitem value="Prestação de contas" />
-			</p:breadCrumb>
+				<p:messages showSummary="false" showDetail="true" closable="true"
+					escape="true">
+				
+					<p:autoUpdate></p:autoUpdate>	
+				</p:messages>
 
-
-			<div id="panel-geral">
+				<p:breadCrumb>
+					<p:menuitem value="Categories" url="home_new.xhtml" />
+					<p:menuitem value="Listagem de Solicitação de Adiantamento"
+						url="adiantamentos.xhtml" />
+					<p:menuitem value="Prestação de contas"
+						styleClass="item-selected-bc" />
+				</p:breadCrumb>
 
 				<p:panel id="panel-info-geral" styleClass="tab-menu-item-vi">
-
 
 					<div id="info-items" class="ui-g ui-fluid">
 
 						<div class="ui-g-3 form-group">
 
-							<h:outputText value="Doc fiscal:" />
-							<p:selectOneMenu required="false"
+							<h:outputText value="Doc fiscal" />
+							<p:selectOneMenu required="true"
 								requiredMessage="Preencha o campo 'Doc fiscal'"
 								autoWidth="false"
 								value="#{prestacao_conta_controller.prestacaoDeContas.tipoDocumentoFiscal}">
@@ -76,19 +73,18 @@
 						</div>
 
 						<div class="ui-g-3 form-group">
-							<h:outputText value="Nota fiscal:" />
+							<h:outputText value="Nota fiscal" />
 							<p:inputText required="false"
 								requiredMessage="Preencha o campo Nota fiscal."
-								value="#{prestacao_conta_controller.prestacaoDeContas.notaFiscal}"
-								placeholder="Nota fiscal" />
+								value="#{prestacao_conta_controller.prestacaoDeContas.notaFiscal}" />
 						</div>
 
 						<div class="ui-g-3 form-group">
-							<h:outputText value="Categoria:" />
+							<p:outputLabel for="category" value="Categoria" />
 
-							<p:selectOneMenu style="font-size:12px" filter="true"
-								autoWidth="false" filterMatchMode="contains"
-								converter="categoriaFinConverter"
+							<p:selectOneMenu id="category" filter="true" autoWidth="false"
+							 	required="true" requiredMessage="Preencha o campo 'categoria'"
+								filterMatchMode="contains" converter="categoriaFinConverter"
 								value="#{prestacao_conta_controller.prestacaoDeContas.categoriaFinanceira}">
 								<f:selectItem noSelectionOption="true" />
 								<f:selectItems
@@ -101,26 +97,24 @@
 						</div>
 
 						<div class="ui-g-3 form-group">
-							<h:outputText value="Data de pagamento:" />
-							<p:calendar id="dt_inicio" placeholder="Data do pagamento"
-								required="false"
-								requiredMessage="Preencha o campo 'Data do pagamento'."
+							<h:outputText value="Data de pagamento" />
+							<p:calendar id="dt_inicio" required="true"
+								requiredMessage="Preencha o campo 'Data de pagamento'."
 								value="#{prestacao_conta_controller.prestacaoDeContas.dataPagamentoPrestacao}"
-								timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+								navigator="true" pattern="dd/MM/yyyy" />
 						</div>
 
 
 						<div class="ui-g-4 form-group">
-							<h:outputText value="Descrição:" />
-							<p:inputText required="false"
+							<h:outputText value="Descrição" />
+							<p:inputText required="true"
 								requiredMessage="Preencha o campo 'Descrição'."
-								value="#{prestacao_conta_controller.prestacaoDeContas.descricao}"
-								placeholder="Descrição" />
+								value="#{prestacao_conta_controller.prestacaoDeContas.descricao}" />
 						</div>
 
 						<div class="ui-g-4 form-group">
-							<h:outputText value="Favorecido:" />
-							<p:autoComplete placeholder="Favorecido" required="false"
+							<h:outputText value="Favorecido" />
+							<p:autoComplete required="true"
 								requiredMessage="Preencha o campo 'Favorecido'."
 								value="#{prestacao_conta_controller.prestacaoDeContas.contaRecebedor}"
 								completeMethod="#{pagamentoLancController.completeConta}"
@@ -129,29 +123,25 @@
 						</div>
 
 						<div class="ui-g-4 form-group">
-							<h:outputText value="Valor:" />
+							<h:outputText value="Valor" />
 							<p:inputText onkeypress="return formatarNumero(this,event,19,2);"
 								required="false" requiredMessage="Preencha o campo 'Valor'."
-								value="#{prestacao_conta_controller.prestacaoDeContas.valorTotalComDesconto}"
-								placeholder="Valor">
+								value="#{prestacao_conta_controller.prestacaoDeContas.valorTotalComDesconto}">
 								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
 									locale="pt_BR" />
 							</p:inputText>
 						</div>
 
-
-						<div class="ui-g-12">
+						<div class="ui-g-12" style="text-align: right">
 							<p:commandLink style="color:#fff" onstart="start()"
 								onsuccess="stop()" onerror="stop()"
 								rendered="#{prestacao_conta_controller.adiantamento.statusAdiantamento.nome.equals('Em aberto') 
 								|| prestacao_conta_controller.adiantamento.statusAdiantamento.nome.equals('Devolução de documentos')}"
 								action="#{prestacao_conta_controller.salvarPrestacao()}"
-								styleClass="btn btn-success btn-sm btn-block"
-								update="panel-info-geral">
-								<span style="font-family: Arial">Salvar despesa</span>
+								styleClass="btn btn-success btn-sm" update="panel-info-geral">
+								<span style="font-family: Arial">Adicionar despesa</span>
 							</p:commandLink>
 						</div>
-
 
 						<div class="ui-g-12">
 
@@ -198,7 +188,6 @@
 
 									</div>
 
-
 								</f:facet>
 
 								<p:column style="text-align: left"
@@ -221,10 +210,7 @@
 											currencySymbol="R$" />
 									</h:outputText>
 
-
-
 								</p:column>
-
 
 								<p:column style="width:150px">
 									<p:commandLink title="Editar" value="Editar" onstart="start()"
@@ -251,22 +237,19 @@
 									</p:commandLink>
 								</p:column>
 
-
 							</p:dataTable>
-
 
 						</div>
 					</div>
 				</p:panel>
 
-			</div>
 
+			</div>
 			<div class="fixed-btn">
 				<p:panel id="btn-panel-p">
 
 					<div id="btn-panel-wizard" class="ui-g ui-fluid"
 						style="margin-bottom: 20px">
-
 
 						<div class="ui-g-12">
 
@@ -337,6 +320,8 @@
 				</p:panel>
 
 			</div>
+
+
 
 			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
 				<p:commandButton value="Sim" type="button"
