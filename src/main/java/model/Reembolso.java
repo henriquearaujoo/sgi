@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @DiscriminatorValue("reembolso")
@@ -18,8 +20,6 @@ public class Reembolso extends Lancamento {
 
 	@Column
 	private String competencia;
-	
-	
 
 	public Reembolso() {
 
@@ -37,12 +37,12 @@ public class Reembolso extends Lancamento {
 		setDescricao(descricao);
 		setValorTotalComDesconto(valorComDesconto);
 	}
-	
+
 	public String getCompetencia() {
 		return competencia;
 	}
 
 	public void setCompetencia(String competencia) {
 		this.competencia = competencia;
-	}	
+	}
 }

@@ -28,7 +28,7 @@
 			<div class="ui-g-12">
 
 				<p:timeline id="timeline" value="#{home_controller.model}"
-					rendered="#{home_controller.showCalendar}" locale="pt"
+					rendered="#{!home_controller.showCalendar}" locale="pt"
 					height="200px" selectable="#{home_controller.selectable}"
 					zoomable="#{home_controller.zoomable}"
 					start="#{home_controller.initDateTimeLine}"
@@ -46,7 +46,7 @@
 
 
 				<p:schedule id="schedule"
-					rendered="#{!home_controller.showCalendar}"
+					rendered="#{home_controller.showCalendar}"
 					value="#{home_controller.eventModel}" widgetVar="myschedule"
 					locale="pt" style="width:70%;margin-left:auto;margin-right:auto">
 

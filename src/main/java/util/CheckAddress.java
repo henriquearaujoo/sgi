@@ -1,6 +1,7 @@
 package util;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -13,11 +14,16 @@ public class CheckAddress {
 	public static void main(String[] args) throws IOException {
 			//verificaData();
 			
-			Pattern pat = Pattern.compile("((\\\\d)*([a-z])*([A-Z])*([@#$%])*){6,20}");
+			/*Pattern pat = Pattern.compile("((\\\\d)*([a-z])*([A-Z])*([@#$%])*){6,20}");
 			
 			if (!pat.matcher("senha1@").matches()) {
 			 System.out.println("Teste!!!");  
-			}
+			}*/
+		
+			BigDecimal a = new BigDecimal("4");
+			BigDecimal b = new BigDecimal("4");
+			
+			System.out.println(a.compareTo(b));
 			
 	}
 

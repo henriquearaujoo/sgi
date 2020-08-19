@@ -51,7 +51,7 @@ public class AutorizacaoService implements Serializable {
 
 	@Inject
 	private AutorizacaoRepositorio autorizacaoRepositorio;
-	
+
 	@Inject
 	private CotacaoService cotacaoService;
 
@@ -66,8 +66,17 @@ public class AutorizacaoService implements Serializable {
 	}
 
 	public void imprimir(Lancamento lancamento) {
-		LancamentoIterface lancamentoInterface = TipoLancamentoV4.valueOf(lancamento.getTipov4()).obterInstancia();
-		lancamentoInterface.imprimir(lancamento);
+
+		if (lancamento.getTipov4().equals("PCA")) {
+			LancamentoIterface lancamentoInterface = TipoLancamentoV4.valueOf("SA").obterInstancia();
+			lancamentoInterface.imprimir(lancamento);
+
+		} else {
+			LancamentoIterface lancamentoInterface = TipoLancamentoV4.valueOf(lancamento.getTipov4()).obterInstancia();
+			lancamentoInterface.imprimir(lancamento);
+
+		}
+
 	}
 
 	// public void desautorizar(List<Lancamento> lancamentos, String args) {
@@ -238,20 +247,20 @@ public class AutorizacaoService implements Serializable {
 
 	public Lancamento getLancamentoByIdResumo(Long id) {
 		Lancamento l = autorizacaoRepositorio.getLancamentoByIdResumo(id);
-				
+
 		l.setArquivos(new ArrayList<ArquivoLancamento>());
 		l.setLancamentosAcoes(new ArrayList<>());
 		l.setLancamentosAcoes(getRecursos(id));
-		
+
 		if (l.getIdCompra() != null) {
 			l.setArquivos(getArquivosByLancamento(id, l.getIdCompra()));
-		}else {
+		} else {
 			l.setArquivos(getArquivosByLancamento(id));
 		}
-					
+
 		return l;
 	}
-	
+
 	// ARQUIVOS DE LANÇAMENTO - ANEXOS
 	public List<ArquivoLancamento> getArquivosByLancamento(Long id) {
 		return autorizacaoRepositorio.getArquivosByLancamento(id);
@@ -266,12 +275,11 @@ public class AutorizacaoService implements Serializable {
 	public List<LancamentoAcao> getRecursos(Long id) {
 		return autorizacaoRepositorio.getRecursos(id);
 	}
-	
-	
+
 	@Inject
 	private CotacaoRepository cotRepositorio;
 	private List<CotacaoAuxiliar> cotacoesAuxiliares = new ArrayList<>();
-	
+
 	public List<CotacaoAuxiliar> getCotacaoAuxiliar(Long id) {
 		return cotRepositorio.getCotacaoAuxiliar(id);
 	}
@@ -293,18 +301,18 @@ public class AutorizacaoService implements Serializable {
 	public void setAutorizacaoRepositorio(AutorizacaoRepositorio autorizacaoRepositorio) {
 		this.autorizacaoRepositorio = autorizacaoRepositorio;
 	}
-	
+
 	public String getTotais(BigDecimal total) {
 		NumberFormat format = NumberFormat.getCurrencyInstance();
 		return format.format(total);
 		// return new DecimalFormat("###,###.###").format(total);
 	}
-	
+
 	public void imprimirMapaComparativo(Long id) {
 
 		StringBuilder resumo = new StringBuilder();
 		Compra compra = cotacaoService.getCompraById(id);
-		
+
 		cotacoesAuxiliares = cotacaoService.getCotacaoAuxiliar(id);
 		for (CotacaoAuxiliar cot : cotacoesAuxiliares) {
 			resumo.append(cot.getFornecedor() + ": " + getTotais(cot.getTotalDesconto()) + "\n");
@@ -518,18 +526,18 @@ public class AutorizacaoService implements Serializable {
 		}
 
 	}
-	
+
 	@Inject
 	private LancamentoRepository lancamentoRepositorio;
-	
-	public List<LancamentoAvulso> getPrestacoes(Long id){
+
+	public List<LancamentoAvulso> getPrestacoes(Long id) {
 		return lancamentoRepositorio.getPrestacoes(id);
 	}
-	
+
 	public LancamentoAcao buscarLancamentoAcao(Long id) {
 		return lancamentoRepositorio.getLancamentoAcaoPorLancamento(id);
 	}
-	
+
 	public void imprimirPrestacao(Long idAdiantamento) {
 
 		BigDecimal totalEntrada = BigDecimal.ZERO;
@@ -537,7 +545,7 @@ public class AutorizacaoService implements Serializable {
 		String conta = "";
 
 		// filtro.setNumeroDocumento(idAdiantamento.toString());
-		
+
 		LancamentoAcao lancamentoAcao = buscarLancamentoAcao(idAdiantamento);
 
 		List<LancamentoAvulso> mListAux = getPrestacoes(idAdiantamento);
@@ -601,21 +609,18 @@ public class AutorizacaoService implements Serializable {
 		parametros.put("TOTAL_ENTRADA", totalEntrada);
 		parametros.put("TOTAL_SAIDA", totalSaida);
 		parametros.put("saldoFinal", totalEntrada.subtract(totalSaida));
-		parametros.put("usuario",
-				"" + " " + new SimpleDateFormat("dd/MM/yyyy hh:mm").format(new Date()));
+		parametros.put("usuario", "" + " " + new SimpleDateFormat("dd/MM/yyyy hh:mm").format(new Date()));
 
 		JRDataSource dataSource = new JRBeanCollectionDataSource(mList, false);
 
 		try {
 			JasperDesign jd = JRXmlLoader.load(path + "resources/relatorio/PrestacaoContas.jrxml");
 			JasperReport report = JasperCompileManager.compileReport(jd);
-			ReportUtil.openReport("Adiantamento", "Adiantamento" + idAdiantamento, report, parametros,
-					dataSource);
+			ReportUtil.openReport("Adiantamento", "Adiantamento" + idAdiantamento, report, parametros, dataSource);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
-
 
 }

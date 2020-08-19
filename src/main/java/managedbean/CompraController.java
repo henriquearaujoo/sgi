@@ -577,7 +577,7 @@ public class CompraController implements Serializable {
 		carregarCategorias();
 		// getProjetoByUsuario();
 		// carregarItensDetalhados();
-		filtro = new Filtro();
+		//filtro = new Filtro();
 
 	}
 

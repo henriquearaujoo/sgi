@@ -8,8 +8,6 @@
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
 
-
-
 	<ui:define name="content">
 
 		<f:metadata>
@@ -39,8 +37,8 @@
 
 				<p:messages showSummary="false" showDetail="true" closable="true"
 					escape="true">
-				
-					<p:autoUpdate></p:autoUpdate>	
+
+					<p:autoUpdate></p:autoUpdate>
 				</p:messages>
 
 				<p:breadCrumb>
@@ -58,7 +56,7 @@
 						<div class="ui-g-3 form-group">
 
 							<h:outputText value="Doc fiscal" />
-							<p:selectOneMenu required="true"
+							<p:selectOneMenu required="false"
 								requiredMessage="Preencha o campo 'Doc fiscal'"
 								autoWidth="false"
 								value="#{prestacao_conta_controller.prestacaoDeContas.tipoDocumentoFiscal}">
@@ -80,10 +78,10 @@
 						</div>
 
 						<div class="ui-g-3 form-group">
-							<p:outputLabel for="category" value="Categoria" />
+							<h:outputText value="Categoria" />
 
 							<p:selectOneMenu id="category" filter="true" autoWidth="false"
-							 	required="true" requiredMessage="Preencha o campo 'categoria'"
+								required="false" requiredMessage="Preencha o campo 'categoria'"
 								filterMatchMode="contains" converter="categoriaFinConverter"
 								value="#{prestacao_conta_controller.prestacaoDeContas.categoriaFinanceira}">
 								<f:selectItem noSelectionOption="true" />
@@ -98,7 +96,7 @@
 
 						<div class="ui-g-3 form-group">
 							<h:outputText value="Data de pagamento" />
-							<p:calendar id="dt_inicio" required="true"
+							<p:calendar id="dt_inicio" required="false"
 								requiredMessage="Preencha o campo 'Data de pagamento'."
 								value="#{prestacao_conta_controller.prestacaoDeContas.dataPagamentoPrestacao}"
 								navigator="true" pattern="dd/MM/yyyy" />
@@ -107,14 +105,14 @@
 
 						<div class="ui-g-4 form-group">
 							<h:outputText value="Descrição" />
-							<p:inputText required="true"
+							<p:inputText required="false"
 								requiredMessage="Preencha o campo 'Descrição'."
 								value="#{prestacao_conta_controller.prestacaoDeContas.descricao}" />
 						</div>
 
 						<div class="ui-g-4 form-group">
 							<h:outputText value="Favorecido" />
-							<p:autoComplete required="true"
+							<p:autoComplete required="false"
 								requiredMessage="Preencha o campo 'Favorecido'."
 								value="#{prestacao_conta_controller.prestacaoDeContas.contaRecebedor}"
 								completeMethod="#{pagamentoLancController.completeConta}"
@@ -212,11 +210,11 @@
 
 								</p:column>
 
-								<p:column style="width:150px">
+								<p:column style="width:150px" rendered="#{prestacao_conta_controller.adiantamento.statusAdiantamento.nome.equals('Em aberto') 
+										|| prestacao_conta_controller.adiantamento.statusAdiantamento.nome.equals('Devolução de documentos')}">
 									<p:commandLink title="Editar" value="Editar" onstart="start()"
 										onsuccess="stop()" onerror="stop()"
-										rendered="#{prestacao_conta_controller.adiantamento.statusAdiantamento.nome.equals('Em aberto') 
-										|| prestacao_conta_controller.adiantamento.statusAdiantamento.nome.equals('Devolução de documentos')}"
+										
 										styleClass="btn btn-primary btn-sm" process="@this"
 										update="form_adiantamento">
 										<f:setPropertyActionListener value="#{prestacao}"
@@ -227,7 +225,7 @@
 									<p:commandLink title="excluir" onstart="start()"
 										onsuccess="stop()" onerror="stop()"
 										style="color:#fff;margin-left:5px" value="Excluir"
-										rendered="#{prestacao_conta_controller.adiantamento.statusAdiantamento.nome.equals('Em aberto') || prestacao_conta_controller.adiantamento.statusAdiantamento.nome.equals('Devolução de documentos')}"
+										
 										styleClass="btn btn-danger btn-sm"
 										action="#{prestacao_conta_controller.removerPrestacao()}"
 										process="@this" update="form_adiantamento">
@@ -280,12 +278,13 @@
 							</p:commandLink>
 
 							<p:commandLink onstart="start()" onsuccess="stop()"
-								onerror="stop()" process="@this"
+								onerror="stop()" process="@this" update="panel-recurso form_reembolso"
+								onclick="setarWidthHeight('form-recurso');start()"
 								rendered="#{prestacao_conta_controller.verificarPrivilegioADT()}"
 								action="#{prestacao_conta_controller.prepararReembolso(
 								prestacao_conta_controller.adiantamento.valorTotalComDesconto.
 								subtract(prestacao_conta_controller.totalSaida).add(prestacao_conta_controller.totalEntrada))}"
-								styleClass="btn btn-primary btn-sm " update=":form_reembolso">
+								styleClass="btn btn-primary btn-sm ">
 								<span style="font-family: Arial">Reembolso de prestação</span>
 							</p:commandLink>
 
@@ -341,6 +340,14 @@
 				name="logofas.png" />
 		</p:dialog>
 
+		<p:dialog widgetVar="set_budget" modal="true" width="100%"
+			resizable="false" draggable="false" height="100%" closable="true"
+			closeOnEscape="true" showHeader="true" header="Reembolso"
+			showEffect="clip" hideEffect="clip">
+
+			<ui:include src="/main/dialog/prestacaodecontas/recurso.xhtml" />
+
+		</p:dialog>
 
 		<p:dialog header="Devolução de recurso" showHeader="false"
 			widgetVar="dlg_devolucao" modal="true" showEffect="clip"
@@ -434,9 +441,10 @@
 				<p:separator></p:separator>
 
 				<p:commandLink style="color:#fff"
-					oncomplete="PF('dlg_reembolso').hide();"
+					oncomplete="PF('dlg_reembolso').hide(); stop();"
+					onclick="start();" onerror="stop();" 
 					action="#{prestacao_conta_controller.salvarReembolso()}"
-					styleClass="btn btn-success btn-xs fa fa-check-square-o"
+					styleClass="btn btn-success btn-xs"
 					update=":form_adiantamento">
 					<span style="font-family: Arial">Confirmar reembolso</span>
 				</p:commandLink>

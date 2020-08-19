@@ -1,6 +1,5 @@
 package managedbean;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,6 @@ import javax.inject.Named;
 import model.Colaborador;
 import model.MenuLateral;
 import model.Perfil;
-import model.TipoLocalizacaoMunicipioFamiliar;
 import model.User;
 import service.SolicitacaoViagemService;
 import service.UsuarioService;
@@ -152,7 +150,6 @@ public class UsuarioControllerAtt implements Serializable {
 	@PostConstruct
 	public void init() {
 		carregarUsuarios();
-		
 	}
 
 	// Getter and Setter

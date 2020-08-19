@@ -73,11 +73,11 @@ public class AutorizacaoRepositorio implements Serializable {
 			stb.append("where ad.documento = l.tipo_v4 and ad.colaborador = :id_colaborador and ad.gestao = l.gestao_id and ad.ordem = 1) ");
 			stb.append("ELSE ");
 			stb.append("(select ad.status from aprovadordocumento ad where ad.documento = l.tipo_v4 and ad.colaborador = :id_colaborador ");
-			stb.append("and ad.gestao = l.gestao_id and ad.ordem = 2) END), statusadiantamento = (case when statuscompra = 'CONCLUIDO' THEN ");
+			stb.append("and ad.gestao = l.gestao_id and ad.ordem = 2) END), ");
+			
+			stb.append("statusadiantamento = (case when statuscompra = 'CONCLUIDO' THEN ");
 			stb.append("(select ad.status from aprovadordocumento ad where ad.documento = l.tipo_v4 and ad.colaborador = :id_colaborador and ad.gestao = l.gestao_id and ad.ordem = 2) ");
 			stb.append("ELSE l.statusadiantamento END) where id in (:identifys); ");
-			
-			
 			
 			
 			Query query = manager.createNativeQuery(stb.toString());
@@ -184,8 +184,12 @@ public class AutorizacaoRepositorio implements Serializable {
 	public List<Lancamento> getSolicitacoes(Long id) {
 
 		StringBuilder jpql = new StringBuilder();
-		jpql.append("SELECT l.tipo_v4 as tipo, l.id,");
-		jpql.append("to_char(l.data_emissao, 'dd/MM/yyyy'),");
+		jpql.append("SELECT ");
+		jpql.append("CASE WHEN (l.tipo_v4 = 'SA' and l.statuscompra = 'CONCLUIDO') ");
+		jpql.append("then 'PCA' ");
+		jpql.append("ELSE l.tipo_v4 END as tipo, ");
+		jpql.append("l.id, ");
+		jpql.append("to_char(l.data_emissao, 'dd/MM/yyyy'), ");
 		jpql.append("CASE ");
 		jpql.append(
 				"WHEN (l.tipo_v4 = 'SC') THEN (select c.nome from categoria_despesa c where c.id = l.categoriadespesaclass_id) ");

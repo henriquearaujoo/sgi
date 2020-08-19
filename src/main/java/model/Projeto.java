@@ -208,10 +208,9 @@ public class Projeto implements Serializable {
 	private BigDecimal totalEntrada;
 	@Transient
 	private BigDecimal totalSaida;
-	
-	@Transient 
+
+	@Transient
 	private String cor;
-	
 
 	public Projeto() {
 	}
@@ -253,10 +252,10 @@ public class Projeto implements Serializable {
 		this.nome = codigo + " - " + nome;
 		// this.codigo = codigo;
 	}
-	
-	public Projeto(Long id, String nome, String codigo, BigDecimal valor,Gestao gestao) {
+
+	public Projeto(Long id, String nome, String codigo, BigDecimal valor, Gestao gestao) {
 		this.id = id;
-		this.nome = codigo + " - " + nome + " / "+gestao.getNome();
+		this.nome = codigo + " - " + nome + " / " + gestao.getNome();
 	}
 
 	public Projeto(Long id, String nome, Date dataInicio, Date dataFim, BigDecimal valor) {
@@ -274,6 +273,14 @@ public class Projeto implements Serializable {
 		this.dataFinal = dataFim;
 		this.valor = valor;
 		this.tarifado = tarifado;
+	}
+
+	public Projeto(Long id, String codigo, String nome, BigDecimal valor, Integer quantidadeAtividade) {
+		this.id = id;
+		this.codigo = codigo;
+		this.nome = nome;
+		this.valor = valor;
+		this.quantidadeAtividade = quantidadeAtividade;
 	}
 
 	public Projeto(Long id, String nome, Date dataInicio, Date dataFim, BigDecimal valor, Boolean tarifado,
@@ -326,19 +333,10 @@ public class Projeto implements Serializable {
 
 	@Transient
 	private BigDecimal faltaEmpenhar = BigDecimal.ZERO;
-	
-	public Projeto(Long id,
-			String nome, 
-			Date dataInicio, 
-			Date dataFim,
-			BigDecimal valor, 
-			String codigo, 
-			Boolean ativo, 
-			BigDecimal totalEntrada, 
-			BigDecimal totalSaida, 
-			Integer qtdAtividadePlan, 
-			Integer qtdAtividadeExec) {
-	
+
+	public Projeto(Long id, String nome, Date dataInicio, Date dataFim, BigDecimal valor, String codigo, Boolean ativo,
+			BigDecimal totalEntrada, BigDecimal totalSaida, Integer qtdAtividadePlan, Integer qtdAtividadeExec) {
+
 		this.id = id;
 		this.nome = nome;
 		this.dataInicio = dataInicio;
@@ -359,22 +357,12 @@ public class Projeto implements Serializable {
 		this.totalPercentualFisico = (totalQtdExecutada.doubleValue() / totalQtdPlanejada) * 100;
 
 		this.totalPercentualFinanceiro = (totalVLlExecutado.doubleValue() / this.valor.doubleValue()) * 100;
-	
-	
+
 	}
 
-	public Projeto(Long id,
-				   String nome,
-				   Date dataInicio,
-				   Date dataFim,
-				   BigDecimal valor,
-				   String codigo,
-				   Boolean ativo,
-				   BigDecimal totalEntrada,
-				   BigDecimal totalSaida,
-				   Integer qtdAtividadePlan,
-				   Integer qtdAtividadeExec,
-				   String statusAprovacao) {
+	public Projeto(Long id, String nome, Date dataInicio, Date dataFim, BigDecimal valor, String codigo, Boolean ativo,
+			BigDecimal totalEntrada, BigDecimal totalSaida, Integer qtdAtividadePlan, Integer qtdAtividadeExec,
+			String statusAprovacao) {
 
 		this.id = id;
 		this.nome = nome;
@@ -426,7 +414,8 @@ public class Projeto implements Serializable {
 	public Projeto(Long id, String nome, Date dataInicio, Date dataFim, BigDecimal valor, Boolean tarifado,
 			String codigo, String cadeia, Boolean ativo, String nomeLocalidade, String codePlano, String plano,
 			String componente, String subComponente, String nomeGestao, BigDecimal faltaEmpenhar,
-			BigDecimal totalEntrada, BigDecimal totalSaida, Integer qtdAtividadePlan, Integer qtdAtividadeExec, Integer qtdAtividadeNpLan) {
+			BigDecimal totalEntrada, BigDecimal totalSaida, Integer qtdAtividadePlan, Integer qtdAtividadeExec,
+			Integer qtdAtividadeNpLan) {
 		this.id = id;
 		this.nome = nome;
 		this.dataInicio = dataInicio;
@@ -448,7 +437,7 @@ public class Projeto implements Serializable {
 		this.totalSaldo = this.valor.subtract(this.totalVLlExecutado);
 
 		this.totalQtdPlanejada = qtdAtividadePlan;
-		
+
 		this.totalQtdNaoPlanejada = qtdAtividadeNpLan;
 
 		this.totalQtdExecutada = qtdAtividadeExec;
@@ -910,8 +899,6 @@ public class Projeto implements Serializable {
 	public void setTotalVLlExecutado(BigDecimal totalVLlExecutado) {
 		this.totalVLlExecutado = totalVLlExecutado;
 	}
-
-	
 
 	public Double getTotalPercentualFinanceiro() {
 		return totalPercentualFinanceiro;

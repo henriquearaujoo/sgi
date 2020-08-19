@@ -23,6 +23,7 @@ import org.primefaces.PrimeFaces;
 
 import model.Adiantamento;
 import model.Aprouve;
+import model.AtividadeProjeto;
 import model.CategoriaDespesaClass;
 import model.CategoriaFinanceira;
 import model.ContaBancaria;
@@ -32,6 +33,9 @@ import model.LancamentoAuxiliar;
 import model.LancamentoAvulso;
 import model.MenuLateral;
 import model.PagamentoLancamento;
+import model.Projeto;
+import model.ProjetoRubrica;
+import model.Reembolso;
 import model.StatusCompra;
 import model.TipoDeDocumentoFiscal;
 import model.TipoParcelamento;
@@ -41,7 +45,10 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import repositorio.CalculatorRubricaRepositorio;
+import service.PagamentoService;
 import service.PrestacaoContaService;
+import service.ProjetoService;
 import util.DataUtil;
 import util.Filtro;
 import util.MakeMenu;
@@ -63,6 +70,7 @@ public class PrestacaoDeContaController implements Serializable {
 
 	private @Inject LancamentoAvulso prestacaoDeContas;
 	private @Inject LancamentoAcao lancamentoAcao;
+	private @Inject LancamentoAcao lancamentoAcaoInsereReembolso;
 	private @Inject PrestacaoContaService service;
 	private @Inject UsuarioSessao usuarioSessao;
 
@@ -76,11 +84,17 @@ public class PrestacaoDeContaController implements Serializable {
 	private BigDecimal totalSaida = BigDecimal.ZERO;
 	private BigDecimal totalEntrada = BigDecimal.ZERO;
 
+	private Projeto projetoAux;
+	private List<Projeto> projetos = new ArrayList<>();
+
 	private Integer stepIndex = 0;
 
 	private LancamentoAuxiliar adiantamento = new LancamentoAuxiliar();
 
 	private List<CategoriaFinanceira> listCategoriaFinanceira = new ArrayList<>();
+
+	@Inject
+	private CalculatorRubricaRepositorio calculatorRubricaRepositorio;
 
 	public MenuLateral getMenu() {
 		return menu;
@@ -89,13 +103,12 @@ public class PrestacaoDeContaController implements Serializable {
 	public void setMenu(MenuLateral menu) {
 		this.menu = menu;
 	}
-	
+
 	public String voltarListagem() {
 		return "adiantamentos?faces-redirect=true";
 	}
 
 	public void steping(String modo) {
-
 
 		if (modo.equalsIgnoreCase("next")) {
 			if (stepIndex == 1) {
@@ -103,14 +116,13 @@ public class PrestacaoDeContaController implements Serializable {
 			}
 
 			stepIndex++;
-		}else {
+		} else {
 			if (stepIndex == 0) {
 				return;
 			}
 			stepIndex--;
 		}
 	}
-
 
 	@PostConstruct
 	public void init() {
@@ -124,6 +136,25 @@ public class PrestacaoDeContaController implements Serializable {
 
 	public void carregarCategoriasFin() {
 		listCategoriaFinanceira = service.buscarCategoriasFin();
+	}
+
+	private List<ProjetoRubrica> listaDeRubricasProjeto = new ArrayList<>();
+	private List<AtividadeProjeto> listaAtividades;
+
+	public void listaRubricasAndAtividades() {
+
+		if (projetoAux == null) {
+			lancamentoAcao = new LancamentoAcao();
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção",
+					"Você deve selecionar um projeto antes de buscar rubrica! ");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+			FacesContext.getCurrentInstance().addMessage(null, message);
+			listaDeRubricasProjeto = new ArrayList<ProjetoRubrica>();
+			setListaAtividades(new ArrayList<AtividadeProjeto>());
+		} else {
+			listaDeRubricasProjeto = calculatorRubricaRepositorio.getProjetoRubricaByProjeto(projetoAux.getId());
+			// findAtividadesByProjetoWithSaldo();
+		}
 	}
 
 	public void verificarExigencia() {
@@ -296,12 +327,16 @@ public class PrestacaoDeContaController implements Serializable {
 			faltaCampo = true;
 		}
 
-
 		return faltaCampo;
 
 	}
 
 	public void prepararDevolucao(BigDecimal valorDevolucao) {
+
+		if (!(valorDevolucao.compareTo(BigDecimal.ZERO) > 0)) {
+			addMessage("", "Não há valores para devolver.", FacesMessage.SEVERITY_ERROR);
+			return;
+		}
 
 		PagamentoLancamento pgto = service.buscarPagamentoByLancamentoAcao(lancamentoAcao.getId());
 
@@ -346,7 +381,27 @@ public class PrestacaoDeContaController implements Serializable {
 
 	}
 
+	@Inject
+	private ProjetoService projetoService;
+
+	public void carregarProjetos() {
+
+		if (usuarioSessao.getUsuario().getPerfil().getDescricao().equals("admin")
+				|| usuarioSessao.getUsuario().getPerfil().getDescricao().equals("financeiro")) {
+			projetos = projetoService.getProjetosbyUsuarioProjeto(null, filtro);
+			return;
+		}
+
+		projetos = projetoService.getProjetosbyUsuarioProjeto(usuarioSessao.getUsuario(), filtro);
+
+	}
+
 	public void prepararReembolso(BigDecimal valorReembolso) {
+
+		if (!(valorReembolso.abs().compareTo(BigDecimal.ZERO) > 0)) {
+			addMessage("", "Não há valores para reembolsar.", FacesMessage.SEVERITY_ERROR);
+			return;
+		}
 
 		PagamentoLancamento pgto = service.buscarPagamentoByLancamentoAcao(lancamentoAcao.getId());
 
@@ -356,6 +411,9 @@ public class PrestacaoDeContaController implements Serializable {
 					FacesMessage.SEVERITY_ERROR);
 			return;
 		}
+
+		lancamentoAcaoInsereReembolso.setProjetoRubrica(lancamentoAcao.getProjetoRubrica());
+		lancamentoAcaoInsereReembolso.setValor(valorReembolso.abs());
 
 		reembolso = new LancamentoAvulso();
 		reembolso.setDescricao("Reembolso de despesa");
@@ -371,23 +429,27 @@ public class PrestacaoDeContaController implements Serializable {
 		reembolso.setDataEmissao(new Date());
 		reembolso.setDataPagamento(new Date());
 		reembolso.setStatusCompra(StatusCompra.CONCLUIDO);
+		reembolso.setLancamentosAcoes(new ArrayList<>());
+
+		if (!calculatorRubricaRepositorio.verificarSaldoRubrica(
+				lancamentoAcaoInsereReembolso.getProjetoRubrica().getId(), valorReembolso.abs())) {
+			carregarProjetos();
+			lancamentoAcaoInsereReembolso = new LancamentoAcao();
+			valorTotalAReembolsar = reembolso.getValorTotalComDesconto();
+			abreDialog("PF('set_budget').show();");
+			addMessage("",
+					"Não há saldo no recurso inserido para custeio da despesa, por favor escolha outro centro de custo",
+					FacesMessage.SEVERITY_WARN);
+			return;
+		}
 
 		LancamentoAcao la = new LancamentoAcao();
-		// la.setProjeto(lancamentoAcao.getProjeto());
-		// la.setOrcamento(lancamentoAcao.getOrcamento());
-		la.setProjetoRubrica(lancamentoAcao.getProjetoRubrica());
+		la.setProjetoRubrica(lancamentoAcaoInsereReembolso.getProjetoRubrica());
 		la.setValor(reembolso.getValorTotalComDesconto());
+		valorTotalAReembolsar = reembolso.getValorTotalComDesconto();
 		la.setDespesaReceita(DespesaReceita.DESPESA);
-
-		// la.setAcao(lancamentoAcao.getAcao());
-		// la.setFontePagadora(lancamentoAcao.getFontePagadora());
-		// la.setValor(reembolso.getValorTotalComDesconto());
-
-		reembolso.setLancamentosAcoes(new ArrayList<>());
 		reembolso.getLancamentosAcoes().add(la);
-
 		abreDialog("PF('dlg_reembolso').show();");
-
 	}
 
 	public void salvarDevolucao() {
@@ -399,25 +461,50 @@ public class PrestacaoDeContaController implements Serializable {
 	}
 
 	public void salvarReembolso() {
+
+		if (compareValorRembolso()) {
+			return;
+		}
+
 		reembolso.setVersionLancamento("MODE01");
 		service.salvarLancamentoAvulso(reembolso, usuarioSessao.getUsuario());
 		reembolso = new LancamentoAvulso();
 		carregaPrestacoes(idAdiantamento, adiantamento.getContaRecebedor().getId());
 		carregarValores();
+		PrimeFaces.current().executeScript("PF('set_budget').hide()");
+
+	}
+
+	public boolean compareValorRembolso() {
+
+		BigDecimal totaisDaLista = BigDecimal.ZERO;
+
+		for (LancamentoAcao la : reembolso.getLancamentosAcoes()) {
+			totaisDaLista = totaisDaLista.add(la.getValor());
+		}
+
+		if (!(totaisDaLista.compareTo(reembolso.getValorTotalComDesconto()) == 0)) {
+			addMessage("",
+					"Hum... Parece que você adicionou menos recursos do que o reembolso necessita, por favor insira os valores corretos",
+					FacesMessage.SEVERITY_ERROR);
+			totaisDaLista = BigDecimal.ZERO;
+			return true;
+		}
+
+		return false;
 	}
 
 	public void validarAdiantamento() {
 		if (verificarPrivilegioValidacao()) {
-			service.validarAdiantamentoComLog(adiantamento.getId(),usuarioSessao.getUsuario());
+			service.validarAdiantamentoComLog(adiantamento.getId(), usuarioSessao.getUsuario());
 			carregarLancamento();
 			carregaPrestacoes(idAdiantamento, adiantamento.getContaRecebedor().getId());
-
 			service.validarLancamentosParaConcilicacao(adiantamento.getId());
 			service.validarLancamentosParaConcilicacao(listPrestacoes);
 
-			//			for(LancamentoAvulso l: listPrestacoes) {
-			//				service.validarAdiantamentoComLog(l.getId(),usuarioSessao.getUsuario());
-			//			}
+			// for(LancamentoAvulso l: listPrestacoes) {
+			// service.validarAdiantamentoComLog(l.getId(),usuarioSessao.getUsuario());
+			// }
 
 			carregarValores();
 		} else {
@@ -461,6 +548,73 @@ public class PrestacaoDeContaController implements Serializable {
 		carregaPrestacoes(idAdiantamento, adiantamento.getContaRecebedor().getId());
 		carregarValores();
 		carregarLancamentoAcao();
+	}
+
+	public Boolean verificaCamposRecurso() {
+
+		Boolean retorno = false;
+
+		if (lancamentoAcaoInsereReembolso.getProjetoRubrica() == null) {
+			addMessage("", "Preencha o campo 'Linha orçamentária' antes de prosseguir.", FacesMessage.SEVERITY_ERROR);
+			retorno = true;
+		}
+
+		if (lancamentoAcaoInsereReembolso.getValor() == null) {
+			addMessage("", "Preencha o campo 'Valor' antes de prosseguir.", FacesMessage.SEVERITY_ERROR);
+			retorno = true;
+		}
+
+		return retorno;
+	}
+
+	private @Inject PagamentoService serviceP;
+
+	public void removerAcao(LancamentoAcao lancamentoAcao) {
+		reembolso.getLancamentosAcoes().remove(lancamentoAcao);
+	}
+
+	private BigDecimal valorTotalAReembolsar = BigDecimal.ZERO;
+
+	public void adicionarNovaAcao() {
+
+		if (verificaCamposRecurso()) {
+			return;
+		}
+
+		BigDecimal totaisDaLista = lancamentoAcaoInsereReembolso.getValor();
+
+		if (!calculatorRubricaRepositorio.verificarSaldoRubrica(
+				lancamentoAcaoInsereReembolso.getProjetoRubrica().getId(), lancamentoAcaoInsereReembolso.getValor())) {
+			addMessage("",
+					"Não há saldo no recurso inserido para custeio da despesa, por favor escolha outro centro de custo",
+					FacesMessage.SEVERITY_WARN);
+			return;
+		}
+
+		for (LancamentoAcao la : reembolso.getLancamentosAcoes()) {
+			if (la.getProjetoRubrica().equals(lancamentoAcaoInsereReembolso.getProjetoRubrica())) {
+				addMessage("", "Não é Permitido Adição de Duas Linhas Orçamentárias Iguais.",
+						FacesMessage.SEVERITY_WARN);
+				totaisDaLista = BigDecimal.ZERO;
+				return;
+			}
+
+			totaisDaLista = totaisDaLista.add(la.getValor());
+		}
+
+		if (totaisDaLista.compareTo(reembolso.getValorTotalComDesconto()) > 0) {
+			addMessage("", "Valor inserido maior que reembolso previsto", FacesMessage.SEVERITY_ERROR);
+			totaisDaLista = BigDecimal.ZERO;
+			return;
+		}
+
+		lancamentoAcaoInsereReembolso.setDespesaReceita(DespesaReceita.DESPESA);
+		// lancamentoAcao.setProjeto(lancamentoAcao.getProjetoRubrica().getProjeto());
+		// lancamentoAcao.setOrcamento(lancamentoAcao.getProjetoRubrica().getRubricaOrcamento().getOrcamento());
+		lancamentoAcaoInsereReembolso.setLancamento(reembolso);
+		reembolso.getLancamentosAcoes().add(lancamentoAcaoInsereReembolso);
+
+		lancamentoAcaoInsereReembolso = new LancamentoAcao();
 	}
 
 	public boolean verificarPrivilegioValidacao() {
@@ -727,6 +881,54 @@ public class PrestacaoDeContaController implements Serializable {
 
 	public void setStepIndex(Integer stepIndex) {
 		this.stepIndex = stepIndex;
+	}
+
+	public Projeto getProjetoAux() {
+		return projetoAux;
+	}
+
+	public void setProjetoAux(Projeto projetoAux) {
+		this.projetoAux = projetoAux;
+	}
+
+	public List<Projeto> getProjetos() {
+		return projetos;
+	}
+
+	public void setProjetos(List<Projeto> projetos) {
+		this.projetos = projetos;
+	}
+
+	public List<ProjetoRubrica> getListaDeRubricasProjeto() {
+		return listaDeRubricasProjeto;
+	}
+
+	public void setListaDeRubricasProjeto(List<ProjetoRubrica> listaDeRubricasProjeto) {
+		this.listaDeRubricasProjeto = listaDeRubricasProjeto;
+	}
+
+	public List<AtividadeProjeto> getListaAtividades() {
+		return listaAtividades;
+	}
+
+	public void setListaAtividades(List<AtividadeProjeto> listaAtividades) {
+		this.listaAtividades = listaAtividades;
+	}
+
+	public BigDecimal getValorTotalAReembolsar() {
+		return valorTotalAReembolsar;
+	}
+
+	public void setValorTotalAReembolsar(BigDecimal valorTotalAReembolsar) {
+		this.valorTotalAReembolsar = valorTotalAReembolsar;
+	}
+
+	public LancamentoAcao getLancamentoAcaoInsereReembolso() {
+		return lancamentoAcaoInsereReembolso;
+	}
+
+	public void setLancamentoAcaoInsereReembolso(LancamentoAcao lancamentoAcaoInsereReembolso) {
+		this.lancamentoAcaoInsereReembolso = lancamentoAcaoInsereReembolso;
 	}
 
 }

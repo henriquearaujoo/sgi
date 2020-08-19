@@ -42,30 +42,28 @@ body #form-home .ui-panel .ui-panel-content {
 
 		<h:form id="form-home" prependId="false">
 
-			<p:tabView prependId="false" 
-				style="margin-top:10px;margin-right:auto;margin-left:auto; width:98%">
 
-			
-				<p:tab id="tab-post" title="Informes">
+			<p:tabView prependId="false"
+				style="margin-top:10px;margin-right:auto;margin-left:auto; width:98%">
+				<p:tab id="tab-post" title="#{message['HOME_INFORM']}"
+					rendered="false">
 					<ui:include src="/main/home/post.xhtml" />
 				</p:tab>
-
-				<p:tab id="tab-conduta" title="Código de conduta">
-					<ui:include src="/main/home/codigo_conduta.xhtml" />
-				</p:tab>
-
-				<p:tab id="tab-remoto" title="Links úteis">
-					<ui:include src="/main/home/utilidades.xhtml" />
-				</p:tab>
-
-				<p:tab id="tab-colaborador" title="Colaboradores">
-					<ui:include src="/main/home/colaborador_vi.xhtml" />
-				</p:tab>
-				
-				<p:tab id="tab-evento" title="Eventos">
+				<p:tab id="tab-evento" title="#{message['HOME_EVENT']}">
 					<ui:include src="/main/home/timeline.xhtml" />
 				</p:tab>
-
+				<p:tab id="tab-conduta" title="#{message['HOME_CONDUCT']}"
+					rendered="true">
+					<ui:include src="/main/home/codigo_conduta.xhtml" />
+				</p:tab>
+				<p:tab id="tab-remoto" title="#{message['HOME_UTIL']}"
+					rendered="false">
+					<ui:include src="/main/home/utilidades.xhtml" />
+				</p:tab>
+				<p:tab id="tab-colaborador" title="#{message['HOME_COL']}"
+					rendered="false">
+					<ui:include src="/main/home/colaborador_vi.xhtml" />
+				</p:tab>
 			</p:tabView>
 
 		</h:form>

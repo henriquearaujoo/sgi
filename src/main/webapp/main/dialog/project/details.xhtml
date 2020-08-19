@@ -1,0 +1,42 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<h:form id="id-detail" prependId="false">
+		<p:panel id="main-panel-detail">
+			<div id="main-div-detail" class="ui-g ui-fluid">
+				<p:messages id="msg-detelhes-projeto" showSummary="false"
+					showDetail="true" closable="true" />
+				<p:outputLabel value="Nome do Projeto: " />
+				<p:outputLabel value="#{projetoBean.projetoAux.nome}" />
+				<p:outputLabel value="Valor do Projeto: " />
+				<p:outputLabel value="#{projetoBean.projetoAux.valor}">
+					<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+						maxFractionDigits="2" locale="pt_BR" />
+				</p:outputLabel>
+				<p:outputLabel value="Saidas: " />
+				<p:outputLabel value="#{projetoBean.projetoAux.valorSaida}">
+					<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+						maxFractionDigits="2" locale="pt_BR" />
+				</p:outputLabel>
+				<p:outputLabel value="Entradas: " />
+				<p:outputLabel value="#{projetoBean.projetoAux.valorEntrada}">
+					<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+						maxFractionDigits="2" locale="pt_BR" />
+				</p:outputLabel>
+				<p:outputLabel value="Saldo: " />
+				<p:outputLabel value="#{projetoBean.projetoAux.valorSaldo}">
+					<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+						maxFractionDigits="2" locale="pt_BR" />
+				</p:outputLabel>
+				
+			</div>
+		</p:panel>
+
+	</h:form>
+
+</ui:fragment>

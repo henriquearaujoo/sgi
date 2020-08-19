@@ -21,7 +21,9 @@ public enum StatusCompra {
 	PENDENTE_APROVACAO_THREE("3º autorização"),
 	PENDENTE_APROVACAO_FOUR("4º autorização"),
 	PENDENTE_APROVACAO_FIVE("5º autorização"),
-	PENDENTE_EMAIL("Pendente envio de Email");
+	PENDENTE_EMAIL("Pendente envio de Email"),
+	AUTORIZADO("Autorizado"),
+	RECUSADO("Recusado");
 
 	private String nome;
 	

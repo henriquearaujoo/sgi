@@ -100,8 +100,8 @@ public class AdiantamentoController implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private @Inject PagamentoService service;
 
+	private @Inject PagamentoService service;
 	private @Inject AdiantamentoService adiantamentoService;
 	private @Inject SolicitacaoPagamento adiantamento;
 
@@ -276,7 +276,7 @@ public class AdiantamentoController implements Serializable {
 		filtro.setDataInicio(DataUtil.getDataInicio(new Date()));
 		filtro.setDataFinal(DataUtil.getDataFinal(new Date()));
 		filtro.setTipoLancamento("ad");
-		carregarPagamentos();
+		fetchOrders();
 		carregarProjetos();
 		carregarCategoriasFin();
 		PrimeFaces.current().executeScript("setarFocused('filter-list')");
@@ -402,8 +402,8 @@ public class AdiantamentoController implements Serializable {
 		return projetos;
 	}
 
-	public void carregarPagamentos() {
-		pagamentos = adiantamentoService.getSolicitacaoPagamentos(filtro);
+	public void fetchOrders() {
+		pagamentos = adiantamentoService.fetchOrdersAdvancedPayment(filtro);
 
 	}
 
@@ -525,9 +525,11 @@ public class AdiantamentoController implements Serializable {
 	}
 
 	public void removerAcao(LancamentoAcao lancamentoAcao) {
-		BigDecimal valor = lancamentoAcao.getValor();
-		adiantamento.setValorTotalComDesconto(adiantamento.getValorTotalComDesconto().subtract(valor));
+		
+		//BigDecimal valor = lancamentoAcao.getValor();
+		adiantamento.setValorTotalComDesconto(BigDecimal.ZERO);
 		adiantamento.getLancamentosAcoes().remove(lancamentoAcao);
+		
 		if (adiantamento.getId() != null && lancamentoAcao.getId() != null) {
 			service.removerLancamentoAcao(lancamentoAcao);
 			if (projetoAux != null && projetoAux.getId() != null) {
@@ -626,7 +628,7 @@ public class AdiantamentoController implements Serializable {
 		lancamentoAcao.setDespesaReceita(DespesaReceita.DESPESA);
 		// lancamentoAcao.setProjeto(lancamentoAcao.getProjetoRubrica().getProjeto());
 		// lancamentoAcao.setOrcamento(lancamentoAcao.getProjetoRubrica().getRubricaOrcamento().getOrcamento());
-		adiantamento.setValorTotalComDesconto(adiantamento.getValorTotalComDesconto().add(lancamentoAcao.getValor()));
+		adiantamento.setValorTotalComDesconto(lancamentoAcao.getValor());
 		lancamentoAcao.setLancamento(adiantamento);
 		adiantamento.getLancamentosAcoes().add(lancamentoAcao);
 

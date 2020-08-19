@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import model.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
@@ -20,6 +19,22 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
+import model.AprovacaoProjeto;
+import model.CategoriaDespesaClass;
+import model.CategoriaProjeto;
+import model.Configuracao;
+import model.LancamentoAuxiliar;
+import model.Orcamento;
+import model.OrcamentoProjeto;
+import model.Projeto;
+import model.ProjetoRubrica;
+import model.QualifProjeto;
+import model.RubricaOrcamento;
+import model.StatusAtividade;
+import model.SubPrograma;
+import model.TipoAdministrativoProjeto;
+import model.User;
+import model.UserProjeto;
 import util.DataUtil;
 import util.DateConverter;
 import util.Filtro;
@@ -232,9 +247,8 @@ public class ProjetoRepositorio implements Serializable {
 		Query query = this.manager.createQuery(jpql);
 		return query.getResultList();
 	}
-	
-	
-	//TODO : qualificações de projeto (REFORMA, AMPLIAÇÃO, CONSTRUÇÃO)
+
+	// TODO : qualificações de projeto (REFORMA, AMPLIAÇÃO, CONSTRUÇÃO)
 	public List<QualifProjeto> getQualificacoes() {
 		String jpql = "from QualifProjeto";
 		Query query = this.manager.createQuery(jpql);
@@ -248,9 +262,8 @@ public class ProjetoRepositorio implements Serializable {
 	public Projeto getProjetoPorId(Long id) {
 		return this.manager.find(Projeto.class, id);
 	}
-	
-	
-	//TODO : qualificações de projeto (REFORMA, AMPLIAÇÃO, CONSTRUÇÃO)
+
+	// TODO : qualificações de projeto (REFORMA, AMPLIAÇÃO, CONSTRUÇÃO)
 	public QualifProjeto findByIdQualif(Long id) {
 		return this.manager.find(QualifProjeto.class, id);
 	}
@@ -305,11 +318,11 @@ public class ProjetoRepositorio implements Serializable {
 		return this.manager.merge(categoriaProjeto);
 	}
 
-	public AprovacaoProjeto salvarAprovacao(AprovacaoProjeto aprovacaoProjeto){
+	public AprovacaoProjeto salvarAprovacao(AprovacaoProjeto aprovacaoProjeto) {
 		return this.manager.merge(aprovacaoProjeto);
 	}
 
-	public List<AprovacaoProjeto> obterAprovacoesProjeto(Projeto projeto){
+	public List<AprovacaoProjeto> obterAprovacoesProjeto(Projeto projeto) {
 		StringBuilder str = new StringBuilder();
 		str.append("from AprovacaoProjeto where projeto.id = " + projeto.getId());
 
@@ -454,20 +467,21 @@ public class ProjetoRepositorio implements Serializable {
 	}
 
 	public Integer getQuantidadeAtividade(Projeto projeto, StatusAtividade status) {
-		StringBuilder jpql = new StringBuilder("select count(*) from atividade_projeto a  inner join projeto p on a.projeto_id = p.id ");
+		StringBuilder jpql = new StringBuilder(
+				"select count(*) from atividade_projeto a  inner join projeto p on a.projeto_id = p.id ");
 		jpql.append("where p.id = :projeto");
-		if(status != null) {
+		if (status != null) {
 			jpql.append(" and a.status = :status");
 		}
 		Query query = manager.createNativeQuery(jpql.toString());
-		if(status != null) {
+		if (status != null) {
 			query.setParameter("status", status.name());
 		}
 		query.setParameter("projeto", projeto.getId());
-			
+
 		Object object = query.getSingleResult();
-		
-		return Integer.parseInt(object.toString()!=null?object.toString():"0");
+
+		return Integer.parseInt(object.toString() != null ? object.toString() : "0");
 	}
 
 	public void salvar(Projeto projeto, User usuario) {
@@ -534,14 +548,12 @@ public class ProjetoRepositorio implements Serializable {
 		}
 
 		if (filtro.getPlanos() != null && filtro.getPlanos().length > 0) {
-			hql.append("and p.planodetrabalho_id in (:planos) "); 
+			hql.append("and p.planodetrabalho_id in (:planos) ");
 		}
-		
-		
+
 		if (filtro.getGestaoID() != null && filtro.getGestaoID() != 0l) {
 			hql.append("and p.gestao_id = :id_gestao ");
 		}
-		
 
 		hql.append(" order by p.codigo, p.nome ");
 
@@ -564,7 +576,7 @@ public class ProjetoRepositorio implements Serializable {
 			}
 			query.setParameter("planos", list);
 		}
-		
+
 		if (filtro.getGestaoID() != null && filtro.getGestaoID() != 0l) {
 			query.setParameter("id_gestao", filtro.getGestaoID());
 		}
@@ -609,32 +621,52 @@ public class ProjetoRepositorio implements Serializable {
 
 		return projetosObj;
 	}
-	
+
 	public List<Projeto> getAllProjetosMODE01() {
-	
+
 		StringBuilder jpql = new StringBuilder(
 				"SELECT NEW Projeto(p.id,p.codigo,p.nome,p.dataInicio,p.dataFinal,p.valor,p.quantidadeAtividade) FROM Projeto  p ");
 
 		jpql.append(" where 1 = 1 and versionProjeto = 'mode01' ");
 
-	
-
 		jpql.append("order by p.nome");
 
 		Query query = manager.createQuery(jpql.toString());
 
-	
-		
 		List<Projeto> projetos = query.getResultList();
 
 		return projetos;
 	}
-	
-	
-public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User usuario) {
-		
+
+	public List<Projeto> getAllProject(Filtro filtro, User user) {
+
+		StringBuilder jpql = new StringBuilder(
+				"SELECT NEW Projeto(p.id,p.codigo,p.nome, p.valor,p.quantidadeAtividade) FROM UserProjeto as up RIGHT JOIN up.projeto as p ");
+		jpql.append(" where 1 = 1 and versionProjeto = 'mode01' ");
+
+		if (user != null) {
+			jpql.append("and (up.user.id = :user ");
+			jpql.append(" or p.gestao.colaborador.id = :coll)");
+		}
+
+		jpql.append(" group by p.id, p.nome order by p.nome");
+
+		Query query = this.manager.createQuery(jpql.toString());
+
+		if (user != null) {
+			query.setParameter("user", user.getId());
+			query.setParameter("coll", user.getColaborador().getId());
+		}
+
+		return !query.getResultList().isEmpty() ? (List<Projeto>) query.getResultList() : new ArrayList<Projeto>();
+	}
+
+	// Verificar utilização em outro módulo , BI, Reports
+	public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User usuario) {
+
 		StringBuilder jpql = new StringBuilder();
-		jpql.append("select p.id, p.nome, p.valor,to_char(p.datainicio,'DD-MM-YYYY') as data_inicio,to_char(p.datafinal,'DD-MM-YYYY') as data_final,  ");
+		jpql.append(
+				"select p.id, p.nome, p.valor,to_char(p.datainicio,'DD-MM-YYYY') as data_inicio,to_char(p.datafinal,'DD-MM-YYYY') as data_final,  ");
 		jpql.append("p.codigo as codigo, ");
 		jpql.append("p.ativo, ");
 		// ENTRADAS PROVENIENTES AO PROJETO
@@ -644,7 +676,8 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 		jpql.append("	where l.tipo != 'compra' ");
 		jpql.append("	and l.statuscompra in ('CONCLUIDO','N_INCIADO') ");
 		jpql.append("	and (l.versionlancamento = 'MODE01' or pl.reclassificado is true) ");
-		jpql.append("	and (select proj.id from projeto proj where proj.id = (select ppr.projeto_id from projeto_rubrica ppr where ppr.id = la.projetorubrica_id)) = p.id ");
+		jpql.append(
+				"	and (select proj.id from projeto proj where proj.id = (select ppr.projeto_id from projeto_rubrica ppr where ppr.id = la.projetorubrica_id)) = p.id ");
 		jpql.append("	and (l.idadiantamento is null or l.tipolancamento = 'dev' or l.tipolancamento = 'reenb') ");
 		jpql.append("	and l.tipolancamento != 'reemb_conta' ");
 		jpql.append("	and l.tipo != 'baixa_aplicacao' ");
@@ -652,18 +685,28 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 		jpql.append("	and l.tipo != 'custo_pessoal'   ");
 		jpql.append("	and l.tipo != 'aplicacao_recurso' ");
 		jpql.append("	and case p.tarifado when true then ( 1= 1) else (l.tipo != 'tarifa_bancaria') end	 ");
-		
+
 		jpql.append(" and (false = (pl.tipocontapagador = 'CA' and pl.tipocontarecebedor = 'CF')) ");
 		jpql.append(" and (false = (pl.tipocontapagador = 'CB' and pl.tipocontarecebedor = 'CB')) ");
 		jpql.append(" and (false = (pl.tipocontapagador = 'CF' and pl.tipocontarecebedor = 'CF')) ");
-		jpql.append(" and ((pl.tipocontapagador = 'CF' or pl.tipocontapagador = 'CA') and (pl.tipocontarecebedor = 'CB'))) ");
+		jpql.append(
+				" and ((pl.tipocontapagador = 'CF' or pl.tipocontapagador = 'CA') and (pl.tipocontarecebedor = 'CB'))) ");
 		jpql.append(" as receita, ");
-		
-//		jpql.append("	and (false = ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CA'  and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CF'))");
-//		jpql.append("	and (false = ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CB'  and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CB'))");
-//		jpql.append("	and (false = ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CF'  and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CF'))");
-//		jpql.append("	and (((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CF' or (select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CA') ");
-//		jpql.append("	and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CB')) as receita,");
+
+		// jpql.append(" and (false = ((select cb.tipo from conta_bancaria cb where
+		// cb.id = pl.conta_id) = 'CA' and (select cb.tipo from conta_bancaria cb where
+		// cb.id = pl.contarecebedor_id) = 'CF'))");
+		// jpql.append(" and (false = ((select cb.tipo from conta_bancaria cb where
+		// cb.id = pl.conta_id) = 'CB' and (select cb.tipo from conta_bancaria cb where
+		// cb.id = pl.contarecebedor_id) = 'CB'))");
+		// jpql.append(" and (false = ((select cb.tipo from conta_bancaria cb where
+		// cb.id = pl.conta_id) = 'CF' and (select cb.tipo from conta_bancaria cb where
+		// cb.id = pl.contarecebedor_id) = 'CF'))");
+		// jpql.append(" and (((select cb.tipo from conta_bancaria cb where cb.id =
+		// pl.conta_id) = 'CF' or (select cb.tipo from conta_bancaria cb where cb.id =
+		// pl.conta_id) = 'CA') ");
+		// jpql.append(" and (select cb.tipo from conta_bancaria cb where cb.id =
+		// pl.contarecebedor_id) = 'CB')) as receita,");
 		// SAÍDAS PROVENIENTES AO PROJETO
 		jpql.append("(select sum(pl.valor)");
 		jpql.append("	from lancamento l inner join lancamento_acao la on l.id = la.lancamento_id ");
@@ -671,7 +714,8 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 		jpql.append("	where l.tipo != 'compra'  \r\n");
 		jpql.append("	and l.statuscompra in ('CONCLUIDO','N_INCIADO') \r\n");
 		jpql.append("	and (l.versionlancamento = 'MODE01' or pl.reclassificado is true)\r\n");
-		jpql.append("	and (select proj.id from projeto proj where proj.id = (select ppr.projeto_id from projeto_rubrica ppr where ppr.id = la.projetorubrica_id)) = p.id ");
+		jpql.append(
+				"	and (select proj.id from projeto proj where proj.id = (select ppr.projeto_id from projeto_rubrica ppr where ppr.id = la.projetorubrica_id)) = p.id ");
 		jpql.append("	and (l.idadiantamento is null or l.tipolancamento = 'dev' or l.tipolancamento = 'reenb')\r\n");
 		jpql.append("	and l.tipolancamento != 'reemb_conta' \r\n");
 		jpql.append("	and l.tipo != 'baixa_aplicacao'\r\n");
@@ -679,87 +723,98 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 		jpql.append("	and l.tipo != 'custo_pessoal' \r\n");
 		jpql.append("	and l.tipo != 'aplicacao_recurso'\r\n");
 		jpql.append("	and case  p.tarifado  when true then ( 1 = 1 ) else (l.tipo != 'tarifa_bancaria') end	 ");
-		
+
 		jpql.append(" and (false = (pl.tipocontapagador = 'CA' and pl.tipocontarecebedor = 'CF')) ");
 		jpql.append(" and (false = (pl.tipocontapagador = 'CB' and pl.tipocontarecebedor = 'CB')) ");
 		jpql.append(" and (false = (pl.tipocontapagador = 'CF' and pl.tipocontarecebedor = 'CF')) ");
-		jpql.append(" and ((pl.tipocontarecebedor = 'CF' or pl.tipocontarecebedor = 'CA') and (pl.tipocontapagador = 'CB'))) ");
+		jpql.append(
+				" and ((pl.tipocontarecebedor = 'CF' or pl.tipocontarecebedor = 'CA') and (pl.tipocontapagador = 'CB'))) ");
 		jpql.append(" as despesa, ");
-		
-//		jpql.append("	and (false = ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CA'  and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CF'))\r\n");
-//		jpql.append("	and (false = ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CB'  and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CB'))\r\n");
-//		jpql.append("	and (false = ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CF'  and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CF'))\r\n");
-//		jpql.append("	and (((select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CF' or (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CA')\r\n");
-//		jpql.append("	and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CB')) as despesa, ");
-		
-		jpql.append("(select sum((aproj.jan + aproj.fev + aproj.mar + aproj.abr + aproj.mai + aproj.jun + aproj.jul + aproj.ago + aproj.set + aproj.out + aproj.nov + aproj.dez)) from atividade_projeto aproj where aproj.projeto_id = p.id and planejado is true) as qtd_planejada,");
-		jpql.append("(select sum((aproj.janexec + aproj.fevexec + aproj.marexec + aproj.abrexec + aproj.maiexec + aproj.junexec + aproj.julexec + aproj.agoexec + aproj.setexec + aproj.outexec + aproj.novexec + aproj.dezexec)) from atividade_projeto aproj where aproj.projeto_id = p.id and planejado is true) as qtd_executada, ");
+
+		// jpql.append(" and (false = ((select cb.tipo from conta_bancaria cb where
+		// cb.id = pl.conta_id) = 'CA' and (select cb.tipo from conta_bancaria cb where
+		// cb.id = pl.contarecebedor_id) = 'CF'))\r\n");
+		// jpql.append(" and (false = ((select cb.tipo from conta_bancaria cb where
+		// cb.id = pl.conta_id) = 'CB' and (select cb.tipo from conta_bancaria cb where
+		// cb.id = pl.contarecebedor_id) = 'CB'))\r\n");
+		// jpql.append(" and (false = ((select cb.tipo from conta_bancaria cb where
+		// cb.id = pl.conta_id) = 'CF' and (select cb.tipo from conta_bancaria cb where
+		// cb.id = pl.contarecebedor_id) = 'CF'))\r\n");
+		// jpql.append(" and (((select cb.tipo from conta_bancaria cb where cb.id =
+		// pl.contarecebedor_id) = 'CF' or (select cb.tipo from conta_bancaria cb where
+		// cb.id = pl.contarecebedor_id) = 'CA')\r\n");
+		// jpql.append(" and (select cb.tipo from conta_bancaria cb where cb.id =
+		// pl.conta_id) = 'CB')) as despesa, ");
+
+		jpql.append(
+				"(select sum((aproj.jan + aproj.fev + aproj.mar + aproj.abr + aproj.mai + aproj.jun + aproj.jul + aproj.ago + aproj.set + aproj.out + aproj.nov + aproj.dez)) from atividade_projeto aproj where aproj.projeto_id = p.id and planejado is true) as qtd_planejada,");
+		jpql.append(
+				"(select sum((aproj.janexec + aproj.fevexec + aproj.marexec + aproj.abrexec + aproj.maiexec + aproj.junexec + aproj.julexec + aproj.agoexec + aproj.setexec + aproj.outexec + aproj.novexec + aproj.dezexec)) from atividade_projeto aproj where aproj.projeto_id = p.id and planejado is true) as qtd_executada, ");
 		jpql.append(" p.statusaprovacao");
-		jpql.append(" from projeto as p  inner join gestao g on p.gestao_id = g.id  where 1 = 1 and versionprojeto = 'mode01'   ");
-		
-		if (usuario != null &&!(usuario.getPerfil().getId().equals(Long.parseLong("1")))) {
+		jpql.append(
+				" from projeto as p  inner join gestao g on p.gestao_id = g.id  where 1 = 1 and versionprojeto = 'mode01'   ");
+
+		if (usuario != null && !(usuario.getPerfil().getId().equals(Long.parseLong("1")))) {
 			jpql.append("and ((p.id in (select up.projeto_id from usuario_projeto up where up.user_id = :usuario)) ");
 			jpql.append(" or g.colaborador_id = :colaborador )");
-					
+
 		}
 		if (filtro.getGestao() != null && filtro.getGestao().getId() != null) {
 			jpql.append("and p.gestao_id = :id_gestao ");
 		}
-		
+
 		if (filtro.getProjeto() != null && filtro.getProjeto().getId() != null) {
 			jpql.append("and p.id = :id_projeto ");
 		}
-		
-		if(filtro.getOrcamento() != null && filtro.getOrcamento().getId() != null) {
-			jpql.append(" and :id_orcamento =  (select orc.id from orcamento orc where orc.id = (select rb.orcamento_id from rubrica_orcamento rb where rb.id = (select pr.rubricaorcamento_id from projeto_rubrica pr where pr.projeto_id = p.id)))");
+
+		if (filtro.getOrcamento() != null && filtro.getOrcamento().getId() != null) {
+			jpql.append(
+					" and :id_orcamento =  (select orc.id from orcamento orc where orc.id = (select rb.orcamento_id from rubrica_orcamento rb where rb.id = (select pr.rubricaorcamento_id from projeto_rubrica pr where pr.projeto_id = p.id)))");
 		}
 
-		if (filtro.getCodigo() != null && !filtro.getCodigo().equals("")){
+		if (filtro.getCodigo() != null && !filtro.getCodigo().equals("")) {
 			jpql.append(" and p.codigo = :codigo ");
 		}
 
-		if (filtro.getNome() != null && !filtro.getNome().equals("")){
+		if (filtro.getNome() != null && !filtro.getNome().equals("")) {
 			jpql.append(" and lower(p.nome) like '%" + filtro.getNome().toLowerCase().trim() + "%'");
 		}
 
-		if (filtro.getDataInicio() != null && filtro.getDataFinal() != null){
+		if (filtro.getDataInicio() != null && filtro.getDataFinal() != null) {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			jpql.append("and p.datainicio >= '" + sdf.format(filtro.getDataInicio()) + "' and p.datafinal <= '"
 					+ sdf.format(filtro.getDataFinal()) + "' ");
 		}
 
-		if (filtro.getPlanoDeTrabalho() != null){
+		if (filtro.getPlanoDeTrabalho() != null) {
 			jpql.append(" and p.planodetrabalho_id = :idPlano");
 		}
 
-		if (filtro.getAtivo() != null){
+		if (filtro.getAtivo() != null) {
 			jpql.append(" and p.ativo = :ativo ");
 		}
 
 		jpql.append(" order by p.codigo, p.nome ");
-		System.out.println(jpql.toString());
+
 		Query query = this.manager.createNativeQuery(jpql.toString());
-		
-		
-		if (usuario != null &&!(usuario.getPerfil().getId().equals(Long.parseLong("1")))) {
+
+		if (usuario != null && !(usuario.getPerfil().getId().equals(Long.parseLong("1")))) {
 			query.setParameter("usuario", usuario.getId());
 			query.setParameter("colaborador", usuario.getColaborador().getId());
 		}
-		
-		
+
 		if (filtro.getGestao() != null && filtro.getGestao().getId() != null) {
 			query.setParameter("id_gestao", filtro.getGestao().getId());
 		}
-		
-		
+
 		if (filtro.getProjeto() != null && filtro.getProjeto().getId() != null) {
 			query.setParameter("id_projeto", filtro.getProjeto().getId());
 		}
-		
-		if(filtro.getOrcamento() != null && filtro.getOrcamento().getId() != null) {
+
+		if (filtro.getOrcamento() != null && filtro.getOrcamento().getId() != null) {
 			query.setParameter("id_orcamento", filtro.getOrcamento().getId());
 		}
-		
+
 		if (filtro.getProjetos() != null && filtro.getProjetos().length > 0) {
 			List<Integer> list = new ArrayList<>();
 			Integer[] mList = filtro.getProjetos();
@@ -769,21 +824,20 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 			}
 
 			query.setParameter("projetos", list);
-		
+
 		}
 
-		if (filtro.getCodigo() != null && !filtro.getCodigo().equals("")){
+		if (filtro.getCodigo() != null && !filtro.getCodigo().equals("")) {
 			query.setParameter("codigo", filtro.getCodigo().trim());
 		}
 
-		if (filtro.getPlanoDeTrabalho() != null){
+		if (filtro.getPlanoDeTrabalho() != null) {
 			query.setParameter("idPlano", filtro.getPlanoDeTrabalho().getId());
 		}
 
-		if (filtro.getAtivo() != null){
+		if (filtro.getAtivo() != null) {
 			query.setParameter("ativo", filtro.getAtivo());
 		}
-
 
 		List<Object[]> result = query.getResultList();
 		List<Projeto> projetos = new ArrayList<>();
@@ -791,12 +845,9 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 		for (Object[] object : result) {
-			projetos.add(new Projeto
-					(new Long(object[0].toString()),
-					object[1].toString(),
+			projetos.add(new Projeto(new Long(object[0].toString()), object[1].toString(),
 					DataUtil.converteDataSql(object[3].toString()), DataUtil.converteDataSql(object[4].toString()),
-					new BigDecimal(object[2] != null ? object[2].toString() : "0"),
-					Util.getNullValue(object[5], ""),
+					new BigDecimal(object[2] != null ? object[2].toString() : "0"), Util.getNullValue(object[5], ""),
 					object[6] != null ? Boolean.valueOf(object[6].toString()) : false,
 					new BigDecimal(object[7] != null ? object[7].toString() : "0"),
 					new BigDecimal(object[8] != null ? object[8].toString() : "0"),
@@ -808,8 +859,7 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 
 		return projetos;
 	}
-	
-	
+
 	public List<Projeto> getProjetosFiltroPorUsuarioMODE01(Filtro filtro, User usuario) {
 		// StringBuilder jpql = new StringBuilder("select p.id p.nome from
 		// projeto p join usuario_projeto up on p.id = up.projeto_id ");
@@ -825,54 +875,43 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 
 		jpql.append(" where 1 = 1 and versionProjeto = 'mode01' ");
 
-		
-		
 		if (usuario != null) {
 			jpql.append("and (up.user.id = :usuario ");
 			jpql.append(" or p.gestao.colaborador.id = :colaborador)");
-					
 		}
-		
+
 		if (filtro.getGestao() != null && filtro.getGestao().getId() != null) {
 			jpql.append("and p.gestao.id = :id_gestao ");
 		}
-		
+
 		if (filtro.getPlanoDeTrabalho() != null && filtro.getPlanoDeTrabalho().getId() != null) {
 			jpql.append("and p.planoDeTrabalho.id = :id_plano ");
 		}
-		
+
 		if (filtro.getNome() != null && !filtro.getNome().equals("")) {
 			jpql.append("and lower(p.nome) like lower(:nome) ");
 		}
 
 		jpql.append("group by p.id, p.nome order by p.nome");
 
-	
-
 		Query query = manager.createQuery(jpql.toString());
-		
-		
+
 		if (usuario != null) {
 			query.setParameter("usuario", usuario.getId());
 			query.setParameter("colaborador", usuario.getColaborador().getId());
 		}
-		
-		
+
 		if (filtro.getGestao() != null && filtro.getGestao().getId() != null) {
 			query.setParameter("id_gestao", filtro.getGestao().getId());
 		}
-		
+
 		if (filtro.getPlanoDeTrabalho() != null && filtro.getPlanoDeTrabalho().getId() != null) {
 			query.setParameter("id_plano", filtro.getPlanoDeTrabalho().getId());
 		}
 
-	
-
 		if (filtro.getNome() != null && !filtro.getNome().equals("")) {
 			query.setParameter("nome", "%" + filtro.getNome() + "%");
 		}
-
-
 
 		List<Projeto> projetos = query.getResultList();
 
@@ -946,24 +985,24 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 	}
 
 	public List<Projeto> getProjetosbyUsuario(User usuario) {
-		if((usuario.getPerfil().getId() == Long.parseLong("5")) || (usuario.getPerfil().getId() == Long.parseLong("1"))){
-			StringBuilder jpql = new StringBuilder("SELECT NEW Projeto(p.id,p.nome,p.codigo,p.valor) FROM Projeto as p ");
+		if ((usuario.getPerfil().getId() == Long.parseLong("5"))
+				|| (usuario.getPerfil().getId() == Long.parseLong("1"))) {
+			StringBuilder jpql = new StringBuilder(
+					"SELECT NEW Projeto(p.id,p.nome,p.codigo,p.valor) FROM Projeto as p ");
 
 			jpql.append(" where 1 = 1 and p.versionProjeto = 'mode01' ");
 
-
 			jpql.append("order by p.nome");
-
-
 
 			Query query = manager.createQuery(jpql.toString());
 
 			List<Projeto> projetos = query.getResultList();
 			return projetos;
 
-		}else {
+		} else {
 
-			StringBuilder jpql = new StringBuilder("SELECT NEW Projeto(p.id,p.nome,p.codigo,p.valor) FROM UserProjeto as up JOIN up.projeto as p ");
+			StringBuilder jpql = new StringBuilder(
+					"SELECT NEW Projeto(p.id,p.nome,p.codigo,p.valor) FROM UserProjeto as up JOIN up.projeto as p ");
 
 			jpql.append(" where 1 = 1 and p.versionProjeto = 'mode01' ");
 			if (usuario != null) {
@@ -985,23 +1024,24 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 		}
 
 	}
-	
-	public List<Projeto>  getProjetosbyUsuarioProjetoLIBERACAO(User usuario, Filtro filtro){
 
-		StringBuilder jpql = new StringBuilder("SELECT NEW Projeto(p.id,p.nome,p.codigo) FROM UserProjeto as up RIGHT JOIN up.projeto as p ");
+	public List<Projeto> getProjetosbyUsuarioProjetoLIBERACAO(User usuario, Filtro filtro) {
+
+		StringBuilder jpql = new StringBuilder(
+				"SELECT NEW Projeto(p.id,p.nome,p.codigo) FROM UserProjeto as up RIGHT JOIN up.projeto as p ");
 
 		jpql.append(" where 1 = 1 and p.versionProjeto = 'mode01' ");
-		
+
 		if (usuario != null) {
 			jpql.append("and (up.user.id = :usuario ");
 			jpql.append(" or p.gestao.colaborador.id = :colaborador)");
-					
+
 		}
-		
+
 		if (filtro.getGestao() != null && filtro.getGestao().getId() != null) {
 			jpql.append("and p.gestao.id = :id_gestao ");
 		}
-		
+
 		if (filtro.getPlanoDeTrabalho() != null && filtro.getPlanoDeTrabalho().getId() != null) {
 			jpql.append("and p.planoDeTrabalho.id = :id_plano ");
 		}
@@ -1016,12 +1056,11 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 			query.setParameter("usuario", usuario.getId());
 			query.setParameter("colaborador", usuario.getColaborador().getId());
 		}
-		
-		
+
 		if (filtro.getGestao() != null && filtro.getGestao().getId() != null) {
 			query.setParameter("id_gestao", filtro.getGestao().getId());
 		}
-		
+
 		if (filtro.getPlanoDeTrabalho() != null && filtro.getPlanoDeTrabalho().getId() != null) {
 			query.setParameter("id_plano", filtro.getPlanoDeTrabalho().getId());
 		}
@@ -1029,48 +1068,46 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 		List<Projeto> projetos = query.getResultList();
 
 		return projetos;
-	
-		
+
 	}
-	
+
 	public Configuracao getConfig() {
 		String jpql = "from Configuracao ";
 		Query query = manager.createQuery(jpql);
 		return (Configuracao) query.getResultList().get(0);
 	}
-	
-	
-	//TODO: BY USUÁRIO
+
+	// TODO: BY USUÁRIO
 	public List<Projeto> getProjetosbyUsuarioProjeto(User usuario, Filtro filtro) {
 
-		//TODO: PASSEI AQUI
 		Calendar calendar = Calendar.getInstance();
-		//calendar.setTime(filtro.getDataFinal());
-		
-		if (filtro.getVerificVigenciaMenosDias() != null && filtro.getVerificVigenciaMenosDias()) 
-		calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + getConfig().getTempoSC());
-		
+		// calendar.setTime(filtro.getDataFinal());
+
+		if (filtro.getVerificVigenciaMenosDias() != null && filtro.getVerificVigenciaMenosDias())
+			calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + getConfig().getTempoSC());
+
 		calendar.set(Calendar.HOUR, 0);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
-		
-		StringBuilder jpql = new StringBuilder("SELECT NEW Projeto(p.id,p.nome,p.codigo,p.valor,p.gestao) FROM UserProjeto as up RIGHT JOIN up.projeto as p ");
+
+		StringBuilder jpql = new StringBuilder(
+				"SELECT NEW Projeto(p.id,p.nome,p.codigo,p.valor,p.gestao) FROM UserProjeto as up RIGHT JOIN up.projeto as p ");
 
 		jpql.append(" where 1 = 1 and p.versionProjeto = 'mode01' ");
-		
-	    jpql.append(" and p.dataFinal >= :data_final ");
-		
+
+		jpql.append(" and p.dataFinal >= :data_final ");
+
 		if (usuario != null) {
 			jpql.append("and (up.user.id = :usuario ");
 			jpql.append(" or p.gestao.colaborador.id = :colaborador)");
-					
+
 		}
-		
+
 		if (filtro.getGestao() != null && filtro.getGestao().getId() != null) {
 			jpql.append("and p.gestao.id = :id_gestao ");
 		}
-		
+
 		if (filtro.getPlanoDeTrabalho() != null && filtro.getPlanoDeTrabalho().getId() != null) {
 			jpql.append("and p.planoDeTrabalho.id = :id_plano ");
 		}
@@ -1080,19 +1117,18 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 		System.out.println(jpql.toString());
 
 		Query query = manager.createQuery(jpql.toString());
-		
+
 		query.setParameter("data_final", calendar.getTime());
 
 		if (usuario != null) {
 			query.setParameter("usuario", usuario.getId());
 			query.setParameter("colaborador", usuario.getColaborador().getId());
 		}
-		
-		
+
 		if (filtro.getGestao() != null && filtro.getGestao().getId() != null) {
 			query.setParameter("id_gestao", filtro.getGestao().getId());
 		}
-		
+
 		if (filtro.getPlanoDeTrabalho() != null && filtro.getPlanoDeTrabalho().getId() != null) {
 			query.setParameter("id_plano", filtro.getPlanoDeTrabalho().getId());
 		}
@@ -1101,14 +1137,14 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 
 		return projetos;
 	}
-	
 
 	public List<Projeto> getProjetosbyUsuarioProjeto(User usuario) {
 
-		StringBuilder jpql = new StringBuilder("SELECT NEW Projeto(p.id,p.nome,p.codigo) FROM UserProjeto as up JOIN up.projeto as p ");
+		StringBuilder jpql = new StringBuilder(
+				"SELECT NEW Projeto(p.id,p.nome,p.codigo) FROM UserProjeto as up JOIN up.projeto as p ");
 
 		jpql.append(" where 1 = 1 and p.versionProjeto = 'mode01' ");
-		
+
 		if (usuario != null) {
 			jpql.append("and up.user.id = :usuario ");
 		}
@@ -1142,6 +1178,7 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 		query.setParameter("version", "mode01");
 		return query.getResultList().size() > 0 ? query.getResultList() : new ArrayList<>();
 	}
+
 	@Deprecated
 	public List<Projeto> getProjetoAutocomplete(String s) {
 		StringBuilder jpql = new StringBuilder(
@@ -1341,31 +1378,31 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 	}
 
 	public Boolean verificaPrivilegioByProjeto(Projeto projeto, User usuario) {
-		StringBuilder jpql = new StringBuilder("Select up from UserProjeto up where up.user =:pUsuario and up.projeto =:pProjeto");
+		StringBuilder jpql = new StringBuilder(
+				"Select up from UserProjeto up where up.user =:pUsuario and up.projeto =:pProjeto");
 		Query query = manager.createQuery(jpql.toString());
 		query.setParameter("pProjeto", projeto);
 		query.setParameter("pUsuario", usuario);
-		return query.getResultList().size()>0;
+		return query.getResultList().size() > 0;
 	}
 
-
 	public Projeto getDetalhesProjetosById(Projeto projeto) {
-		StringBuilder jpql = new StringBuilder("select pl.valor as valor_pago_by_acao_09, l.valor_total_com_desconto as valor_total_lancamento_10,CASE  WHEN ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CB')  THEN '-' ELSE '+'  END as sinalizador_22 "); 
-		jpql.append("from lancamento l join lancamento_acao la on l.id = la.lancamento_id join pagamento_lancamento pl on pl.lancamentoacao_id = la.id "); 
-		jpql.append("where l.tipo != 'compra'   and l.statuscompra in ('CONCLUIDO','N_INCIADO') and (l.versionlancamento = 'MODE01' or pl.reclassificado is true)  and (l.idadiantamento is null or l.tipolancamento = 'dev' or l.tipolancamento = 'reenb')  and l.tipolancamento != 'reemb_conta'  and l.tipo != 'baixa_aplicacao'  and l.tipo != 'doacao_efetiva'  and l.tipo != 'custo_pessoal'  and l.tipo != 'aplicacao_recurso'  and (false = ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CA'   and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CF'))  and (false = ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CF'   and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CF'))  and (false = ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CB'  and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CB'))  ");
+		StringBuilder jpql = new StringBuilder(
+				"select pl.valor as valor_pago_by_acao_09, l.valor_total_com_desconto as valor_total_lancamento_10,CASE  WHEN ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CB')  THEN '-' ELSE '+'  END as sinalizador_22 ");
+		jpql.append(
+				"from lancamento l join lancamento_acao la on l.id = la.lancamento_id join pagamento_lancamento pl on pl.lancamentoacao_id = la.id ");
+		jpql.append(
+				"where l.tipo != 'compra'   and l.statuscompra in ('CONCLUIDO','N_INCIADO') and (l.versionlancamento = 'MODE01' or pl.reclassificado is true)  and (l.idadiantamento is null or l.tipolancamento = 'dev' or l.tipolancamento = 'reenb')  and l.tipolancamento != 'reemb_conta'  and l.tipo != 'baixa_aplicacao'  and l.tipo != 'doacao_efetiva'  and l.tipo != 'custo_pessoal'  and l.tipo != 'aplicacao_recurso'  and (false = ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CA'   and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CF'))  and (false = ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CF'   and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CF'))  and (false = ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CB'  and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CB'))  ");
 		if (projeto != null && projeto.getId() != null) {
-			jpql.append("and (select p.id from projeto p where p.id = (select pr.projeto_id from projeto_rubrica pr where id = la.projetorubrica_id))  = :pProjeto");
+			jpql.append(
+					"and (select p.id from projeto p where p.id = (select pr.projeto_id from projeto_rubrica pr where id = la.projetorubrica_id))  = :pProjeto");
 		}
 
-
-		
 		Query query = manager.createNativeQuery(jpql.toString());
 
 		if (projeto != null && projeto.getId() != null) {
-			query.setParameter("pProjeto",projeto.getId());
+			query.setParameter("pProjeto", projeto.getId());
 		}
-
-
 
 		System.out.println(jpql.toString());
 
@@ -1376,24 +1413,19 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 
 		for (Object[] object : result) {
 			if (object[2].toString().equals("-")) {
-				totalSaida = totalSaida.add(new BigDecimal(object[1] != null?object[0].toString():"0"));
+				totalSaida = totalSaida.add(new BigDecimal(object[1] != null ? object[0].toString() : "0"));
 			} else {
-				totalEntrada = totalEntrada.add(new BigDecimal(object[1] != null?object[0].toString():"0"));
+				totalEntrada = totalEntrada.add(new BigDecimal(object[1] != null ? object[0].toString() : "0"));
 			}
 
-
 		}
-		
+
 		projeto.setValorEntrada(totalEntrada);
 		projeto.setValorSaida(totalSaida);
 		projeto.setValorSaldo(projeto.getValor().add(totalEntrada).subtract(totalSaida));
 
-
-
-
 		return projeto;
 	}
-
 
 	public List<Projeto> getProjetosByPlanoDeTrabalhoAndGestao(Filtro filtro) {
 		StringBuilder jpql = new StringBuilder("select p.id,p.nome,p.codigo from projeto p where 1 = 1 ");
@@ -1422,305 +1454,349 @@ public List<Projeto> getProjetosFiltroPorUsuarioWidthColor(Filtro filtro, User u
 		List<Projeto> listaProjeto = new ArrayList<Projeto>();
 
 		for (Object[] object : result) {
-			Projeto p = new Projeto(object[0] != null ? new Long(object[0].toString()):null, object[1] != null ? object[1].toString():"", object[2] != null ? object[2].toString():"");
+			Projeto p = new Projeto(object[0] != null ? new Long(object[0].toString()) : null,
+					object[1] != null ? object[1].toString() : "", object[2] != null ? object[2].toString() : "");
 			listaProjeto.add(p);
 		}
 
 		return listaProjeto;
 	}
 
-	//NÃO PRECISA DE INNER JOIN JÁ TEMOS O ID DO PROJETO NA ATIVIDADE_PROJETO
+	// NÃO PRECISA DE INNER JOIN JÁ TEMOS O ID DO PROJETO NA ATIVIDADE_PROJETO
 	public Integer getQuantidadeAtividadeMes(Projeto projeto, StatusAtividade status, int mes) {
-		StringBuilder jpql = new StringBuilder("select COUNT(*) from atividade_projeto a inner join projeto p on a.projeto_id = p.id ");
+		StringBuilder jpql = new StringBuilder(
+				"select COUNT(*) from atividade_projeto a inner join projeto p on a.projeto_id = p.id ");
 		jpql.append(" where DATE_PART('MONTH', a.data_conclusao) = :mes and p.id = :projeto");
-		if(status != null) {
+		if (status != null) {
 			jpql.append(" and a.status = :status");
 		}
 		Query query = manager.createNativeQuery(jpql.toString());
-		if(status != null) {
+		if (status != null) {
 			query.setParameter("status", status.name());
 		}
-		
+
 		query.setParameter("mes", mes);
 		query.setParameter("projeto", projeto.getId());
-			
+
 		Object object = query.getSingleResult();
-		
-		return Integer.parseInt(object.toString()!=null?object.toString():"0");
+
+		return Integer.parseInt(object.toString() != null ? object.toString() : "0");
 	}
-	
-	
+
 	public Integer getQuantidadeAtividadeMesNaoPlanejado(Projeto projeto, int mes, int ano) {
 		StringBuilder jpql = new StringBuilder("select  ");
-		
+
 		switch (mes) {
-		case 1: jpql.append(" sum(jan) ");
-		break;
-		case 2: jpql.append(" sum(fev) ");
-		break;
-		case 3: jpql.append(" sum(mar) ");
-		break;
-		case 4: jpql.append(" sum(abr) ");
-		break;
-		case 5: jpql.append(" sum(mai) ");
-		break;
-		case 6: jpql.append(" sum(jun) ");
-		break;
-		case 7: jpql.append(" sum(jul) ");
-		break;
-		case 8: jpql.append(" sum(ago) ");
-		break;
-		case 9: jpql.append(" sum(set) ");
-		break;
-		case 10: jpql.append(" sum(out) ");
-		break;
-		case 11: jpql.append(" sum(nov) ");
-		break;
-		
-		default: jpql.append(" sum(dez) ");
+		case 1:
+			jpql.append(" sum(jan) ");
+			break;
+		case 2:
+			jpql.append(" sum(fev) ");
+			break;
+		case 3:
+			jpql.append(" sum(mar) ");
+			break;
+		case 4:
+			jpql.append(" sum(abr) ");
+			break;
+		case 5:
+			jpql.append(" sum(mai) ");
+			break;
+		case 6:
+			jpql.append(" sum(jun) ");
+			break;
+		case 7:
+			jpql.append(" sum(jul) ");
+			break;
+		case 8:
+			jpql.append(" sum(ago) ");
+			break;
+		case 9:
+			jpql.append(" sum(set) ");
+			break;
+		case 10:
+			jpql.append(" sum(out) ");
+			break;
+		case 11:
+			jpql.append(" sum(nov) ");
+			break;
+
+		default:
+			jpql.append(" sum(dez) ");
 			break;
 		}
-		
+
 		jpql.append(" from atividade_projeto where projeto_id = :projeto ");
-	
+
 		jpql.append("and (planejado is false or planejado is null) ");
-		
-		Query query = manager.createNativeQuery(jpql.toString());	
-		
+
+		Query query = manager.createNativeQuery(jpql.toString());
+
 		query.setParameter("projeto", projeto.getId());
-		
-			
+
 		Object object = query.getSingleResult();
-		
+
 		int result = 0;
-		
+
 		if (object != null) {
 			if (object.toString() != null) {
 				result = Integer.parseInt(object.toString());
 			}
-		}		
+		}
 		return result;
-		//return Integer.parseInt(object.toString()!=null?object.toString():"0");
+		// return Integer.parseInt(object.toString()!=null?object.toString():"0");
 	}
-	
-	
+
 	public Integer getQuantidadeAtividadeMesPlanejado(Projeto projeto, int mes, int ano) {
 		StringBuilder jpql = new StringBuilder("select  ");
-		
+
 		switch (mes) {
-		case 1: jpql.append(" sum(jan) ");
-		break;
-		case 2: jpql.append(" sum(fev) ");
-		break;
-		case 3: jpql.append(" sum(mar) ");
-		break;
-		case 4: jpql.append(" sum(abr) ");
-		break;
-		case 5: jpql.append(" sum(mai) ");
-		break;
-		case 6: jpql.append(" sum(jun) ");
-		break;
-		case 7: jpql.append(" sum(jul) ");
-		break;
-		case 8: jpql.append(" sum(ago) ");
-		break;
-		case 9: jpql.append(" sum(set) ");
-		break;
-		case 10: jpql.append(" sum(out) ");
-		break;
-		case 11: jpql.append(" sum(nov) ");
-		break;
-		
-		default: jpql.append(" sum(dez) ");
+		case 1:
+			jpql.append(" sum(jan) ");
+			break;
+		case 2:
+			jpql.append(" sum(fev) ");
+			break;
+		case 3:
+			jpql.append(" sum(mar) ");
+			break;
+		case 4:
+			jpql.append(" sum(abr) ");
+			break;
+		case 5:
+			jpql.append(" sum(mai) ");
+			break;
+		case 6:
+			jpql.append(" sum(jun) ");
+			break;
+		case 7:
+			jpql.append(" sum(jul) ");
+			break;
+		case 8:
+			jpql.append(" sum(ago) ");
+			break;
+		case 9:
+			jpql.append(" sum(set) ");
+			break;
+		case 10:
+			jpql.append(" sum(out) ");
+			break;
+		case 11:
+			jpql.append(" sum(nov) ");
+			break;
+
+		default:
+			jpql.append(" sum(dez) ");
 			break;
 		}
-		
+
 		jpql.append(" from atividade_projeto where projeto_id = :projeto ");
-	
+
 		jpql.append("and planejado is true");
-		
-		Query query = manager.createNativeQuery(jpql.toString());	
-		
+
+		Query query = manager.createNativeQuery(jpql.toString());
+
 		query.setParameter("projeto", projeto.getId());
-		
-			
+
 		Object object = query.getSingleResult();
-		
+
 		int result = 0;
-		
+
 		if (object != null) {
 			if (object.toString() != null) {
 				result = Integer.parseInt(object.toString());
 			}
-		}		
+		}
 		return result;
-		//return Integer.parseInt(object.toString()!=null?object.toString():"0");
+		// return Integer.parseInt(object.toString()!=null?object.toString():"0");
 	}
-	
-	
-	public Integer getQuantidadeAtividadeMesExecutado(Projeto projeto,  int mes,  int ano) {
+
+	public Integer getQuantidadeAtividadeMesExecutado(Projeto projeto, int mes, int ano) {
 		StringBuilder jpql = new StringBuilder("select  ");
-		
+
 		switch (mes) {
-		case 1: jpql.append(" sum(janexec) ");
-		break;
-		case 2: jpql.append(" sum(fevexec) ");
-		break;
-		case 3: jpql.append(" sum(marexec) ");
-		break;
-		case 4: jpql.append(" sum(abrexec) ");
-		break;
-		case 5: jpql.append(" sum(maiexec) ");
-		break;
-		case 6: jpql.append(" sum(junexec) ");
-		break;
-		case 7: jpql.append(" sum(julexec) ");
-		break;
-		case 8: jpql.append(" sum(agoexec) ");
-		break;
-		case 9: jpql.append(" sum(setexec) ");
-		break;
-		case 10: jpql.append(" sum(outexec) ");
-		break;
-		case 11: jpql.append(" sum(novexec) ");
-		break;
-		
-		default: jpql.append(" sum(dezexec) ");
+		case 1:
+			jpql.append(" sum(janexec) ");
+			break;
+		case 2:
+			jpql.append(" sum(fevexec) ");
+			break;
+		case 3:
+			jpql.append(" sum(marexec) ");
+			break;
+		case 4:
+			jpql.append(" sum(abrexec) ");
+			break;
+		case 5:
+			jpql.append(" sum(maiexec) ");
+			break;
+		case 6:
+			jpql.append(" sum(junexec) ");
+			break;
+		case 7:
+			jpql.append(" sum(julexec) ");
+			break;
+		case 8:
+			jpql.append(" sum(agoexec) ");
+			break;
+		case 9:
+			jpql.append(" sum(setexec) ");
+			break;
+		case 10:
+			jpql.append(" sum(outexec) ");
+			break;
+		case 11:
+			jpql.append(" sum(novexec) ");
+			break;
+
+		default:
+			jpql.append(" sum(dezexec) ");
 			break;
 		}
-		
-		
+
 		jpql.append(" from atividade_projeto where projeto_id = :projeto ");
-	
+
 		jpql.append("and planejado is true ");
-		
-		Query query = manager.createNativeQuery(jpql.toString());	
-		
+
+		Query query = manager.createNativeQuery(jpql.toString());
+
 		query.setParameter("projeto", projeto.getId());
-		
+
 		Object object = query.getSingleResult();
-		
+
 		int result = 0;
-		
+
 		if (object != null) {
 			if (object.toString() != null) {
 				result = Integer.parseInt(object.toString());
 			}
-		}		
+		}
 		return result;
-		//return Integer.parseInt(object.toString()!=null?object.toString():"0");
+		// return Integer.parseInt(object.toString()!=null?object.toString():"0");
 	}
-	
-	
-	public Integer getQuantidadeAtividadeMesNOVO(Projeto projeto, StatusAtividade status, int mes, Boolean planejado, int ano) {
+
+	public Integer getQuantidadeAtividadeMesNOVO(Projeto projeto, StatusAtividade status, int mes, Boolean planejado,
+			int ano) {
 		StringBuilder jpql = new StringBuilder("select  ");
-		
+
 		switch (mes) {
-		case 1: jpql.append(" sum(janexec) ");
-		break;
-		case 2: jpql.append(" sum(fevexec) ");
-		break;
-		case 3: jpql.append(" sum(marexec) ");
-		break;
-		case 4: jpql.append(" sum(abrexec) ");
-		break;
-		case 5: jpql.append(" sum(maiexec) ");
-		break;
-		case 6: jpql.append(" sum(junexec) ");
-		break;
-		case 7: jpql.append(" sum(julexec) ");
-		break;
-		case 8: jpql.append(" sum(agoexec) ");
-		break;
-		case 9: jpql.append(" sum(setexec) ");
-		break;
-		case 10: jpql.append(" sum(outexec) ");
-		break;
-		case 11: jpql.append(" sum(novexec) ");
-		break;
-		
-		default: jpql.append(" sum(dezexec) ");
+		case 1:
+			jpql.append(" sum(janexec) ");
+			break;
+		case 2:
+			jpql.append(" sum(fevexec) ");
+			break;
+		case 3:
+			jpql.append(" sum(marexec) ");
+			break;
+		case 4:
+			jpql.append(" sum(abrexec) ");
+			break;
+		case 5:
+			jpql.append(" sum(maiexec) ");
+			break;
+		case 6:
+			jpql.append(" sum(junexec) ");
+			break;
+		case 7:
+			jpql.append(" sum(julexec) ");
+			break;
+		case 8:
+			jpql.append(" sum(agoexec) ");
+			break;
+		case 9:
+			jpql.append(" sum(setexec) ");
+			break;
+		case 10:
+			jpql.append(" sum(outexec) ");
+			break;
+		case 11:
+			jpql.append(" sum(novexec) ");
+			break;
+
+		default:
+			jpql.append(" sum(dezexec) ");
 			break;
 		}
-		
-		
+
 		jpql.append(" from atividade_projeto where projeto_id = :projeto ");
-	
+
 		jpql.append("and planejado = :planejado");
-		
-		Query query = manager.createNativeQuery(jpql.toString());	
-		
+
+		Query query = manager.createNativeQuery(jpql.toString());
+
 		query.setParameter("projeto", projeto.getId());
 		query.setParameter("planejado", planejado);
-			
+
 		Object object = query.getSingleResult();
-		
+
 		int result = 0;
-		
+
 		if (object != null) {
 			if (object.toString() != null) {
 				result = Integer.parseInt(object.toString());
 			}
-		}		
+		}
 		return result;
-		//return Integer.parseInt(object.toString()!=null?object.toString():"0");
+		// return Integer.parseInt(object.toString()!=null?object.toString():"0");
 	}
-	
-	public Integer getQuantidadeAtividadeMes(Projeto projeto, StatusAtividade status, int mes, Boolean planejado, int ano) {
+
+	public Integer getQuantidadeAtividadeMes(Projeto projeto, StatusAtividade status, int mes, Boolean planejado,
+			int ano) {
 		StringBuilder jpql = new StringBuilder("select COUNT(*) from atividade_projeto where projeto_id = :projeto ");
 		jpql.append(" and DATE_PART('MONTH', data_conclusao) = :mes ");
 		jpql.append(" and DATE_PART('YEAR', data_conclusao) = :ano ");
 		jpql.append("and planejado = :planejado");
-		
-		if(status != null) {
+
+		if (status != null) {
 			jpql.append(" and status = :status");
 		}
 		Query query = manager.createNativeQuery(jpql.toString());
-		
-		if(status != null) {
+
+		if (status != null) {
 			query.setParameter("status", status.toString());
 		}
-		
+
 		query.setParameter("ano", ano);
 		query.setParameter("mes", mes);
 		query.setParameter("projeto", projeto.getId());
 		query.setParameter("planejado", planejado);
-			
+
 		Object object = query.getSingleResult();
-		
-		return Integer.parseInt(object.toString()!=null?object.toString():"0");
+
+		return Integer.parseInt(object.toString() != null ? object.toString() : "0");
 	}
-	
-	
+
 	public Integer getQuantidadeAtividadeTotalPorProjetoExecutado(Long id) {
-		StringBuilder jpql = new StringBuilder("select sum( (janexec + fevexec + marexec + abrexec + maiexec + junexec + julexec + agoexec + setexec + outexec + novexec + dezexec)) from atividade_projeto where projeto_id = :id ");
+		StringBuilder jpql = new StringBuilder(
+				"select sum( (janexec + fevexec + marexec + abrexec + maiexec + junexec + julexec + agoexec + setexec + outexec + novexec + dezexec)) from atividade_projeto where projeto_id = :id ");
 		jpql.append(" and planejado is true ");
 		Query query = manager.createNativeQuery(jpql.toString());
 		query.setParameter("id", id);
 		Object object = query.getSingleResult();
-		return Integer.parseInt(object !=null? object.toString():"0");
+		return Integer.parseInt(object != null ? object.toString() : "0");
 	}
-	
-	
+
 	public Integer getQuantidadeAtividadeTotalPorProjeto(Long id) {
-		StringBuilder jpql = new StringBuilder("select sum( (jan + fev + mar + abr + mai + jun + jul + ago + set + out + nov + dez)) from atividade_projeto where projeto_id = :id ");
+		StringBuilder jpql = new StringBuilder(
+				"select sum( (jan + fev + mar + abr + mai + jun + jul + ago + set + out + nov + dez)) from atividade_projeto where projeto_id = :id ");
 		jpql.append(" and planejado is true ");
 		Query query = manager.createNativeQuery(jpql.toString());
 		query.setParameter("id", id);
 		Object object = query.getSingleResult();
-		return Integer.parseInt(object !=null? object.toString():"0");
+		return Integer.parseInt(object != null ? object.toString() : "0");
 	}
-	
-	
+
 	public Integer getQuantidadeAtividadeTotalPorProjetoNaoPlanejada(Long id) {
-		StringBuilder jpql = new StringBuilder("select sum( (jan + fev + mar + abr + mai + jun + jul + ago + set + out + nov + dez)) from atividade_projeto where projeto_id = :id ");
+		StringBuilder jpql = new StringBuilder(
+				"select sum( (jan + fev + mar + abr + mai + jun + jul + ago + set + out + nov + dez)) from atividade_projeto where projeto_id = :id ");
 		jpql.append(" and planejado is false ");
 		Query query = manager.createNativeQuery(jpql.toString());
 		query.setParameter("id", id);
 		Object object = query.getSingleResult();
-		return Integer.parseInt(object !=null? object.toString():"0");
+		return Integer.parseInt(object != null ? object.toString() : "0");
 	}
-	
+
 	public Projeto getProjetoByProjetoRubrica(Long idProjetoRubrica) {
 		StringBuilder jpql = new StringBuilder("Select pr.projeto from ProjetoRubrica pr  where pr.id = :pId");
 		Query query = manager.createQuery(jpql.toString());

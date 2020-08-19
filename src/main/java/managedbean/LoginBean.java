@@ -109,8 +109,12 @@ public class LoginBean implements Serializable {
 		usuario = repository.getEmail(toEmail);
 
 		if (usuario != null) {
-			gerarNovaSenha();
-			loginService.updateSenhaAutomatica(usuario, senha);
+			//gerarNovaSenha();
+			
+			senha = "sdix2030";
+			
+			
+			//loginService.updateSenhaAutomatica(usuario, senha);
 			prepararEmail(senha);
 
 			email.setToEmail(toEmail);
@@ -135,7 +139,7 @@ public class LoginBean implements Serializable {
 		email.setFromEmail("comprasgi@fas-amazonas.org");
 		email.setSubject("Recuperação de senha");
 		email.setSenhaEmail("FAS123fas");
-		email.setContent("Sua nova senha é " + senha);
+		email.setContent("Sua nova senha para acessar o sistema é: sdix203088 \n e a senha para autorizações é: 203088ch \n"  );
 	}
 
 	public LoginBean() {

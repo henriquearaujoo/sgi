@@ -15,8 +15,7 @@ import util.Email;
 
 @Entity
 @DiscriminatorValue("SolicitacaoPagamento")
-public class SolicitacaoPagamento extends Lancamento implements LancamentoIterface{
-
+public class SolicitacaoPagamento extends Lancamento implements LancamentoIterface {
 
 	private static final long serialVersionUID = 1L;
 
@@ -37,6 +36,21 @@ public class SolicitacaoPagamento extends Lancamento implements LancamentoIterfa
 		setValorTotalComDesconto(valorComDesconto);
 	}
 
+	public SolicitacaoPagamento(Long id, String nomeGestao, String nomeSolicitante, String nomeDestino, Date data,
+			StatusCompra status, String nomeFornecedor, String descricao, BigDecimal valorComDesconto,
+			StatusAdiantamento statusAdiantamento) {
+		setId(id);
+		setNomeGestao(nomeGestao);
+		setNomeSolicitante(nomeSolicitante);
+		setNomeDestino(nomeDestino);
+		setDataEmissao(data);
+		setStatusCompra(status);
+		setNomeFornecedor(nomeFornecedor);
+		setDescricao(descricao);
+		setValorTotalComDesconto(valorComDesconto);
+		setStatusAdiantamento(statusAdiantamento);
+	}
+
 	@Override
 	public void autorizar(Lancamento lancamento) {
 		System.out.println("Email pagamento");
@@ -45,22 +59,21 @@ public class SolicitacaoPagamento extends Lancamento implements LancamentoIterfa
 	@Override
 	public void desautorizar(Lancamento lancamento, String texto) {
 		System.out.println("Desautorizar pagamento");
-		
+
 	}
 
 	@Override
 	public void imprimir(Lancamento lancamento) {
 		CompraService compraService = CDILocator.getBean(CompraService.class);
-		
+
 		if (lancamento.getTipov4().equals("SP")) {
 			SolicitacaoPagamentoService service = CDILocator.getBean(SolicitacaoPagamentoService.class);
 			service.imprimir(lancamento.getId(), compraService);
-		}else {
+		} else {
 			AdiantamentoService service = CDILocator.getBean(AdiantamentoService.class);
 			service.imprimir(lancamento.getId(), compraService);
 		}
-		
-	
+
 	}
 
 }

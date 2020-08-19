@@ -146,10 +146,10 @@
 
 							<p:commandLink styleClass="btn btn-primary btn-sm"
 								action="#{compraController.filtrar()}" onclick="start()"
-								onsuccess="stop()" onerror="stop()" update="table-compras"
-								style="color:#fff; margin: 8px 2px;">
+								update="panel-table" onsuccess="stop()" onerror="stop()"
+								oncomplete="stop();" style="color:#fff; margin: 8px 2px;">
 								<span class="fa fa-fw fa-search"></span>
-								<span style="margin: 3px;">Procurar</span>
+								<span style="margin: 3px;">#{message['BUTTON_LABEL_SEARCH']}</span>
 
 							</p:commandLink>
 
@@ -159,7 +159,7 @@
 								style="color:#fff; margin: 8px 2px;" onclick="start();"
 								onerror="stop();" oncomplete="stop();">
 								<span class="fa fa-fw fa-trash-o"></span>
-								<span style="margin: 3px;">Limpar filtro</span>
+								<span style="margin: 3px;">#{message['BUTTON_LABEL_CLS']}</span>
 							</p:commandLink>
 
 							<p:link styleClass="btn btn-success btn-sm"
@@ -167,14 +167,120 @@
 								outcome="/main/compra_cadastro"
 								title="Adicionar solicitação de compra">
 								<span class="fa fa-fw fa-plus"></span>
-								<span style="margin: 3px;">Novo</span>
+								<span style="margin: 3px;">#{message['BUTTON_LABEL_NEW']}</span>
 							</p:link>
 
 						</div>
 
+						<div class="ui-g-12">
+							<p:outputPanel id="panel-table">
+								<table class="table table-sm table-hover">
+									<thead class="thead-light">
+										<tr>
+											<th scope="col">Código</th>
+											<th scope="col">Gestão</th>
+											<th scope="col">Destino</th>
+											<th scope="col">Data</th>
+											<th scope="col">Solicitante</th>
+											<th scope="col">Status</th>
+											<th scope="col">Categoria</th>
+											<th scope="col">Urg</th>
+											<th scope="col" style="text-align: center">#</th>
+
+										</tr>
+									</thead>
+									<tbody>
+
+										<ui:repeat value="#{compraController.compras}" var="compra">
+											<tr
+												class="#{compra.statusCompra.nome.equals('Recusado') ? 'bg-danger' : ''} ">
+												<td style="text-align: left"><p:link
+														value="SC#{compra.id}" title="Editar"
+														outcome="/main/compra_cadastro" onclick="start();"
+														oncomplete="stop();">
+														<f:param name="lanc" value="#{compra.id}" />
+													</p:link></td>
+
+												<td>#{compra.nomeGestao}</td>
+
+												<td>#{compra.nomeDestino}</td>
+
+												<td><h:outputText value="#{compra.dataEmissao}">
+														<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss " />
+													</h:outputText></td>
+
+												<td>#{compra.nomeSolicitante}</td>
+												<td>#{compra.statusCompra.nome}</td>
+												<td>#{compra.nomeCategoria}</td>
+												<td><p:commandLink rendered="#{compra.bootUrgencia}">
+														<span style="color: red" class="glyphicon glyphicon-alert"></span>
+													</p:commandLink></td>
+
+												<td><p:menuButton value="Opções">
+
+														<p:menuitem update=":form-pedidos" icon="fa fa-cart-plus"
+															oncomplete="PF('dlg_pedido').show()" value="Pedidos"
+															onstart="start()" onsuccess="stop()" onerror="stop()"
+															rendered="#{compra.statusCompra.nome.equals('Concluído') || 
+															compra.statusCompra.nome.equals('Parcialmente Concluído')}"
+															action="#{compraController.carregarPedidos(compra.id)}" />
+
+														<p:menuitem icon="fa fa-dollar" value="Cotação"
+															outcome="/main/cotacao"
+															rendered="#{compra.statusCompra.nome.equals('Autorizado') || 
+															compra.statusCompra.nome.equals('Em cotação')}">
+															<f:param name="comp" value="#{compra.id}" />
+														</p:menuitem>
+
+														<p:menuitem icon="fa fa-envelope-o"
+															value="Enviar para aprovação"
+															update="panel-content msg-list"
+															rendered="#{compra.statusCompra.nome.equals('1º autorização')}" 
+															actionListener="#{compraController.enviarEmailAutorizacaoSC(compra)}"
+															onstart="start()" onerror="stop()" oncomplete="stop()">
+															<p:confirm header="Enviar para Aprovação"
+																icon="ui-icon-alert"
+																message="Enviar e-mail com solicitação para aprovação?" />
+
+														</p:menuitem>
+
+														<p:menuitem value="Imprimir" target="_blank"
+															process="@this" update="panel-content" ajax="false"
+															icon="fa fa-print"
+															action="#{compraController.imprimir(compra)}">
+														</p:menuitem>
+
+														<p:menuitem icon="fa fa-copy"
+															rendered="#{compra.statusCompra.nome.equals('Em cotação') || 
+															compra.statusCompra.nome.equals('Concluído') || 
+															compra.statusCompra.nome.equals('Parcialmente Concluído')}"
+															value="Selecionar fornecedor"
+															outcome="/main/escolha_cotacao">
+															<f:param name="comp" value="#{compra.id}" />
+														</p:menuitem>
+
+														<p:menuitem target="_blank" icon="fa fa-file"
+															value="Formulário de cotação" ajax="false"
+															process="@this"
+															actionListener="#{compraController.imprimirFormulario(compra.id)}">
+
+														</p:menuitem>
+
+													</p:menuButton></td>
+
+											</tr>
+
+										</ui:repeat>
+
+									</tbody>
+								</table>
+
+							</p:outputPanel>
+						</div>
+
 						<div id="div-table" class="ui-g-12">
 
-							<p:dataTable id="table-compras"
+							<p:dataTable id="table-compras" rendered="false"
 								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 								emptyMessage="Não há solicitações de compra"
 								value="#{compraController.compras}" var="compra"

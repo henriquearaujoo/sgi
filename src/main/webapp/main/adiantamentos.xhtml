@@ -8,9 +8,6 @@
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
 
-
-
-
 	<ui:define name="content">
 
 		<script type="text/javascript">
@@ -21,6 +18,15 @@
 			function stop() {
 		    	PF('statusDialog').hide();
 			}
+
+
+			function setarWidthHeight(id) {
+				var htmlTag = document.getElementById(id);
+				htmlTag.style.height = Math.floor(window.innerHeight*0.98)+"px";	
+				htmlTag.style.width = Math.floor(window.innerWidth*0.98)+"px";	
+				
+			}
+			
 		</script>
 
 		<!-- Painle de listagem -->
@@ -46,28 +52,20 @@
 						<f:viewAction action="#{adiantamentoController.init()}" />
 					</f:metadata>
 
-
 					<p:panel id="filter-list">
-
 
 						<div class="ui-g ui-fluid" style="margin-top: 8px">
 
 							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
-								<p:outputLabel value="Código:" for="codigo"
+								<p:outputLabel value="Código" for="codigo"
 									styleClass="form-label" />
 								<p:inputText value="#{adiantamentoController.filtro.codigo}"
 									id="codigo" />
 							</div>
 
-							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
-								<p:outputLabel value="Solicitante:" styleClass="form-label"
-									for="nome" />
-								<p:inputText value="#{adiantamentoController.filtro.nome}"
-									id="nome" />
-							</div>
 
 							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-								<p:outputLabel value="Dt. Inicio:" styleClass="form-label"
+								<p:outputLabel value="Dt. Inicio" styleClass="form-label"
 									for="dt_inicio" />
 								<p:calendar id="dt_inicio"
 									value="#{adiantamentoController.filtro.dataInicio}"
@@ -84,12 +82,21 @@
 
 							</div>
 
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+								<p:outputLabel value="Solicitante" styleClass="form-label"
+									for="solicitante" />
+								<p:inputText
+									value="#{adiantamentoController.filtro.nomeFornecedor}"
+									id="solicitante" />
+
+							</div>
+
 						</div>
 
 						<div class="ui-g ui-fluid">
 
 							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-								<p:outputLabel value="Gestão:" for="gestao"
+								<p:outputLabel value="Gestão" for="gestao"
 									styleClass="form-label" />
 								<p:autoComplete styleClass="font12-vi" id="gestao"
 									panelStyle="width:180px"
@@ -100,39 +107,15 @@
 							</div>
 
 							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-								<p:outputLabel value="Destino/Localização:" for="localidade"
-									styleClass="form-label" />
-								<p:autoComplete styleClass="font12-vi" id="localidade"
-									panelStyle="width:180px"
-									value="#{adiantamentoController.filtro.localidade}"
-									completeMethod="#{adiantamentoController.completeLocalidade}"
-									var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
-									converter="localConverterVI" minQueryLength="3">
-								</p:autoComplete>
-							</div>
-
-							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-								<p:outputLabel value="Fornecedor:" styleClass="form-label"
-									for="fornecedor" />
-								<p:inputText
-									value="#{adiantamentoController.filtro.nomeFornecedor}"
-									id="fornecedor" />
-
-							</div>
-
-							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-								<p:outputLabel value="Descrição:" style="margin-left:5px"
+								<p:outputLabel value="Descrição" style="margin-left:5px"
 									for="descricao" styleClass="form-label" />
 								<p:inputText value="#{adiantamentoController.filtro.descricao}"
 									id="descricao" style="margin-left:5px"></p:inputText>
 
 							</div>
 
-						</div>
-
-						<div class="ui-g ui-fluid">
 							<div class="ui-g-12 ui-lg-6 form-group">
-								<p:outputLabel value="Projeto:" style="margin-left:4px"
+								<p:outputLabel value="Projeto" style="margin-left:4px"
 									for="projeto" styleClass="form-label" />
 								<p:autoComplete value="#{adiantamentoController.filtro.projeto}"
 									completeMethod="#{adiantamentoController.completeProjetos}"
@@ -150,10 +133,17 @@
 								</p:autoComplete>
 
 							</div>
-							<div class="ui-g-12 ui-lg-6 " style="text-align: right">
+
+						</div>
+
+						<div class="ui-g ui-fluid">
+
+							<div class="ui-g-6" style="text-align: left">
+
+
 								<p:commandLink styleClass="btn btn-primary btn-sm"
 									action="#{adiantamentoController.filtrar()}" onclick="start()"
-									onsuccess="stop()" onerror="stop()" update="table"
+									onsuccess="stop()" onerror="stop()" update="panel-table"
 									style="color:#fff; margin: 8px 2px;">
 									<span class="fa fa-fw fa-search"></span>
 									<span>Buscar</span>
@@ -168,7 +158,6 @@
 									<span>Limpar</span>
 								</p:commandLink>
 
-
 								<p:link styleClass="btn btn-success btn-sm"
 									style="color:#fff;margin: 8px 2px;"
 									outcome="/main/adiantamento_cadastro"
@@ -178,13 +167,120 @@
 								</p:link>
 
 
+								<p:commandLink styleClass="btn btn-primary btn-sm"
+									oncomplete="PF('dialog_help').show();" update="main-panel-help"
+									onclick="start();setarWidthHeight('id-help')"
+									onsuccess="stop()" onerror="stop()"
+									style="color:#fff; margin: 8px 2px;">
+									<span class="fa fa-fw fa-question"></span>
+									<span>Ajuda</span>
+								</p:commandLink>
+
+							</div>
+
+
+
+
+							<div class="ui-g-12">
+								<p:outputPanel id="panel-table">
+									<table class="table table-sm table-hover">
+										<thead class="thead-light">
+											<tr>
+												<th scope="col">Código</th>
+												<th scope="col">Descrição</th>
+												<th scope="col">Gestão</th>
+												<th scope="col">Colaborador</th>
+												<th scope="col">Status</th>
+												<th scope="col">Prestação de contas</th>
+												<th scope="col">Data</th>
+												<th scope="col">Valor</th>
+												<th scope="col" style="text-align: center">#</th>
+											</tr>
+										</thead>
+										<tbody>
+
+											<ui:repeat var="pagamento"
+												value="#{adiantamentoController.pagamentos}">
+
+												<tr
+													class="#{pagamento.statusAdiantamento.nome.equals('Devolução de documentos') ? 
+											'bg-warning' : pagamento.statusCompra.nome.equals('Recusado') ?
+											 'bg-danger' : ''} ">
+													<td><p:link style="text-align:center"
+															outcome="/main/adiantamento_cadastro"
+															title="Editar adiantamento">
+															<span style="margin: 3px;">SA#{pagamento.id}</span>
+															<f:param name="lanc" value="#{pagamento.id}" />
+														</p:link></td>
+													<td>#{pagamento.descricao}</td>
+													<td>#{pagamento.nomeGestao}</td>
+													<td>#{pagamento.nomeFornecedor}</td>
+													<td>#{pagamento.statusCompra.nome}</td>
+													<td>#{pagamento.statusAdiantamento.nome}</td>
+
+													<td><h:outputText value="#{pagamento.dataEmissao}">
+															<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss " />
+														</h:outputText></td>
+
+													<td><h:outputText
+															value="#{pagamento.valorTotalComDesconto}">
+															<f:convertNumber type="currency" maxFractionDigits="2"
+																currencySymbol="R$" />
+
+														</h:outputText></td>
+
+													<td><p:menuButton value="Opções">
+
+															<p:menuitem value="Notas" icon="fa fa-fw fa-search"
+																oncomplete="PF('dialog_arquivo').show();"
+																update=":form-arquivo"
+																action="#{adiantamentoController.carregarArquivos()}"
+																style="margin: 8px 2px;" onclick="start()"
+																onerror="stop()" onsuccess="stop()" process="@this">
+																<f:setPropertyActionListener value="#{pagamento}"
+																	target="#{adiantamentoController.lancamentoAux}" />
+
+															</p:menuitem>
+
+															<p:menuitem value="Imprimir" icon="fa fa-fw fa-print"
+																target="_blank" update="panel-content"
+																style="margin: 8px 2px;" ajax="false"
+																action="#{adiantamentoController.imprimir()}">
+																<span class="glyphicon glyphicon-print"></span>
+																<f:setPropertyActionListener value="#{pagamento}"
+																	target="#{adiantamentoController.pagamento}" />
+															</p:menuitem>
+
+															<p:menuitem value="Mudar Status"
+																icon="fa fa-fw fa-rotate-left" style="margin: 8px 2px;"
+																update="formDialogAlterarStatus"
+																oncomplete="PF('dialogAlterarStatus').show()"
+																rendered="#{adiantamentoController.usuarioSessao.usuario.perfil.id == 1}">
+																<span class="glyphicon glyphicon-sort"></span>
+																<f:setPropertyActionListener value="#{pagamento}"
+																	target="#{adiantamentoController.pagamento}" />
+															</p:menuitem>
+
+															<p:menuitem value="Prestar contas"
+																icon="fa fa-fw fa-dollar"
+																outcome="/main/prestacaodecontas_cadastro?faces-redirect=true">
+																<f:param name="ad" value="#{pagamento.id}" />
+															</p:menuitem>
+
+														</p:menuButton></td>
+												</tr>
+											</ui:repeat>
+										</tbody>
+									</table>
+								</p:outputPanel>
 							</div>
 
 							<div id="div-table" class="ui-g-12">
-								<p:dataTable emptyMessage="Não há solicitações de pagamento"
-									id="table" value="#{adiantamentoController.pagamentos}"
-									var="pagamento" paginator="true" widgetVar="comprasTable"
-									rows="10"
+								<p:dataTable rendered="false"
+									emptyMessage="Não há solicitações de pagamento" id="table"
+									value="#{adiantamentoController.pagamentos}" var="pagamento"
+									paginator="true" widgetVar="comprasTable" rows="10"
+									styleClass="table"
 									paginatorTemplate="{Exporters}  {CurrentPageReport}  
 						{FirstPageLink} {PreviousPageLink} {PageLinks} 
 						{NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
@@ -199,8 +295,7 @@
 										</h:commandLink>
 									</f:facet>
 
-									<p:column headerText="Código" filterBy="#{pagamento.id}"
-										filterMatchMode="contains">
+									<p:column headerText="Código">
 
 										<p:link style="text-align:center"
 											outcome="/main/adiantamento_cadastro"
@@ -212,49 +307,41 @@
 									</p:column>
 
 									<p:column headerText="Descrição">
+
 										<h:outputText id="motivo"
-											value="#{pagamento.descricao.length() > 30 ? pagamento.descricao.substring(0,30) : pagamento.descricao} . . ." />
-										<p:tooltip id="toolTipGrow" for="motivo" style="width:600px;"
-											showDelay="10" showEffect="clip" hideEffect="explode"
-											position="left">
-											<h:outputText value="#{pagamento.descricao}" />
-										</p:tooltip>
+											value="#{pagamento.descricao.length() > 40 ? pagamento.descricao.substring(0,40) : pagamento.descricao}" />
+
+										<h:outputText rendered="#{pagamento.descricao.length() > 40}"
+											id="desc" value=" ..." />
+
+										<p:tooltip id="toolTipFade" for="desc"
+											value="#{pagamento.descricao}" style="width:50%"
+											position="top" />
+
+
 									</p:column>
 
-									<p:column headerText="Destino"
-										filterBy="#{pagamento.nomeDestino}" filterMatchMode="contains">
-										<h:outputText value="#{pagamento.nomeDestino}" />
-									</p:column>
 
-									<p:column headerText="Gestão"
-										filterBy="#{pagamento.nomeGestao}" filterMatchMode="contains">
+									<p:column headerText="Gestão">
 										<h:outputText value="#{pagamento.nomeGestao}" />
 									</p:column>
 
-									<p:column headerText="Fornecedor"
-										filterBy="#{pagamento.nomeFornecedor}"
-										filterMatchMode="contains">
+									<p:column headerText="Colaborador">
 										<h:outputText value="#{pagamento.nomeFornecedor}" />
 									</p:column>
 
-									<p:column headerText="Status"
-										filterBy="#{pagamento.statusCompra.nome}"
-										filterMatchMode="contains">
+									<p:column headerText="Status">
 										<h:outputText value="#{pagamento.statusCompra.nome}" />
+									</p:column>
+
+									<p:column headerText="Prestação de contas">
+										<h:outputText value="#{pagamento.statusAdiantamento.nome}" />
 									</p:column>
 
 									<p:column headerText="Data">
 										<h:outputText value="#{pagamento.dataEmissao}">
 											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss " />
 										</h:outputText>
-									</p:column>
-
-
-									<p:column headerText="Solicitante"
-										filterBy="#{pagamento.nomeSolicitante}"
-										filterMatchMode="contains">
-										<h:outputText
-											value="#{pagamento.nomeSolicitante.toLowerCase()}" />
 									</p:column>
 
 									<p:column headerText="valor">
@@ -324,6 +411,18 @@
 	</ui:define>
 
 	<ui:define name="adicionais">
+
+
+		<p:dialog header="Help" widgetVar="dialog_help" hideEffect="clip"
+			closeOnEscape="true" showEffect="clip" width="100%" height="100%"
+			minimizable="true"
+			maximizable="true"
+			resizable="false"
+			draggable="false">
+
+			<ui:include src="/main/dialog/help/help_adiantamentos.xhtml" />
+
+		</p:dialog>
 
 		<p:dialog header="Anexos" modal="true" widgetVar="dialog_arquivo"
 			hideEffect="clip" closeOnEscape="true" showEffect="clip">

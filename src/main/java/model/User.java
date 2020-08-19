@@ -94,7 +94,7 @@ public class User implements Serializable {
 	}
 	public void setSenha(String senha) {
 		
-		MessageDigest algorithm = null;
+		/*MessageDigest algorithm = null;
 		try {
 			algorithm = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException e) {
@@ -114,7 +114,7 @@ public class User implements Serializable {
 		for (byte b : messageDigest) {
 		  hexString.append(String.format("%02X", 0xFF & b));
 		}
-		senha = hexString.toString();
+		senha = hexString.toString();*/
 		
 		this.senha = senha;
 	}

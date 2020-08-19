@@ -36,9 +36,12 @@
 			</p:commandLink>
 
 			<p:commandLink styleClass="btn btn-primary btn-sm"
-				style="color:#fff;" onstart="start()" onerror="stop()"
-				oncomplete="stop()">
-				<span style="font-family: Arial;">Ajuda</span>
+				process="@this"
+				oncomplete="PF('dialog_help').show();" update="main-panel-help"
+				onclick="start();setarWidthHeight('id-help')" onsuccess="stop()"
+				onerror="stop()" style="color:#fff; margin: 8px 2px;">
+				<span class="fa fa-fw fa-question"></span>
+				<span>Ajuda</span>
 			</p:commandLink>
 
 			<p:commandLink action="#{pagamentoController.voltarListagem()}"

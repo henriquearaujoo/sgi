@@ -347,8 +347,8 @@ public class ProjetoBean implements Serializable {
 		if (!auxTotal.equals(new BigDecimal(0)))
 			execucaoFisica = Double.parseDouble(
 					(auxEx.divide(auxTotal, 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100))).toString());
-
-		openDialog("PF('dlg_detalhes_projeto').show();");
+		
+		openDialog("PF('dialog_detail').show();");
 
 	}
 
@@ -543,13 +543,29 @@ public class ProjetoBean implements Serializable {
 			filtro.setAtivo(true);
 			filtro.setDataInicio(DataUtil.getDataInicio(new Date()));
 			filtro.setDataFinal(DataUtil.getDataFinal(new Date()));
-			colorirProjeto();
-			carregarPlanos();
-			carregarOrcamentos();
-		} catch (NumberFormatException | ParseException e) {
+			fetchProjects();
+			fetchPlanes();
+			fetchDonations();
+
+		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public void addList(Projeto p) {
+		if (listaProjetosSelecionados == null)
+			listaProjetosSelecionados = new ArrayList<>();
+		boolean contain = listaProjetosSelecionados.contains(p);
+		if (contain) {
+			listaProjetosSelecionados.remove(p);
+		} else {
+			listaProjetosSelecionados.add(p);
+		}
+	}
+
+	public void fetchProjects() {
+		projetos = gestaoProjeto.getAllProject(filtro, usuarioSessao.getUsuario());
 	}
 
 	public void carregarProjetosMODE01() {
@@ -580,7 +596,7 @@ public class ProjetoBean implements Serializable {
 		subComponentes = new ArrayList<>();
 	}
 
-	public void carregarPlanos() {
+	public void fetchPlanes() {
 		planos = gestaoProjeto.carregarPlanos(usuarioSessao.getUsuario());
 	}
 
@@ -624,7 +640,7 @@ public class ProjetoBean implements Serializable {
 		categoriasDeProjeto = gestaoProjeto.getListaDeCategoriasDeProjeto(filtro);
 	}
 
-	public void carregarOrcamentos() {
+	public void fetchDonations() {
 		orcamentos = orcService.getOrcamentos(filtro);
 	}
 
@@ -724,7 +740,7 @@ public class ProjetoBean implements Serializable {
 		carregarSubComponentes();
 		// carregarRelacaoDeOrcamentos();
 		findObjetivoByIdProjeto();
-		carregarPlanos();
+		fetchPlanes();
 		carregarCadeias();
 		carregarSubProgramas();
 		// carregarQualifs();
@@ -795,13 +811,14 @@ public class ProjetoBean implements Serializable {
 		return format.format(valorTotal);
 	}
 
-//	public void carregarDialogOrcadoRealizado() {
-//		Map<String, Object> option = new HashMap<>();
-//		option.put("modal", true);
-//		option.put("resizable", false);
-//		option.put("contentHeight", 470);
-//		RequestContext.getCurrentInstance().openDialog("filterOrcadoRealizado", option, null);
-//	}
+	// public void carregarDialogOrcadoRealizado() {
+	// Map<String, Object> option = new HashMap<>();
+	// option.put("modal", true);
+	// option.put("resizable", false);
+	// option.put("contentHeight", 470);
+	// RequestContext.getCurrentInstance().openDialog("filterOrcadoRealizado",
+	// option, null);
+	// }
 
 	public void salvarOrcamentoProjeto() {
 		if (projeto.getId() == null) {

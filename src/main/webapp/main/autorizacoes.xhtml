@@ -34,8 +34,8 @@ body .ui-staticmessage.ui-message {
 						<p:autoUpdate disabled="false" />
 					</p:messages>
 
-
 				</div>
+
 				<div class="ui-g-12">
 
 					<div class="alert alert-primary alert-dismissible fade show"
@@ -52,8 +52,6 @@ body .ui-staticmessage.ui-message {
 				</div>
 
 			</div>
-
-
 
 			<p:breadCrumb>
 				<p:menuitem value="Categories" url="home_new.xhtml" />
@@ -83,8 +81,6 @@ body .ui-staticmessage.ui-message {
 							title="Recusar">
 							<i class="pi pi-times"></i>
 						</p:commandLink>
-
-
 
 					</div>
 
@@ -130,10 +126,8 @@ body .ui-staticmessage.ui-message {
 													action="#{autorizacao_controller.imprimirMapa(solic.idCompra)}"
 													ajax="false" target="_blank">
 													<i class="pi pi-print"></i>
-												</p:commandLink> 
-												
-												<p:commandLink title="Imprimir prestação"
-													rendered="#{solic.tipov4.equals('SA')}" process="@this"
+												</p:commandLink> <p:commandLink title="Imprimir prestação"
+													rendered="#{solic.tipov4.equals('PCA')}" process="@this"
 													action="#{autorizacao_controller.imprimirPrestacao(solic)}"
 													ajax="false" target="_blank">
 													<i class="pi pi-print"></i>

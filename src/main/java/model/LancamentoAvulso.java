@@ -62,7 +62,6 @@ public class LancamentoAvulso extends Lancamento {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataPagamentoPrestacao;
 	
-	
 
 	@Transient
 	private String acao;
@@ -158,13 +157,7 @@ public class LancamentoAvulso extends Lancamento {
 		this.acao = acao;
 	}
 
-	public Long getIdAdiantamento() {
-		return idAdiantamento;
-	}
-
-	public void setIdAdiantamento(Long idAdiantamento) {
-		this.idAdiantamento = idAdiantamento;
-	}
+	
 
 	public String getContaEnvolvida() {
 		return contaEnvolvida;
@@ -182,6 +175,14 @@ public class LancamentoAvulso extends Lancamento {
 		this.saidaPrestacao = saidaPrestacao;
 	}
 
+	public Long getIdAdiantamento() {
+		return idAdiantamento;
+	}
+
+	public void setIdAdiantamento(Long idAdiantamento) {
+		this.idAdiantamento = idAdiantamento;
+	}
+
 	public Date getDataPagamentoPrestacao() {
 		return dataPagamentoPrestacao;
 	}
@@ -189,6 +190,22 @@ public class LancamentoAvulso extends Lancamento {
 	public void setDataPagamentoPrestacao(Date dataPagamentoPrestacao) {
 		this.dataPagamentoPrestacao = dataPagamentoPrestacao;
 	}
+
+	/*public Date getDataPagamentoPrestacao() {
+		return dataPagamentoPrestacao;
+	}
+
+	public void setDataPagamentoPrestacao(Date dataPagamentoPrestacao) {
+		this.dataPagamentoPrestacao = dataPagamentoPrestacao;
+	}
+	
+	public Long getIdAdiantamento() {
+		return idAdiantamento;
+	}
+
+	public void setIdAdiantamento(Long idAdiantamento) {
+		this.idAdiantamento = idAdiantamento;
+	}*/
 
 	
 

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import repositorio.AutorizacaoRepositorio;
+import service.HomeService;
 
 public class AutorizacaoFilter implements Filter {
 
@@ -21,9 +22,9 @@ public class AutorizacaoFilter implements Filter {
 
 	@Inject
 	private AutorizacaoRepositorio autorizacaoRepo;
-
+	
+	
 	public void destroy() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -32,29 +33,12 @@ public class AutorizacaoFilter implements Filter {
 		HttpServletResponse resp = (HttpServletResponse) response;
 		HttpServletRequest req = (HttpServletRequest) request;
 
-		// if (sessao.getUsuario() != null)
-		// System.out.println(sessao.getUsuario().getSenhaAuto());
-
-		if (!sessao.verificaLogado() && !req.getRequestURI().endsWith("/login.xhtml")
+		if (!sessao.verificaLogado() 
+				&& !req.getRequestURI().endsWith("/login.xhtml")
 				&& !req.getRequestURI().contains("/javax.faces.resource/")) {
 
 			resp.sendRedirect(req.getContextPath() + "/main/login.xhtml");
-			// } else if (req.getRequestURI().endsWith("/lancamentosV2.xhtml")
-			// || req.getRequestURI().endsWith("/liberacao_lancamento.xhtml")
-			// || req.getRequestURI().endsWith("/lancamentos_diversos.xhtml")
-			// || req.getRequestURI().endsWith("/custo_pessoal.xhtml")) {
-			//
-			// if (sessao.getUsuario().getPerfil().getDescricao().equals("administracao")
-			// || sessao.getUsuario().getPerfil().getDescricao().equals("admin")
-			// || sessao.getUsuario().getPerfil().getDescricao().equals("financeiro")
-			// || sessao.getUsuario().getPerfil().getDescricao().equals("contabil")
-			// || sessao.getUsuario().getPerfil().getDescricao().equals("RH"))
-			// chain.doFilter(request, response);
-			//
-			// else
-			// resp.sendRedirect(req.getContextPath() + "/main/acesso_negado.xhtml");
-//		} else if (sessao.getUsuario() != null && autorizacaoRepo.verificaSolicitacoes(sessao.getIdColadorador())) {
-//			resp.sendRedirect(req.getContextPath() + "/main/autorizacoes.xhtml");
+
 		} else {
 			chain.doFilter(request, response);
 		}

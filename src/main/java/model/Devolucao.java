@@ -1,6 +1,5 @@
 package model;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,7 +11,13 @@ import javax.persistence.Entity;
 public class Devolucao extends Lancamento {
 
    
-    @Column(name = "id_lancamento")
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	
+	@Column(name = "id_lancamento")
     private Long idLancamento;
 
     public Devolucao() {

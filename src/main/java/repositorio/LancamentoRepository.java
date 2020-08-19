@@ -2160,11 +2160,6 @@ public class LancamentoRepository implements Serializable {
 
 	public LancamentoAvulso salvarLancamentoAvulso(LancamentoAvulso lancamento, User usuario) {
 
-		/*
-		 * if (lancamento.getId() != null) this.manager.
-		 * createNativeQuery("delete from PagamentoLancamento as pl where pl.lancamentoAcao.lancamento = :lanc"
-		 * ) .setParameter("lanc", lancamento).executeUpdate();
-		 */
 
 		if (lancamento.getId() != null) {
 			this.manager.createNativeQuery(
@@ -2619,8 +2614,136 @@ public class LancamentoRepository implements Serializable {
 		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<ItemCompra>();
 	}
 
-	// SolicitacaoPagamento(Long id, String nomeDestino, StatusCompra status,
-	// Date data, String nomeSolicitante){
+	
+	public List<SolicitacaoPagamento> fetchOrdersByTypeAdPaySA(Filtro filtro) {
+
+		StringBuilder jpql = new StringBuilder(
+				"SELECT NEW SolicitacaoPagamento(p.id, p.gestao.nome, p.solicitante.nome, p.localidade.mascara,  ");
+		jpql.append(
+				"p.dataEmissao,p.statusCompra,  ");
+		jpql.append("forn.nomeFantasia, p.descricao, p.valorTotalComDesconto, p.statusAdiantamento) ");
+		jpql.append(" from SolicitacaoPagamento p ");
+		jpql.append(" left join p.contaRecebedor recebedor ");
+		jpql.append(" left join recebedor.fornecedor forn ");
+
+		// jpql.append(" left join c.lancamentosAcoes la left join la.projetoRubrica pr
+		// join pr.projeto p ");
+
+		jpql.append(" where 1  = 1 ");
+
+		jpql.append(" and p.versionLancamento = 'MODE01' ");
+
+		if (filtro.getSp() != null && !filtro.getSp().equals("")) {
+			jpql.append(" and p.tipoLancamento != 'ad' ");
+		}
+
+		if (filtro.getTipoLancamento() != null && !filtro.getTipoLancamento().equals("")) {
+			jpql.append(" and p.tipoLancamento = 'ad' ");
+
+		}
+
+		if (filtro.getCodigo() != null && !filtro.getCodigo().equals("")) {
+			jpql.append(" and p.id = :codigo ");
+
+		}
+
+
+		if (filtro.getDataInicio() != null) {
+			if (filtro.getDataFinal() != null) {
+				jpql.append(" and p.dataEmissao between :data_inicio and :data_final");
+			} else {
+				jpql.append(" and p.dataEmissao > :data_inicio");
+			}
+		}
+
+		if (filtro.getGestaoID() != null) {
+			jpql.append(" and p.gestao.id = :gestaoID ");
+		}
+
+		if (filtro.getGestao() != null) {
+			jpql.append(" and p.gestao = :gestao");
+		}
+
+		if (filtro.getNomeFornecedor() != null && !filtro.getNomeFornecedor().equals("")) {
+			jpql.append(
+					" and (lower(p.contaRecebedor.nomeConta) like lower(:fornecedor) or lower(p.contaRecebedor.razaoSocial)  ");
+			jpql.append("like lower(:fornecedor) or lower(p.contaRecebedor.cnpj) like lower(:fornecedor) ");
+			jpql.append("or lower(p.contaRecebedor.cpf) like lower(:fornecedor)) ");
+
+		}
+
+		if (filtro.getDescricao() != null && !filtro.getDescricao().equals("")) {
+			jpql.append(" and lower(p.descricao) like lower(:descricao)");
+		}
+
+		if (filtro.getProjeto() != null && filtro.getProjeto().getId() != null) {
+			jpql.append(" and :pProjetoID = p.id");
+		}
+
+		jpql.append(" order by p.dataEmissao desc");
+
+		Query query = manager.createQuery(jpql.toString());
+
+		if (filtro.getCodigo() != null && !filtro.getCodigo().equals("")) {
+			/* jpql.append(" and lower(c.codigo) like lower(:codigo)"); */
+			query.setParameter("codigo", Long.valueOf(filtro.getCodigo()));
+		}
+
+		if (filtro.getNome() != null && !filtro.getNome().equals("")) {
+			/*
+			 * jpql.append(" and lower(c.solicitante.nome) like lower(:nome)");
+			 */
+			query.setParameter("nome", "%" + filtro.getNome() + "%");
+		}
+
+		if (filtro.getDataInicio() != null) {
+			if (filtro.getDataFinal() != null) {
+				/*
+				 * jpql.append( " and c.dataEmissao between :data_inicio and :data_final");
+				 */
+				query.setParameter("data_inicio", filtro.getDataInicio());
+				query.setParameter("data_final", filtro.getDataFinal());
+			} else {
+				/* jpql.append(" and c.dataEmissao > :data_inicio"); */
+				query.setParameter("data_inicio", filtro.getDataInicio());
+			}
+		}
+
+		if (filtro.getGestaoID() != null) {
+			/* jpql.append(" and c.gestao.id = :gestaoID "); */
+			query.setParameter("gestaoID", filtro.getGestaoID());
+		}
+
+		if (filtro.getLocalidadeID() != null) {
+			/* jpql.append(" and c.localidade.id = :localidadeID "); */
+			query.setParameter("localidadeID", filtro.getLocalidadeID());
+		}
+
+		if (filtro.getGestao() != null) {
+			query.setParameter("gestao", filtro.getGestao());
+		}
+
+		if (filtro.getLocalidade() != null) {
+			query.setParameter("localidade", filtro.getLocalidade());
+		}
+
+		if (filtro.getNomeFornecedor() != null && !filtro.getNomeFornecedor().equals("")) {
+			query.setParameter("fornecedor", "%" + filtro.getNomeFornecedor() + "%");
+		}
+
+		if (filtro.getDescricao() != null && !filtro.getDescricao().equals("")) {
+			query.setParameter("descricao", "%" + filtro.getDescricao() + "%");
+		}
+
+		if (filtro.getProjeto() != null && filtro.getProjeto().getId() != null) {
+			query.setParameter("pProjetoID", filtro.getProjeto().getId());
+		}
+
+		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<SolicitacaoPagamento>();
+	}
+	
+	
+	
 	public List<SolicitacaoPagamento> getPagamentos(Filtro filtro) {
 
 		StringBuilder jpql = new StringBuilder(

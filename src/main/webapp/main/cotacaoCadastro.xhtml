@@ -189,7 +189,7 @@
 										onclick="setarWidthHeight('form-detalhe-cotacao'); PF('dlg_detalhe_cotacao').show();"
 										oncomplete="setarFocused('div-detalhe-cotacao');"
 										style="color:#fff; margin: 2px 2px;"
-										value="Adicionar informações">
+										value="Informações de pagamento">
 
 									</p:commandLink>
 
@@ -318,7 +318,7 @@
 							<p:commandLink process="form-detalhe-cotacao"
 								update=":info-panel-geral" value="Aplicar" 
 								action="#{cotacaoCadastroController.aplicarDetalhes()}"
-								onclick="start();"
+								onclick="start();" oncomplete="stop()"
 								onerror="stop();" onsuccess="stop();"
 								styleClass="btn btn-primary btn-block">
 							</p:commandLink>

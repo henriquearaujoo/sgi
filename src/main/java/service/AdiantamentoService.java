@@ -535,6 +535,48 @@ public class AdiantamentoService implements Serializable {
 		}
 
 	}
+	
+	
+	public List<SolicitacaoPagamento> fetchOrdersAdvancedPayment(Filtro filtro) {
+		if (filtro.getDataInicio() != null && filtro.getDataFinal() != null) {
+			if (filtro.getDataInicio().after(filtro.getDataFinal())) {
+				addMessage("", "Data inicio maior que data final", FacesMessage.SEVERITY_ERROR);
+				return new ArrayList<SolicitacaoPagamento>();
+			}
+
+			Calendar calInicio = Calendar.getInstance();
+			calInicio.setTime(filtro.getDataInicio());
+
+			Calendar calFinal = Calendar.getInstance();
+			calFinal.setTime(filtro.getDataFinal());
+
+			calInicio.set(Calendar.HOUR, 0);
+			calInicio.set(Calendar.MINUTE, 0);
+			calInicio.set(Calendar.SECOND, 0);
+			calInicio.set(Calendar.MILLISECOND, 0);
+
+			calFinal.set(Calendar.HOUR, 24);
+			calFinal.set(Calendar.MINUTE, 0);
+			calFinal.set(Calendar.SECOND, 0);
+			calFinal.set(Calendar.MILLISECOND, 0);
+
+			filtro.setDataInicio(calInicio.getTime());
+			filtro.setDataFinal(calFinal.getTime());
+
+			// System.out.println(filtro.getDataInicio());
+			// System.out.println(filtro.getDataFinal());
+
+		} else if (filtro.getDataInicio() != null) {
+			Calendar calInicio = Calendar.getInstance();
+			calInicio.set(Calendar.HOUR, 0);
+			calInicio.set(Calendar.MINUTE, 0);
+			calInicio.set(Calendar.SECOND, 0);
+			calInicio.set(Calendar.MILLISECOND, 0);
+			filtro.setDataInicio(calInicio.getTime());
+		}
+
+		return repositorio.fetchOrdersByTypeAdPaySA(filtro);
+	}
 
 	public List<SolicitacaoPagamento> getSolicitacaoPagamentos(Filtro filtro) {
 		if (filtro.getDataInicio() != null && filtro.getDataFinal() != null) {

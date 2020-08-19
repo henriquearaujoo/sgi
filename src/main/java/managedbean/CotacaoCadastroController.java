@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.primefaces.event.FileUploadEvent;
 
 import model.Compra;
+import model.CondicaoPagamento;
 import model.Cotacao;
 import model.CotacaoAuxiliar;
 import model.CotacaoParent;
@@ -32,6 +33,7 @@ import model.ItemCompra;
 import model.Lancamento;
 import model.MenuLateral;
 import model.Pedido;
+import model.TipoParcelamento;
 import service.CotacaoService;
 import service.PagamentoService;
 import util.ArquivoLancamento;
@@ -80,13 +82,24 @@ public class CotacaoCadastroController implements Serializable {
 	private BigDecimal valorTotal = BigDecimal.ZERO;
 
 	public void distribuirDesconto() {
-		// System.out.println(valorTotalDesconto);
-		// System.out.println(valorTotalDescontoPorcentagem);
-
+ 
 		if (cotacaoParent.getValorTotalSemDesconto() != null)
 			cotacaoParent.getValorTotalSemDesconto().setScale(2);
+		
 		if (cotacaoParent.getValorTotalComDesconto() != null)
-			cotacaoParent.getValorTotalComDesconto().setScale(2);
+			cotacaoParent.getValorTotalComDesconto().setScale(2);		
+		
+		if(cotacaoParent.getCondicaoPagamentoEnum() == null)
+			cotacaoParent.setCondicaoPagamentoEnum(CondicaoPagamento.DEPOSITO);
+		
+		if(cotacaoParent.getQuantidadeParcela() == null)
+			cotacaoParent.setQuantidadeParcela(1);
+		
+		if(cotacaoParent.getTipoParcelamento() == null)
+			cotacaoParent.setTipoParcelamento(TipoParcelamento.PARCELA_UNICA);
+		
+		if(cotacaoParent.getDataPagamentoPedido() == null)
+			cotacaoParent.setDataPagamentoPedido(new Date());;
 
 		if (cotacaoParent.getValorTotalDesconto() != null) {
 
@@ -222,6 +235,7 @@ public class CotacaoCadastroController implements Serializable {
 
 		}
 	}
+	
 
 	public void duplicarValorCotacao(Cotacao cotacao) {
 		cotacao.setValorDesconto(cotacao.getValor());
@@ -317,7 +331,7 @@ public class CotacaoCadastroController implements Serializable {
 	}
 	
 	public void aplicarDetalhes() {
-		addMessage("", "", FacesMessage.SEVERITY_INFO);
+		addMessage("", "Alterações aplicadas", FacesMessage.SEVERITY_INFO);
 	}
 	
 	public void addMessage(String summary, String detail, Severity severity) {
@@ -326,7 +340,10 @@ public class CotacaoCadastroController implements Serializable {
 	}
 
 	public String salvar() {
+		
+		distribuirDesconto();
 		cotacaoService.salvar(cotacoes, fornecedor, cotacaoParent);
+		
 		return "cotacao?faces-redirect=true&amp;includeViewParams=true";
 	}
 	
