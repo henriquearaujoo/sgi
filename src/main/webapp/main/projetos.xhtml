@@ -163,7 +163,7 @@
 										<td><p:selectBooleanCheckbox style="cursor: pointer">
 												<p:ajax listener="#{projetoBean.addList(projeto)}" />
 											</p:selectBooleanCheckbox></td>
-										<td><h:outputText value="#{projeto.codigo}" /></td>
+										<td><h:outputText value="#{projeto.codigo}"/></td>
 										<td><h:outputText value="#{projeto.nome}" /></td>
 										<td><h:outputText
 												value="#{projeto.statusAprovacao.descricao}" /></td>
@@ -177,11 +177,13 @@
 													oncomplete="stop()" onerror="stop()">
 													<f:param name="project" value="#{projeto.id}" />
 												</p:menuitem>
-												<p:menuitem value="#{message['ACTION_DETAILS']}"
+
+												<p:menuitem value="#{message['DETAILS']}"
 													onclick="setarWidthHeight('id-detail')"
 													update="main-panel-detail"
 													action="#{projetoBean.openDialogDetalhes(projeto)}">
 												</p:menuitem>
+
 												<p:menuitem action="#{projetoBean.remover()}"
 													rendered="false" process="@this"
 													value="#{message['ACTION_REMOVE']}">

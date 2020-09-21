@@ -13,7 +13,15 @@
 	-webkit-box-sizing: content-box;
 	-moz-box-sizing: content-box;
 	box-sizing: content-box;
-	color: #fff !important;
+	
+}
+
+#schedule .fc-title{
+	color:#fff
+}
+
+#schedule .fc-time{
+	color:#fff
 }
 </style>
 
@@ -28,7 +36,7 @@
 			<div class="ui-g-12">
 
 				<p:timeline id="timeline" value="#{home_controller.model}"
-					rendered="#{!home_controller.showCalendar}" locale="pt"
+					rendered="false" locale="pt"
 					height="200px" selectable="#{home_controller.selectable}"
 					zoomable="#{home_controller.zoomable}"
 					start="#{home_controller.initDateTimeLine}"
@@ -45,12 +53,12 @@
 				</p:timeline>
 
 
-				<p:schedule id="schedule"
+				<p:schedule id="schedule" 
 					rendered="#{home_controller.showCalendar}"
 					value="#{home_controller.eventModel}" widgetVar="myschedule"
-					locale="pt" style="width:70%;margin-left:auto;margin-right:auto">
+					locale="pt" style="width:70%;margin-left:auto;margin-right:auto; color:#000 !important">
 
-					<p:ajax event="dateSelect"
+					<p:ajax event="dateSelect" 
 						listener="#{home_controller.onDateSelect}" />
 					<p:ajax event="eventSelect"
 						listener="#{home_controller.onEventSelect}" />
@@ -66,7 +74,7 @@
 
 	</p:outputPanel>
 
-	<p:outputPanel id="resume-event">
+	<p:outputPanel id="resume-event" rendered="false">
 
 		<div class="ui-g ui-fluid">
 

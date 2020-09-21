@@ -5,3 +5,5 @@
 .svn/
 .tern-project
 target/
+src/main/java
+src/test

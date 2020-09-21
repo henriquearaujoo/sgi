@@ -349,7 +349,6 @@ public class ProjetoBean implements Serializable {
 					(auxEx.divide(auxTotal, 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100))).toString());
 		
 		openDialog("PF('dialog_detail').show();");
-
 	}
 
 	public void openDialog(String nomeDialog) {

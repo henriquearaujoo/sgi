@@ -74,12 +74,12 @@ public class HomeController implements Serializable {
 	private List<Post> posts;
 	private List<Utilidade> utilidades;
 	private List<ColaboradorVI> colaboradores;
-	
+
 	private Boolean showCalendar = true;
 
 	@Inject
 	private UsuarioSessao sessao;
-	
+
 	@Inject
 	private HomeService homeService;
 
@@ -94,7 +94,6 @@ public class HomeController implements Serializable {
 
 	@Inject
 	protected PostService postService;
-	
 
 	@Inject
 	protected UtilidadeService utilidadeService;
@@ -118,8 +117,7 @@ public class HomeController implements Serializable {
 	}
 
 	public void init() throws IOException {
-		
-		
+
 		if (homeService.verificarSolicitacoes(sessao.getIdColadorador())) {
 			HttpServletResponse resp = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
 					.getResponse();
@@ -127,14 +125,14 @@ public class HomeController implements Serializable {
 					.getRequest();
 			resp.sendRedirect(req.getContextPath() + "/main/autorizacoes.xhtml");
 		}
-		
+
 		openDialogSenha();
-	    //initTimeLine();
+		// initTimeLine();
 		carregarListPost();
-		//carregarUtilidades();
-		//carregarColaboradores();
+		// carregarUtilidades();
+		// carregarColaboradores();
 		initSchedule();
-		
+
 		System.out.println("Home");
 	}
 
@@ -209,21 +207,16 @@ public class HomeController implements Serializable {
 	public void initSchedule() {
 		eventModel = new DefaultScheduleModel();
 		DefaultScheduleEvent event = new DefaultScheduleEvent();
-
 		List<Evento> eventos = eventService.getResumeList();
-		
 		for (Evento evento : eventos) {
 			event = new DefaultScheduleEvent();
 			event.setTitle(evento.getTitulo());
 			event.setStartDate(evento.getDataInicio());
 			event.setEndDate(evento.getDataFim());
 			event.setDescription(evento.getDescricao());
+			event.setData(evento);
 			eventModel.addEvent(event);
-			
 		}
-
-		
-
 	}
 
 	private ScheduleEvent event = new DefaultScheduleEvent();
@@ -233,7 +226,7 @@ public class HomeController implements Serializable {
 	}
 
 	public void onDateSelect(SelectEvent selectEvent) {
-
+		event = (ScheduleEvent) selectEvent.getObject();
 	}
 
 	public void onEventMove(ScheduleEntryMoveEvent event) {
