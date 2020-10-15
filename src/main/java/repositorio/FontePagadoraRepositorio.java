@@ -1,11 +1,14 @@
 package repositorio;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TransactionRequiredException;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -13,7 +16,9 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.postgresql.util.PSQLException;
 
+import model.Evento;
 import model.FontePagadora;
 import model.Projeto;
 import model.Versao;
@@ -36,19 +41,13 @@ public class FontePagadoraRepositorio {
 		return this.manager.find(FontePagadora.class, id);
 	}
 
-	
 	public void salvar(FontePagadora fontePagadora) {
 		this.manager.merge(fontePagadora);
-	}
-	
-	
-	public FontePagadora salvarFonte(FontePagadora fontePagadora) {
-		return this.manager.merge(fontePagadora);
 		
 	}
 	
 	public List<FontePagadora> findAll(){
-		StringBuilder jpql = new StringBuilder("from FontePagadora a");
+		StringBuilder jpql = new StringBuilder("from FontePagadora a order by id asc");
 		Query query = manager.createQuery(jpql.toString());
 		return query.getResultList();
 	}
@@ -70,11 +69,10 @@ public class FontePagadoraRepositorio {
 	}
 	
 	
-	public void remover(FontePagadora fonte){
-		this.manager.remove(this.manager.merge(fonte));
+	public void remover(FontePagadora fontePagadora){
+		this.manager.remove(this.manager.find(FontePagadora.class, fontePagadora.getId()));
 	}
 
-	
 	// Metodosp pra usar com lazy
 	public List<Projeto> filtrados(Filtro filtro) {
 		Criteria criteria = criarCriteria(filtro);

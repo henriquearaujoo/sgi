@@ -9,46 +9,83 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
 
 	<ui:define name="content">
+		<div class="mx-4">
+			<f:metadata>
+				<o:viewParam name="edicaoSucesso"
+					value="#{fonte_pagadora_controller.edicaoSucesso}" />
+				<f:viewAction action="#{fonte_pagadora_controller.initListagem()}" />
+			</f:metadata>
 
-		<h:form id="content_fonte">
-				
-			<br />
+			<h:form id="content_fonte">
 
-			<p:breadCrumb>
-				<p:menuitem value="Home" url="home_new.xhtml" />
-				<p:menuitem value="Fontes pagadoras" url="#" />
-			</p:breadCrumb>
+				<br />
 
-			<p:panel>
+				<p:breadCrumb styleClass="mt-3 px-3 py-2">
+					<p:menuitem value="Home" url="home_new.xhtml" />
+					<p:menuitem value="Fontes pagadoras" url="#" />
+				</p:breadCrumb>
 
-				<div class="ui-g ui-fluid">
+				<p:panel>
 
-					<div class="ui-g-12 ui-lg-12 " style="text-align: right">
+					<div class="ui-g ui-fluid">
 
-						<p:link styleClass="btn btn-success btn-sm"
-							style="margin-left:5px;color:#fff" title="Novo"	
-							outcome="/main/fonte_pagadora_cadastro">
-							<span class="fa fa-fw fa-plus"></span>
-							<span>Novo</span>
-						</p:link>
+						<div class="ui-g-12 ui-lg-12 " style="text-align: right">
 
+							<p:link styleClass="btn btn-success" title="Novo"
+								outcome="/main/fonte_pagadora_cadastro">
+								<i class="fa fas fa-plus"></i> Novo
+							</p:link>
+
+						</div>
 					</div>
-				</div>
 
 
-				<div class="ui-g ui-fluid">
-					<p:dataTable id="tabela_fonte" paginator="true" rows="12"
-						value="#{fonte_pagadora_controller.findAll()}" var="bean">
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-12">
+							<p:messages id="messages" showDetail="true" closable="true">
+								<p:autoUpdate />
+							</p:messages>
+						</div>
+						<div class="ui-g-12">
 
-						<p:column headerText="Fonte" filterBy="#{bean.nome}"
-										filterMatchMode="contains">
-							<h:outputText escape="false" value="#{bean.nome}" />
-						</p:column>
+							<p:dataTable id="tabela_fonte" paginator="true" rows="12"
+								value="#{fonte_pagadora_controller.fontes}" var="fonte">
 
-					</p:dataTable>
-				</div>
-			</p:panel>
-		</h:form>
+								<p:column headerText="Fonte" filterBy="#{fonte.nome}"
+									filterMatchMode="contains">
+									<h:outputText escape="false" value="#{fonte.nome}" />
+								</p:column>
+
+								<p:column headerText="Opções" style="width:10vw;">
+									<p:menuButton value="Opções">
+										<p:menuitem icon="fa fa-fw fa-edit" value="editar"
+											outcome="/main/fonte_pagadora_cadastro">
+											<f:param name="fonte_pagadora" value="#{fonte.id}" />
+										</p:menuitem>
+
+										<p:menuitem value="remover" ajax="false"
+											icon="fa fa-fw fa-trash-o" update="tabela_fonte"
+											action="#{fonte_pagadora_controller.remover()}">
+											<p:confirm header="Confirmação"
+												message="Você realmente deseja remover a fonte #{fonte.nome}?"
+												icon="pi pi-exclamation-triangle" />
+											<f:setPropertyActionListener value="#{fonte}"
+												target="#{fonte_pagadora_controller.fontePagadora}" />
+										</p:menuitem>
+									</p:menuButton>
+								</p:column>
+							</p:dataTable>
+						</div>
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:commandButton value="Sim" type="button"
+								styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+							<p:commandButton value="Não" type="button"
+								styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+						</p:confirmDialog>
+					</div>
+				</p:panel>
+			</h:form>
+		</div>
 	</ui:define>
 	<ui:define name="adicionais">
 

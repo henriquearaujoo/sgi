@@ -21,7 +21,7 @@ public class FontePagadora implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column
+	@Column(name = "nome")
 	private String nome;
 
 	
@@ -40,8 +40,13 @@ public class FontePagadora implements Serializable {
 		this.id = id;
 	}
 	
-	public FontePagadora(){
+	public FontePagadora() {
 		
+	}
+	
+	public FontePagadora(Long _id, String _nome){
+		this.id = _id;
+		this.nome = _nome;
 	}
 
 	@Override

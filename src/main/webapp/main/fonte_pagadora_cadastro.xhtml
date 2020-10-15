@@ -9,51 +9,56 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
 
 	<ui:define name="content">
-		
-		<p:breadCrumb>
-			<p:menuitem value="Home" url="home_new.xhtml" />
-			<p:menuitem value="Fontes pagadoras" url="fonte_pagadora.xhtml" />
-			<p:menuitem value="Cadastro/Edição de Fonte pagadora" url="#" />
-		</p:breadCrumb>
-		
-		<p:panel header="Fontes" >
-			<h:form id="form-cadastro-fontes"  >
-			
-			<f:metadata>
-				<o:viewParam name="fonte_pagadora" value="#{orcamento_controller.orcamento}" />
-				<f:viewAction action="#{fonte_pagadora_controller.init()}" />
-			</f:metadata>
-					
-						<p:commandLink
-					styleClass="btn btn-primary btn-sm"
-					style="color:#fff"
-					action="#{fonte_pagadora_controller.salvar()}">
-					<span style="font-family: Arial; margin-left: 4px">Salvar</span>
+		<div class="mx-4">
+
+			<p:breadCrumb styleClass="mt-3 mb-3 px-3 py-2">
+				<p:menuitem value="Home" url="home_new.xhtml" />
+				<p:menuitem value="Fontes pagadoras" url="fonte_pagadora.xhtml" />
+				<p:menuitem value="Cadastro/Edição de Fonte pagadora" url="#" />
+			</p:breadCrumb>
+
+			<p:panel header="Fontes">
+				<h:form id="form-cadastro-fontes">
+
+					<f:metadata>
+						<o:viewParam name="fonte_pagadora"
+							value="#{fonte_pagadora_controller.fontePagadora}" />
+						<!-- 					<f:viewAction action="#{fonte_pagadora_controller.init()}" /> -->
+					</f:metadata>
+
+					<!-- 				<p:panelGrid columns="3" styleClass="ui-noborder p-3"> -->
+					<div class="ui-g">
+						<div class="ui-g-4">
+							<p:outputLabel value="Nome:" for="nome" />
+							<p:inputText id="nome"
+								value="#{fonte_pagadora_controller.fontePagadora.nome}"
+								requiredMessage="Preencha o campo Nome!"
+								placeholder="Ex.:Fonte Pagadora S/A" required="true" />
+							<p:message for="nome" />
+						</div>
+					</div>
+
+					<!-- 				</p:panelGrid> -->
+
+
+					<p:commandLink styleClass="btn btn-success" style="color:#fff"
+						action="#{fonte_pagadora_controller.salvar()}">
+						<i class="fa fas fa-paper-plane"></i> Salvar
 						</p:commandLink>
-						
-					<p:link styleClass="btn btn-default btn-sm"
-						style="color:#000;margin: 8px 2px;"
-						outcome="/main/fonte_pagadora" title="Volar">
-						<span style="font-family: Arial">Voltar</span>
-					</p:link>
-					
-					<p:panelGrid columns="3" styleClass="ui-noborder" >
-							
-						<p:outputLabel value="Nome:" for="nome" style="text-align:center"/>
-						<p:inputText id="nome" value="#{fonte_pagadora_controller.fontePagadora.nome}" style="text-align:center" requiredMessage="Preencha o campo Nome!" required="true"/>
-						<p:message for="nome" />
-						
-     				</p:panelGrid>
-			 
-			
-		</h:form>
-		</p:panel>
-		
+
+
+					<p:link styleClass="btn btn-light" outcome="/main/fonte_pagadora"
+						title="Voltar">
+						<i class="fa fas fa-arrow-left"></i> Voltar
+						</p:link>
+
+				</h:form>
+			</p:panel>
+		</div>
 	</ui:define>
 	<ui:define name="adicionais">
 
 	</ui:define>
-		
+
 </ui:composition>
-			
-			
+
