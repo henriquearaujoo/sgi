@@ -11,10 +11,20 @@
 	<ui:define name="content">
 		<div class="mx-4">
 			<f:metadata>
-				<o:viewParam name="edicaoSucesso"
-					value="#{fonte_pagadora_controller.edicaoSucesso}" />
 				<f:viewAction action="#{fonte_pagadora_controller.initListagem()}" />
 			</f:metadata>
+			
+			<script>
+				window.addEventListener("load", () => {
+					const queryString = window.location.search;
+					const paramsBusca = new URLSearchParams(queryString);
+					if(paramsBusca.get("sucesso") == "1"){
+						alert("Operação realizada com sucesso")
+					}else if(paramsBusca.get("sucesso") == "0"){
+						alert("Não foi possível realizar a operação.")
+					}
+				})
+			</script>
 
 			<h:form id="content_fonte">
 

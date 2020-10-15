@@ -28,28 +28,10 @@ public class FontePagadoraController implements Serializable {
 	@Inject
 	private FontePagadora fontePagadora = new FontePagadora();
 
-	@Inject
-	private String edicaoSucesso;
-
-	public String getEdicaoSucesso() {
-		return edicaoSucesso;
-	}
-
-	public void setEdicaoSucesso(String edicaoSucesso) {
-		this.edicaoSucesso = edicaoSucesso;
-	}
-
 	private List<FontePagadora> fontes = new ArrayList<>();
 
 	public void initListagem() {
 		this.fontes = fontePagadoraService.findAll();
-		if (!this.edicaoSucesso.isEmpty() && this.edicaoSucesso.equals("1")) {
-			FacesContext.getCurrentInstance().addMessage("messages",
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Fonte alterada com sucesso!"));
-		} else {
-			FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Erro!", "Não foi possível alterar a fonte desejada."));
-		}
 	}
 
 	public List<FontePagadora> findAll() {
@@ -59,9 +41,9 @@ public class FontePagadoraController implements Serializable {
 	public String salvar() {
 		try {
 			fontePagadoraService.salvar(this.fontePagadora);
-			return "fonte_pagadora?faces-redirect=true";
+			return "fonte_pagadora?faces-redirect=true&sucesso=1";
 		} catch (Exception e) {
-			return "fonte_pagadora_cadastro";
+			return "fonte_pagadora?faces-redirect=true&sucesso=0";
 		}
 	}
 
@@ -70,7 +52,7 @@ public class FontePagadoraController implements Serializable {
 			fontePagadoraService.remover(fontePagadora);
 			FacesContext.getCurrentInstance().addMessage("messages",
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Fonte removida com sucesso!"));
-			this.fontes.remove(fontePagadora);
+			this.initListagem();
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"Erro!",
