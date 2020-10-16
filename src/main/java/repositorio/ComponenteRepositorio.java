@@ -11,43 +11,50 @@ import javax.persistence.Query;
 import model.ComponenteClass;
 import model.SubComponente;
 
-public class ComponenteRepositorio implements Serializable{
-	
+public class ComponenteRepositorio implements Serializable {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	@Inject	
+	@Inject
 	private EntityManager manager;
 
 	public ComponenteRepositorio() {
 	}
 
-
 	public ComponenteRepositorio(EntityManager manager) {
 		this.manager = manager;
 	}
 
-	public ComponenteClass findById(Long id){
+	public void salvar(ComponenteClass componente) {
+		this.manager.merge(componente);
+	}
+	
+	public void remover(ComponenteClass componente){
+		this.manager.remove(this.manager.find(ComponenteClass.class, componente.getId()));
+	}
+
+	public ComponenteClass findById(Long id) {
 		return this.manager.find(ComponenteClass.class, id);
 	}
-	
-	public SubComponente findByIdSubComponente(Long id){
+
+	public SubComponente findByIdSubComponente(Long id) {
 		return this.manager.find(SubComponente.class, id);
 	}
-	
-	public List<ComponenteClass> getComponentes(){
-		String jpql =  "from ComponenteClass";
-		Query query =  this.manager.createQuery(jpql);
+
+	public List<ComponenteClass> getComponentes() {
+		String jpql = "from ComponenteClass order by id asc";
+		Query query = this.manager.createQuery(jpql);
 		return query.getResultList();
 	}
-	
-	public List<SubComponente> getSubComponentes(Long idComponente){
-		String jpql =  "from SubComponente where componente.id = :id";
-		Query query =  this.manager.createQuery(jpql);
+
+	public List<SubComponente> getSubComponentes(Long idComponente) {
+		String jpql = "from SubComponente where componente.id = :id";
+		Query query = this.manager.createQuery(jpql);
 		query.setParameter("id", idComponente);
 		return query.getResultList();
-		
+
 	}
-	
+
 }

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+
+
+	<ui:define name="content">
+
+		<script>
+				window.addEventListener("load", () => {
+					const queryString = window.location.search;
+					const paramsBusca = new URLSearchParams(queryString);
+					console.log(queryString)
+					if(paramsBusca.get("sucesso") == "1"){
+						alert("Operação realizada com sucesso")
+					}else if(paramsBusca.get("sucesso") == "0"){
+						alert("Não foi possível realizar a operação.")
+					}
+				})
+			</script>
+		<div class="mx-4">
+			<f:metadata>
+				<f:viewAction action="#{componente_controller.initListagem()}" />
+			</f:metadata>
+			<h:form id="content_componente">
+				<br />
+				<p:breadCrumb styleClass="mt-3 px-3 py-2">
+					<p:menuitem value="Home" url="home_new.xhtml" />
+					<p:menuitem value="Componentes" url="#" />
+				</p:breadCrumb>
+				<p:panel>
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-12 ui-lg-12 " style="text-align: right">
+
+							<p:link styleClass="btn btn-success" title="Novo"
+								outcome="/main/componente_cadastro">
+								<i class="fa fa-fw fa-plus"></i>
+								Novo
+							</p:link>
+
+						</div>
+					</div>
+
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-12">
+							<p:messages id="messages" showDetail="true" closable="true">
+								<p:autoUpdate />
+							</p:messages>
+						</div>
+						<div class="ui-g-12">
+							<p:dataTable id="tabela_componente" paginator="true" rows="12"
+								value="#{componente_controller.componentes}" var="componente">
+								<p:column headerText="Componente" filterBy="#{componente.nome}"
+									filterMatchMode="contains">
+									<h:outputText escape="false" value="#{componente.nome}" />
+								</p:column>
+								<p:column headerText="Opções" style="width:10vw;">
+									<p:menuButton value="Opções">
+										<p:menuitem icon="fa fa-fw fa-edit" value="editar"
+											outcome="/main/componente_cadastro">
+											<f:param name="componente" value="#{componente.id}" />
+										</p:menuitem>
+
+										<p:menuitem value="remover" ajax="false"
+											icon="fa fa-fw fa-trash-o" update="tabela_componente"
+											action="#{componente_controller.remover()}">
+											<p:confirm header="Confirmação"
+												message="Você realmente deseja remover o componente #{componente.nome}?"
+												icon="pi pi-exclamation-triangle" />
+											<f:setPropertyActionListener value="#{componente}"
+												target="#{componente_controller.componente}" />
+										</p:menuitem>
+									</p:menuButton>
+								</p:column>
+							</p:dataTable>
+						</div>
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:commandButton value="Sim" type="button"
+								styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+							<p:commandButton value="Não" type="button"
+								styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+						</p:confirmDialog>
+					</div>
+				</p:panel>
+			</h:form>
+		</div>
+	</ui:define>
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+</ui:composition>
