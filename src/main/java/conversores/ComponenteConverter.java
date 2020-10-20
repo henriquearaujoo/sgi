@@ -9,7 +9,7 @@ import model.ComponenteClass;
 import repositorio.ComponenteRepositorio;
 import util.CDILocator;
 
-@FacesConverter(forClass = ComponenteClass.class)
+@FacesConverter("componenteConverter")
 public class ComponenteConverter implements Converter {
 
 	private ComponenteRepositorio repository;

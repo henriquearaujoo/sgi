@@ -33,6 +33,11 @@ public class ComponenteClass implements Serializable{
 		this.id = id;
 	}
 	
+	public ComponenteClass(Long _id, String _nome) {
+		this.id = _id;
+		this.nome = _nome;
+	}
+	
 	public Long getId() {
 		return id;
 	}

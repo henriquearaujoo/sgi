@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import model.ComponenteClass;
+import model.Gestao;
 import model.SubComponente;
 
 public class ComponenteRepositorio implements Serializable {
@@ -30,8 +31,8 @@ public class ComponenteRepositorio implements Serializable {
 	public void salvar(ComponenteClass componente) {
 		this.manager.merge(componente);
 	}
-	
-	public void remover(ComponenteClass componente){
+
+	public void remover(ComponenteClass componente) {
 		this.manager.remove(this.manager.find(ComponenteClass.class, componente.getId()));
 	}
 
@@ -54,7 +55,14 @@ public class ComponenteRepositorio implements Serializable {
 		Query query = this.manager.createQuery(jpql);
 		query.setParameter("id", idComponente);
 		return query.getResultList();
+	}
 
+	public List<ComponenteClass> buscarComponenteAutocomplete(String s) {
+		StringBuilder jpql = new StringBuilder(
+				"SELECT NEW ComponenteClass(g.id, g.nome) from ComponenteClass g where lower(g.nome) like lower(:nome)");
+		Query query = manager.createQuery(jpql.toString());
+		query.setParameter("nome", "%" + s + "%");
+		return query.getResultList();
 	}
 
 }

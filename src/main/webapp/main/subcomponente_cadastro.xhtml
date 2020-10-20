@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="content">
+		<div class="container">
+
+			<p:breadCrumb styleClass="mt-3 mb-3 px-3 py-2">
+				<p:menuitem value="Home" url="home_new.xhtml" />
+				<p:menuitem value="Sub-Componentes" url="subcomponentes.xhtml" />
+				<p:menuitem value="Cadastro/Edição de Sub-Componentes" url="#" />
+			</p:breadCrumb>
+
+			<p:panel header="Sub-Componentes">
+				<h:form id="form-cadastro-subcomponentes">
+
+					<f:metadata>
+						<o:viewParam name="subcomponente"
+							value="#{subcomponente_controller.subcomponente}" />
+					</f:metadata>
+
+					<div class="row">
+						<div class="col">
+							<p:outputLabel value="Nome:" for="nome" />
+							<p:inputText id="nome"
+								value="#{subcomponente_controller.subcomponente.nome}"
+								requiredMessage="Preencha o campo Nome!"
+								placeholder="Ex.: Sub-componente 1, 2..." required="true" />
+							<p:message for="nome" />
+						</div>
+						<div class="col">
+							<div class="row">
+								<p:outputLabel value="Componente:" for="componente" />
+							</div>
+							<div class="row">
+								<p:autoComplete id="componente" required="true"
+									placeholder="Ex.: Componente 1, 2..."
+									requiredMessage="Preencha o campo 'Componente'"
+									value="#{subcomponente_controller.subcomponente.componente}"
+									completeMethod="#{componente_controller.completeComponente}"
+									var="componente" itemLabel="#{componente.nome}"
+									itemValue="#{componente}" converter="componenteConverter"
+									minQueryLength="1" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<p:commandLink styleClass="btn btn-success"
+								action="#{subcomponente_controller.salvar()}">
+								<i class="fa fas fa-paper-plane"></i> Salvar
+							</p:commandLink>
+							<p:link styleClass="btn btn-light" outcome="/main/subcomponentes"
+								title="Voltar">
+								<i class="fa fas fa-arrow-left"></i> Voltar
+						</p:link>
+						</div>
+					</div>
+				</h:form>
+			</p:panel>
+
+		</div>
+	</ui:define>
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+</ui:composition>
