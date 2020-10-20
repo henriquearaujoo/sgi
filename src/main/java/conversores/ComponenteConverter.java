@@ -4,12 +4,13 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.inject.Named;
 
 import model.ComponenteClass;
 import repositorio.ComponenteRepositorio;
 import util.CDILocator;
-
-@FacesConverter("componenteConverter")
+@Named(value = "componente_converter")
+@FacesConverter(forClass = ComponenteClass.class)
 public class ComponenteConverter implements Converter {
 
 	private ComponenteRepositorio repository;
