@@ -20,6 +20,7 @@ import com.sun.faces.config.InitFacesContext;
 
 import anotacoes.Transactional;
 import exception.NegocioException;
+import model.Cargo;
 import model.Colaborador;
 import model.ContaBancaria;
 import model.Endereco;
@@ -70,6 +71,10 @@ public class ColaboradorController implements Serializable {
 	public void filtrar() {
 		listaColaborador = new ArrayList<Colaborador>();
 		listaColaborador = colaboradorService.findByFiltro(filtro);
+	}
+	
+	public void initListagem() {
+		this.listaColaborador = colaboradorService.findAll();
 	}
 	
 	
@@ -130,6 +135,10 @@ public class ColaboradorController implements Serializable {
 	}
 	public List<Gestao> listaGestao() {
 		return colaboradorService.findGestao();
+	}
+	
+	public List<Cargo> listaCargo() {
+		return colaboradorService.findCargo();
 	}
 	
 	public List<Gestao> completeGestao(String query) {

@@ -8,8 +8,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.OneToMany;
 
 import model.Cargo;
+import model.Colaborador;
 import service.CargoService;
 
 @Named(value = "cargo_controller")
@@ -28,6 +30,9 @@ public class CargoController implements Serializable {
 	private Cargo cargo;
 
 	private List<Cargo> cargos;
+	
+	@OneToMany(mappedBy = "cargo")
+	private List<Colaborador> colaboradores;
 
 	public CargoController() {
 	}
@@ -82,6 +87,14 @@ public class CargoController implements Serializable {
 
 	public void setCargo(Cargo cargo) {
 		this.cargo = cargo;
+	}
+
+	public List<Colaborador> getColaboradores() {
+		return colaboradores;
+	}
+
+	public void setColaboradores(List<Colaborador> colaboradores) {
+		this.colaboradores = colaboradores;
 	}
 
 }

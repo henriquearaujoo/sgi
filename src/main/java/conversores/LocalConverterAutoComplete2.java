@@ -23,7 +23,7 @@ public class LocalConverterAutoComplete2 implements Converter{
 		
 			Localidade retorno =  new Localidade();
 			if (value != null) {
-				retorno =  repository.findByIdLocal(new Long(value));
+				retorno =  repository.findByIdLocal(Long.parseLong(value));
 			};
 	 return retorno;	
 	}
