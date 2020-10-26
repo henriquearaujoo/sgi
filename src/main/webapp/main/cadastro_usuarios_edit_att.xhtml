@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<ui:composition template="/WEB-INF/Layout.xhtml"
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -10,11 +10,11 @@
 
 
 	<ui:define name="menu_lateral">
-	
+
 		<f:metadata>
 			<o:viewParam name="idUser" value="#{usuario_controller.usuario}" />
 		</f:metadata>
-		
+
 		<h:form id="tabela_menu">
 
 			<p:ajaxStatus onstart="PF('statusDialog').show()"
@@ -45,69 +45,77 @@
 
 	</ui:define>
 	<ui:define name="content">
-		<h:form id="formUsuario" acceptcharset="ISO-8859-1">
-			<p:tabView id="cadastroUsuario" prependId="false">
-				<p:tab title="Cadastro de Usuário">
-					<p:messages id="msgs"  showSummary="false"
-						showDetail="true" showIcon="true" closable="true" />
+		<div class="container mt-3">
+			<h:form id="formUsuario" acceptcharset="ISO-8859-1">
+				<p:panel header="Cadastro de Usuário" prependId="false">
+					<p:messages id="msgs" showSummary="false" showDetail="true"
+						showIcon="true" closable="true" />
 
-					<div class="botao_central" align="left"
-						style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
-
-						<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
-							action="#{usuario_controller.insert()}" ajax="false"
-							style="color:#fff; margin: 2px 2px;" value="Salvar" />
-						<p:commandLink action="#{usuario_controller.listagemUsuarios()}" value="voltar"
-							ajax="false" immediate="true" styleClass="btn btn-info btn-sm" />
-
+					<div class="row">
+						<div class="col">
+							<p:commandLink styleClass="btn btn-success" type="button"
+								action="#{usuario_controller.salvar()}" ajax="false">
+								<i class="fa fas fa-save"></i> Salvar</p:commandLink>
+							<p:link outcome="/main/cadastro_usuarios_att"
+								styleClass="btn btn-outline-dark">
+								<i class="fa fas fa-arrow-left"></i> Voltar</p:link>
+						</div>
 					</div>
 
-	
+					<br />
 
-					<p:panelGrid columns="2" style="width:100%">
-						<p:outputLabel value="Colaborador: " style="font-size:12px" />
-						<p:autoComplete id="colaborador" style="font-size:12px;"
+					<p:panelGrid columns="2" styleClass="container-fluid">
+						<p:outputLabel value="Colaborador: " for="colaborador" />
+						<p:autoComplete id="colaborador" style="width:100%;"
 							requiredMessage="Colaborador é Obrigatório" rendered="true"
-							placeholder="Nome" size="20" required="true"
+							placeholder="Nome" required="true"
 							value="#{usuario_controller.usuario.colaborador}"
 							completeMethod="#{sv_cadastro_controller.completeProfissional}"
 							var="colaborador" itemLabel="#{colaborador.nome}"
 							itemValue="#{colaborador}" converter="colaboradorConverter"
 							minQueryLength="2" forceSelection="true" />
 
-						<p:outputLabel value="Email: " />
-						<p:inputText value="#{usuario_controller.usuario.email}"
-							placeholder="exemplo@fas-amazonas.org" style="width:300px">
+						<p:outputLabel value="Email: " for="email" />
+						<p:inputText id="email"
+							value="#{usuario_controller.usuario.email}"
+							placeholder="exemplo@fas-amazonas.org">
 							<f:validateRegex
 								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 						</p:inputText>
 
-						<p:outputLabel value="Perfil: " rendered="#{usuario_controller.poderEditar()}"/>
-						<p:selectOneMenu value="#{usuario_controller.usuario.perfil}" rendered="#{usuario_controller.poderEditar()}"
+						<p:outputLabel value="Perfil: " for="perfil"
+							rendered="#{usuario_controller.poderEditar()}" />
+						<p:selectOneMenu id="perfil"
+							value="#{usuario_controller.usuario.perfil}"
+							rendered="#{usuario_controller.poderEditar()}"
 							converter="perfilConverter">
 							<f:selectItems value="#{usuario_controller.listaPerfil()}"
 								var="perfil" itemLabel="#{perfil.descricao}"
 								itemValue="#{perfil}" />
 						</p:selectOneMenu>
 
-						<p:outputLabel value="Usuário: " />
-						<p:inputText value="#{usuario_controller.usuario.nomeUsuario}" />
+						<p:outputLabel value="Usuário: " for="username" />
+						<p:inputText id="username" required="true"
+							requiredMessage="O campo Usuário é obrigatório"
+							value="#{usuario_controller.usuario.nomeUsuario}" />
 
-						<p:outputLabel value="Digite a Senha: " />
-						<p:password id="pwd1" value="#{usuario_controller.usuario.senha}"
-							match="pwd2" label="Senha" required="true" />
+						<p:outputLabel value="Digite a Senha: " for="pwd1" />
+						<p:password id="pwd1" redisplay="true" value="#{usuario_controller.usuario.senha}"
+							disabled="#{usuario_controller.usuario.id.equals(null) == false}"
+							requiredMessage="O campo Senha é obrigatório" match="pwd2"
+							label="Senha" />
 
-						<p:outputLabel value="Confirme a Senha: " />
-						<p:password id="pwd2" value="#{usuario_controller.usuario.senha}"
-							label="Confirmação" required="true" />
-
-
-
+						<p:outputLabel value="Confirme a Senha: " for="pwd2" />
+						<p:password id="pwd2" redisplay="true" value="#{usuario_controller.usuario.senha}"
+							requiredMessage="O campo Confirmar Senha é obrigatório"
+							disabled="#{usuario_controller.usuario.id.equals(null) == false}"
+							label="Confirmação" />
 
 					</p:panelGrid>
-				</p:tab>
-			</p:tabView>
-		</h:form>
+
+				</p:panel>
+			</h:form>
+		</div>
 	</ui:define>
 
 </ui:composition>

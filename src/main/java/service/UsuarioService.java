@@ -88,17 +88,20 @@ public class UsuarioService implements Serializable {
 		}
 	}
 	
+//	@Transactional
+//	public boolean update(User usuario) {
+//		try{
+//			repositorio.update(usuario);
+//			return true;
+//		}catch(Exception e){
+//			return false;
+//		}
+//	}
+	
 	@Transactional
-	public boolean update(User usuario) {
-		try{
-			repositorio.update(usuario);
-			return true;
-		}catch(Exception e){
-			return false;
-		}
+	public void remover(User usuario) {
+		repositorio.remover(usuario);
 	}
-	
-	
 	
 	@Transactional
 	public boolean updateSenha(User usuario, String senha) {
@@ -121,11 +124,7 @@ public class UsuarioService implements Serializable {
 		return repositorio.findUsuarioProjeto(projetoSelecionado, usuario);
 	}
 	
-	@Transactional
-	public void remover(UserProjeto usuarioProjeto) {
-		repositorio.remover(usuarioProjeto);
-		
-	}
+	
 
 	
 	

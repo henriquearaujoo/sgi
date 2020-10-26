@@ -10,38 +10,53 @@
 
 	<ui:define name="content">
 
-		<h:form id="formUsuario">
-			<br />
+		<script>
+				window.addEventListener("load", () => {
+					const queryString = window.location.search;
+					const paramsBusca = new URLSearchParams(queryString);
+					console.log(queryString)
+					if(paramsBusca.get("sucesso") == "1"){
+						alert("Operação realizada com sucesso")
+					}else if(paramsBusca.get("sucesso") == "0"){
+						alert("Não foi possível realizar a operação.")
+					}
+				})
+			</script>
+		<div class="container my-3">
 
-			<p:breadCrumb>
-				<p:menuitem value="Categories" url="home_new.xhtml" />
-				<p:menuitem value="Usuarios" url="cadastro_usuarios_att.xhtml" />
-			</p:breadCrumb>
+			<h:form id="formUsuario">
+				<br />
 
-			<p:panel id="panel-content">
-				<div class="ui-g ui-fluid">
-					<div class="ui-g-12 ui-lg-12 " style="text-align: right">
-						<p:commandLink id="add" styleClass="btn btn-success btn-sm"
-							action="#{usuario_controller.novo()}"
-							rendered="#{usuario_controller.poderEditar()}"
-							title="Adicionar Usuário">
-							<span class="fa fa-fw fa-plus"></span>
-							<span>Novo</span>
-						</p:commandLink>
+				<p:breadCrumb styleClass="px-3 py-2">
+					<p:menuitem value="Categories" url="home_new.xhtml" />
+					<p:menuitem value="Usuários" url="cadastro_usuarios_att.xhtml" />
+				</p:breadCrumb>
 
+				<p:panel id="panel-content">
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-12">
+							<p:messages id="messages" showDetail="true" closable="true">
+								<p:autoUpdate />
+							</p:messages>
+						</div>
+						<div class="ui-g-12 ui-lg-12 " style="text-align: right">
+							<p:link id="add" styleClass="btn btn-success"
+								outcome="/main/cadastro_usuarios_edit_att"
+								rendered="#{usuario_controller.poderEditar()}"
+								title="Adicionar Usuário">
+								<i class="fa fas fa-plus"></i> Novo
+								</p:link>
+						</div>
 					</div>
-				</div>
 
-				<p:separator></p:separator>
-
-				<div class="ui-g ui-fluid">
 					<p:dataTable id="list" value="#{usuario_controller.usuarios}"
-						var="bean" paginator="true" widgetVar="filteredUsuario"
+						var="bean" paginator="true" rows="12" widgetVar="filteredUsuario"
 						filteredValue="#{usuario_controller.listaFiltroUsuarios}">
 
 						<f:facet name="header">
 							<p:outputPanel>
-								<p:inputText id="globalFilter" placeholder="Pesquisa de usuários"
+								<p:inputText id="globalFilter"
+									placeholder="Pesquisa de usuários"
 									onkeyup="PF('filteredUsuario').filter()" />
 							</p:outputPanel>
 						</f:facet>
@@ -61,30 +76,36 @@
 							<h:outputText value="#{bean.email}" />
 						</p:column>
 
-						<p:column headerText="Opções"
-							style="width:10%;text-align: center;">
+						<p:column headerText="Opções" style="width: 10vw;">
 
 							<p:link outcome="/main/cadastro_usuarios_edit_att"
-								style="color:#fff;margin-left:4px"
-								styleClass="btn btn-primary btn-sm" process="@this">
+								styleClass="btn btn-primary" process="@this">
 								<span class="fa fa-fw fa-edit"></span>
 								<f:param name="idUser" value="#{bean.id}" />
 							</p:link>
 
 							<p:commandLink title="Excluir" rendered="true" update="list"
-								styleClass="btn btn-danger btn-xs"
+								styleClass="btn btn-danger" ajax="false"
 								action="#{usuario_controller.delete(bean)}">
 								<span class="fa fa-fw fa-trash-o"></span>
+								<p:confirm header="Confirmação"
+									message="Você realmente deseja remover o usuário #{bean.nomeUsuario}?"
+									icon="pi pi-exclamation-triangle" />
 							</p:commandLink>
-
-							<p:spacer width="10px"/>
 
 						</p:column>
 					</p:dataTable>
-				</div>
 
-			</p:panel>
-		</h:form>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Sim" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="Não" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+
+				</p:panel>
+			</h:form>
+		</div>
 	</ui:define>
 
 </ui:composition>

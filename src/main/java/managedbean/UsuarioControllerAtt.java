@@ -42,7 +42,8 @@ public class UsuarioControllerAtt implements Serializable {
 
 	private List<User> usuarios = new ArrayList<>();
 
-	private User usuario = new User();
+	@Inject
+	private User usuario;
 
 	// metodo para buscar por string parcial o colaborador
 	public List<Colaborador> completeColaborador(String s) {
@@ -73,14 +74,6 @@ public class UsuarioControllerAtt implements Serializable {
 		return listaUsuario;
 	}
 
-//	public boolean poderEditar() {
-//		if (usuarioSessao.getUsuario().getPerfil().getDescricao().equals("admin")) {
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
-
 	public void carregarUsuarios() {
 		if (usuarioSessao.getUsuario().getNomeUsuario().equals("admin")) {
 			usuarios = usuarioService.getUsuarios();
@@ -109,33 +102,28 @@ public class UsuarioControllerAtt implements Serializable {
 
 	// and medotos de listagem
 
-	public String insert() {
-		FacesContext context = FacesContext.getCurrentInstance();
-		if (usuarioService.salvar(usuario)) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuário salvo com Sucesso!", "");
-			context.addMessage("msg", msg);
-		} else {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao salvar Usuário", "");
-			context.addMessage("msg", msg);
-			return "";
+	public String salvar() {
+		try {
+			usuarioService.salvar(usuario);
+			return "cadastro_usuarios_att?faces-redirect=true&sucesso=1";
+		} catch (Exception e) {
+			return "cadastro_usuarios_att?faces-redirect=true&sucesso=0";
 		}
-
-		return "cadastro_usuarios_att?faces-redirect=true";
 	}
 
 	// Metodos de Delete
 
-	public String delete(User usuario) {
+	public void delete(User usuario) {
 		FacesContext context = FacesContext.getCurrentInstance();
-
-		if (usuarioService.update(usuario)) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuário salvo com Sucesso!", "");
+		try {
+			usuarioService.remover(usuario);
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuário removido com Sucesso!", "");
 			context.addMessage("msg", msg);
-		} else {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao salvar Usuário", "");
+			this.carregarUsuarios();
+		} catch (Exception e) {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao remover o Usuário", "");
 			context.addMessage("msg", msg);
 		}
-		return "cadastro_usuarios";
 	}
 
 	// metodos de redirect
