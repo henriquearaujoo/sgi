@@ -33,21 +33,13 @@ public class Localidade implements Serializable {
 	private String mascara;
 	@Column
 	private Integer codigo;
-	
+
 	@Transient
 	private String municipioNome;
-
-	
-	
 
 	public String getMunicipioNome() {
 		return municipioNome;
 	}
-
-
-
-
-
 
 	public void setMunicipioNome(String municipioNome) {
 		this.municipioNome = municipioNome;
@@ -55,64 +47,99 @@ public class Localidade implements Serializable {
 
 	@ManyToOne
 	private Estado estado;
-	
+
 	@ManyToOne
 	private Pais pais;
-	
-	
+
 	@ManyToOne
 	private UnidadeConservacao unidadeConservacao;
-	
-	public Localidade(){}
-	
-	
 
-	
+	@Transient
+	private String estadoNome;
+	@Transient
+	private String paisNome;
+	@Transient
+	private String ucNome;
 
-	
-	public Localidade(Long id,String nome){
+	public String getEstadoNome() {
+		return estadoNome;
+	}
+
+	public String getPaisNome() {
+		return paisNome;
+	}
+
+	public String getUcNome() {
+		return ucNome;
+	}
+
+	public void setEstadoNome(String estadoNome) {
+		this.estadoNome = estadoNome;
+	}
+
+	public void setPaisNome(String paisNome) {
+		this.paisNome = paisNome;
+	}
+
+	public void setUcNome(String ucNome) {
+		this.ucNome = ucNome;
+	}
+
+	public Localidade(Long id, String nome, String mascara, String estadoNome, String paisNome, String ucNome) {
+		this.id = id;
+		this.nome = nome;
+		this.mascara = mascara;
+		this.estadoNome = estadoNome;
+		this.paisNome = paisNome;
+		this.ucNome = ucNome;
+	}
+
+	public Localidade() {
+	}
+
+	public Localidade(Long id, String nome) {
 		this.id = id;
 		this.nome = nome;
 	}
-	
-	public Localidade(Long id,String nome, Integer codigo){
+
+	public Localidade(Long id, String nome, Integer codigo) {
 		this.id = id;
 		this.nome = nome;
 		this.codigo = codigo;
 	}
-	
+
 	@Transient
 	private String type;
-	
-	public Localidade(Long id,String nome, String type){
+
+	public Localidade(Long id, String nome, String type) {
 		this.id = id;
 		this.nome = nome;
 		this.type = type;
 	}
-	
-	public Localidade(Long id,String nome, String type, String mascara){
-		this.id = id;
-		this.nome = nome;
-		this.type = type;
-		this.mascara = mascara;
-	}
-	
-	public Localidade(Long id,String nome, String type, String mascara,String municipioNome){
+
+	public Localidade(Long id, String nome, String type, String mascara) {
 		this.id = id;
 		this.nome = nome;
 		this.type = type;
 		this.mascara = mascara;
-		this.municipioNome  = municipioNome;
 	}
-	
-	public Localidade(Long id,String nome, String type, String mascara, Integer codigo){
+
+	public Localidade(Long id, String nome, String type, String mascara, String municipioNome) {
+		this.id = id;
+		this.nome = nome;
+		this.type = type;
+		this.mascara = mascara;
+		this.municipioNome = municipioNome;
+	}
+
+	public Localidade(Long id, String nome, String type, String mascara, Integer codigo) {
 		this.id = id;
 		this.nome = nome;
 		this.type = type;
 		this.mascara = mascara;
 		this.codigo = codigo;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -162,21 +189,17 @@ public class Localidade implements Serializable {
 		this.mascara = mascara;
 	}
 
-
 	public Estado getEstado() {
 		return estado;
 	}
-
 
 	public void setEstado(Estado estado) {
 		this.estado = estado;
 	}
 
-
 	public Pais getPais() {
 		return pais;
 	}
-
 
 	public void setPais(Pais pais) {
 		this.pais = pais;
@@ -206,5 +229,4 @@ public class Localidade implements Serializable {
 		this.codigo = codigo;
 	}
 
-	
 }

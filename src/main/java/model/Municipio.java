@@ -7,63 +7,48 @@ import javax.persistence.Transient;
 
 @Entity
 @DiscriminatorValue("mun")
-public class Municipio extends Localidade{
+public class Municipio extends Localidade {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	
-	
-	
-	
+
 	@Column(name = "numero_ibge")
 	private String numeroIbge;
-	
+
 	@Column
 	private Boolean municipioDeCompra;
-	
+
 	@Transient
 	private String nomeEstado = "";
-	
-	
-	
-	public Municipio(){}
-	
-	public Municipio(Long id, String nome){
+
+	public Municipio() {
+	}
+
+	public Municipio(Long id, String nome) {
 		setId(id);
 		setNome(nome);
-	
+
 	}
-	
-	public Municipio(Long id, String nome, Integer codigo){
+
+	public Municipio(Long id, String nome, Integer codigo) {
 		setId(id);
 		setNome(nome);
 		setCodigo(codigo);
 	}
 
-
 	public String getNumeroIbge() {
 		return numeroIbge;
 	}
-
 
 	public void setNumeroIbge(String numeroIbge) {
 		this.numeroIbge = numeroIbge;
 	}
 
-
-
-
-
 	public String getNomeEstado() {
 		return nomeEstado;
 	}
-
-
-
-
 
 	public void setNomeEstado(String nomeEstado) {
 		this.nomeEstado = nomeEstado;
@@ -76,6 +61,5 @@ public class Municipio extends Localidade{
 	public void setMunicipioDeCompra(Boolean municipioDeCompra) {
 		this.municipioDeCompra = municipioDeCompra;
 	}
-	
-	
+
 }

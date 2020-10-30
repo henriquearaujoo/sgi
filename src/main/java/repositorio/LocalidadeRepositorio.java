@@ -10,6 +10,7 @@ import anotacoes.Transactional;
 import model.Configuracao;
 import model.Estado;
 import model.Localidade;
+import model.Municipio;
 import model.Perfil;
 import model.UnidadeConservacao;
 import model.User;
@@ -78,6 +79,13 @@ public class LocalidadeRepositorio {
 
 	public List<UnidadeConservacao> getListUc() {
 		String jpql = "from UnidadeConservacao uc";
+		Query query = manager.createQuery(jpql);
+		return query.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Municipio> getMunicipios() {
+		String jpql = "from Municipio m order by m.nome asc";
 		Query query = manager.createQuery(jpql);
 		return query.getResultList();
 	}
