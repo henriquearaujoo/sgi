@@ -7,93 +7,102 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @DiscriminatorValue("uc")
-public class UnidadeConservacao extends Localidade{
+public class UnidadeConservacao extends Localidade {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@ManyToOne
 	private Regional regional;
-	
+
 	@Column(name = "nome_associacao")
 	private String nomeAssociacao;
-	
+
 	@Column(name = "presidente_associacao")
 	private String presidenteAssociacao;
-	
+
 	@Column(name = "rg_presidente")
 	private String rgPresidente;
-	
+
 	@Column(name = "cpf_presidente")
 	private String cpfPresidente;
-	
+
 	@Column(name = "cnpj_associacao")
 	private String cnpjassociacao;
 
 	@Column(name = "profissao_presidente")
 	private String profissaoPresidente;
-	
-	@Column(name =  "endereco_presidente")
+
+	@Column(name = "endereco_presidente")
 	private String enderecoPresidente;
-	
+
 	@Column(name = "endereco_associacao")
 	private String enderecoAssociacao;
 
-	@Column(name = "cep_associacao") 
+	@Column(name = "cep_associacao")
 	private String cepAssociacao;
-	
-	@Column(name = "banco_associacao") 
-	private String BancoAssociacao;
-	
-	@Column(name =  "agencia_associacao")
+
+	@Column(name = "banco_associacao")
+	private String bancoAssociacao;
+
+	@Column(name = "agencia_associacao")
 	private String agenciaAssociacao;
-	
+
 	@Column(name = "conta_associacao")
 	private String contaAssociacao;
-	
+
 	@Column(name = "cargo_presidente")
 	private String cargoPresidente;
-	
-	
+
 	@Column(name = "telefone_associacao ")
 	private String telefoneAssociacao;
-	
+
 	@Column(name = "telefone_presidente ")
 	private String telefonePresidente;
-	
+
 	@Column(name = "cidade_presidente ")
 	private String cidadePresidente;
-	
+
 	@Column(name = "cidade_associacao ")
-	private String cidadeAssosiacao;
-	
+	private String cidadeAssociacao;
+
 	@ManyToOne
 	private Municipio municipio;
-	
-	
-	public UnidadeConservacao(){}
-	
-	public UnidadeConservacao(Long id, String nome){
+
+	public UnidadeConservacao() {
+	}
+
+	public UnidadeConservacao(Long id, String nome) {
 		setId(id);
 		setNome(nome);
 	}
-	
-	public UnidadeConservacao(Long id, String nome, String mascara){
+
+	public UnidadeConservacao(Long id, String nome, String mascara) {
 		setId(id);
 		setNome(nome);
 		setMascara(mascara);
 	}
-	
-	public UnidadeConservacao(Long id, String nome, String mascara, Integer codigo){
+
+	public UnidadeConservacao(Long id, String nome, String mascara, Integer codigo) {
 		setId(id);
 		setNome(nome);
 		setMascara(mascara);
 		setCodigo(codigo);
 	}
-	
-	public UnidadeConservacao(String mascara){
+
+	public UnidadeConservacao(Long id, String nome, String mascara, Long regionalId, String regionalNome,
+			String nomeAssociacao, String presidenteAssociacao) {
+		setId(id);
+		setNome(nome);
+		setMascara(mascara);
+		setNomeAssociacao(nomeAssociacao);
+		setPresidenteAssociacao(presidenteAssociacao);
+		setRegional(new Regional(regionalId, regionalNome, "reg"));
+	}
+
+	public UnidadeConservacao(String mascara) {
 		setMascara(mascara);
 	}
 
@@ -104,7 +113,7 @@ public class UnidadeConservacao extends Localidade{
 	public void setRegional(Regional regional) {
 		this.regional = regional;
 	}
-	
+
 	public String getNomeAssociacao() {
 		return nomeAssociacao;
 	}
@@ -136,7 +145,6 @@ public class UnidadeConservacao extends Localidade{
 	public void setCpfPresidente(String cpfPresidente) {
 		this.cpfPresidente = cpfPresidente;
 	}
-
 
 	public String getCnpjassociacao() {
 		return cnpjassociacao;
@@ -187,11 +195,11 @@ public class UnidadeConservacao extends Localidade{
 	}
 
 	public String getBancoAssociacao() {
-		return BancoAssociacao;
+		return bancoAssociacao;
 	}
 
 	public void setBancoAssociacao(String bancoAssociacao) {
-		BancoAssociacao = bancoAssociacao;
+		this.bancoAssociacao = bancoAssociacao;
 	}
 
 	public String getAgenciaAssociacao() {
@@ -242,15 +250,12 @@ public class UnidadeConservacao extends Localidade{
 		this.cidadePresidente = cidadePresidente;
 	}
 
-	public String getCidadeAssosiacao() {
-		return cidadeAssosiacao;
+	public String getCidadeAssociacao() {
+		return cidadeAssociacao;
 	}
 
-	public void setCidadeAssosiacao(String cidadeAssosiacao) {
-		this.cidadeAssosiacao = cidadeAssosiacao;
+	public void setCidadeAssociacao(String cidadeAssociacao) {
+		this.cidadeAssociacao = cidadeAssociacao;
 	}
-	
 
 }
-	
-

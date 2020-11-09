@@ -12,14 +12,10 @@ import model.UnidadeConservacao;
 
 public class UnidadeConservacaoRepositorio {
 
+	@Inject
 	private EntityManager manager;
 
 	public UnidadeConservacaoRepositorio() {
-	}
-
-	@Inject
-	public UnidadeConservacaoRepositorio(EntityManager manager) {
-		this.manager = manager;
 	}
 
 	public UnidadeConservacao findById(Long id) {
@@ -37,26 +33,31 @@ public class UnidadeConservacaoRepositorio {
 	}
 
 	@Transactional
-	public Boolean delete(Localidade localidade) {
+	public Boolean delete(UnidadeConservacao localidade) {
 		try {
-			manager.remove(this.manager.find(Localidade.class, localidade.getId()));
+			this.manager.remove(this.manager.find(Localidade.class, localidade.getId()));
 			return true;
 		} catch (Exception e) {
 			return false;
 		}
 	}
 
-	public void salvar(Localidade localidade) {
-		this.manager.merge(localidade);
+	@Transactional
+	public void salvar(UnidadeConservacao localidade) {
+		try {
+			this.manager.merge(localidade);
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<UnidadeConservacao> getListUc() {
-		String jpql = "from UnidadeConservacao uc";
+		String jpql = "SELECT NEW UnidadeConservacao(uc.id,uc.nome,uc.mascara,uc.regional.id,uc.regional.nome,uc.nomeAssociacao,uc.presidenteAssociacao) from UnidadeConservacao uc";
 		Query query = manager.createQuery(jpql);
 		return query.getResultList();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<UnidadeConservacao> ucAutocomplete(String queryStr) {
 		String jpql = "from UnidadeConservacao uc where lower(uc.nome) like :nome";

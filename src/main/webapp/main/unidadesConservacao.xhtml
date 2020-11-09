@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="content">
+
+		<script>
+				window.addEventListener("load", () => {
+					const queryString = window.location.search;
+					const paramsBusca = new URLSearchParams(queryString);
+					console.log(queryString)
+					if(paramsBusca.get("sucesso") == "1"){
+						alert("Operação realizada com sucesso")
+					}else if(paramsBusca.get("sucesso") == "0"){
+						alert("Não foi possível realizar a operação.")
+					}
+				})
+			</script>
+		<div class="container-fluid mb-3">
+				<f:metadata>
+					<f:viewAction action="#{unidadeConservacaoController.initListagem()}" />
+				</f:metadata>
+			<h:form id="content_fonte">
+
+				<br />
+
+				<p:breadCrumb styleClass="mt-3 px-3 py-2">
+					<p:menuitem value="Home" url="home_new.xhtml" />
+					<p:menuitem value="Unidades de Conservação" url="#" />
+				</p:breadCrumb>
+
+				<p:panel>
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-12 ui-lg-12 " style="text-align: right">
+							<p:link styleClass="btn btn-success" title="Novo"
+								outcome="/main/unidadeconservacao_cadastro">
+								<i class="fa fa-fw fa-plus"></i> Novo
+							</p:link>
+						</div>
+					</div>
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-12 ui-lg-12">
+							<p:messages id="messages" showDetail="true" closable="true">
+								<p:autoUpdate />
+							</p:messages>
+						</div>
+					</div>
+
+					<div class="ui-g ui-fluid">
+						<p:dataTable id="tabela_unidadeConservacao" paginator="true" rows="12"
+							value="#{unidadeConservacaoController.unidades}" var="unidadeConservacao">
+
+							<p:column headerText="Unidade de Conservação" filterBy="#{unidadeConservacao.nome}"
+								filterMatchMode="contains">
+								<h:outputText escape="false" value="#{unidadeConservacao.nome}" />
+							</p:column>
+							
+							<p:column headerText="Máscara" filterBy="#{unidadeConservacao.mascara}"
+								filterMatchMode="contains">
+								<h:outputText escape="false" value="#{unidadeConservacao.mascara}" />
+							</p:column>
+						
+							<p:column headerText="Regional"
+								filterBy="#{unidadeConservacao.regional.nome}"
+								filterMatchMode="contains">
+								<h:outputText escape="false"
+									value="#{unidadeConservacao.regional.nome}" />
+							</p:column>
+							
+							<p:column headerText="Associação"
+								filterBy="#{unidadeConservacao.nomeAssociacao}"
+								filterMatchMode="contains">
+								<h:outputText escape="false"
+									value="#{unidadeConservacao.nomeAssociacao}" />
+							</p:column>
+							
+							<p:column headerText="Presidente da Associação"
+								filterBy="#{unidadeConservacao.presidenteAssociacao}"
+								filterMatchMode="contains">
+								<h:outputText escape="false"
+									value="#{unidadeConservacao.presidenteAssociacao}" />
+							</p:column>
+
+							<p:column headerText="Opções" width="10%">
+								<p:menuButton value="Opções">
+									<p:menuitem icon="fa fa-fw fa-edit" value="editar"
+										outcome="/main/unidadeconservacao_cadastro">
+										<f:param name="unidadeConservacao" value="#{unidadeConservacao.id}" />
+									</p:menuitem>
+
+									<p:menuitem value="remover" ajax="false"
+										icon="fa fa-fw fa-trash-o" update="tabela_unidadeConservacao"
+										action="#{unidadeConservacaoController.delete()}">
+										<p:confirm header="Confirmação"
+											message="Você realmente deseja remover a Unidade de Conservação #{unidadeConservacao.nome}?"
+											icon="pi pi-exclamation-triangle" />
+										<f:setPropertyActionListener value="#{unidadeConservacao}"
+											target="#{unidadeConservacaoController.unidadeConservacao}" />
+									</p:menuitem>
+								</p:menuButton>
+							</p:column>
+						</p:dataTable>
+					</div>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Sim" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="Não" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+				</p:panel>
+			</h:form>
+		</div>
+	</ui:define>
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+</ui:composition>

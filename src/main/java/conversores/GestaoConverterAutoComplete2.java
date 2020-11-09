@@ -26,11 +26,10 @@ public class GestaoConverterAutoComplete2 implements Converter{
 	
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
 			
-			Gestao retorno =  new Gestao() {
-			};
+			Gestao retorno =  new Gestao();
 	
 			if (value != null) {
-				retorno =  repository.findByIdGestao(new Long(value));
+				retorno =  repository.findByIdGestao(Long.parseLong(value));
 			}
 	 return retorno;	
 	}
