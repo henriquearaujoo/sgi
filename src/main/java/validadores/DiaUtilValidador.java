@@ -23,7 +23,7 @@ public class DiaUtilValidador implements Validator {
 		if (diaDaSemana < Calendar.MONDAY || diaDaSemana > Calendar.FRIDAY) {
 			throw new ValidatorException(new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, "Data inv√°lida.",
-					"a data informada n„o È um dia util"));
+					"a data informada n√£o √© um dia util"));
 		}
 
 	}

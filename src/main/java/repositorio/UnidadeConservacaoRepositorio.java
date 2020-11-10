@@ -53,7 +53,7 @@ public class UnidadeConservacaoRepositorio {
 
 	@SuppressWarnings("unchecked")
 	public List<UnidadeConservacao> getListUc() {
-		String jpql = "SELECT NEW UnidadeConservacao(uc.id,uc.nome,uc.mascara,uc.regional.id,uc.regional.nome,uc.nomeAssociacao,uc.presidenteAssociacao) from UnidadeConservacao uc";
+		String jpql = "SELECT NEW UnidadeConservacao(uc.id,uc.nome,uc.mascara,uc.regional.id,uc.regional.nome,uc.nomeAssociacao,uc.presidenteAssociacao) from UnidadeConservacao uc order by uc.id asc";
 		Query query = manager.createQuery(jpql);
 		return query.getResultList();
 	}

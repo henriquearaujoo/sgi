@@ -510,7 +510,7 @@ public class PlanoTrabalhoController implements Serializable {
 		hp.put("CPF", Util.getNullValue(uc.getCpfPresidente(), "ñ cadastrado"));
 		hp.put("END_RESID", Util.getNullValue(uc.getEnderecoPresidente(), "ñ cadastrado"));
 		hp.put("CIDADE_RESP", Util.getNullValue(uc.getCidadePresidente(), "Ñ cadastrado"));
-		hp.put("CIDADE", Util.getNullValue(uc.getCidadeAssosiacao(), "Ñ cadastrado"));
+		hp.put("CIDADE", Util.getNullValue(uc.getCidadeAssociacao(), "Ñ cadastrado"));
 		hp.put("UF_RESP", "AM");
 		hp.put("CEP_RESP", Util.getNullValue(uc.getCepAssociacao(), "ñ cadastrado"));
 		hp.put("TELEFONE_RESP", Util.getNullValue(uc.getTelefonePresidente(), "ñ cadastrado"));

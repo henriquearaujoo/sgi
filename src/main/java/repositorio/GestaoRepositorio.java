@@ -105,7 +105,13 @@ public class GestaoRepositorio implements Serializable {
 		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<Gestao>();
 	}
 
-	public List<Regional> getRegional() {
+	public List<Regional> getRegionais() {
+		StringBuilder jpql = new StringBuilder("from Regional");
+		Query query = manager.createQuery(jpql.toString());
+		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<Gestao>();
+	}
+	
+	public List<Gestao> getRegional() {
 		StringBuilder jpql = new StringBuilder("from Regional");
 		Query query = manager.createQuery(jpql.toString());
 		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<Gestao>();

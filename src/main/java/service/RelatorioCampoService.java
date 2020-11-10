@@ -15,6 +15,7 @@ import model.Colaborador_Relatorio;
 import model.Estado;
 import model.Gestao;
 import model.Localidade;
+import model.Regional;
 import model.RelatorioCampo;
 import model.SolicitacaoViagem;
 import repositorio.AtividadeCampoRepositorio;
@@ -130,8 +131,8 @@ public class RelatorioCampoService implements Serializable {
 	}
 	
 	
-	public List<Gestao> getRegional(){
-		return gestaoRepositorio.getRegional();
+	public List<Regional> getRegional(){
+		return gestaoRepositorio.getRegionais();
 	}
 	
 	

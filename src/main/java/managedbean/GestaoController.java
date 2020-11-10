@@ -130,7 +130,7 @@ public void editarGestao(User usuario) {
 		this.sessao = sessao;
 	}
 	
-	public List<Gestao> getRegionais(){
+	public List<Regional> getRegionais(){
 		return this.gestaoService.getRegionais();
 	}
 
