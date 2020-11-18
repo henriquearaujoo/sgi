@@ -35,12 +35,10 @@ public class UsuarioRepository {
 	}
 	
 	public User getEmail(String email) {
-		
 		String jpql = "select u from User u where u.email = :toEmail";
 		Query query  = manager.createQuery(jpql);
 		query.setParameter("toEmail", email);
 		return (User) (query.getResultList().size() > 0 ? query.getResultList().get(0) : null);
-	
 	}
 	public List<User> getUsuario(String nome){
 		String jpql = "select u from User u where u.nomeUsuario like :nome";
@@ -54,11 +52,6 @@ public class UsuarioRepository {
 		Query query = this.manager.createQuery(jpql);
 		return query.getResultList();
 	}
-	
-//	this.id = id;
-//	this.nomeUsuario = nomeUsuario;
-//	this.email = email;
-//	this.nomeColaborador = nomeColaborador;
 	
 	public User getUsuarioByColaborador(Long colaborador){
 		String jpql = "select u from User u where u.colaborador.id = :colaborador";
@@ -81,6 +74,10 @@ public class UsuarioRepository {
 	public void salvar(User usuario){
 		this.manager.merge(usuario);
 	}
+	
+	public void remover(UserProjeto usuarioProjeto) {
+		this.manager.remove(this.manager.find(UserProjeto.class, usuarioProjeto.getId()));
+	}
 
 	public Perfil getPerfil(Long id) {
 		return this.manager.find(Perfil.class, id);
@@ -92,31 +89,24 @@ public class UsuarioRepository {
 		return query.getResultList();
 	}
 
-	
 	@Transactional
-	public void update(User usuario) {
+	public void remover(User usuario) {
 		User a = new User();
 		a = manager.merge(usuario);
 		a.setAtivo(false);
 		manager.merge(a);
 	}
 	
-	
-	
-	
 	public void updateSenha(User usuario) {
 		manager.merge(usuario);
 	}
 	
-	
-
 	public List<User> findUsuarioByProjeto(Projeto projetoSelecionado) {
 		String jpql = "select up.user from UserProjeto up where up.projeto = :projeto";
 		Query query = this.manager.createQuery(jpql);
 		query.setParameter("projeto", projetoSelecionado);
 		return query.getResultList().size() > 0 ? query.getResultList() : null;
 	}
-	
 	
 	public UserProjeto findUsuarioProjeto(Projeto projetoSelecionado, User usuario) {
 		String jpql = "select up from UserProjeto up where up.projeto = :projeto  and up.user = :usuario";
@@ -125,11 +115,5 @@ public class UsuarioRepository {
 		query.setParameter("usuario", usuario);
 		return (UserProjeto) query.getSingleResult();
 	}
-
-	public void remover(UserProjeto usuarioProjeto) {
-		this.manager.remove(this.manager.find(UserProjeto.class, usuarioProjeto.getId()));
-		
-	}
-	
 
 }
