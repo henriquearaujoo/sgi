@@ -11,10 +11,11 @@
 
 
 	<ui:define name="content">
-	
+
 		<f:metadata>
 			<f:viewAction action="#{colaboradorController.init()}" />
-			<o:viewParam name="id" value="#{colaboradorController.idInitColaborador}" />
+			<o:viewParam name="id"
+				value="#{colaboradorController.idInitColaborador}" />
 		</f:metadata>
 
 		<script type="text/javascript">
@@ -30,153 +31,260 @@
 			    PF('dlg_filtro_compra').hide();
 			}
 		</script>
-		
-		<p:breadCrumb>
-			<p:menuitem value="Home" url="home_new.xhtml" />
-			<p:menuitem value="Listagem de Colaboradores" url="cadastro_colaborador.xhtml" />
-			<p:menuitem value="Cadastro de Colaborador" url="cadastro_colaborador_novo.xhtml" />
-		</p:breadCrumb>
-		
-		
-		<p:panel header="Colaboradores" >
-			
-			
-			<h:form id="form-cadastro-colaborador" prependId="false"  enctype="multipart/form-data">
-		
-		
-					
-					<p:commandLink styleClass="btn btn-primary btn-sm"
-						action="#{colaboradorController.salvar()}" 
-						onclick="start()" onsuccess="stop()" onerror="stop()"
-						update=":form-cadastro-colaborador"
-						style="color:#fff; margin: 8px 2px;" value="Salvar"  />
-					
-					
-					<p:link styleClass="btn btn-default btn-sm"
-						style="color:#000;margin: 8px 2px;"
-						outcome="/main/cadastro_colaborador" title="Volar">
-						<span style="font-family: Arial">Voltar</span>
-					</p:link>
-					
-					<p:panelGrid columns="6" styleClass="ui-noborder" >
-							
-						<p:outputLabel value="Nome:" for="nome" />
-						<p:inputText id="nome" value="#{colaboradorController.colaborador.nome}"  required="true" requiredMessage="Preencha o campo Nome!" />
-						<p:message for="nome" />
-						
-						<p:outputLabel value="CPF:" for="cpf" />
-						<p:inputMask id="cpf" value="#{colaboradorController.colaborador.cpf}" required="true" mask="999.999.999-99"/>
-						<p:message for="cpf" />
-						
-						<p:outputLabel value="RG:" for="rg" />
-						<p:inputText id="rg" value="#{colaboradorController.colaborador.rg}" required="true" />
-						<p:message for="rg" />
-						
-						<p:outputLabel value="Email:" for="email" />
-						<p:inputText id="email" value="#{colaboradorController.colaborador.email}" />
-						<p:message for="email" />
-						
-						<p:outputLabel value="Telefone:" for="telefone" />
-						<p:inputMask id="telefone" value="#{colaboradorController.colaborador.telefone}" mask="(99) 9999-9999"/>
-						<p:message for="telefone" />
-						
-						<p:outputLabel value="Celular:" for="celular" />
-						<p:inputMask id="celular" value="#{colaboradorController.colaborador.celular}" mask="(99) 99999-9999"/>
-						<p:message for="celular" />
-						
-						<p:outputLabel value="Escolaridade:" for="escolaridade" />
-						<p:inputText id="escolaridade" value="#{colaboradorController.colaborador.ensinoFundamentalMedio}" />
-						<p:message for="escolaridade" />
-						
-						<p:outputLabel value="Data de Nascimento:"
-							for="data_nascimento" />
-						<p:calendar id="data_nascimento" pattern="dd/MM/yyyy" required="true"
-							value="#{colaboradorController.colaborador.dataDeNascimento}"
-							style="width:50px" />
-						<p:message for="data_nascimento" />
-						
-						<p:outputLabel for="sexo" value="Sexo:" />
-						<p:selectOneRadio id="sexo" value="#{colaboradorController.colaborador.sexo}" required="true">
-							<f:selectItem itemLabel="Masculino" itemValue="Masculino" />
-							<f:selectItem itemLabel="Feminino" itemValue="Feminino" />
-							
-						</p:selectOneRadio>
-						<p:message for="sexo" />
-						
-						<p:outputLabel value="Estado Civil:" for="estadoCivil" />	
-						<p:selectOneMenu id="estadoCivil" value="#{colaboradorController.colaborador.estadoCivil}" required="true" >
-							<f:selectItems value="#{colaboradorController.listarEstadosCivis()}"
-								var="action" itemLabel="#{action}" itemValue="#{action}" />
-						</p:selectOneMenu>
-						<p:message for="estadoCivil" />				
-						
-						<p:outputLabel value="Cep:" for="cep" />
-						<p:inputMask id="cep" required="true" value="#{colaboradorController.colaborador.cep}" mask="99999-999"/>
-						<p:message for="cep" />
-	
-						<p:outputLabel value="Logradouro:" for="logradouro" />
-						<p:inputText id="logradouro" value="#{colaboradorController.colaborador.logradouro}" />
-						<p:message for="logradouro" />
-							
-						<p:outputLabel value="Bairro:" for="bairro" />
-						<p:inputText id="bairro" value="#{colaboradorController.colaborador.bairro}" />	
-						<p:message for="bairro" />	
-	
-						<p:outputLabel value="Data de Admisão:" for="data_admissao" />
-						<p:calendar id="data_admissao" pattern="dd/MM/yyyy"
-							value="#{colaboradorController.colaborador.dataDeAdmissao}"
-							style="width:50px" required="true"
-							requiredMessage="Campo 'Data de Admissão' é obrigatório" />
-						<p:message for="data_admissao" />
-						
-						<p:outputLabel value="Cargo:" for="cargo" />
-						<p:inputText id="cargo" value="#{colaboradorController.colaborador.cargo}" required="true" />
-						<p:message for="cargo" />
-						
-						<p:outputLabel value="Gestão:" for="gestao" />
-						<p:selectOneMenu id="gestao" filter="true" filterMatchMode="startsWith"
-							value="#{colaboradorController.colaborador.gestao}"
-							converter="gestaoConverter" required="true"
-							requiredMessage="Campo 'Gestão' obrigatório">
-							<f:selectItems value="#{colaboradorController.listaGestao()}"
-								var="action" itemLabel="#{action.nome}" itemValue="#{action}" />
-						</p:selectOneMenu>
-						<p:message for="gestao" />
-						
-						<p:outputLabel value="Localidade:" for="localidade" />
-						<p:selectOneMenu id="localidade" filter="true" filterMatchMode="startsWith"
-							value="#{colaboradorController.colaborador.lotacao}"
-							converter="localConverterVI" required="true"
-							requiredMessage="Campo 'Localidade' obrigatório">
-							<f:selectItem noSelectionOption="true" />
-							<f:selectItems value="#{colaboradorController.listaLocalidade()}"
-								var="action" itemLabel="#{action.nome}" itemValue="#{action}" />
-						</p:selectOneMenu>
-						<p:message for="localidade" />
-						
-						<p:outputLabel value="Controla Ponto ?" for="ponto" />
-						<p:inputSwitch value="#{colaboradorController.colaborador.controlaPonto}" id="ponto" offLabel="Não" onLabel="Sim" />
-						<p:message for="ponto" />
-						
-						<p:outputLabel value="CTPS/SERIE/UF:" for="ctps" />
-						<p:inputText id="ctps" value="#{colaboradorController.colaborador.ctpsSerieUf}" required="true" />
-						<p:message for="ctps" />
-						
-						<p:outputLabel value="PIS:" for="pis" />
-						<p:inputMask id="pis" required="true" value="#{colaboradorController.colaborador.pis}" mask="999.99999.99-9"/>
-						<p:message for="pis" />
-						
-						<p:outputLabel value="Título:" for="titulo" />
-						<p:inputMask id="titulo" required="true" value="#{colaboradorController.colaborador.titulo}" mask="999.999.999-999"/>
-						<p:message for="titulo" />
-						
-						<p:outputLabel value="Matricula:" for="matricula" />
-						<p:inputText id="matricula" value="#{colaboradorController.colaborador.matricula}"  required="true"/>
-						<p:message for="matricula" />
-						
-				</p:panelGrid>
-			</h:form>
-		</p:panel>
+
+		<div class="container-fluid">
+
+
+			<p:breadCrumb styleClass="mt-3 px-3 py-2">
+				<p:menuitem value="Home" url="home_new.xhtml" />
+				<p:menuitem value="Listagem de Colaboradores"
+					url="cadastro_colaborador.xhtml" />
+				<p:menuitem value="Cadastro de Colaborador"
+					url="cadastro_colaborador_novo.xhtml" />
+			</p:breadCrumb>
+
+
+			<p:panel header="Colaboradores" styleClass="mb-3">
+				<h:form id="form-cadastro-colaborador" prependId="false"
+					enctype="multipart/form-data">
+
+					<div class="row">
+						<div class="col">
+							<p:commandLink styleClass="btn btn-success"
+								action="#{colaboradorController.salvar()}" onclick="start()"
+								onsuccess="stop()" onerror="stop()"
+								update=":form-cadastro-colaborador" icon="fa fas fa-paper-plane">
+								<i class="fa fas fa-paper-plane"></i> Salvar</p:commandLink>
+
+							<p:link styleClass="btn btn-outline-dark"
+								outcome="/main/cadastro_colaborador" title="Voltar">
+								<i class="fa fas fa-arrow-left"></i> Voltar
+							</p:link>
+						</div>
+					</div>
+					<br />
+					<div class="row">
+
+						<div class="col form-group">
+							<p:outputLabel value="Nome:" for="nome" />
+							<p:inputText id="nome" styleClass="form-control"
+								value="#{colaboradorController.colaborador.nome}"
+								required="true" requiredMessage="Preencha o campo Nome!" />
+							<p:message for="nome" />
+						</div>
+
+						<div class="col form-group">
+							<p:outputLabel value="CPF:" for="cpf" />
+							<p:inputMask id="cpf" styleClass="form-control"
+								value="#{colaboradorController.colaborador.cpf}" required="true"
+								mask="999.999.999-99" />
+							<p:message for="cpf" />
+						</div>
+
+						<div class="col form-group">
+							<p:outputLabel value="RG:" for="rg" />
+							<p:inputText id="rg" styleClass="form-control"
+								value="#{colaboradorController.colaborador.rg}" required="true" />
+							<p:message for="rg" />
+						</div>
+
+					</div>
+
+					<div class="row">
+
+						<div class="col-6 form-group">
+							<p:outputLabel value="Email:" for="email" />
+							<p:inputText id="email" styleClass="form-control"
+								value="#{colaboradorController.colaborador.email}" />
+							<p:message for="email" />
+						</div>
+
+						<div class="col-3 form-group">
+							<p:outputLabel value="Telefone:" for="telefone" />
+							<p:inputMask id="telefone" styleClass="form-control"
+								value="#{colaboradorController.colaborador.telefone}"
+								mask="(99) 9999-9999" />
+							<p:message for="telefone" />
+						</div>
+
+						<div class="col-3 form-group">
+							<p:outputLabel value="Celular:" for="celular" />
+							<p:inputMask id="celular" styleClass="form-control"
+								value="#{colaboradorController.colaborador.celular}"
+								mask="(99) 99999-9999" />
+							<p:message for="celular" />
+						</div>
+
+					</div>
+
+					<div class="row">
+
+						<div class="col form-group">
+							<p:outputLabel value="Escolaridade:" for="escolaridade" />
+							<p:inputText id="escolaridade" styleClass="form-control"
+								value="#{colaboradorController.colaborador.ensinoFundamentalMedio}" />
+							<p:message for="escolaridade" />
+						</div>
+
+						<div class="col form-group">
+							<p:outputLabel value="Data de Nascimento:" for="data_nascimento" />
+							<p:calendar id="data_nascimento" pattern="dd/MM/yyyy"
+								required="true"
+								value="#{colaboradorController.colaborador.dataDeNascimento}" />
+							<p:message for="data_nascimento" />
+						</div>
+
+						<div class="col form-group">
+							<p:outputLabel for="sexo" value="Sexo:" />
+							<p:selectOneRadio id="sexo"
+								value="#{colaboradorController.colaborador.sexo}"
+								required="true">
+								<f:selectItem itemLabel="Masculino" itemValue="Masculino" />
+								<f:selectItem itemLabel="Feminino" itemValue="Feminino" />
+
+							</p:selectOneRadio>
+							<p:message for="sexo" />
+						</div>
+
+						<div class="col form-group">
+							<p:outputLabel value="Estado Civil:" for="estadoCivil" />
+							<br />
+							<p:selectOneMenu id="estadoCivil"
+								value="#{colaboradorController.colaborador.estadoCivil}"
+								required="true">
+								<f:selectItems
+									value="#{colaboradorController.listarEstadosCivis()}"
+									var="action" itemLabel="#{action}" itemValue="#{action}" />
+							</p:selectOneMenu>
+							<p:message for="estadoCivil" />
+						</div>
+					</div>
+
+					<div class="row">
+
+						<div class="col-2 form-group">
+							<p:outputLabel value="Cep:" for="cep" />
+							<p:inputMask styleClass="form-control" id="cep" required="true"
+								value="#{colaboradorController.colaborador.cep}"
+								mask="99999-999" />
+							<p:message for="cep" />
+						</div>
+
+						<div class="col-6 form-group">
+							<p:outputLabel value="Logradouro:" for="logradouro" />
+							<p:inputText styleClass="form-control" id="logradouro"
+								value="#{colaboradorController.colaborador.logradouro}" />
+							<p:message for="logradouro" />
+						</div>
+
+						<div class="col-2 form-group">
+							<p:outputLabel value="Bairro:" for="bairro" />
+							<p:inputText styleClass="form-control" id="bairro"
+								value="#{colaboradorController.colaborador.bairro}" />
+							<p:message for="bairro" />
+						</div>
+
+						<div class="col-2 form-group">
+							<p:outputLabel value="Data de Admisão:" for="data_admissao" />
+							<p:calendar id="data_admissao" pattern="dd/MM/yyyy"
+								value="#{colaboradorController.colaborador.dataDeAdmissao}"
+								required="true"
+								requiredMessage="Campo 'Data de Admissão' é obrigatório" />
+							<p:message for="data_admissao" />
+						</div>
+
+					</div>
+
+					<div class="row">
+
+						<div class="col-4 form-group">
+							<p:outputLabel value="Cargo:" for="gestao" />
+							<br />
+							<p:selectOneMenu id="cargo" filter="true"
+								filterMatchMode="startsWith"
+								value="#{colaboradorController.colaborador.cargo}"
+								converter="#{cargoConverter}" required="true"
+								requiredMessage="Campo 'Cargo' obrigatório">
+								<f:selectItems value="#{colaboradorController.listaCargo()}"
+									var="action" itemLabel="#{action.nome}" itemValue="#{action}" />
+							</p:selectOneMenu>
+						</div>
+
+						<div class="col-4 form-group">
+							<p:outputLabel value="Gestão:" for="gestao" />
+							<p:selectOneMenu id="gestao" filter="true"
+								filterMatchMode="startsWith"
+								value="#{colaboradorController.colaborador.gestao}"
+								converter="gestaoConverter" required="true"
+								requiredMessage="Campo 'Gestão' obrigatório">
+								<f:selectItems value="#{colaboradorController.listaGestao()}"
+									var="action" itemLabel="#{action.nome}" itemValue="#{action}" />
+							</p:selectOneMenu>
+							<p:message for="gestao" />
+						</div>
+
+						<div class="col form-group">
+							<p:outputLabel value="Localidade:" for="localidade" />
+							<p:selectOneMenu id="localidade" filter="true"
+								filterMatchMode="startsWith"
+								value="#{colaboradorController.colaborador.lotacao}"
+								converter="localConverterVI" required="true"
+								requiredMessage="Campo 'Localidade' obrigatório">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems
+									value="#{colaboradorController.listaLocalidade()}" var="action"
+									itemLabel="#{action.nome}" itemValue="#{action}" />
+							</p:selectOneMenu>
+							<p:message for="localidade" />
+						</div>
+					</div>
+					<div class="row">
+
+						<div class="col-2 form-group">
+							<p:outputLabel value="Controla Ponto ?" for="ponto" />
+							<br />
+							<p:inputSwitch
+								value="#{colaboradorController.colaborador.controlaPonto}"
+								id="ponto" offLabel="Não" onLabel="Sim" />
+							<p:message for="ponto" />
+						</div>
+
+						<div class="col-3 form-group">
+							<p:outputLabel value="CTPS/SERIE/UF:" for="ctps" />
+							<p:inputText id="ctps" styleClass="form-control"
+								value="#{colaboradorController.colaborador.ctpsSerieUf}"
+								required="true" />
+							<p:message for="ctps" />
+						</div>
+
+						<div class="col-3 form-group">
+							<p:outputLabel value="PIS:" for="pis" />
+							<p:inputMask id="pis" required="true" styleClass="form-control"
+								value="#{colaboradorController.colaborador.pis}"
+								mask="999.99999.99-9" />
+							<p:message for="pis" />
+						</div>
+
+						<div class="col-2 form-group">
+							<p:outputLabel value="Título:" for="titulo" />
+							<p:inputMask id="titulo" required="true"
+								styleClass="form-control"
+								value="#{colaboradorController.colaborador.titulo}"
+								mask="999.999.999-999" />
+							<p:message for="titulo" />
+						</div>
+
+						<div class="col-2 form-group">
+							<p:outputLabel value="Matricula:" for="matricula" />
+							<p:inputText id="matricula" styleClass="form-control"
+								value="#{colaboradorController.colaborador.matricula}"
+								required="true" />
+							<p:message for="matricula" />
+						</div>
+					</div>
+				</h:form>
+			</p:panel>
+		</div>
 	</ui:define>
 	<ui:define name="adicionais">
 		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
@@ -188,7 +296,6 @@
 		</p:dialog>
 
 	</ui:define>
-		
+
 </ui:composition>
-			
-			
+

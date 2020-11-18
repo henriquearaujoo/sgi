@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import model.Cargo;
 import model.Colaborador;
 import model.ContaBancaria;
 import model.Endereco;
@@ -100,6 +101,12 @@ public class ColaboradorRepositorio {
 
 	public List<Gestao> findGestao() {
 		StringBuilder jpql = new StringBuilder("from Gestao g");
+		Query query = manager.createQuery(jpql.toString());
+		return query.getResultList();
+	}
+	
+	public List<Cargo> findCargo() {
+		StringBuilder jpql = new StringBuilder("from Cargo k");
 		Query query = manager.createQuery(jpql.toString());
 		return query.getResultList();
 	}

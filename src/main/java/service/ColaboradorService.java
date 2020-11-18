@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
 import anotacoes.Transactional;
+import model.Cargo;
 import model.Colaborador;
 import model.Endereco;
 import model.Gestao;
@@ -38,6 +39,10 @@ public class ColaboradorService implements Serializable{
 
 	public List<Gestao> findGestao() {
 		return colaboradorRepositorio.findGestao();
+	}
+	
+	public List<Cargo> findCargo() {
+		return colaboradorRepositorio.findCargo();
 	}
 
 	public List<Localidade> findLocalidade() {
