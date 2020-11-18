@@ -11,7 +11,7 @@ import repositorio.LocalRepositorio;
 import util.CDILocator;
 
 
-@FacesConverter("comunidadeConverter")
+@FacesConverter("comunidadeConverterAutoComplete")
 public class ComunidadeConverterAutoComplete implements Converter{
 
 	private LocalRepositorio repository;

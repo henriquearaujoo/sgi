@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="content">
+		<div class="container">
+
+			<p:breadCrumb styleClass="mt-3 mb-3 px-3 py-2">
+				<p:menuitem value="Home" url="home_new.xhtml" />
+				<p:menuitem value="Comunidades" url="comunidades.xhtml" />
+				<p:menuitem value="Cadastro/Edição de Comunidades" url="#" />
+			</p:breadCrumb>
+
+			<p:panel header="Cadastro/Edição de Comunidades">
+				<h:form id="form-cadastro-comunidade">
+
+					<f:metadata>
+						<o:viewParam name="comunidade"
+							value="#{comunidade_controller.comunidade}" />
+					</f:metadata>
+
+					<div class="row">
+						<div class="col form-group">
+							<p:outputLabel value="Nome:" for="nome" />
+							<p:inputText id="nome" styleClass="form-control"
+								value="#{comunidade_controller.comunidade.nome}"
+								requiredMessage="Preencha o campo Nome!"
+								placeholder="Ex.: Comunidade Tal de Cidade A" ucrequired="true" />
+							<p:message for="nome" />
+						</div>
+						<div class="col form-group">
+							<p:outputLabel value="Máscara:" for="mascara" />
+							<p:inputText id="mascara" styleClass="form-control"
+								value="#{comunidade_controller.comunidade.mascara}"
+								requiredMessage="Preencha o campo Nome!"
+								placeholder="Ex.: Comunidade Tal de Cidade A" ucrequired="true" />
+							<p:message for="mascara" />
+						</div>
+						<div class="col form-group">
+							<p:outputLabel value="Número de pessoas" for="nPessoa" />
+							<p:inputText id="nPessoa" styleClass="form-control"
+								value="#{comunidade_controller.comunidade.nPessoa}"
+								requiredMessage="Preencha o campo Número de Pessoas!"
+								required="true" />
+							<p:message for="nPessoa" />
+						</div>
+						<div class="col form-group">
+							<p:outputLabel value="Número de famílias" for="nfamilia" />
+							<p:inputText id="nfamilia" styleClass="form-control"
+								value="#{comunidade_controller.comunidade.nfamilia}"
+								requiredMessage="Preencha o campo Número de famílias!"
+								required="true" />
+							<p:message for="nfamilia" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col form-group">
+							<p:outputLabel value="Setor: " for="setor" />
+							<br />
+							<p:inputText id="setor" styleClass="form-control"
+								value="#{comunidade_controller.comunidade.setor}"
+								requiredMessage="Preencha o campo Setor!" required="true" />
+						</div>
+						<div class="col form-group">
+							<p:outputLabel value="Unidade de conservação: " for="uc" />
+							<br />
+							<p:autoComplete id="uc" style="width:100%;"
+								requiredMessage="O campo Unidade de Conservação é Obrigatório"
+								rendered="true" placeholder="Unidade de Conservação"
+								required="true" cache="true"
+								value="#{comunidade_controller.comunidade.unidadeConservacao}"
+								completeMethod="#{unidadeConservacaoController.ucAutocomplete}"
+								var="uniC" itemLabel="#{uniC.nome}" itemValue="#{uniC}"
+								converter="uc_converter" minQueryLength="2"
+								forceSelection="true" />
+						</div>
+						<div class="col form-group">
+							<p:outputLabel value="Município: " for="municipio" />
+							<br />
+							<p:selectOneMenu id="municipio"
+								value="#{comunidade_controller.comunidade.municipio}"
+								style="width:100%;">
+								<f:selectItem itemLabel="Escolha um município" itemValue="" />
+								<f:selectItems value="#{municipioController.listaMunicipios()}"
+									var="mun" itemLabel="#{mun.nome}" itemValue="#{mun}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+
+					<p:commandLink styleClass="btn btn-success"
+						action="#{comunidade_controller.salvar()}">
+						<i class="fa fas fa-paper-plane"></i> Salvar
+						</p:commandLink>
+
+					<p:link styleClass="btn btn-outline-dark"
+						outcome="/main/comunidades" title="Voltar">
+						<i class="fa fas fa-arrow-left"></i> Voltar
+						</p:link>
+
+				</h:form>
+			</p:panel>
+		</div>
+	</ui:define>
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+</ui:composition>

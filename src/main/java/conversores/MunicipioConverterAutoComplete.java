@@ -4,38 +4,42 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.inject.Named;
 
-import model.Localidade;
 import model.Municipio;
-import repositorio.LocalRepositorio;
+import repositorio.MunicipioRepositorio;
 import util.CDILocator;
 
+@Named(value = "municipioConverter")
+@FacesConverter(forClass = Municipio.class)
+public class MunicipioConverterAutoComplete implements Converter {
 
-@FacesConverter("municipioConverter")
-public class MunicipioConverterAutoComplete implements Converter{
+	private MunicipioRepositorio repository;
 
-	private LocalRepositorio repository;
-	
-	public MunicipioConverterAutoComplete(){
-		this.repository = CDILocator.getBean(LocalRepositorio.class);
+	public MunicipioConverterAutoComplete() {
+		this.repository = CDILocator.getBean(MunicipioRepositorio.class);
 	}
-	
+
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
-		
-			Municipio retorno =  new Municipio();
-			if (value != null) {
-				retorno =  repository.findByIdMunicipio(new Long(value));
-			};
-	 return retorno;	
+
+		Municipio retorno = new Municipio();
+		if (value != null) {
+			retorno = repository.findByIdMunicipio(Long.parseLong(value));
+		}
+
+		return retorno;
 	}
 
 	public String getAsString(FacesContext context, UIComponent component, Object value) {
 		if (value != null) {
-			if(((Localidade) value).getId() != null){
-				return ((Localidade) value).getId().toString();
+			try {
+				Municipio m = (Municipio) value;
+				return m.getId().toString();
+			} catch (Exception e) {
+				return "erro: " + e;
 			}
 		}
 		return null;
 	}
-	
+
 }

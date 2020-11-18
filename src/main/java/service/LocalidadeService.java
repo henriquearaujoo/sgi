@@ -10,7 +10,7 @@ import model.Pais;
 import model.UnidadeConservacao;
 import model.Estado;
 import model.Localidade;
-import model.User;
+import model.Municipio;
 import repositorio.LocalidadeRepositorio;
 
 public class LocalidadeService implements Serializable {
@@ -19,36 +19,35 @@ public class LocalidadeService implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	//Variaveis
+
+	// Variaveis
 	@Inject
 	private LocalidadeRepositorio localidadeRepositorio;
-	
-	//Metodos
+
+	// Metodos
 	public List<Localidade> carregaLocalidade() {
-		
+
 		return localidadeRepositorio.carregaLocalidade();
 	}
-	
+
 	public void salvar(Localidade localidade) {
 		localidadeRepositorio.update(localidade);
-		
+
 	}
-	
+
 	@Transactional
-	public Boolean Salvar(Localidade localidade){
-		try{
+	public Boolean Salvar(Localidade localidade) {
+		try {
 			localidadeRepositorio.salvar(localidade);
 			return true;
-		}catch(Exception e){
+		} catch (Exception e) {
 			return false;
 		}
-		
-		
+
 	}
 
 	public Boolean delete(Localidade localidade) {
-		
+
 		return localidadeRepositorio.delete(localidade);
 	}
 
@@ -57,20 +56,22 @@ public class LocalidadeService implements Serializable {
 	}
 
 	public List<Estado> getListEstado() {
-		
+
 		return localidadeRepositorio.getListEstado();
 	}
 
 	public List<Pais> getListPais() {
-		
+
 		return localidadeRepositorio.getListPais();
 	}
 
 	public List<UnidadeConservacao> getListUc() {
-		
+
 		return localidadeRepositorio.getListUc();
 	}
-	
-	
+
+	public List<Municipio> getMunicipios() {
+		return localidadeRepositorio.getMunicipios();
+	}
 
 }
