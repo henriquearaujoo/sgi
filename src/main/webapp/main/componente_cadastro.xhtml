@@ -9,7 +9,7 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
 
 	<ui:define name="content">
-		<div class="mx-4">
+		<div class="container">
 
 			<p:breadCrumb styleClass="mt-3 mb-3 px-3 py-2">
 				<p:menuitem value="Home" url="home_new.xhtml" />
@@ -36,11 +36,11 @@
 						</div>
 					</div>
 					<p:commandLink styleClass="btn btn-success"
-						action="#{componente_controller.salvar()}">
+						action="#{componente_controller.salvarComponente()}">
 						<i class="fa fas fa-paper-plane"></i> Salvar
 						</p:commandLink>
 
-					<p:link styleClass="btn btn-light" outcome="/main/componentes"
+					<p:link styleClass="btn btn-outline-dark" outcome="/main/componentes"
 						title="Voltar">
 						<i class="fa fas fa-arrow-left"></i> Voltar
 						</p:link>

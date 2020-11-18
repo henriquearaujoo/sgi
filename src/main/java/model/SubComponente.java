@@ -10,33 +10,35 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "sub_componente")
-public class SubComponente implements Serializable{
+public class SubComponente implements Serializable {
 
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column
 	private String nome;
-	
+
 	@ManyToOne
 	private ComponenteClass componente;
 
-	public SubComponente(){}
-	
+	public SubComponente() {
+	}
+
 	public SubComponente(Long id) {
 		this.id = id;
 	}
-	
+
+	public SubComponente(Long id, String nome, Long cid, String cnome) {
+		this.setId(id);
+		this.setNome(nome);
+		this.setComponente(new ComponenteClass(cid, cnome));
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -86,7 +88,4 @@ public class SubComponente implements Serializable{
 		this.componente = componente;
 	}
 
-	
-	
-	
 }

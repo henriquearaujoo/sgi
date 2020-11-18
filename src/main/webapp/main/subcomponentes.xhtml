@@ -27,9 +27,9 @@
 			</script>
 		<div class="mx-4">
 			<f:metadata>
-				<f:viewAction action="#{subcomponente_controller.initListagem()}" />
+				<f:viewAction action="#{componente_controller.initListagemSubcomponente()}" />
 			</f:metadata>
-			<h:form id="content_componente">
+			<h:form id="content_subcomponente">
 				<br />
 				<p:breadCrumb styleClass="mt-3 px-3 py-2">
 					<p:menuitem value="Home" url="home_new.xhtml" />
@@ -56,7 +56,7 @@
 						</div>
 						<div class="ui-g-12">
 							<p:dataTable id="tabela_subcomponente" paginator="true" rows="12"
-								value="#{subcomponente_controller.subcomponentes}"
+								value="#{componente_controller.subcomponentes}"
 								var="subcomponente">
 								<p:column headerText="Sub-componente"
 									filterBy="#{subcomponente.nome}" filterMatchMode="contains">
@@ -77,12 +77,12 @@
 
 										<p:menuitem value="remover" ajax="false"
 											icon="fa fa-fw fa-trash-o" update="tabela_subcomponente"
-											action="#{subcomponente_controller.remover()}">
+											action="#{componente_controller.removerSubcomponente()}">
 											<p:confirm header="Confirmação"
 												message="Você realmente deseja remover o componente #{subcomponente.nome}?"
 												icon="pi pi-exclamation-triangle" />
 											<f:setPropertyActionListener value="#{subcomponente}"
-												target="#{subcomponente_controller.subcomponente}" />
+												target="#{componente_controller.subcomponente}" />
 										</p:menuitem>
 									</p:menuButton>
 								</p:column>

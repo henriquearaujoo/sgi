@@ -1,4 +1,3 @@
-
 package repositorio;
 
 import java.io.Serializable;
@@ -9,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import model.ComponenteClass;
-import model.Gestao;
 import model.SubComponente;
 
 public class ComponenteRepositorio implements Serializable {
@@ -32,8 +30,16 @@ public class ComponenteRepositorio implements Serializable {
 		this.manager.merge(componente);
 	}
 
+	public void salvar(SubComponente subcomponente) {
+		this.manager.merge(subcomponente);
+	}
+
 	public void remover(ComponenteClass componente) {
 		this.manager.remove(this.manager.find(ComponenteClass.class, componente.getId()));
+	}
+
+	public void remover(SubComponente subcomponente) {
+		this.manager.remove(this.manager.find(SubComponente.class, subcomponente.getId()));
 	}
 
 	public ComponenteClass findById(Long id) {
@@ -44,23 +50,24 @@ public class ComponenteRepositorio implements Serializable {
 		return this.manager.find(SubComponente.class, id);
 	}
 
-	public List<ComponenteClass> getComponentes() {
-		String jpql = "from ComponenteClass order by id asc";
+	@SuppressWarnings("unchecked")
+	public List<ComponenteClass> findAllComponente() {
+		String jpql = "SELECT NEW ComponenteClass(c.id, c.nome) from ComponenteClass c order by c.id asc";
 		Query query = this.manager.createQuery(jpql);
 		return query.getResultList();
 	}
 
-	public List<SubComponente> getSubComponentes(Long idComponente) {
-		String jpql = "from SubComponente where componente.id = :id";
+	@SuppressWarnings("unchecked")
+	public List<SubComponente> findAllSubcomponente() {
+		String jpql = "SELECT NEW SubComponente(s.id, s.nome, s.componente.id, s.componente.nome) from SubComponente s order by s.id asc";
 		Query query = this.manager.createQuery(jpql);
-		query.setParameter("id", idComponente);
 		return query.getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<ComponenteClass> buscarComponenteAutocomplete(String s) {
-		StringBuilder jpql = new StringBuilder(
-				"SELECT NEW ComponenteClass(g.id, g.nome) from ComponenteClass g where lower(g.nome) like lower(:nome)");
-		Query query = manager.createQuery(jpql.toString());
+		String jpql = "SELECT NEW ComponenteClass(g.id, g.nome) from ComponenteClass g where lower(g.nome) like lower(:nome)";
+		Query query = manager.createQuery(jpql);
 		query.setParameter("nome", "%" + s + "%");
 		return query.getResultList();
 	}

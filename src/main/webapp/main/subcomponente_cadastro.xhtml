@@ -22,42 +22,44 @@
 
 					<f:metadata>
 						<o:viewParam name="subcomponente"
-							value="#{subcomponente_controller.subcomponente}" />
+							value="#{componente_controller.subcomponente}" />
 					</f:metadata>
 
 					<div class="row">
-						<div class="col">
+						<div class="col-6 form-group">
 							<p:outputLabel value="Nome:" for="nome" />
+							<br />
 							<p:inputText id="nome"
-								value="#{subcomponente_controller.subcomponente.nome}"
+								value="#{componente_controller.subcomponente.nome}"
 								requiredMessage="Preencha o campo Nome!"
-								placeholder="Ex.: Sub-componente 1, 2..." required="true" />
+								placeholder="Ex.: Sub-componente 1, 2..." required="true"
+								styleClass="form-control" />
 							<p:message for="nome" />
 						</div>
-						<div class="col">
-							<div class="row">
+						<div class="col-6">
+							<div class="row form-group">
 								<p:outputLabel value="Componente:" for="componente" />
-							</div>
-							<div class="row">
 								<p:autoComplete id="componente" required="true"
 									placeholder="Ex.: Componente 1, 2..."
 									requiredMessage="Preencha o campo 'Componente'"
-									value="#{subcomponente_controller.subcomponente.componente}"
+									value="#{componente_controller.subcomponente.componente}"
 									completeMethod="#{componente_controller.completeComponente}"
 									var="componente" itemLabel="#{componente.nome}"
 									itemValue="#{componente}" converter="#{componente_converter}"
-									minQueryLength="1" />
+									minQueryLength="1" style="width:90%;"
+									/>
+								<p:message for="componente" />
 							</div>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col">
 							<p:commandLink styleClass="btn btn-success"
-								action="#{subcomponente_controller.salvar()}">
+								action="#{componente_controller.salvarSubcomponente()}">
 								<i class="fa fas fa-paper-plane"></i> Salvar
 							</p:commandLink>
-							<p:link styleClass="btn btn-light" outcome="/main/subcomponentes"
-								title="Voltar">
+							<p:link styleClass="btn btn-outline-dark"
+								outcome="/main/subcomponentes" title="Voltar">
 								<i class="fa fas fa-arrow-left"></i> Voltar
 						</p:link>
 						</div>

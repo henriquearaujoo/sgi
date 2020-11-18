@@ -9,35 +9,34 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "componente_class")
-public class ComponenteClass implements Serializable{
-
+public class ComponenteClass implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column
 	private String nome;
 
-	public ComponenteClass(){}
-	
+	public ComponenteClass() {
+	}
+
 	public ComponenteClass(Long id) {
 		this.id = id;
 	}
-	
+
 	public ComponenteClass(Long _id, String _nome) {
 		this.id = _id;
 		this.nome = _nome;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -79,7 +78,4 @@ public class ComponenteClass implements Serializable{
 		this.nome = nome;
 	}
 
-	
-	
-	
 }

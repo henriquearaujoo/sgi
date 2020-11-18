@@ -27,7 +27,7 @@
 			</script>
 		<div class="mx-4">
 			<f:metadata>
-				<f:viewAction action="#{componente_controller.initListagem()}" />
+				<f:viewAction action="#{componente_controller.initListagemComponente()}" />
 			</f:metadata>
 			<h:form id="content_componente">
 				<br />
@@ -70,7 +70,7 @@
 
 										<p:menuitem value="remover" ajax="false"
 											icon="fa fa-fw fa-trash-o" update="tabela_componente"
-											action="#{componente_controller.remover()}">
+											action="#{componente_controller.removerComponente()}">
 											<p:confirm header="Confirmação"
 												message="Você realmente deseja remover o componente #{componente.nome}?"
 												icon="pi pi-exclamation-triangle" />
