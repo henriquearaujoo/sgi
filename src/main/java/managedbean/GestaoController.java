@@ -34,7 +34,7 @@ public class GestaoController implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	GestaoService gestaoService;
+	private GestaoService gestaoService;
 
 	@Inject
 	private ColaboradorService colaboradorService;
@@ -128,6 +128,10 @@ public void editarGestao(User usuario) {
 
 	public void setSessao(UsuarioSessao sessao) {
 		this.sessao = sessao;
+	}
+	
+	public List<Regional> getRegionais(){
+		return this.gestaoService.getRegionais();
 	}
 
 }

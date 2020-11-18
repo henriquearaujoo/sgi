@@ -114,5 +114,9 @@ public class GestaoService implements Serializable {
 		return gestaoRepositorio.verificaGestao(id);
 	}
 	
+	public List<Regional> getRegionais(){
+		return gestaoRepositorio.getRegionais();
+	}
+	
 
 }

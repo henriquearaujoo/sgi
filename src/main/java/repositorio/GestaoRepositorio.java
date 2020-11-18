@@ -105,8 +105,14 @@ public class GestaoRepositorio implements Serializable {
 		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<Gestao>();
 	}
 
+	public List<Regional> getRegionais() {
+		StringBuilder jpql = new StringBuilder("from Regional");
+		Query query = manager.createQuery(jpql.toString());
+		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<Gestao>();
+	}
+	
 	public List<Gestao> getRegional() {
-		StringBuilder jpql = new StringBuilder("from  Regional");
+		StringBuilder jpql = new StringBuilder("from Regional");
 		Query query = manager.createQuery(jpql.toString());
 		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<Gestao>();
 	}
@@ -177,6 +183,13 @@ public class GestaoRepositorio implements Serializable {
 		String hql = "SELECT r FROM Gestao r WHERE r.id = :pGestaoId";
 		TypedQuery<Gestao> query = manager.createQuery(hql, Gestao.class);
 		query.setParameter("pGestaoId", id);
+		return  query.getSingleResult();
+	}
+	
+	public Regional findByIdRegional(Long id) {
+		String hql = "SELECT r FROM Regional r WHERE r.id = :pRegionalId";
+		TypedQuery<Regional> query = manager.createQuery(hql, Regional.class);
+		query.setParameter("pRegionalId", id);
 		return  query.getSingleResult();
 	}
 	

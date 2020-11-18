@@ -22,13 +22,8 @@ public class UnidadeConservacaoService implements Serializable {
 
 	// Metodos
 
-	public void salvar(UnidadeConservacao localidade) {
-		unidadeConservacaoRepositorio.update(localidade);
-
-	}
-
 	@Transactional
-	public Boolean Salvar(UnidadeConservacao localidade) {
+	public Boolean salvar(UnidadeConservacao localidade) {
 		try {
 			unidadeConservacaoRepositorio.salvar(localidade);
 			return true;
@@ -38,8 +33,8 @@ public class UnidadeConservacaoService implements Serializable {
 
 	}
 
+	@Transactional
 	public Boolean delete(UnidadeConservacao localidade) {
-
 		return unidadeConservacaoRepositorio.delete(localidade);
 	}
 
@@ -56,5 +51,7 @@ public class UnidadeConservacaoService implements Serializable {
 
 		return unidadeConservacaoRepositorio.ucAutocomplete(query);
 	}
+	
+	
 
 }

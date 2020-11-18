@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="content">
+		<div class="container mb-3">
+
+			<p:breadCrumb styleClass="mt-3 mb-3 px-3 py-2">
+				<p:menuitem value="Home" url="home_new.xhtml" />
+				<p:menuitem value="Unidades de Conservação"
+					url="unidadesConservacao.xhtml" />
+				<p:menuitem value="Cadastro/Edição de UC" url="#" />
+			</p:breadCrumb>
+
+			<p:panel header="Cadastro/Edição de UC">
+				<h:form id="form-cadastro-unidadeConservacao">
+
+					<f:metadata>
+						<o:viewParam name="unidadeConservacao"
+							value="#{unidadeConservacaoController.unidadeConservacao}" />
+						<f:viewAction
+							action="#{unidadeConservacaoController.getMunEReg()}" />
+
+					</f:metadata>
+					<div class="row mb-3">
+						<div class="col">
+							<p:commandLink styleClass="btn btn-success"
+								action="#{unidadeConservacaoController.salvar()}">
+								<i class="fa fas fa-paper-plane"></i> Salvar
+						</p:commandLink>
+
+							<p:link styleClass="btn btn-outline-dark"
+								outcome="/main/unidadesConservacao" title="Voltar">
+								<i class="fa fas fa-arrow-left"></i> Voltar
+						</p:link>
+						</div>
+					</div>
+					<p:fieldset legend="Dados gerais">
+						<div class="row">
+							<div class="col form-group">
+								<p:outputLabel value="Nome:" for="nome" />
+								<p:inputText id="nome" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.nome}"
+									requiredMessage="Preencha o campo Nome!"
+									placeholder="Ex.: Reserva de Desenvolvimento..." />
+								<p:message for="nome" />
+							</div>
+							<div class="col form-group">
+								<p:outputLabel value="Máscara:" for="mascara" />
+								<p:inputText id="mascara" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.mascara}"
+									requiredMessage="Preencha o campo Nome!"
+									placeholder="Ex.: RDS A" />
+								<p:message for="mascara" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col form-group">
+								<p:outputLabel value="Regional: " for="regional" />
+								<br />
+								<p:selectOneMenu id="regional"
+									value="#{unidadeConservacaoController.unidadeConservacao.regional}"
+									style="width:100%;">
+									<f:selectItem itemLabel="Escolha uma regional" itemValue="" />
+									<f:selectItems
+										value="#{unidadeConservacaoController.regionais}" var="reg"
+										itemLabel="#{reg.nome}" itemValue="#{reg}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="col form-group">
+								<p:outputLabel value="Município: " for="municipio" />
+								<br />
+								<p:selectOneMenu id="municipio"
+									value="#{unidadeConservacaoController.unidadeConservacao.municipio}"
+									filter="true" filterMatchMode="contains" style="width:100%;">
+									<f:selectItem itemLabel="Escolha um município" itemValue="" />
+									<f:selectItems
+										value="#{unidadeConservacaoController.municipios}" var="mun"
+										itemLabel="#{mun.nome}" itemValue="#{mun}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+					</p:fieldset>
+					<p:fieldset legend="Dados da Associação" styleClass="mt-3">
+						<div class="row">
+							<div class="col-7 form-group">
+								<p:outputLabel value="Nome da Associação: " for="nomeAssociacao" />
+								<br />
+								<p:inputText id="nomeAssociacao" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.nomeAssociacao}"
+									requiredMessage="Preencha o campo Nome da Associação!" />
+							</div>
+
+							<div class="col-2 form-group">
+								<p:outputLabel value="CNPJ:" for="cnpjAssociacao" />
+								<br />
+								<p:inputMask mask="99.999.999/9999-99" id="cnpjAssociacao"
+									styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.cnpjassociacao}"
+									requiredMessage="Preencha o campo CPF do Presidente da Associação!" />
+							</div>
+
+							<div class="col-3 form-group">
+								<p:outputLabel value="Telefone da Associação: "
+									for="telefoneAssociacao" />
+								<br />
+								<p:inputMask id="telefoneAssociacao" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.telefoneAssociacao}"
+									requiredMessage="Preencha o campo CPF do Presidente da Associação!"
+									mask="(99) 99999-9999" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-6 form-group">
+								<p:outputLabel value="Endereço da Associação:"
+									for="enderecoAssociacao" />
+								<br />
+								<p:inputText id="enderecoAssociacao" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.enderecoAssociacao}"
+									requiredMessage="Preencha o campo CPF do Presidente da Associação!" />
+							</div>
+							<div class="col-3 form-group">
+								<p:outputLabel value="CEP da Associação:" for="cepAssociacao" />
+								<br />
+								<p:inputMask mask="99.999-999" id="cepAssociacao"
+									styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.cepAssociacao}"
+									requiredMessage="Preencha o campo CPF do Presidente da Associação!" />
+							</div>
+							<div class="col-3 form-group">
+								<p:outputLabel value="Cidade da Associação:"
+									for="cidadeAssociacao" />
+								<br />
+								<p:inputText id="cidadeAssociacao" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.cidadeAssociacao}"
+									requiredMessage="Preencha o campo CPF do Presidente da Associação!" />
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-4 form-group">
+								<p:outputLabel value="Presidente da Associação: "
+									for="presidenteAssociacao" />
+								<br />
+								<p:inputText id="presidenteAssociacao" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.presidenteAssociacao}"
+									requiredMessage="Preencha o campo Presidente da Associação!" />
+							</div>
+							<div class="col-2 form-group">
+								<p:outputLabel value="RG do Pres.: " for="rgPresidente" />
+								<br />
+								<p:inputText id="rgPresidente" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.rgPresidente}"
+									requiredMessage="Preencha o campo RG do Presidente da Associação!" />
+							</div>
+
+							<div class="col-2 form-group">
+								<p:outputLabel value="CPF do Pres.: " for="cpfPresidente" />
+								<br />
+								<p:inputMask mask="999.999.999-99" id="cpfPresidente"
+									styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.cpfPresidente}"
+									requiredMessage="Preencha o campo CPF do Presidente da Associação!" />
+							</div>
+							<div class="col-4 form-group">
+								<p:outputLabel value="Profissão do Pres.: "
+									for="profissaoPresidente" />
+								<br />
+								<p:inputText id="profissaoPresidente" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.profissaoPresidente}"
+									requiredMessage="Preencha o campo CPF do Presidente da Associação!" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-3 form-group">
+								<p:outputLabel value="Cargo do Pres.: " for="cepAssociacao" />
+								<br />
+								<p:inputText id="cargoPresidente" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.cargoPresidente}"
+									requiredMessage="Preencha o campo CPF do Presidente da Associação!" />
+							</div>
+
+							<div class="col-4 form-group">
+								<p:outputLabel value="Endereço do Presidente: "
+									for="enderecoPresidente" />
+								<br />
+								<p:inputText id="enderecoPresidente" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.enderecoPresidente}"
+									requiredMessage="Preencha o campo CPF do Presidente da Associação!" />
+							</div>
+
+							<div class="col-3 form-group">
+								<p:outputLabel value="Cidade do Pres.: " for="cidadePresidente" />
+								<br />
+								<p:inputText id="cidadePresidente" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.cidadePresidente}"
+									requiredMessage="Preencha o campo CPF do Presidente da Associação!" />
+							</div>
+
+							<div class="col-2 form-group">
+								<p:outputLabel value="Tel. do Pres.: " for="telefonePresidente" />
+								<br />
+								<p:inputMask id="telefonePresidente" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.telefonePresidente}"
+									requiredMessage="Preencha o campo CPF do Presidente da Associação!"
+									mask="(99) 99999-9999" />
+							</div>
+						</div>
+					</p:fieldset>
+					<p:fieldset legend="Dados bancários" styleClass="mt-3">
+
+						<div class="row">
+							<div class="col form-group">
+								<p:outputLabel value="Banco da Associação: "
+									for="bancoAssociacao" />
+								<br />
+								<p:inputText id="bancoAssociacao" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.bancoAssociacao}"
+									requiredMessage="Preencha o campo CPF do Presidente da Associação!" />
+							</div>
+
+							<div class="col form-group">
+								<p:outputLabel value="Agência bancária da Associação: "
+									for="agenciaAssociacao" />
+								<br />
+								<p:inputText id="agenciaAssociacao" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.agenciaAssociacao}"
+									requiredMessage="Preencha o campo CPF do Presidente da Associação!" />
+							</div>
+
+							<div class="col form-group">
+								<p:outputLabel value="Conta Bancária da Associação: "
+									for="contaAssociacao" />
+								<br />
+								<p:inputText id="contaAssociacao" styleClass="form-control"
+									value="#{unidadeConservacaoController.unidadeConservacao.contaAssociacao}"
+									requiredMessage="Preencha o campo CPF do Presidente da Associação!" />
+							</div>
+						</div>
+					</p:fieldset>
+				</h:form>
+			</p:panel>
+		</div>
+	</ui:define>
+	<ui:define name="adicionais">
+
+	</ui:define>
+
+</ui:composition>

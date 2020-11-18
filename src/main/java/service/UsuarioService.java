@@ -88,19 +88,34 @@ public class UsuarioService implements Serializable {
 		}
 	}
 	
-//	@Transactional
-//	public boolean update(User usuario) {
-//		try{
-//			repositorio.update(usuario);
-//			return true;
-//		}catch(Exception e){
-//			return false;
-//		}
-//	}
+	@Transactional
+	public boolean update(User usuario) {
+		try{
+			repositorio.salvar(usuario);
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+	}
 	
 	@Transactional
-	public void remover(User usuario) {
-		repositorio.remover(usuario);
+	public boolean remover(User usuario) {
+		try {
+			repositorio.remover(usuario);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	@Transactional
+	public boolean remover(UserProjeto usuarioProjeto) {
+		try {
+			repositorio.remover(usuarioProjeto);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
 	@Transactional

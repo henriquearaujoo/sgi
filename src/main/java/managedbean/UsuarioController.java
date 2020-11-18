@@ -105,7 +105,7 @@ public class UsuarioController implements Serializable {
 	public String delete(User usuario){
 		FacesContext context = FacesContext.getCurrentInstance();
 		
-		if(usuarioService.update(usuario)){
+		if(usuarioService.remover(usuario)){
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuário salvo com Sucesso!", "");
 			context.addMessage("msg", msg);
 		}else{

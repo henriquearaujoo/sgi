@@ -1969,7 +1969,7 @@ public class ProjetoBean implements Serializable {
 		hp.put("CPF", getNullValue(uc.getCpfPresidente(), "Não cadastrado"));
 		hp.put("END_RESID", getNullValue(uc.getEnderecoPresidente(), "Não cadastrado"));
 		hp.put("CIDADE_RESP", getNullValue(uc.getCidadePresidente(), "Não cadastrado"));
-		hp.put("CIDADE", getNullValue(uc.getCidadeAssosiacao(), "Não cadastrado"));
+		hp.put("CIDADE", getNullValue(uc.getCidadeAssociacao(), "Não cadastrado"));
 		hp.put("UF_RESP", "AM");
 		hp.put("CEP_RESP", getNullValue(uc.getCepAssociacao(), "Não cadastrado"));
 		hp.put("TELEFONE_RESP", getNullValue(uc.getTelefonePresidente(), "Não cadastrado"));
