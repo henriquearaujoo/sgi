@@ -43,8 +43,6 @@ public class LoginBean implements Serializable {
 
 	@Inject
 	private UsuarioRepository repository;
-	
-	
 
 	private Gestao gestao;
 
@@ -77,11 +75,10 @@ public class LoginBean implements Serializable {
 	public String getWelcome() {
 		return "Bem vindo " + this.sessao.getUsuario().getNomeUsuario() + "!";
 	}
-	
+
 	public String getNome() {
-		return  this.sessao.getUsuario().getNomeUsuario();
+		return this.sessao.getUsuario().getNomeUsuario();
 	}
-	
 
 	public Boolean verificaGestao(Long id) {
 		return teste = gestaoService.verificaGestao(id);
@@ -104,24 +101,21 @@ public class LoginBean implements Serializable {
 	@Inject
 	private LoginService loginService;
 
-	public void recuperarNovaSenha() throws AddressException, MessagingException { 
+	public void recuperarNovaSenha() throws AddressException, MessagingException {
 		FacesContext context = FacesContext.getCurrentInstance();
 		usuario = repository.getEmail(toEmail);
 
 		if (usuario != null) {
-			//gerarNovaSenha();
-			
-			senha = "sdix2030";
-			
-			
-			//loginService.updateSenhaAutomatica(usuario, senha);
+			gerarNovaSenha();
+
+			loginService.updateSenhaAutomatica(usuario, senha);
 			prepararEmail(senha);
 
 			email.setToEmail(toEmail);
 			email.EnviarEmailSimples();
 			System.out.println("com shar " + toReturn);
 			System.out.println("com rec " + senha);
-			
+
 			FacesMessage message = new FacesMessage("Um email com uma nova senha foi enviado!");
 			message.setSeverity(FacesMessage.SEVERITY_INFO);
 			context.addMessage(null, message);
@@ -139,7 +133,8 @@ public class LoginBean implements Serializable {
 		email.setFromEmail("comprasgi@fas-amazonas.org");
 		email.setSubject("Recuperação de senha");
 		email.setSenhaEmail("FAS123fas");
-		email.setContent("Sua nova senha para acessar o sistema é: sdix203088 \n e a senha para autorizações é: 203088ch \n"  );
+		email.setContent(
+				"Sua nova senha para acessar o sistema é: "+ senha +"\n");
 	}
 
 	public LoginBean() {
@@ -147,8 +142,8 @@ public class LoginBean implements Serializable {
 
 	public String logar() {
 		FacesContext context = FacesContext.getCurrentInstance();
-		//usuario = repository.getUsuario(nomeUsuario, getCriptografada());
-		 usuario = loginService.getUsuario(nomeUsuario, senhaUsuario);
+		usuario = repository.getUsuario(nomeUsuario, getCriptografada());
+//		usuario = loginService.getUsuario(nomeUsuario, senhaUsuario);
 
 		if (usuario != null) {
 			sessao.setNomeUsuario(nomeUsuario);
@@ -372,9 +367,5 @@ public class LoginBean implements Serializable {
 	public void setSenhaAuto(Boolean senhaAuto) {
 		this.senhaAuto = senhaAuto;
 	}
-	
-	
-	
-	
 
 }

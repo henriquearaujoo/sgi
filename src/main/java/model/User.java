@@ -16,11 +16,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-
 @Entity
 @Table(name = "usuario")
 public class User implements Serializable {
-	
+
 	/**
 	 * 
 	 */
@@ -30,7 +29,7 @@ public class User implements Serializable {
 	private Long id;
 	@Column
 	private String nomeUsuario;
-	
+
 	@Column
 	private String senha;
 	@ManyToOne
@@ -42,24 +41,21 @@ public class User implements Serializable {
 	@Column
 	private Boolean checked;
 	@ManyToOne
-	private Gestao  coordenadoria;
+	private Gestao coordenadoria;
 	@ManyToOne
-	private Colaborador  colaborador;
+	private Colaborador colaborador;
 	@Enumerated(EnumType.STRING)
 	private TipoGestao tipoGestao;
-	
+
 	@Column
 	private String senhaem;
-	
+
 	@Column
 	private Boolean senhaAuto;
-	
-	
+
 	@Transient
 	private String nomeColaborador;
-	
-	
-	
+
 	public User(Long id, String nomeUsuario, String email, String nomeColaborador) {
 		this.id = id;
 		this.nomeUsuario = nomeUsuario;
@@ -75,47 +71,53 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	public User(){}
-	
+	public User() {
+	}
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getNomeUsuario() {
 		return nomeUsuario;
 	}
+
 	public void setNomeUsuario(String nomeUsuario) {
 		this.nomeUsuario = nomeUsuario;
 	}
+
 	public String getSenha() {
 		return senha;
 	}
+
 	public void setSenha(String senha) {
-		
-		/*MessageDigest algorithm = null;
+
+		MessageDigest algorithm = null;
 		try {
 			algorithm = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		
+
 		byte messageDigest[] = null;
-		
+
 		try {
 			messageDigest = algorithm.digest(senha.getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		 
+
 		StringBuilder hexString = new StringBuilder();
 		for (byte b : messageDigest) {
-		  hexString.append(String.format("%02X", 0xFF & b));
+			hexString.append(String.format("%02X", 0xFF & b));
 		}
-		senha = hexString.toString();*/
-		
+		senha = hexString.toString();
+
 		this.senha = senha;
 	}
 
@@ -126,7 +128,6 @@ public class User implements Serializable {
 	public void setPerfil(Perfil perfil) {
 		this.perfil = perfil;
 	}
-	
 
 	public Boolean getChecked() {
 		return checked;
@@ -159,7 +160,7 @@ public class User implements Serializable {
 	public void setColaborador(Colaborador colaborador) {
 		this.colaborador = colaborador;
 	}
-	
+
 	public TipoGestao getTipoGestao() {
 		return tipoGestao;
 	}
@@ -216,8 +217,5 @@ public class User implements Serializable {
 	public void setSenhaAuto(Boolean senhaAuto) {
 		this.senhaAuto = senhaAuto;
 	}
-	
-	
-	
 
 }
