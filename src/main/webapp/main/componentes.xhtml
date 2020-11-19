@@ -25,16 +25,18 @@
 					}
 				})
 			</script>
-		<div class="mx-4">
+		<div class="container">
 			<f:metadata>
-				<f:viewAction action="#{componente_controller.initListagemComponente()}" />
+				<f:viewAction
+					action="#{componente_controller.initListagemComponente()}" />
 			</f:metadata>
 			<h:form id="content_componente">
-				<br />
+
 				<p:breadCrumb styleClass="mt-3 px-3 py-2">
 					<p:menuitem value="Home" url="home_new.xhtml" />
 					<p:menuitem value="Componentes" url="#" />
 				</p:breadCrumb>
+
 				<p:panel>
 					<div class="ui-g ui-fluid">
 						<div class="ui-g-12 ui-lg-12 " style="text-align: right">

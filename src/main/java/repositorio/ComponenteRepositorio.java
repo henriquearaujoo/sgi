@@ -51,16 +51,24 @@ public class ComponenteRepositorio implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ComponenteClass> findAllComponente() {
+	public List<ComponenteClass> getComponentes() {
 		String jpql = "SELECT NEW ComponenteClass(c.id, c.nome) from ComponenteClass c order by c.id asc";
 		Query query = this.manager.createQuery(jpql);
 		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<SubComponente> findAllSubcomponente() {
+	public List<SubComponente> getSubComponentes() {
 		String jpql = "SELECT NEW SubComponente(s.id, s.nome, s.componente.id, s.componente.nome) from SubComponente s order by s.id asc";
 		Query query = this.manager.createQuery(jpql);
+		return query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<SubComponente> getSubComponentes(Long id) {
+		String jpql = "SELECT NEW SubComponente(s.id, s.nome, s.componente.id, s.componente.nome) from SubComponente s where s.componente.id=:cid order by s.id asc";
+		Query query = this.manager.createQuery(jpql);
+		query.setParameter("cid", id);
 		return query.getResultList();
 	}
 
