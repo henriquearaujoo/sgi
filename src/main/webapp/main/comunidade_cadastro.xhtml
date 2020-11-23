@@ -9,6 +9,16 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
 
 	<ui:define name="content">
+
+		<script>
+			function start() {
+				PF('statusDialog').show();
+			}
+
+			function stop() {
+				PF('statusDialog').hide();
+			}
+		</script>
 		<div class="container">
 			<h:form id="form-cadastro-comunidade">
 
@@ -93,7 +103,7 @@
 
 
 					<p:commandLink styleClass="btn btn-success"
-						action="#{comunidade_controller.salvar()}">
+						action="#{comunidade_controller.salvar()}" onclick="start()" onsuccess="stop()" onerror="stop()">
 						<i class="fa fas fa-paper-plane"></i> Salvar
 						</p:commandLink>
 
@@ -108,7 +118,13 @@
 		</div>
 	</ui:define>
 	<ui:define name="adicionais">
-
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
 	</ui:define>
 
 </ui:composition>

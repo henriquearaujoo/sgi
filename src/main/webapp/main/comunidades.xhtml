@@ -21,7 +21,16 @@
 						alert("Não foi possível realizar a operação.")
 					}
 				})
+				
+				function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
 			</script>
+
 		<div class="container-fluid mb-3">
 			<f:metadata>
 				<f:viewAction action="#{comunidade_controller.initListagem()}" />
@@ -57,7 +66,7 @@
 								filterMatchMode="contains">
 								<h:outputText escape="false" value="#{comunidade.nome}" />
 							</p:column>
-							
+
 							<p:column headerText="Máscara" filterBy="#{comunidade.mascara}"
 								filterMatchMode="contains">
 								<h:outputText escape="false" value="#{comunidade.mascara}" />
@@ -70,32 +79,26 @@
 									value="#{comunidade.unidadeConservacao.mascara}" />
 							</p:column>
 
-							<p:column headerText="Setor"
-								filterBy="#{comunidade.setor}"
+							<p:column headerText="Setor" filterBy="#{comunidade.setor}"
 								filterMatchMode="contains">
-								<h:outputText escape="false"
-									value="#{comunidade.setor}" />
+								<h:outputText escape="false" value="#{comunidade.setor}" />
 							</p:column>
-							
+
 							<p:column headerText="Município"
 								filterBy="#{comunidade.municipio.nome}"
 								filterMatchMode="contains">
 								<h:outputText escape="false"
 									value="#{comunidade.municipio.nome}" />
 							</p:column>
-							
+
 							<p:column headerText="Número de Pessoas"
-								filterBy="#{comunidade.nPessoa}"
-								filterMatchMode="contains">
-								<h:outputText escape="false"
-									value="#{comunidade.nPessoa}" />
+								filterBy="#{comunidade.nPessoa}" filterMatchMode="contains">
+								<h:outputText escape="false" value="#{comunidade.nPessoa}" />
 							</p:column>
-							
+
 							<p:column headerText="Número de famílias"
-								filterBy="#{comunidade.nfamilia}"
-								filterMatchMode="contains">
-								<h:outputText escape="false"
-									value="#{comunidade.nfamilia}" />
+								filterBy="#{comunidade.nfamilia}" filterMatchMode="contains">
+								<h:outputText escape="false" value="#{comunidade.nfamilia}" />
 							</p:column>
 
 							<p:column headerText="Opções" width="10%">
@@ -107,7 +110,7 @@
 
 									<p:menuitem value="remover" ajax="false"
 										icon="fa fa-fw fa-trash-o" update="tabela_comunidade"
-										action="#{comunidade_controller.delete()}">
+										action="#{comunidade_controller.delete()}" onclick="start()" onsuccess="stop()" onerror="stop()">
 										<p:confirm header="Confirmação"
 											message="Você realmente deseja remover o comunidade #{comunidade.nome}?"
 											icon="pi pi-exclamation-triangle" />
@@ -129,7 +132,13 @@
 		</div>
 	</ui:define>
 	<ui:define name="adicionais">
-
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
 	</ui:define>
 
 </ui:composition>
