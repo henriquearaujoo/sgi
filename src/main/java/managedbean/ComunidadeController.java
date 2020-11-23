@@ -69,7 +69,14 @@ public class ComunidadeController implements Serializable {
 			this.comunidadeService.salvar(this.comunidade);
 			return "comunidades?faces-redirect=true&sucesso=1";
 		} catch (Exception e) {
-			return "comunidades?faces-redirect=true&sucesso=0";
+			if(e.getMessage().equals("comunidadeJaCadastrada")) {
+				FacesContext context = FacesContext.getCurrentInstance();
+				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Essa comunidade já foi cadastrada!", "Essa comunidade já foi cadastrada!");
+				context.addMessage("msg", msg);
+				return null;
+			}else {
+				return "comunidades?faces-redirect=true&sucesso=0";				
+			}
 		}
 	}
 

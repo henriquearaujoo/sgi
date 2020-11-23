@@ -31,11 +31,28 @@ public class Comunidade extends Localidade {
 	public Comunidade(String mascara) {
 		setMascara(mascara);
 	}
+	
+	public Comunidade(Long id, String nome) {
+		setId(id);
+		setNome(nome);
+	}
 
 	public Comunidade(Long id, String nome, Municipio municipio) {
 		setId(id);
 		setNome(nome);
 		this.municipio = municipio;
+	}
+
+	public Comunidade(Long id, String nome, String mascara, Long ucId, String ucNome, String ucMascara, String setor, Long munId,
+			String munNome, Integer nPessoa, Integer nfamilia) {
+		this.setId(id);
+		this.setNome(nome);
+		this.setMascara(mascara);
+		this.setUnidadeConservacao(new UnidadeConservacao(ucId, ucNome, ucMascara));
+		this.setSetor(setor);
+		this.setMunicipio(new Municipio(munId, munNome));
+		this.setnPessoa(nPessoa);
+		this.setNfamilia(nfamilia);
 	}
 
 	public Municipio getMunicipio() {

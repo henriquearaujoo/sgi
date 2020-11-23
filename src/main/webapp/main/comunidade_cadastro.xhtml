@@ -10,15 +10,20 @@
 
 	<ui:define name="content">
 		<div class="container">
+			<h:form id="form-cadastro-comunidade">
 
-			<p:breadCrumb styleClass="mt-3 mb-3 px-3 py-2">
-				<p:menuitem value="Home" url="home_new.xhtml" />
-				<p:menuitem value="Comunidades" url="comunidades.xhtml" />
-				<p:menuitem value="Cadastro/Edição de Comunidades" url="#" />
-			</p:breadCrumb>
+				<p:breadCrumb styleClass="mt-3 mb-3 px-3 py-2">
+					<p:menuitem value="Home" url="home_new.xhtml" />
+					<p:menuitem value="Comunidades" url="comunidades.xhtml" />
+					<p:menuitem value="Cadastro/Edição de Comunidades" url="#" />
+				</p:breadCrumb>
 
-			<p:panel header="Cadastro/Edição de Comunidades">
-				<h:form id="form-cadastro-comunidade">
+				<p:messages id="messages" showSummary="true" closable="true">
+					<p:autoUpdate />
+				</p:messages>
+
+				<p:panel header="Cadastro/Edição de Comunidades">
+
 
 					<f:metadata>
 						<o:viewParam name="comunidade"
@@ -31,16 +36,14 @@
 							<p:inputText id="nome" styleClass="form-control"
 								value="#{comunidade_controller.comunidade.nome}"
 								requiredMessage="Preencha o campo Nome!"
-								placeholder="Ex.: Comunidade Tal de Cidade A" ucrequired="true" />
-							<p:message for="nome" />
+								placeholder="Ex.: Comunidade Tal de Cidade A" required="true" />
 						</div>
 						<div class="col form-group">
 							<p:outputLabel value="Máscara:" for="mascara" />
 							<p:inputText id="mascara" styleClass="form-control"
 								value="#{comunidade_controller.comunidade.mascara}"
-								requiredMessage="Preencha o campo Nome!"
-								placeholder="Ex.: Comunidade Tal de Cidade A" ucrequired="true" />
-							<p:message for="mascara" />
+								requiredMessage="Preencha o campo Máscara!"
+								placeholder="Ex.: Comunidade Tal de Cidade A" required="true" />
 						</div>
 						<div class="col form-group">
 							<p:outputLabel value="Número de pessoas" for="nPessoa" />
@@ -48,28 +51,24 @@
 								value="#{comunidade_controller.comunidade.nPessoa}"
 								requiredMessage="Preencha o campo Número de Pessoas!"
 								required="true" />
-							<p:message for="nPessoa" />
 						</div>
 						<div class="col form-group">
 							<p:outputLabel value="Número de famílias" for="nfamilia" />
 							<p:inputText id="nfamilia" styleClass="form-control"
 								value="#{comunidade_controller.comunidade.nfamilia}"
-								requiredMessage="Preencha o campo Número de famílias!"
+								requiredMessage="Preencha o campo Número de Famílias!"
 								required="true" />
-							<p:message for="nfamilia" />
 						</div>
 					</div>
 					<div class="row">
 						<div class="col form-group">
 							<p:outputLabel value="Setor: " for="setor" />
-							<br />
 							<p:inputText id="setor" styleClass="form-control"
 								value="#{comunidade_controller.comunidade.setor}"
 								requiredMessage="Preencha o campo Setor!" required="true" />
 						</div>
 						<div class="col form-group">
 							<p:outputLabel value="Unidade de conservação: " for="uc" />
-							<br />
 							<p:autoComplete id="uc" style="width:100%;"
 								requiredMessage="O campo Unidade de Conservação é Obrigatório"
 								rendered="true" placeholder="Unidade de Conservação"
@@ -82,7 +81,6 @@
 						</div>
 						<div class="col form-group">
 							<p:outputLabel value="Município: " for="municipio" />
-							<br />
 							<p:selectOneMenu id="municipio"
 								value="#{comunidade_controller.comunidade.municipio}"
 								style="width:100%;">
@@ -92,6 +90,7 @@
 							</p:selectOneMenu>
 						</div>
 					</div>
+
 
 					<p:commandLink styleClass="btn btn-success"
 						action="#{comunidade_controller.salvar()}">
@@ -103,8 +102,9 @@
 						<i class="fa fas fa-arrow-left"></i> Voltar
 						</p:link>
 
-				</h:form>
-			</p:panel>
+
+				</p:panel>
+			</h:form>
 		</div>
 	</ui:define>
 	<ui:define name="adicionais">
