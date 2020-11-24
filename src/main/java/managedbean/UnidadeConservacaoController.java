@@ -97,7 +97,7 @@ public class UnidadeConservacaoController implements Serializable {
 	public void delete() {
 		if (unidadeConservacaoService.delete(this.unidadeConservacao)) {
 			FacesContext.getCurrentInstance().addMessage("msgs",
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Unidade de Conservação", "Deletado com Sucesso!"));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Unidade de Conservação", "Removida com Sucesso!"));
 			this.initListagem();
 		} else {
 			FacesContext.getCurrentInstance().addMessage("msgs", new FacesMessage(FacesMessage.SEVERITY_FATAL,

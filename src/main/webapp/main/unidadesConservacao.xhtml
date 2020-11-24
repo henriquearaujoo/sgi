@@ -21,11 +21,21 @@
 						alert("Não foi possível realizar a operação.")
 					}
 				})
+				
+				function start() {
+				PF('statusDialog').show();
+			}
+
+			function stop() {
+				PF('statusDialog').hide();
+			}
+
 			</script>
 		<div class="container-fluid mb-3">
-				<f:metadata>
-					<f:viewAction action="#{unidadeConservacaoController.initListagem()}" />
-				</f:metadata>
+			<f:metadata>
+				<f:viewAction
+					action="#{unidadeConservacaoController.initListagem()}" />
+			</f:metadata>
 			<h:form id="content_fonte">
 
 				<br />
@@ -53,33 +63,36 @@
 					</div>
 
 					<div class="ui-g ui-fluid">
-						<p:dataTable id="tabela_unidadeConservacao" paginator="true" rows="12"
-							value="#{unidadeConservacaoController.unidades}" var="unidadeConservacao">
+						<p:dataTable id="tabela_unidadeConservacao" paginator="true"
+							rows="12" value="#{unidadeConservacaoController.unidades}"
+							var="unidadeConservacao">
 
-							<p:column headerText="Unidade de Conservação" filterBy="#{unidadeConservacao.nome}"
-								filterMatchMode="contains">
+							<p:column headerText="Unidade de Conservação"
+								filterBy="#{unidadeConservacao.nome}" filterMatchMode="contains">
 								<h:outputText escape="false" value="#{unidadeConservacao.nome}" />
 							</p:column>
-							
-							<p:column headerText="Máscara" filterBy="#{unidadeConservacao.mascara}"
+
+							<p:column headerText="Máscara"
+								filterBy="#{unidadeConservacao.mascara}"
 								filterMatchMode="contains">
-								<h:outputText escape="false" value="#{unidadeConservacao.mascara}" />
+								<h:outputText escape="false"
+									value="#{unidadeConservacao.mascara}" />
 							</p:column>
-						
+
 							<p:column headerText="Regional"
 								filterBy="#{unidadeConservacao.regional.nome}"
 								filterMatchMode="contains">
 								<h:outputText escape="false"
 									value="#{unidadeConservacao.regional.nome}" />
 							</p:column>
-							
+
 							<p:column headerText="Associação"
 								filterBy="#{unidadeConservacao.nomeAssociacao}"
 								filterMatchMode="contains">
 								<h:outputText escape="false"
 									value="#{unidadeConservacao.nomeAssociacao}" />
 							</p:column>
-							
+
 							<p:column headerText="Presidente da Associação"
 								filterBy="#{unidadeConservacao.presidenteAssociacao}"
 								filterMatchMode="contains">
@@ -91,12 +104,14 @@
 								<p:menuButton value="Opções">
 									<p:menuitem icon="fa fa-fw fa-edit" value="editar"
 										outcome="/main/unidadeconservacao_cadastro">
-										<f:param name="unidadeConservacao" value="#{unidadeConservacao.id}" />
+										<f:param name="unidadeConservacao"
+											value="#{unidadeConservacao.id}" />
 									</p:menuitem>
 
 									<p:menuitem value="remover" ajax="false"
 										icon="fa fa-fw fa-trash-o" update="tabela_unidadeConservacao"
-										action="#{unidadeConservacaoController.delete()}">
+										action="#{unidadeConservacaoController.delete()}" onclick="start()"
+										onsuccess="stop()" onerror="stop()">
 										<p:confirm header="Confirmação"
 											message="Você realmente deseja remover a Unidade de Conservação #{unidadeConservacao.nome}?"
 											icon="pi pi-exclamation-triangle" />
@@ -118,7 +133,13 @@
 		</div>
 	</ui:define>
 	<ui:define name="adicionais">
-
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
 	</ui:define>
 
 </ui:composition>

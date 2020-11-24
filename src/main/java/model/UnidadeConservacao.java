@@ -56,17 +56,20 @@ public class UnidadeConservacao extends Localidade {
 	@Column(name = "cargo_presidente")
 	private String cargoPresidente;
 
-	@Column(name = "telefone_associacao ")
+	@Column(name = "telefone_associacao")
 	private String telefoneAssociacao;
 
-	@Column(name = "telefone_presidente ")
+	@Column(name = "telefone_presidente")
 	private String telefonePresidente;
 
-	@Column(name = "cidade_presidente ")
+	@Column(name = "cidade_presidente")
 	private String cidadePresidente;
 
-	@Column(name = "cidade_associacao ")
+	@Column(name = "cidade_associacao")
 	private String cidadeAssociacao;
+
+	@Column(name = "tem_associacao")
+	private Boolean temAssociacao;
 
 	@ManyToOne
 	private Municipio municipio;
@@ -256,6 +259,14 @@ public class UnidadeConservacao extends Localidade {
 
 	public void setCidadeAssociacao(String cidadeAssociacao) {
 		this.cidadeAssociacao = cidadeAssociacao;
+	}
+
+	public Boolean getTemAssociacao() {
+		return temAssociacao;
+	}
+
+	public void setTemAssociacao(Boolean temAssociacao) {
+		this.temAssociacao = temAssociacao;
 	}
 
 }
