@@ -10,7 +10,7 @@ import repositorio.UsuarioRepository;
 import util.CDILocator;
 
 
-@FacesConverter("usuarioConverter")
+@FacesConverter("usuarioConverterOld")
 public class UsuarioConverterAutoComplete implements Converter{
 
 	private UsuarioRepository repository;

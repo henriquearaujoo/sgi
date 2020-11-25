@@ -4,12 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 
 import model.Colaborador;
 import model.MenuLateral;
@@ -17,8 +18,11 @@ import model.Perfil;
 import model.User;
 import service.SolicitacaoViagemService;
 import service.UsuarioService;
+
+import util.Email;
 import util.MakeMenu;
 import util.UsuarioSessao;
+import util.Util;
 
 @Named(value = "usuario_controller")
 @ViewScoped
@@ -44,6 +48,8 @@ public class UsuarioControllerAtt implements Serializable {
 
 	@Inject
 	private User usuario;
+
+	private Email email;
 
 	// metodo para buscar por string parcial o colaborador
 	public List<Colaborador> completeColaborador(String s) {
@@ -76,9 +82,9 @@ public class UsuarioControllerAtt implements Serializable {
 
 	public void carregarUsuarios() {
 		if (usuarioSessao.getUsuario().getNomeUsuario().equals("admin")) {
-			usuarios = usuarioService.getUsuarios();
+			this.usuarios = usuarioService.getUsuarios();
 		} else {
-			usuarios.add(usuarioSessao.getUsuario());
+			this.usuarios.add(usuarioService.getUsuario(usuarioSessao.getUsuario().getId()));
 		}
 	}
 
@@ -102,9 +108,46 @@ public class UsuarioControllerAtt implements Serializable {
 
 	// and medotos de listagem
 
-	public String salvar() {
+	public String salvar() throws AddressException, MessagingException {
 		try {
+
+			// Checar se já existe usuário com o email informado e não está ativo para
+			// edição.
+			User checkEmailUser = this.usuarioService.findUsuarioByEmail(this.usuario.getEmail());
+			if (checkEmailUser != null && checkEmailUser.getAtivo() == false) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Um usuário já está cadastrado com esse email!",
+								"Caso não tenha acesso a essa conta, entre em contato com o suporte do SGI."));
+				return null;
+			}
+
+			// Se não existir usuário com o email informado
+
+			// Verificar se o id é nulo para usuário novo
+			if (this.usuario.getId() == null) {
+				// novo usuário: gerar senha aleatória.
+				String novaSenha = Util.gerarNovaSenha();
+				this.usuario.setSenha(novaSenha);
+				this.usuario.setSenhaAuto(true);
+				this.usuario.setAtivo(true);
+
+				// Enviar email para o usuário informando a nova senha para acesso.
+				this.email = new Email();
+				this.email.setFromEmail("comprasgi@fas-amazonas.org");
+				this.email.setSubject("Dados para acesso ao SGI");
+				this.email.setSenhaEmail("FAS123fas");
+				this.email.setContent("Olá, " + this.usuario.getColaborador().getNome()
+						+ "! Seja bem-vindo(a) ao SGI.\n\nSeu usuário é: " + this.usuario.getNomeUsuario()
+						+ ".\nA senha para acessar o sistema é: " + novaSenha + ".\n\nAtenciosamente,\n\nPGT-FAS");
+
+				this.email.setToEmail(this.usuario.getEmail());
+				this.email.EnviarEmailSimples();
+			}
+
+			// Se não for usuário novo, basta salvar os dados vindos do formulário
 			usuarioService.salvar(usuario);
+
+			// Retornar com sucesso
 			return "cadastro_usuarios_att?faces-redirect=true&sucesso=1";
 		} catch (Exception e) {
 			return "cadastro_usuarios_att?faces-redirect=true&sucesso=0";
@@ -113,16 +156,17 @@ public class UsuarioControllerAtt implements Serializable {
 
 	// Metodos de Delete
 
-	public void delete(User usuario) {
-		FacesContext context = FacesContext.getCurrentInstance();
+	public void remover(User usuario) {
 		try {
+			usuario.setAtivo(false);
 			usuarioService.remover(usuario);
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuário removido com Sucesso!", "");
-			context.addMessage("msg", msg);
+			FacesContext.getCurrentInstance().addMessage("msg", msg);
 			this.carregarUsuarios();
 		} catch (Exception e) {
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao remover o Usuário", "");
-			context.addMessage("msg", msg);
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao remover o Usuário",
+					e.getMessage());
+			FacesContext.getCurrentInstance().addMessage("msg", msg);
 		}
 	}
 
@@ -133,11 +177,6 @@ public class UsuarioControllerAtt implements Serializable {
 
 	public String redirect() {
 		return "cadastro_usuarios_edit";
-	}
-
-	@PostConstruct
-	public void init() {
-		carregarUsuarios();
 	}
 
 	// Getter and Setter
@@ -172,6 +211,14 @@ public class UsuarioControllerAtt implements Serializable {
 
 	public void setUsuarios(List<User> usuarios) {
 		this.usuarios = usuarios;
+	}
+
+	public Email getEmail() {
+		return email;
+	}
+
+	public void setEmail(Email email) {
+		this.email = email;
 	}
 
 }

@@ -24,47 +24,42 @@ public class UsuarioService implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	@Inject 
+
+	@Inject
 	private UsuarioRepository repositorio;
-	
+
 	@Inject
 	private ColaboradorRepositorio colaboradorRepositorio;
-	
-	
-	
-	public UsuarioService(){
-		
+
+	public UsuarioService() {
+
 	}
-	
-	public Perfil getPerfil(Long id){
+
+	public Perfil getPerfil(Long id) {
 		return repositorio.getPerfil(id);
 	}
-	
-	public List<Perfil> getListPerfil(){
+
+	public List<Perfil> getListPerfil() {
 		return repositorio.getListPerfil();
 	}
-	
+
 	@Transactional
-	public Boolean Salvar(User usuario){
-		try{
+	public Boolean Salvar(User usuario) {
+		try {
 			usuario.setAtivo(true);
 			repositorio.salvar(usuario);
 			return true;
-		}catch(Exception e){
+		} catch (Exception e) {
 			return false;
 		}
-		
-		
+
 	}
-	
-	
-	
-	public List<User> getUsuarios(){
+
+	public List<User> getUsuarios() {
 		return repositorio.getUsuarios(new Filtro());
 	}
-	
-	public List<Colaborador> getColaborador(){
+
+	public List<Colaborador> getColaborador() {
 		return colaboradorRepositorio.findAll();
 	}
 
@@ -76,38 +71,38 @@ public class UsuarioService implements Serializable {
 	public User getUsuario(Long id) {
 		return repositorio.getUsuarioById(id);
 	}
-	
+
 	@Transactional
 	public boolean salvar(User usuario) {
-		try{
+		try {
 			usuario.setAtivo(true);
 			repositorio.salvar(usuario);
 			return true;
-		}catch(Exception e){
+		} catch (Exception e) {
 			return false;
 		}
 	}
-	
+
 	@Transactional
 	public boolean update(User usuario) {
-		try{
+		try {
 			repositorio.salvar(usuario);
 			return true;
-		}catch(Exception e){
+		} catch (Exception e) {
 			return false;
 		}
 	}
-	
+
 	@Transactional
 	public boolean remover(User usuario) {
 		try {
 			repositorio.remover(usuario);
 			return true;
 		} catch (Exception e) {
-			return false;
+			throw e;
 		}
 	}
-	
+
 	@Transactional
 	public boolean remover(UserProjeto usuarioProjeto) {
 		try {
@@ -117,16 +112,16 @@ public class UsuarioService implements Serializable {
 			return false;
 		}
 	}
-	
+
 	@Transactional
 	public boolean updateSenha(User usuario, String senha) {
-		try{
+		try {
 			usuario.setSenhaAuto(false);
 			usuario.setSenha(senha);
 			repositorio.updateSenha(usuario);
 			addMessage("", "Senha alterada com sucesso", FacesMessage.SEVERITY_INFO);
 			return true;
-		}catch(Exception e){
+		} catch (Exception e) {
 			return false;
 		}
 	}
@@ -135,12 +130,12 @@ public class UsuarioService implements Serializable {
 		return repositorio.findUsuarioByProjeto(projetoSelecionado);
 	}
 	
+	public User findUsuarioByEmail(String email) {
+		return repositorio.findUsuarioByEmail(email);
+	}
+
 	public UserProjeto findUsuarioProjeto(Projeto projetoSelecionado, User usuario) {
 		return repositorio.findUsuarioProjeto(projetoSelecionado, usuario);
 	}
-	
-	
 
-	
-	
 }

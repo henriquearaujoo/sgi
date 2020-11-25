@@ -10,7 +10,15 @@
 
 
 	<ui:define name="menu_lateral">
+		<script>
+			function start() {
+				PF('statusDialog').show();
+			}
 
+			function stop() {
+				PF('statusDialog').hide();
+			}
+		</script>
 		<f:metadata>
 			<o:viewParam name="idUser" value="#{usuario_controller.usuario}" />
 		</f:metadata>
@@ -48,13 +56,14 @@
 		<div class="container mt-3">
 			<h:form id="formUsuario" acceptcharset="ISO-8859-1">
 				<p:panel header="Cadastro de Usuário" prependId="false">
-					<p:messages id="msgs" showSummary="false" showDetail="true"
+					<p:messages id="msgs" showSummary="true" showDetail="true"
 						showIcon="true" closable="true" />
 
 					<div class="row">
 						<div class="col">
 							<p:commandLink styleClass="btn btn-success" type="button"
-								action="#{usuario_controller.salvar()}" ajax="false">
+								action="#{usuario_controller.salvar()}" ajax="false"
+								onclick="start()" onsuccess="stop()" onerror="stop()">
 								<i class="fa fas fa-save"></i> Salvar</p:commandLink>
 							<p:link outcome="/main/cadastro_usuarios_att"
 								styleClass="btn btn-outline-dark">
@@ -99,23 +108,20 @@
 							requiredMessage="O campo Usuário é obrigatório"
 							value="#{usuario_controller.usuario.nomeUsuario}" />
 
-						<p:outputLabel value="Digite a Senha: " for="pwd1" />
-						<p:password id="pwd1" redisplay="true" value="#{usuario_controller.usuario.senha}"
-							disabled="#{usuario_controller.usuario.id.equals(null) == false}"
-							requiredMessage="O campo Senha é obrigatório" match="pwd2"
-							label="Senha" />
-
-						<p:outputLabel value="Confirme a Senha: " for="pwd2" />
-						<p:password id="pwd2" redisplay="true" value="#{usuario_controller.usuario.senha}"
-							requiredMessage="O campo Confirmar Senha é obrigatório"
-							disabled="#{usuario_controller.usuario.id.equals(null) == false}"
-							label="Confirmação" />
-
 					</p:panelGrid>
 
 				</p:panel>
 			</h:form>
 		</div>
+	</ui:define>
+	<ui:define name="adicionais">
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
 	</ui:define>
 
 </ui:composition>

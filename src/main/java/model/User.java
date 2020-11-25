@@ -56,11 +56,12 @@ public class User implements Serializable {
 	@Transient
 	private String nomeColaborador;
 
-	public User(Long id, String nomeUsuario, String email, String nomeColaborador) {
-		this.id = id;
-		this.nomeUsuario = nomeUsuario;
-		this.email = email;
-		this.nomeColaborador = nomeColaborador;
+	public User(Long id, String nomeUsuario, String email, Long colaboradorId, String nomeColaborador, Boolean ativo) {
+		this.setId(id);
+		this.setNomeUsuario(nomeUsuario);
+		this.setEmail(email);
+		this.setColaborador(new Colaborador(colaboradorId, nomeColaborador));
+		this.setAtivo(ativo);
 	}
 
 	public String getEmail() {

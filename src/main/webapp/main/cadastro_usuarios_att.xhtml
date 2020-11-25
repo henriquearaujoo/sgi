@@ -21,9 +21,20 @@
 						alert("Não foi possível realizar a operação.")
 					}
 				})
-			</script>
-		<div class="container my-3">
+				
+				function start() {
+				PF('statusDialog').show();
+			}
 
+			function stop() {
+				PF('statusDialog').hide();
+			}
+
+			</script>
+		<div class="container-fluid my-3">
+			<f:metadata>
+				<f:viewAction action="#{usuario_controller.carregarUsuarios()}" />
+			</f:metadata>
 			<h:form id="formUsuario">
 				<br />
 
@@ -39,7 +50,7 @@
 								<p:autoUpdate />
 							</p:messages>
 						</div>
-						<div class="ui-g-12 ui-lg-12 " style="text-align: right">
+						<div class="ui-g-12 ui-lg-12" style="text-align: right">
 							<p:link id="add" styleClass="btn btn-success"
 								outcome="/main/cadastro_usuarios_edit_att"
 								rendered="#{usuario_controller.poderEditar()}"
@@ -50,49 +61,37 @@
 					</div>
 
 					<p:dataTable id="list" value="#{usuario_controller.usuarios}"
-						var="bean" paginator="true" rows="12" widgetVar="filteredUsuario"
-						filteredValue="#{usuario_controller.listaFiltroUsuarios}">
+						var="usuario" paginator="true" rows="12">
 
-						<f:facet name="header">
-							<p:outputPanel>
-								<p:inputText id="globalFilter"
-									placeholder="Pesquisa de usuários"
-									onkeyup="PF('filteredUsuario').filter()" />
-							</p:outputPanel>
-						</f:facet>
-
-						<p:column filterBy="#{bean.nomeColaborador}"
-							filterStyle="display:none" headerText="Nome">
-							<h:outputText value="#{bean.nomeColaborador}" />
+						<p:column filterBy="#{usuario.nomeColaborador}" headerText="Nome">
+							<h:outputText value="#{usuario.colaborador.nome}" />
 						</p:column>
 
-						<p:column filterBy="#{bean.nomeUsuario}"
-							filterStyle="display:none" headerText="Usuário">
-							<h:outputText value="#{bean.nomeUsuario}" />
+						<p:column filterBy="#{usuario.nomeUsuario}" headerText="Usuário">
+							<h:outputText value="#{usuario.nomeUsuario}" />
 						</p:column>
 
-						<p:column filterBy="#{bean.email}" filterStyle="display:none"
-							headerText="Email">
-							<h:outputText value="#{bean.email}" />
+						<p:column filterBy="#{usuario.email}" headerText="Email">
+							<h:outputText value="#{usuario.email}" />
 						</p:column>
 
 						<p:column headerText="Opções" style="width: 10vw;">
 
-							<p:link outcome="/main/cadastro_usuarios_edit_att"
-								styleClass="btn btn-primary" process="@this">
-								<span class="fa fa-fw fa-edit"></span>
-								<f:param name="idUser" value="#{bean.id}" />
-							</p:link>
+							<p:menuButton value="Opções">
+								<p:menuitem icon="fa fa-fw fa-edit" value="editar"
+									outcome="/main/cadastro_usuarios_edit_att">
+									<f:param name="idUser" value="#{usuario.id}" />
+								</p:menuitem>
 
-							<p:commandLink title="Excluir" rendered="true" update="list"
-								styleClass="btn btn-danger" ajax="false"
-								action="#{usuario_controller.delete(bean)}">
-								<span class="fa fa-fw fa-trash-o"></span>
-								<p:confirm header="Confirmação"
-									message="Você realmente deseja remover o usuário #{bean.nomeUsuario}?"
-									icon="pi pi-exclamation-triangle" />
-							</p:commandLink>
-
+								<p:menuitem value="remover" ajax="false"
+									icon="fa fa-fw fa-trash-o" update="list"
+									action="#{usuario_controller.remover(usuario)}" onclick="start()"
+									onsuccess="stop()" onerror="stop()">
+									<p:confirm header="Confirmação"
+										message="Você realmente deseja remover o usuário #{usuario.nomeUsuario}?"
+										icon="pi pi-exclamation-triangle" />
+								</p:menuitem>
+							</p:menuButton>
 						</p:column>
 					</p:dataTable>
 
@@ -106,6 +105,15 @@
 				</p:panel>
 			</h:form>
 		</div>
+	</ui:define>
+	<ui:define name="adicionais">
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
 	</ui:define>
 
 </ui:composition>
