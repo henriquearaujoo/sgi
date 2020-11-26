@@ -9,7 +9,17 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
 
 	<ui:define name="content">
-		<div class="mx-4">
+
+		<script>
+			function start() {
+				PF('statusDialog').show();
+			}
+
+			function stop() {
+				PF('statusDialog').hide();
+			}
+		</script>
+		<div class="container mb-3">
 
 			<p:breadCrumb styleClass="mt-3 mb-3 px-3 py-2">
 				<p:menuitem value="Home" url="home_new.xhtml" />
@@ -17,20 +27,30 @@
 				<p:menuitem value="Cadastro/Edição de Fonte pagadora" url="#" />
 			</p:breadCrumb>
 
-			<p:panel header="Fontes">
+			<p:panel header="Cadastro/Edição de Fonte Pagadora">
 				<h:form id="form-cadastro-fontes">
 
 					<f:metadata>
 						<o:viewParam name="fonte_pagadora"
 							value="#{fonte_pagadora_controller.fontePagadora}" />
-						<!-- 					<f:viewAction action="#{fonte_pagadora_controller.init()}" /> -->
 					</f:metadata>
-
-					<!-- 				<p:panelGrid columns="3" styleClass="ui-noborder p-3"> -->
-					<div class="ui-g">
-						<div class="ui-g-4">
+					<div class="row mb-3">
+						<div class="col">
+							<p:commandLink styleClass="btn btn-success" style="color:#fff"
+								action="#{fonte_pagadora_controller.salvar()}" onclick="start()"
+								onsuccess="stop()" onerror="stop()">
+								<i class="fa fas fa-paper-plane"></i> Salvar
+						</p:commandLink>
+							<p:link styleClass="btn btn-outline-dark" outcome="/main/fonte_pagadora"
+								title="Voltar">
+								<i class="fa fas fa-arrow-left"></i> Voltar
+						</p:link>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-4 form-group">
 							<p:outputLabel value="Nome:" for="nome" />
-							<p:inputText id="nome"
+							<p:inputText id="nome" styleClass="form-control"
 								value="#{fonte_pagadora_controller.fontePagadora.nome}"
 								requiredMessage="Preencha o campo Nome!"
 								placeholder="Ex.:Fonte Pagadora S/A" required="true" />
@@ -41,23 +61,20 @@
 					<!-- 				</p:panelGrid> -->
 
 
-					<p:commandLink styleClass="btn btn-success" style="color:#fff"
-						action="#{fonte_pagadora_controller.salvar()}">
-						<i class="fa fas fa-paper-plane"></i> Salvar
-						</p:commandLink>
 
-
-					<p:link styleClass="btn btn-light" outcome="/main/fonte_pagadora"
-						title="Voltar">
-						<i class="fa fas fa-arrow-left"></i> Voltar
-						</p:link>
 
 				</h:form>
 			</p:panel>
 		</div>
 	</ui:define>
 	<ui:define name="adicionais">
-
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
 	</ui:define>
 
 </ui:composition>

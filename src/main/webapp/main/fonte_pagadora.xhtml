@@ -9,11 +9,11 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
 
 	<ui:define name="content">
-		<div class="mx-4">
+		<div class="container-fluid mb-3">
 			<f:metadata>
 				<f:viewAction action="#{fonte_pagadora_controller.initListagem()}" />
 			</f:metadata>
-			
+
 			<script>
 				window.addEventListener("load", () => {
 					const queryString = window.location.search;
@@ -24,6 +24,14 @@
 						alert("Não foi possível realizar a operação.")
 					}
 				})
+				
+				function start() {
+				PF('statusDialog').show();
+			}
+
+			function stop() {
+				PF('statusDialog').hide();
+			}
 			</script>
 
 			<h:form id="content_fonte">
@@ -75,7 +83,8 @@
 
 										<p:menuitem value="remover" ajax="false"
 											icon="fa fa-fw fa-trash-o" update="tabela_fonte"
-											action="#{fonte_pagadora_controller.remover()}">
+											action="#{fonte_pagadora_controller.remover()}"
+											onclick="start()" onsuccess="stop()" onerror="stop()">
 											<p:confirm header="Confirmação"
 												message="Você realmente deseja remover a fonte #{fonte.nome}?"
 												icon="pi pi-exclamation-triangle" />
@@ -98,7 +107,13 @@
 		</div>
 	</ui:define>
 	<ui:define name="adicionais">
-
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
 	</ui:define>
 
 </ui:composition>
