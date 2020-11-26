@@ -9,53 +9,40 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
 
 	<ui:define name="content">
-		<div class="container">
+		<script>
+			function start() {
+				PF('statusDialog').show();
+			}
 
-			<p:breadCrumb styleClass="mt-3 mb-3 px-3 py-2">
-				<p:menuitem value="Home" url="home_new.xhtml" />
-				<p:menuitem value="Sub-Componentes" url="subcomponentes.xhtml" />
-				<p:menuitem value="Cadastro/Edição de Sub-Componentes" url="#" />
-			</p:breadCrumb>
+			function stop() {
+				PF('statusDialog').hide();
+			}
+		</script>
+		<div class="container mb-3">
+			<h:form id="form-cadastro-subcomponentes">
+				<p:breadCrumb styleClass="mt-3 mb-3 px-3 py-2">
+					<p:menuitem value="Home" url="home_new.xhtml" />
+					<p:menuitem value="Sub-Componentes" url="subcomponentes.xhtml" />
+					<p:menuitem value="Cadastro/Edição de Sub-Componentes" url="#" />
+				</p:breadCrumb>
 
-			<p:panel header="Sub-Componentes">
-				<h:form id="form-cadastro-subcomponentes">
+				<p:messages id="messages" showSummary="true" closable="true">
+					<p:autoUpdate />
+				</p:messages>
+
+				<p:panel header="Sub-Componentes">
+
 
 					<f:metadata>
 						<o:viewParam name="subcomponente"
 							value="#{componente_controller.subcomponente}" />
 					</f:metadata>
 
-					<div class="row">
-						<div class="col-6 form-group">
-							<p:outputLabel value="Nome:" for="nome" />
-							<br />
-							<p:inputText id="nome"
-								value="#{componente_controller.subcomponente.nome}"
-								requiredMessage="Preencha o campo Nome!"
-								placeholder="Ex.: Sub-componente 1, 2..." required="true"
-								styleClass="form-control" />
-							<p:message for="nome" />
-						</div>
-						<div class="col-6">
-							<div class="row form-group">
-								<p:outputLabel value="Componente:" for="componente" />
-								<p:autoComplete id="componente" required="true"
-									placeholder="Ex.: Componente 1, 2..."
-									requiredMessage="Preencha o campo 'Componente'"
-									value="#{componente_controller.subcomponente.componente}"
-									completeMethod="#{componente_controller.completeComponente}"
-									var="componente" itemLabel="#{componente.nome}"
-									itemValue="#{componente}" converter="#{componente_converter}"
-									minQueryLength="1" style="width:90%;"
-									/>
-								<p:message for="componente" />
-							</div>
-						</div>
-					</div>
-					<div class="row">
+					<div class="row mb-3">
 						<div class="col">
 							<p:commandLink styleClass="btn btn-success"
-								action="#{componente_controller.salvarSubcomponente()}">
+								action="#{componente_controller.salvarSubcomponente()}"
+								onclick="start()" onsuccess="stop()" onerror="stop()">
 								<i class="fa fas fa-paper-plane"></i> Salvar
 							</p:commandLink>
 							<p:link styleClass="btn btn-outline-dark"
@@ -64,13 +51,43 @@
 						</p:link>
 						</div>
 					</div>
-				</h:form>
-			</p:panel>
 
+					<div class="row">
+						<div class="col-6 form-group">
+							<p:outputLabel value="Nome:" for="nome" />
+							<p:inputText id="nome"
+								value="#{componente_controller.subcomponente.nome}"
+								requiredMessage="Preencha o campo Nome!"
+								placeholder="Ex.: Sub-componente 1, 2..." required="true"
+								styleClass="form-control" />
+						</div>
+						<div class="col-6">
+							<div class="form-group">
+								<p:outputLabel value="Componente:" for="componente" />
+								<p:autoComplete id="componente" required="true"
+									placeholder="Ex.: Componente 1, 2..."
+									requiredMessage="Preencha o campo Componente!"
+									value="#{componente_controller.subcomponente.componente}"
+									completeMethod="#{componente_controller.completeComponente}"
+									var="componente" itemLabel="#{componente.nome}"
+									itemValue="#{componente}" converter="#{componente_converter}"
+									minQueryLength="1" style="width:100%;" />
+							</div>
+						</div>
+					</div>
+				</p:panel>
+
+			</h:form>
 		</div>
 	</ui:define>
 	<ui:define name="adicionais">
-
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
 	</ui:define>
 
 </ui:composition>

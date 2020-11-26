@@ -24,18 +24,27 @@
 						alert("Não foi possível realizar a operação.")
 					}
 				})
+				
+				function start() {
+				PF('statusDialog').show();
+			}
+
+			function stop() {
+				PF('statusDialog').hide();
+			}
 			</script>
-		<div class="mx-4">
+		<div class="container-fluid mb-3">
 			<f:metadata>
-				<f:viewAction action="#{componente_controller.initListagemSubcomponente()}" />
+				<f:viewAction
+					action="#{componente_controller.initListagemSubcomponente()}" />
 			</f:metadata>
 			<h:form id="content_subcomponente">
 				<br />
-				<p:breadCrumb styleClass="mt-3 px-3 py-2">
+				<p:breadCrumb styleClass="my-3 px-3 py-2">
 					<p:menuitem value="Home" url="home_new.xhtml" />
-					<p:menuitem value="Sub-componentes" url="#" />
+					<p:menuitem value="Sub-Componentes" url="#" />
 				</p:breadCrumb>
-				<p:panel>
+				<p:panel header="Sub-Componentes">
 					<div class="ui-g ui-fluid">
 						<div class="ui-g-12 ui-lg-12 " style="text-align: right">
 
@@ -77,7 +86,8 @@
 
 										<p:menuitem value="remover" ajax="false"
 											icon="fa fa-fw fa-trash-o" update="tabela_subcomponente"
-											action="#{componente_controller.removerSubcomponente()}">
+											action="#{componente_controller.removerSubcomponente()}"
+											onclick="start()" onsuccess="stop()" onerror="stop()">
 											<p:confirm header="Confirmação"
 												message="Você realmente deseja remover o componente #{subcomponente.nome}?"
 												icon="pi pi-exclamation-triangle" />
@@ -100,7 +110,13 @@
 		</div>
 	</ui:define>
 	<ui:define name="adicionais">
-
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
 	</ui:define>
 
 </ui:composition>
