@@ -31,25 +31,20 @@
 			}
 
 			</script>
-		<div class="container-fluid my-3">
+		<div class="container-fluid mb-3">
 			<f:metadata>
 				<f:viewAction action="#{usuario_controller.carregarUsuarios()}" />
 			</f:metadata>
 			<h:form id="formUsuario">
 				<br />
 
-				<p:breadCrumb styleClass="px-3 py-2">
+				<p:breadCrumb styleClass="mb-3 px-3 py-2">
 					<p:menuitem value="Categories" url="home_new.xhtml" />
 					<p:menuitem value="Usuários" url="cadastro_usuarios_att.xhtml" />
 				</p:breadCrumb>
 
-				<p:panel id="panel-content">
+				<p:panel header="Usuários" id="panel-content">
 					<div class="ui-g ui-fluid">
-						<div class="ui-g-12">
-							<p:messages id="messages" showDetail="true" closable="true">
-								<p:autoUpdate />
-							</p:messages>
-						</div>
 						<div class="ui-g-12 ui-lg-12" style="text-align: right">
 							<p:link id="add" styleClass="btn btn-success"
 								outcome="/main/cadastro_usuarios_edit_att"
@@ -58,6 +53,12 @@
 								<i class="fa fas fa-plus"></i> Novo
 								</p:link>
 						</div>
+						<div class="ui-g-12">
+							<p:messages id="messages" showDetail="true" closable="true">
+								<p:autoUpdate />
+							</p:messages>
+						</div>
+
 					</div>
 
 					<p:dataTable id="list" value="#{usuario_controller.usuarios}"
@@ -85,8 +86,8 @@
 
 								<p:menuitem value="remover" ajax="false"
 									icon="fa fa-fw fa-trash-o" update="list"
-									action="#{usuario_controller.remover(usuario)}" onclick="start()"
-									onsuccess="stop()" onerror="stop()">
+									action="#{usuario_controller.remover(usuario)}"
+									onclick="start()" onsuccess="stop()" onerror="stop()">
 									<p:confirm header="Confirmação"
 										message="Você realmente deseja remover o usuário #{usuario.nomeUsuario}?"
 										icon="pi pi-exclamation-triangle" />
