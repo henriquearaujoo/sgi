@@ -11,106 +11,148 @@
 
 	<ui:define name="content">
 
+		<script>
+				window.addEventListener("load", () => {
+					const queryString = window.location.search;
+					const paramsBusca = new URLSearchParams(queryString);
+					console.log(queryString)
+					if(paramsBusca.get("sucesso") == "1"){
+						alert("Operação realizada com sucesso")
+					}else if(paramsBusca.get("sucesso") == "0"){
+						alert("Não foi possível realizar a operação.")
+					}
+				})
+				
+				function start() {
+				PF('statusDialog').show();
+			}
+
+			function stop() {
+				PF('statusDialog').hide();
+			}
+			</script>
+
 		<f:metadata>
 			<f:viewAction action="#{evento_controller.initListagem()}" />
 		</f:metadata>
 
 
+		<div class="container-fluid mb-3">
+			<h:form id="form_evento_lista">
 
-		<h:form id="form_evento_lista">
-
-			<p:messages>
-				<p:autoUpdate />
-			</p:messages>
-
-			<p:breadCrumb>
-				<p:menuitem value="Categories" url="home_new.xhtml" />
-				<p:menuitem value="Eventos" url="eventos.xhtml" />
-			</p:breadCrumb>
-
-			<p:panel id="panel-content">
+				<p:breadCrumb styleClass="my-3 px-3 py-2">
+					<p:menuitem value="Categories" url="home_new.xhtml" />
+					<p:menuitem value="Eventos" url="eventos.xhtml" />
+				</p:breadCrumb>
 
 
-				<div class="ui-g ui-fluid">
-					<div class="ui-g-12 ui-md-6 ui-lg-4">
-						<h:outputText value="Titulo" />
-						<p:inputText value="#{evento_controller.filtro.titulo}" />
+				<p:messages id="messages" showDetail="true" closable="true">
+					<p:autoUpdate />
+				</p:messages>
 
+
+				<p:panel header="Eventos" id="panel-content">
+					<h5>Filtros</h5>
+					<p:separator></p:separator>
+					<div class="row">
+						<div class="col">
+							<div class="form-group">
+								<h:outputText for="tituloFiltro" value="Título" />
+								<p:inputText id="tituloFiltro" styleClass="form-control"
+									value="#{evento_controller.filtro.titulo}" />
+
+							</div>
+						</div>
+						<div class="col">
+							<div class="form-group">
+								<h:outputText value="Descrição" for="descricaoFiltro" />
+								<p:inputText style="margin-left:5px" id="descricaoFiltro"
+									styleClass="form-control"
+									value="#{evento_controller.filtro.descricao}" />
+
+							</div>
+						</div>
 					</div>
 
-					<div class="ui-g-12 ui-md-6 ui-lg-8">
-						<h:outputText value="Descrição" />
-						<p:inputText style="margin-left:5px"
-							value="#{evento_controller.filtro.descricao}" />
+					<div class="ui-g ui-fluid">
 
+						<div class="ui-g-12 ui-lg-12 " style="text-align: right">
+
+							<p:commandLink styleClass="btn btn-primary" update="table_evento"
+								action="#{evento_controller.carregarLista()}">
+								<span class="fa fa-fw fa-search"></span>
+								Procurar
+							</p:commandLink>
+
+							<p:link styleClass="btn btn-success" title="Novo"
+								outcome="/main/evento_cadastro">
+								<span class="fa fa-fw fa-plus"></span>
+								Novo
+							</p:link>
+
+						</div>
 					</div>
-				</div>
 
-				<div class="ui-g ui-fluid">
+					<div class="ui-g ui-fluid">
 
-					<div class="ui-g-12 ui-lg-12 " style="text-align: right">
+						<p:dataTable id="table_evento" paginator="true" rows="12"
+							value="#{evento_controller.eventos}" var="evento">
 
-						<p:commandLink styleClass="btn btn-primary btn-sm"
-							style="margin-left:5px;color:#fff" update="table_evento"
-							action="#{evento_controller.carregarLista()}">
-							<span class="fa fa-fw fa-search"></span>
-							<span>Procurar</span>
-						</p:commandLink>
+							<p:column headerText="Cód." style="width:120px">
+								<h:outputText value="#{evento.id}" />
+							</p:column>
 
-						<p:link styleClass="btn btn-success btn-sm"
-							style="margin-left:5px;color:#fff" title="Novo"
-							outcome="/main/evento_cadastro">
-							<span class="fa fa-fw fa-plus"></span>
-							<span>Novo</span>
-						</p:link>
+							<p:column headerText="Título" width="30%">
+								<h:outputText value="#{evento.titulo}" />
+							</p:column>
 
+							<p:column headerText="Descrição">
+								<h:outputText value="#{evento.descricao}" />
+							</p:column>
+
+							<p:column headerText="Opções" style="width:110px">
+
+								<p:menuButton value="Opções">
+
+									<p:menuitem icon="fa fa-fw fa-edit" value="editar"
+										outcome="/main/evento_cadastro">
+										<f:param name="event" value="#{evento.id}" />
+									</p:menuitem>
+
+									<p:menuitem value="remover" ajax="false"
+										icon="fa fa-fw fa-trash-o" update="table_evento"
+										action="#{evento_controller.remover()}" onclick="start()"
+										onsuccess="stop()" onerror="stop()">
+										<p:confirm header="Confirmação"
+											message="Você realmente deseja remover o evento #{evento.titulo}?"
+											icon="pi pi-exclamation-triangle" />
+										<f:setPropertyActionListener value="#{evento}"
+											target="#{evento_controller.evento}" />
+									</p:menuitem>
+
+								</p:menuButton>
+							</p:column>
+						</p:dataTable>
 					</div>
-				</div>
-
-				<div class="ui-g ui-fluid">
-					
-					<p:dataTable id="table_evento" paginator="true" rows="12"
-						value="#{evento_controller.eventos}" var="evento">
-					
-						<p:column headerText="Cód." style="width:120px">
-							<h:outputText value="#{evento.id}" />
-						</p:column>
-
-						<p:column headerText="Título" width="30%">
-							<h:outputText value="#{evento.titulo}" />
-						</p:column>
-						
-						<p:column headerText="Descrição">
-							<h:outputText value="#{evento.descricao}" />
-						</p:column>
-
-						<p:column headerText="Opções" style="width:110px">
-
-							<p:menuButton value="Opções">
-
-								<p:menuitem icon="fa fa-fw fa-edit" value="editar"
-									outcome="/main/evento_cadastro">
-									<f:param name="event" value="#{evento.id}" />
-								</p:menuitem>
-
-								<p:menuitem value="remover"  ajax="false"
-									icon="fa fa-fw fa-trash-o" update="table_evento"
-									action="#{evento_controller.remover()}">
-									
-									<f:setPropertyActionListener value="#{evento}"
-										target="#{evento_controller.evento}" />
-								</p:menuitem>
-
-							</p:menuButton>
-						</p:column>
-					</p:dataTable>
-				</div>
-			</p:panel>
-		</h:form>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Sim" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="Não" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+				</p:panel>
+			</h:form>
+		</div>
 	</ui:define>
 
 	<ui:define name="adicionais">
-
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
 	</ui:define>
 
 
