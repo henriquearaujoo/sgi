@@ -93,7 +93,7 @@
 							<p:outputLabel value="Município: " for="municipio" />
 							<p:selectOneMenu id="municipio"
 								value="#{comunidade_controller.comunidade.municipio}"
-								style="width:100%;">
+								style="width:100%;" filter="true" filterMatchMode="contains">
 								<f:selectItem itemLabel="Escolha um município" itemValue="" />
 								<f:selectItems value="#{municipioController.listaMunicipios()}"
 									var="mun" itemLabel="#{mun.nome}" itemValue="#{mun}" />
