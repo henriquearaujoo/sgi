@@ -26,16 +26,20 @@
 				    PF('dlg_filtro_compra').hide();
 				}
 			</script>
-		<div class="container mb-3">
-			<p:breadCrumb styleClass="mt-3 px-3 py-2">
+		<div class="container-fluid mb-3">
+			<p:breadCrumb styleClass="my-3 px-3 py-2">
 				<p:menuitem value="Home" url="home_new.xhtml" />
 				<p:menuitem value="Listagem de Colaboradores"
 					url="cadastro_colaborador.xhtml" />
 			</p:breadCrumb>
 			<h:form id="content_colaborador">
-				<p:panel header="Filtros" toggleable="true">
-					<p:panelGrid columns="4" styleClass="ui-noborder">
+				<p:panel header="Listagem de Colaboradores" toggleable="true">
+					<h5>Filtros</h5>
 
+					<p:separator />
+					<p:panelGrid columns="4" styleClass="ui-noborder">
+							
+						
 						<h:outputText value="Nome" />
 						<p:inputText placeholder="Nome do Colaborador"
 							value="#{colaboradorController.filtro.nomeColaborador}" size="40" />
@@ -62,7 +66,7 @@
 					</p:panelGrid>
 					<h:panelGroup>
 
-						<div class="row">
+						<div class="row mt-3">
 							<div class="col">
 								<p:commandLink styleClass="btn btn-primary"
 									action="#{colaboradorController.filtrar()}" onclick="start()"
