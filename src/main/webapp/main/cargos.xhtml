@@ -21,8 +21,16 @@
 						alert("Não foi possível realizar a operação.")
 					}
 				})
+				
+				function start() {
+				PF('statusDialog').show();
+			}
+
+			function stop() {
+				PF('statusDialog').hide();
+			}
 			</script>
-		<div class="container">
+		<div class="container-fluid mb-3">
 			<f:metadata>
 				<f:viewAction action="#{cargo_controller.initListagem()}" />
 			</f:metadata>
@@ -30,12 +38,12 @@
 
 				<br />
 
-				<p:breadCrumb styleClass="mt-3 px-3 py-2">
+				<p:breadCrumb styleClass="mb-3 px-3 py-2">
 					<p:menuitem value="Home" url="home_new.xhtml" />
 					<p:menuitem value="Cargos" url="#" />
 				</p:breadCrumb>
 
-				<p:panel>
+				<p:panel header="Cargos">
 					<div class="ui-g ui-fluid">
 						<div class="ui-g-12 ui-lg-12 " style="text-align: right">
 
@@ -75,7 +83,8 @@
 
 									<p:menuitem value="remover" ajax="false"
 										icon="fa fa-fw fa-trash-o" update="tabela_cargo"
-										action="#{cargo_controller.remover()}">
+										action="#{cargo_controller.remover()}" onclick="start()"
+										onsuccess="stop()" onerror="stop()">
 										<p:confirm header="Confirmação"
 											message="Você realmente deseja remover o cargo #{cargo.nome}?"
 											icon="pi pi-exclamation-triangle" />
@@ -97,7 +106,13 @@
 		</div>
 	</ui:define>
 	<ui:define name="adicionais">
-
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
 	</ui:define>
 
 </ui:composition>

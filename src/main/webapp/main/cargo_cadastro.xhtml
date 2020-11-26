@@ -9,46 +9,76 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
 
 	<ui:define name="content">
+
+		<script>
+			function start() {
+				PF('statusDialog').show();
+			}
+
+			function stop() {
+				PF('statusDialog').hide();
+			}
+		</script>
+
 		<div class="container">
+			<h:form id="form-cadastro-cargos">
+				<p:breadCrumb styleClass="my-3 px-3 py-2">
+					<p:menuitem value="Home" url="home_new.xhtml" />
+					<p:menuitem value="Cargos" url="cargos.xhtml" />
+					<p:menuitem value="Cadastro/Edição de Cargos"
+						url="cargo_cadastro.xhtml" />
+				</p:breadCrumb>
 
-			<p:breadCrumb styleClass="mt-3 mb-3 px-3 py-2">
-				<p:menuitem value="Home" url="home_new.xhtml" />
-				<p:menuitem value="Cargos" url="cargos.xhtml" />
-				<p:menuitem value="Cadastro/Edição de Cargos" url="#" />
-			</p:breadCrumb>
+				<p:messages id="messages" showSummary="true" closable="true">
+					<p:autoUpdate />
+				</p:messages>
 
-			<p:panel header="Cargos">
-				<h:form id="form-cadastro-cargos">
+
+				<p:panel header="Cadastro/Edição de Cargos">
+
 
 					<f:metadata>
 						<o:viewParam name="cargo" value="#{cargo_controller.cargo}" />
 					</f:metadata>
 
-					<div class="ui-g">
-						<div class="ui-g-4">
-							<p:outputLabel value="Nome:" for="nome" />
-							<p:inputText id="nome" value="#{cargo_controller.cargo.nome}"
-								requiredMessage="Preencha o campo Nome!"
-								placeholder="Ex.: Superintendente, Auxiliar..." required="true" />
-							<p:message for="nome" />
-						</div>
-					</div>
-					<p:commandLink styleClass="btn btn-success"
-						action="#{cargo_controller.salvar()}">
-						<i class="fa fas fa-paper-plane"></i> Salvar
+					<div class="row mb-3">
+						<div class="col">
+							<p:commandLink styleClass="btn btn-success"
+								action="#{cargo_controller.salvar()}" onclick="start()"
+								onsuccess="stop()" onerror="stop()">
+								<i class="fa fas fa-paper-plane"></i> Salvar
 						</p:commandLink>
 
-					<p:link styleClass="btn btn-light" outcome="/main/cargos"
-						title="Voltar">
-						<i class="fa fas fa-arrow-left"></i> Voltar
+							<p:link styleClass="btn btn-outline-dark" outcome="/main/cargos"
+								title="Voltar">
+								<i class="fa fas fa-arrow-left"></i> Voltar
 						</p:link>
+						</div>
+					</div>
 
-				</h:form>
-			</p:panel>
+					<div class="row">
+						<div class="col-4 form-group">
+							<p:outputLabel value="Nome:" for="nome" />
+							<p:inputText styleClass="form-control" id="nome"
+								value="#{cargo_controller.cargo.nome}"
+								requiredMessage="Preencha o campo Nome!"
+								placeholder="Ex.: Superintendente, Auxiliar..." required="true" />
+						</div>
+					</div>
+
+
+				</p:panel>
+			</h:form>
 		</div>
 	</ui:define>
 	<ui:define name="adicionais">
-
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
 	</ui:define>
 
 </ui:composition>
