@@ -66,34 +66,36 @@
 				</p:submenu>
 
 				<p:submenu label="Cadastro" rendered="true">
+					<p:menuitem value="Cargos" url="cargos.xhtml" rendered="true"
+						onclick="start()" onerror="stop()" />
+					<p:menuitem value="Colaboradores" url="cadastro_colaborador.xhtml"
+						onclick="start()" onerror="stop()" />
+					<p:menuitem value="Componentes" url="componentes.xhtml"
+						rendered="true" onclick="start()" onerror="stop()" />
+					<p:menuitem value="Comunidades" url="comunidades.xhtml"
+						rendered="true" onclick="start()" onerror="stop()" />
+					<p:menuitem value="Eventos" url="eventos.xhtml" onclick="start()"
+						onerror="stop()" />
+					<p:menuitem value="Fontes Pagadoras" url="fonte_pagadora.xhtml"
+						rendered="true" onclick="start()" onerror="stop()" />
 					<p:menuitem value="Produtos" url="produtos.xhtml" onclick="start()"
 						onerror="stop()" />
+					<p:menuitem value="Sub-Componentes" url="subcomponentes.xhtml"
+						rendered="true" onclick="start()" onerror="stop()" />
 					<p:menuitem value="Contas" url="contas.xhtml" rendered="false" />
 					<p:menuitem value="Bancos" url="bancos.xhtml" rendered="false" />
-					<p:menuitem value="Usuário" url="cadastro_usuarios_att.xhtml"
-						rendered="true" />
+					<p:menuitem value="Usuários" url="cadastro_usuarios_att.xhtml"
+						rendered="true" onclick="start()" onerror="stop()" />
 					<p:menuitem value="Aprovadores" url="aprovadores.xhtml"
 						rendered="false" />
 					<p:menuitem value="Fornecedores" url="fornecedores.xhtml"
 						rendered="false" />
-					<p:menuitem value="Colaborador" url="cadastro_colaborador.xhtml"
-						onclick="start()" onerror="stop()" />
+
 					<p:menuitem value="Rubricas" url="rubrica.xhtml" rendered="false" />
-					<p:menuitem value="Fonte" url="fonte_pagadora.xhtml"
-						rendered="false" />
-					<p:menuitem value="Componentes" url="componentes.xhtml"
-						rendered="true" />
-					<p:menuitem value="Sub-Componentes" url="subcomponentes.xhtml" 
-                                                   onclick="start()" onerror="stop()"/>
-					
-					<p:menuitem value="Cargos" url="cargos.xhtml" rendered="true" 
-                                                             onclick="start()" onerror="stop()"/>
-					<p:menuitem value="Eventos" url="eventos.xhtml" onclick="start()"
+
+					<p:menuitem value="Unid. Conservação"
+						url="unidadesConservacao.xhtml" rendered="true" onclick="start()"
 						onerror="stop()" />
-					<p:menuitem value="Comunidades" url="comunidades.xhtml"
-						rendered="true" />
-					<p:menuitem value="Unid. Conservação" url="unidadesConservacao.xhtml"
-						rendered="true" />
 				</p:submenu>
 
 				<p:submenu label="PBF" rendered="false">
