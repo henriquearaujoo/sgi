@@ -113,8 +113,8 @@ public class LoginBean implements Serializable {
 
 			email.setToEmail(toEmail);
 			email.EnviarEmailSimples();
-			System.out.println("com shar " + toReturn);
-			System.out.println("com rec " + senha);
+//			System.out.println("com shar " + toReturn);
+//			System.out.println("com rec " + senha);
 
 			FacesMessage message = new FacesMessage("Um email com uma nova senha foi enviado!");
 			message.setSeverity(FacesMessage.SEVERITY_INFO);

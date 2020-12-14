@@ -26,7 +26,7 @@ public class LoginService implements Serializable {
 	@Transactional
 	public void updateSenhaAutomatica(User usuario, String senha) {
 		usuario.setSenha(senha);
-		usuario.setSenhaAuto(true);
+		usuario.setSenhaAuto(true);	
 		userRepositorio.updateSenha(usuario);
 	}
 
