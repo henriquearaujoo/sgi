@@ -27,17 +27,13 @@ public class ComunidadeService implements Serializable {
 	public void salvar(Comunidade comunidade) throws Exception {
 		try {
 			// Buscar as comunidades do banco que pertencem à UC selecionada
-			List<Comunidade> comunidadesInUc = this.comunidadeRepositorio
-					.getComunidadesInUC(comunidade.getUnidadeConservacao().getId());
-			
-			// Verifica se a comunidade já foi cadastrada na UC relacionada.
-			for(int i = 0; i < comunidadesInUc.size(); i++) {
-				if(comunidade.getNome().equals(comunidadesInUc.get(i).getNome())) {
-					throw new Exception("comunidadeJaCadastrada");
-				}
+			List<Comunidade> comunidadesIguais = (this.comunidadeRepositorio.getComunidadesInUC(comunidade));
+
+			if (comunidadesIguais.size() > 0) {
+				throw new Exception("comunidadeJaCadastrada");
 			}
-			
 			this.comunidadeRepositorio.salvar(comunidade);
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			throw e;

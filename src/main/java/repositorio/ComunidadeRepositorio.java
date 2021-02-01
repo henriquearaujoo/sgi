@@ -51,11 +51,23 @@ public class ComunidadeRepositorio implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Comunidade> getComunidadesInUC(Long id) {
-		String jpql = "SELECT NEW Comunidade(c.id, c.nome) FROM Comunidade c where c.unidadeConservacao.id = :ucId order by c.nome ASC";
-		Query query = this.manager.createQuery(jpql);
-		query.setParameter("ucId", id);
-		List<Comunidade> resultList = query.getResultList();
+	public List<Comunidade> getComunidadesInUC(Comunidade comunidade) {
+		String jpql = "SELECT NEW Comunidade(c.id, c.nome) FROM Comunidade c where c.unidadeConservacao.id = :ucId and c.nome = lower(:cnome)";
+		Query query;
+		List<Comunidade> resultList;
+		if (comunidade.getId() != null) {
+			jpql += " and c.id <> :cid";
+			query = this.manager.createQuery(jpql);
+			query.setParameter("ucId", comunidade.getUnidadeConservacao().getId());
+			query.setParameter("cid", comunidade.getId());
+			query.setParameter("cnome", comunidade.getNome());
+			resultList = query.getResultList();
+		}else {
+			query = this.manager.createQuery(jpql);
+			query.setParameter("ucId", comunidade.getUnidadeConservacao().getId());
+			query.setParameter("cnome", comunidade.getNome());
+		}
+		resultList = query.getResultList();
 		return resultList;
 	}
 
