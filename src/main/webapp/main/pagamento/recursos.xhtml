@@ -118,8 +118,7 @@
 
 				<p:outputLabel for="input-value-project" value="Valor"
 					styleClass="form-label" />
-				<p:inputText id="input-value-project"
-					onkeypress="return formatarNumero(this,event,19,2);"
+				<p:inputText id="input-value-project" onkeypress="return moedabrl(this,'.',',',event)"
 					value="#{pagamentoController.lancamentoAcao.valor}">
 					<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
 						locale="pt_BR" />

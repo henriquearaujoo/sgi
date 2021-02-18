@@ -110,14 +110,14 @@ public class ContaBancariaController implements Serializable {
 		filtro.setDataInicio(DataUtil.getDataInicio(new Date()));
 		filtro.setDataFinal(DataUtil.getDataFinal(new Date()));
 
-		carregarContasPagadoras();
+		/*carregarContasPagadoras();
 		carregarContasAlocacao();
 		carregarOrcamentos();
 		carregarAplicacoes();
 		carregarBaixas();
 		carregarRendimentos();
 		carregarAlocacoes();
-        carregarDoacoes();
+        carregarDoacoes();*/
 	}
 
 	public void carregarTransacoes() {

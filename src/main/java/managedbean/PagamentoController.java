@@ -592,18 +592,18 @@ public class PagamentoController implements Serializable {
 		 * FacesMessage.SEVERITY_WARN); return; }
 		 */
 		// after
-		if (!calculatorRubricaRepositorio.verificarSaldoRubrica(lancamentoAcao.getProjetoRubrica().getId(),
-				lancamentoAcao.getValor())) {
-			addMessage("", "Saldo de rubrica insuficiente", FacesMessage.SEVERITY_WARN);
-			return;
-		}
-		if (lancamentoAcao.getAtividade() != null && lancamentoAcao.getAtividade().getId() != null) {
-			if (!projetoService.verificaSaldoAtividade(lancamentoAcao.getAtividade().getId(),
-					lancamentoAcao.getValor())) {
-				addMessage("", "Atividade sem saldo suficiente", FacesMessage.SEVERITY_WARN);
-				return;
-			}
-		}
+//		if (!calculatorRubricaRepositorio.verificarSaldoRubrica(lancamentoAcao.getProjetoRubrica().getId(),
+//				lancamentoAcao.getValor())) {
+//			addMessage("", "Saldo de rubrica insuficiente", FacesMessage.SEVERITY_WARN);
+//			return;
+//		}
+//		if (lancamentoAcao.getAtividade() != null && lancamentoAcao.getAtividade().getId() != null) {
+//			if (!projetoService.verificaSaldoAtividade(lancamentoAcao.getAtividade().getId(),
+//					lancamentoAcao.getValor())) {
+//				addMessage("", "Atividade sem saldo suficiente", FacesMessage.SEVERITY_WARN);
+//				return;
+//			}
+//		}
 
 		// end
 		for (LancamentoAcao la : pagamento.getLancamentosAcoes()) {
