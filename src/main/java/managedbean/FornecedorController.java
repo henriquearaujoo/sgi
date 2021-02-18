@@ -86,7 +86,7 @@ public class FornecedorController implements Serializable {
 	private List<Fornecedor> listaFiltroFornecedores;
 
 	private List<Localidade> listaLocalidade = new ArrayList<Localidade>();
-	
+
 	private List<Estado> estados = new ArrayList<Estado>();
 
 	private Fornecedor fornecedor = new Fornecedor();
@@ -111,11 +111,11 @@ public class FornecedorController implements Serializable {
 
 	private List<CategoriaDespesaClass> categorias = new ArrayList<>();
 
-    @Inject
-    private Banco banco = new Banco();
+	@Inject
+	private Banco banco = new Banco();
 
-    @Inject
-    private BancoService bancoService;
+	@Inject
+	private BancoService bancoService;
 
 	public String mandaPronovo() {
 
@@ -137,7 +137,6 @@ public class FornecedorController implements Serializable {
 		carregarCategorias();
 		contaBancaria = new ContaBancaria();
 		carregarEstados();
-		
 
 		if (usuarioSessao.getUsuario().getPerfil().getDescricao().equals("admin")
 				|| usuarioSessao.getUsuario().getPerfil().getDescricao().equals("compra")
@@ -151,13 +150,12 @@ public class FornecedorController implements Serializable {
 	public String voltarTelaDeListagem() {
 		return "fornecedores?faces-redirect=true";
 	}
-	
-	
+
 	public void carregarCidades() {
-		if (fornecedor.getEstado() != null) 
-		listaLocalidade = fornecedorService.findCidadeByEstado(fornecedor.getEstado().getId());
+		if (fornecedor.getEstado() != null)
+			listaLocalidade = fornecedorService.findCidadeByEstado(fornecedor.getEstado().getId());
 	}
-	
+
 	public void carregarEstados() {
 		estados = fornecedorService.getEstados();
 	}
@@ -195,9 +193,10 @@ public class FornecedorController implements Serializable {
 
 		if (!fornecedorService.verificarExisteFornecimento(fornecedor.getId())) {
 			fornecedorService.removerFornecedor(fornecedor);
+			addMessage("Sucesso", "Fornecedor removido com sucesso!", FacesMessage.SEVERITY_INFO);
 			carregarFornecedores();
 		} else {
-			addMessage("", "Fornecedor não pode ser removido, existem fornecimentos vinculados ao cadastro",
+			addMessage("Erro", "Fornecedor não pode ser removido, existem fornecimentos vinculados ao cadastro",
 					FacesMessage.SEVERITY_ERROR);
 		}
 	}
@@ -282,7 +281,6 @@ public class FornecedorController implements Serializable {
 
 		try {
 
-
 			contaBancaria.setCnpj(fornecedor.getCnpj() != null ? fornecedor.getCnpj() : "");
 			contaBancaria.setCpf(fornecedor.getCpf() != null ? fornecedor.getCpf() : "");
 			contaBancaria.setEmail(fornecedor.getEmail() != null ? fornecedor.getEmail() : "");
@@ -301,9 +299,9 @@ public class FornecedorController implements Serializable {
 				fornecedor.setContasBancarias(new ArrayList<>());
 
 			if (!editandoConta) {
-				for (ContaBancaria contaBancaria :
-						fornecedor.getContasBancarias()) {
-					if (this.contaBancaria.getClassificacaoConta().equals("PRINCIPAL") && contaBancaria.getClassificacaoConta().equals("PRINCIPAL"))
+				for (ContaBancaria contaBancaria : fornecedor.getContasBancarias()) {
+					if (this.contaBancaria.getClassificacaoConta().equals("PRINCIPAL")
+							&& contaBancaria.getClassificacaoConta().equals("PRINCIPAL"))
 						throw new Exception("Já existe uma conta principal");
 				}
 			}
@@ -421,25 +419,25 @@ public class FornecedorController implements Serializable {
 		fornecedor.setClassificacao(ClassificacaoFornecedor.FORNECEDOR);
 
 		if (fornecedor.getNomeFantasia() != null)
-		    fornecedor.setNomeFantasia(fornecedor.getNomeFantasia().toUpperCase());
+			fornecedor.setNomeFantasia(fornecedor.getNomeFantasia().toUpperCase());
 
 		if (fornecedor.getRazaoSocial() != null)
-		    fornecedor.setRazaoSocial(fornecedor.getRazaoSocial().toUpperCase());
+			fornecedor.setRazaoSocial(fornecedor.getRazaoSocial().toUpperCase());
 
 		if (fornecedor.getEndereco() != null)
-		    fornecedor.setEndereco(fornecedor.getEndereco().toUpperCase());
+			fornecedor.setEndereco(fornecedor.getEndereco().toUpperCase());
 
 		if (fornecedor.getBanco() != null)
-		    fornecedor.setBairro(fornecedor.getBairro().toUpperCase());
+			fornecedor.setBairro(fornecedor.getBairro().toUpperCase());
 
 		if (fornecedor.getContato() != null)
-		    fornecedor.setContato(fornecedor.getContato().toUpperCase());
+			fornecedor.setContato(fornecedor.getContato().toUpperCase());
 
 		if (fornecedor.getEmail() != null)
-		    fornecedor.setEmail(fornecedor.getEmail().toUpperCase());
+			fornecedor.setEmail(fornecedor.getEmail().toUpperCase());
 
 		if (fornecedor.getEmailSecundario() != null)
-		    fornecedor.setEmailSecundario(fornecedor.getEmailSecundario().toUpperCase());
+			fornecedor.setEmailSecundario(fornecedor.getEmailSecundario().toUpperCase());
 
 		fornecedorService.insert(fornecedor);
 		addMessage("", "Salvo com sucesso!", FacesMessage.SEVERITY_INFO);
@@ -454,24 +452,24 @@ public class FornecedorController implements Serializable {
 
 	}
 
-    public String salvarBanco(){
-        try {
-            if (banco.getNomeBanco() == null || banco.getNomeBanco().equals(""))
-                throw new Exception("Nome do banco é obrigatório");
+	public String salvarBanco() {
+		try {
+			if (banco.getNomeBanco() == null || banco.getNomeBanco().equals(""))
+				throw new Exception("Nome do banco é obrigatório");
 
-            if (banco.getNumeroBanco() == null || banco.getNumeroBanco().equals(""))
-                throw new Exception("Número do banco é obrigatório");
+			if (banco.getNumeroBanco() == null || banco.getNumeroBanco().equals(""))
+				throw new Exception("Número do banco é obrigatório");
 
-            bancoService.salvarBanco(banco);
-            banco = new Banco();
+			bancoService.salvarBanco(banco);
+			banco = new Banco();
 
-            addMessage("", "Banco salvo com sucesso", FacesMessage.SEVERITY_INFO);
-        } catch (Exception e) {
-            e.printStackTrace();
-            addMessage("", e.getMessage(), FacesMessage.SEVERITY_ERROR);
-        }
-        return "";
-    }
+			addMessage("", "Banco salvo com sucesso", FacesMessage.SEVERITY_INFO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			addMessage("", e.getMessage(), FacesMessage.SEVERITY_ERROR);
+		}
+		return "";
+	}
 
 	public ClassificacaoConta[] listClassificacoes() {
 		return ClassificacaoConta.values();
@@ -653,8 +651,6 @@ public class FornecedorController implements Serializable {
 		arquivo = new ArquivoFornecedor();
 
 	}
-
-
 
 	public void visualizarArquivo() throws IOException {
 		DownloadUtil.downloadFile(arqAuxiliar.getNome(), arqAuxiliar.getPath(), "application/pdf",
