@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<ui:composition template="/WEB-INF/Layout.xhtml"
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -8,132 +8,132 @@
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:jsf="http://xmlns.jcp.org/jsf">
 
+	<script>
+				window.addEventListener("load", () => {
+					const queryString = window.location.search;
+					const paramsBusca = new URLSearchParams(queryString);
+					if(paramsBusca.get("sucesso") == "1"){
+						alert("Operação realizada com sucesso")
+					}else if(paramsBusca.get("sucesso") == "0"){
+						alert("Não foi possível realizar a operação.")
+					}
+				})
+				
+				function start() {
+				PF('statusDialog').show();
+			}
 
-	<ui:define name="menu_lateral">
-
-		<h:form id="tabela_menu">
-
-			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
-				scrollHeight="300" styleClass="table table-hover"
-				value="#{fornecedor_terceiro_controller.menus}" var="menu">
-
-				<p:column>
-					<p:commandLink
-						action="#{fornecedor_terceiro_controller.redirecionar()}"
-						style="font-size:1em;" value="#{menu.nome}">
-						<f:setPropertyActionListener value="#{menu}"
-							target="#{fornecedor_terceiro_controller.menu}" />
-					</p:commandLink>
-					<span style="margin-left: 4px; float: right;" class="#{menu.icon}"></span>
-				</p:column>
-
-			</p:dataTable>
-		</h:form>
-
-
-	</ui:define>
+			function stop() {
+				PF('statusDialog').hide();
+			}
+			</script>
 
 	<ui:define name="content">
+		<div class="container mt-3">
+			<h:form id="formFornecedores">
+				<p:fieldset legend="Filtro">
+					<p:panelGrid columns="4" styleClass="semBorda">
+						<h:outputText value="Nome Fantasia/Razão Social:" />
+						<p:inputText
+							value="#{fornecedor_terceiro_controller.filtro.nomeFornecedor}" />
 
+						<h:outputText value="CNPJ/CPF:" />
+						<p:inputMask mask="99.999.999/9999-99" autoClear="false"
+							value="#{fornecedor_terceiro_controller.filtro.cnpjcpf}" />
 
+					</p:panelGrid>
 
-		<h:form id="formFornecedores">
-
-
-
-			<p:fieldset legend="Filtro">
-				<p:panelGrid columns="4" styleClass="semBorda">
-
-					<h:outputText value="Nome Fantasia/Razão Social:" />
-					<p:inputText
-						value="#{fornecedor_terceiro_controller.filtro.nomeFornecedor}" />
-
-					<h:outputText value="CNPJ/CPF:" />
-					<p:inputMask  mask="99.999.999/9999-99" autoClear="false" 
-						value="#{fornecedor_terceiro_controller.filtro.cnpjcpf}" />
-
-				</p:panelGrid>
-
-				<p:commandLink styleClass="btn btn-primary btn-sm"
-					style="color:#fff; margin: 8px 2px;"
-					action="#{fornecedor_terceiro_controller.filtrar()}"
-					update=":formFornecedores:list">
-					<span class="glyphicon glyphicon-search" ></span><span  style="margin: 3px;">Procurar</span>
+					<p:commandLink styleClass="btn btn-primary"
+						action="#{fornecedor_terceiro_controller.filtrar()}"
+						update=":formFornecedores:list">
+						<span class="fa fa-fw fa-search"></span>
+					Procurar
 				</p:commandLink>
 
-				<p:commandLink styleClass="btn btn-danger"
-					style="color:#fff; margin: 8px 2px;"
-					action="#{fornecedor_terceiro_controller.limparFiltro()}"
-					update=":formFornecedores">
-					<span class="glyphicon glyphicon-trash"></span><span  style="margin: 3px;">Limpar filtro</span>
+					<p:commandLink styleClass="btn btn-outline-dark"
+						action="#{fornecedor_terceiro_controller.limparFiltro()}"
+						update=":formFornecedores">
+						<span class="fa fa-fw fa-times"></span>
+					Limpar
 				</p:commandLink>
 
-				<p:commandLink styleClass="btn btn-success btn-sm fa fa-cart-plus"
-					action="#{fornecedor_terceiro_controller.mandaPronovo()}"
-					title="Adicionar fornecedor" style="color:#fff; margin: 8px 2px;">
-					<span style="font-family: Arial"> Adicionar novo</span>
+					<p:commandLink styleClass="btn btn-success"
+						action="#{fornecedor_terceiro_controller.mandaPronovo()}"
+						title="Adicionar fornecedor">
+						<i class="fa fa-fw fa-plus"></i>
+					Adicionar novo
 				</p:commandLink>
 
 
-			</p:fieldset>
-			<p:separator></p:separator>
-			<p:dataTable id="list"
-				value="#{fornecedor_terceiro_controller.listaFornecedor}"
-				editable="true" editMode="cell" tableStyle="table-layout: auto;"
-				var="bean" paginator="true" widgetVar="filteredFornecedor" rows="50"
-				filteredValue="#{fornecedor_terceiro_controller.listaFiltroFornecedores}">
-				<f:facet name="header">
+				</p:fieldset>
+				<p:separator></p:separator>
+				<p:dataTable id="list"
+					value="#{fornecedor_terceiro_controller.listaFornecedor}"
+					editable="true" editMode="cell" tableStyle="table-layout: auto;"
+					var="bean" paginator="true" widgetVar="filteredFornecedor"
+					rows="50"
+					filteredValue="#{fornecedor_terceiro_controller.listaFiltroFornecedores}">
+					<f:facet name="header">
 
-				</f:facet>
+					</f:facet>
 
-				<p:column 
-					headerText="Razão Social">
-					<p:outputLabel value="#{bean.razaoSocial.toUpperCase()}" />
-				</p:column>
+					<p:column headerText="Razão Social">
+						<p:outputLabel value="#{bean.razaoSocial.toUpperCase()}" />
+					</p:column>
 
-				<p:column 
-					headerText="Nome Fantasia">
-					<p:outputLabel value="#{bean.nomeFantasia.toUpperCase()}" />
-				</p:column>
+					<p:column headerText="Nome Fantasia">
+						<p:outputLabel value="#{bean.nomeFantasia.toUpperCase()}" />
+					</p:column>
 
-				<p:column filterBy="#{bean.cnpj}" filterStyle="display:none"
-					headerText="Cnpj/Cpf">
-					<p:outputLabel rendered="#{bean.tipo.equals('juridica')}" value="#{bean.cnpj}" />
-					<p:outputLabel rendered="#{bean.tipo.equals('fisica')}" value="#{bean.cpf}" />
-				</p:column>
+					<p:column filterBy="#{bean.cnpj}" filterStyle="display:none"
+						headerText="Cnpj/Cpf">
+						<p:outputLabel rendered="#{bean.tipo.equals('juridica')}"
+							value="#{bean.cnpj}" />
+						<p:outputLabel rendered="#{bean.tipo.equals('fisica')}"
+							value="#{bean.cpf}" />
+					</p:column>
 
-				<p:column filterBy="#{bean.email}" filterStyle="display:none"
-					headerText="Email">
-					<p:outputLabel value="#{bean.email}" />
-				</p:column>
+					<p:column filterBy="#{bean.email}" filterStyle="display:none"
+						headerText="Email">
+						<p:outputLabel value="#{bean.email}" />
+					</p:column>
 
-				<p:column filterBy="#{bean.telefone}" filterStyle="display:none"
-					headerText="Contato">
-					<p:outputLabel value="#{bean.telefone}" />
-				</p:column>
+					<p:column filterBy="#{bean.telefone}" filterStyle="display:none"
+						headerText="Contato">
+						<p:outputLabel value="#{bean.telefone}" />
+					</p:column>
 
-				<p:column headerText="Situação" style="text-align:center">
-					<p:outputLabel value="Ativo" rendered="#{bean.ativo}" />
-					<p:outputLabel value="Inativo" rendered="#{!bean.ativo}" />
-				</p:column>
-
-			
-
-				<p:column style="width:90px;text-align:center" headerText="Ação">
-
-					<p:button title="Editar" value="Editar" icon="ui-icon-star"
-						style="font-size:10px;" outcome="/main/fornecedores_terceiros_cadastro">
-						<f:param name="forn" value="#{bean.id}" />
-					</p:button>
-
-				</p:column>
-
-			</p:dataTable>
-		</h:form>
+					<p:column headerText="Situação" style="text-align:center">
+						<p:outputLabel value="Ativo" rendered="#{bean.ativo}" />
+						<p:outputLabel value="Inativo" rendered="#{!bean.ativo}" />
+					</p:column>
 
 
+
+					<p:column style="width:90px;text-align:center" headerText="Ação">
+
+						<p:button title="Editar" value="Editar" icon="ui-icon-star"
+							style="font-size:10px;"
+							outcome="/main/fornecedores_terceiros_cadastro">
+							<f:param name="forn" value="#{bean.id}" />
+						</p:button>
+
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+
+		</div>
 	</ui:define>
 
-
+	<ui:define name="adicionais">
+		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width:120px;height:70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+	</ui:define>
 
 </ui:composition>
