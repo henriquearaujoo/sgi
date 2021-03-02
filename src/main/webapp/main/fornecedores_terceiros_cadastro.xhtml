@@ -34,8 +34,9 @@
 						<div class="col">
 
 							<p:commandLink styleClass="btn btn-success"
-								action="#{fornecedor_terceiro_controller.salvarTerceiro()}"
-								onclick="start()" onsuccess="stop()" onerror="stop()">
+								action="#{fornecedor_terceiro_controller.salvarTerceiro}"
+								ajax="false" onclick="start()" onsuccess="stop()"
+								onerror="stop()">
 								<i class="fa fas fa-check"></i> Salvar
 						</p:commandLink>
 
@@ -209,7 +210,7 @@
 								<p:inputText id="email"
 									value="#{fornecedor_terceiro_controller.fornecedor.email}"
 									placeholder="exemplo@fas-amazonas.org"
-									styleClass="form-control" style="text-transform: uppercase">
+									styleClass="form-control">
 								</p:inputText>
 							</div>
 						</div>
@@ -244,12 +245,13 @@
 
 					</p:fieldset>
 					<p:fieldset legend="Contas Bancárias" id="panelConta">
+
 						<div class="row">
 							<div class="col form-group">
 								<p:outputLabel value="Banco:" for="banco_conta" />
 
-								<p:autoComplete id="banco_conta" required="true"
-									placeholder="Banco" requiredMessage="Banco é obrigatório"
+								<p:autoComplete id="banco_conta" placeholder="Banco"
+									requiredMessage="Banco é obrigatório"
 									value="#{fornecedor_terceiro_controller.contaBancaria.banco}"
 									completeMethod="#{fornecedor_terceiro_controller.completeBanco}"
 									var="banc" itemLabel="#{banc.nomeBanco}" itemValue="#{banc}"
@@ -267,7 +269,7 @@
 							<div class="col form-group">
 								<div class="row">
 									<p:outputLabel value="Agência:" for="agencia" />
-									<p:inputMask mask="9999-*" required="true" id="agencia"
+									<p:inputMask mask="9999-*" id="agencia"
 										requiredMessage="Agência é obrigatório"
 										styleClass="form-control" placeholder="0123-4"
 										style="text-transform: uppercase"
@@ -276,7 +278,7 @@
 							</div>
 							<div class="col form-group">
 								<p:outputLabel value="Conta:" for="conta" />
-								<p:inputMask mask="999999999999-*" id="conta" required="true"
+								<p:inputMask mask="999999999999-*" id="conta"
 									requiredMessage="Conta é obrigatório é obrigatório"
 									placeholder="012345678901-1"
 									value="#{fornecedor_terceiro_controller.contaBancaria.numeroConta}" />
@@ -295,9 +297,9 @@
 							</div>
 							<div class="col form-group">
 								<p:commandButton title="Adicionar" value="Adicionar"
-									icon="fa fas fa-save" onclick="start()" update="@this"
-									oncomplete="stop()" onerror="stop()"
-									action="#{fornecedor_terceiro_controller.salvarConta}" ajax="" />
+									icon="fa fas fa-save" onclick="start()" oncomplete="stop()"
+									update="contas" onerror="stop()"
+									action="#{fornecedor_terceiro_controller.salvarConta}" />
 							</div>
 						</div>
 						<p:spacer></p:spacer>
@@ -305,6 +307,7 @@
 							value="#{fornecedor_terceiro_controller.fornecedor.contasBancarias}"
 							tableStyle="table-layout: auto;" var="bean" paginator="true"
 							widgetVar="filteredFornecedor" rows="50">
+							<p:autoUpdate />
 							<p:column headerText="Banco">
 								<p:outputLabel value="#{bean.banco.nomeBanco}" />
 							</p:column>
