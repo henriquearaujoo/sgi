@@ -224,18 +224,19 @@ public class PagamentoController implements Serializable {
 		this.listaProjeto = listaProjeto;
 	}
 
-	public void carregarProjetos() {
+	public List<Projeto> carregarProjetos() {
 		// listaProjeto =
 		// projetoService.getProjetosByUsuario(usuarioSessao.getUsuario());
 
 		if (usuarioSessao.getUsuario().getPerfil().getDescricao().equals("admin")
 				|| usuarioSessao.getUsuario().getPerfil().getDescricao().equals("financeiro")) {
 			projetos = projetoService.getProjetosbyUsuarioProjeto(null, filtro);
-			return;
 		}
 
 		filtro.setVerificVigenciaMenosDias(true);
 		projetos = projetoService.getProjetosbyUsuarioProjeto(usuarioSessao.getUsuario(), filtro);
+		
+		return projetos;
 	}
 
 	public void listaRubricas() {
@@ -342,8 +343,9 @@ public class PagamentoController implements Serializable {
 	}
 
 	// novo módulo
-	public void carregarCategoriasFin() {
+	public List<model.CategoriaFinanceira> carregarCategoriasFin() {
 		listCategoriaFinanceira = pagamentoService.buscarCategoriasFin();
+		return listCategoriaFinanceira;
 	}
 
 	public List<ProjetoRubrica> completeCategoria(String s) {
@@ -409,8 +411,9 @@ public class PagamentoController implements Serializable {
 		}
 	}
 
-	public void verificarExigencia() {
+	public Boolean verificarExigencia() {
 		exigeNF = pagamentoService.verificarExigencia(pagamento);
+		return exigeNF;
 	}
 
 	public void carregarRubricasDeProjeto() {
@@ -468,8 +471,9 @@ public class PagamentoController implements Serializable {
 	private @Inject RubricaRepositorio rubricaRepositorio;
 	private List<Rubrica> rubricas = new ArrayList<>();
 
-	public void carregarRubricas() {
+	public List<Rubrica> carregarRubricas() {
 		rubricas = rubricaRepositorio.getRubricas();
+		return rubricas;
 	}
 
 	public CategoriaDespesaClass getCategoria() {
