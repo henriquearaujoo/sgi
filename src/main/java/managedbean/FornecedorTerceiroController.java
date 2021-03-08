@@ -189,18 +189,6 @@ public class FornecedorTerceiroController implements Serializable {
 			contaBancaria.setTipoJuridico(fornecedor.getTipo());
 			contaBancaria.setFornecedor(fornecedor);
 
-			String contaSemDigito = contaBancaria.getNumeroConta().substring(0, 12);
-			String digitoConta = contaBancaria.getNumeroConta().substring(13);
-
-			String agenciaSemDigito = contaBancaria.getNumeroAgencia().substring(0, 4);
-			String digitoAgencia = contaBancaria.getNumeroAgencia().substring(5);
-
-			contaBancaria.setNumeroConta(contaSemDigito);
-			contaBancaria.setDigitoConta(digitoConta);
-
-			contaBancaria.setNumeroAgencia(agenciaSemDigito);
-			contaBancaria.setDigitoAgencia(digitoAgencia);
-
 			if (fornecedor.getContasBancarias() == null)
 				fornecedor.setContasBancarias(new ArrayList<>());
 

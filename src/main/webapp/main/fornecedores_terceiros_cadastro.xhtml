@@ -171,8 +171,8 @@
 							</div>
 							<div class="col form-group">
 								<p:outputLabel value="Estado:" for="est" />
-								<p:selectOneMenu id="est" filter="true"
-									styleClass="form-control" style="border: none;"
+								<br />
+								<p:selectOneMenu id="est" filter="true" style="border: none; width: 100%;"
 									value="#{fornecedor_terceiro_controller.fornecedor.estado}"
 									requiredMessage="Estado é obrigatório"
 									converter="estadoConverter"
@@ -191,12 +191,11 @@
 							<div class="col form-group">
 
 								<p:outputLabel value="Cidade:" for="cidade2" />
-
+								<br />
 								<p:selectOneMenu id="cidade2" filter="true"
-									styleClass="form-control"
 									value="#{fornecedor_terceiro_controller.fornecedor.cidade}"
 									required="#{fornecedor_terceiro_controller.verificarObrigatoriedade('cidade')}"
-									requiredMessage="Cidade é obrigatório"
+									requiredMessage="Cidade é obrigatório" style="width:100%"
 									converter="localConverter">
 									<f:selectItem noSelectionOption="true" />
 									<f:selectItems
@@ -246,62 +245,61 @@
 					</p:fieldset>
 					<p:fieldset legend="Contas Bancárias" id="panelConta">
 
-						<div class="row">
-							<div class="col form-group">
-								<p:outputLabel value="Banco:" for="banco_conta" />
+						<p:panelGrid columns="10">
+							<p:outputLabel value="Banco: " />
 
-								<p:autoComplete id="banco_conta" placeholder="Banco"
-									requiredMessage="Banco é obrigatório"
-									value="#{fornecedor_terceiro_controller.contaBancaria.banco}"
-									completeMethod="#{fornecedor_terceiro_controller.completeBanco}"
-									var="banc" itemLabel="#{banc.nomeBanco}" itemValue="#{banc}"
-									forceSelection="true">
-									<p:column>
-										<h:outputText value="#{banc.numeroBanco}" />
-									</p:column>
+							<p:autoComplete id="banco_conta" placeholder="Banco"
+								inputStyle="width:155px"
+								value="#{fornecedor_terceiro_controller.contaBancaria.banco}"
+								completeMethod="#{fornecedor_terceiro_controller.completeBanco}"
+								var="banc" itemLabel="#{banc.nomeBanco}" itemValue="#{banc}"
+								forceSelection="true">
+								<p:column>
+									<h:outputText value="#{banc.numeroBanco}" />
+								</p:column>
 
-									<p:column>
-										<h:outputText value="#{banc.nomeBanco}" />
-									</p:column>
-								</p:autoComplete>
+								<p:column>
+									<h:outputText value="#{banc.nomeBanco}" />
+								</p:column>
+							</p:autoComplete>
 
-							</div>
-							<div class="col form-group">
-								<div class="row">
-									<p:outputLabel value="Agência:" for="agencia" />
-									<p:inputMask mask="9999-*" id="agencia"
-										requiredMessage="Agência é obrigatório"
-										styleClass="form-control" placeholder="0123-4"
-										style="text-transform: uppercase"
-										value="#{fornecedor_terceiro_controller.contaBancaria.numeroAgencia}" />
-								</div>
-							</div>
-							<div class="col form-group">
-								<p:outputLabel value="Conta:" for="conta" />
-								<p:inputMask mask="999999999999-*" id="conta"
-									requiredMessage="Conta é obrigatório é obrigatório"
-									placeholder="012345678901-1"
-									value="#{fornecedor_terceiro_controller.contaBancaria.numeroConta}" />
-								<small class="form-text text-muted">A conta deve ter 12
-									caracteres antes do dígito. Se for o caso, adicione zeros à
-									esquerda.</small>
-							</div>
-							<div class="col form-group">
-								<p:outputLabel value="Classificação" for="classificacao" />
-								<br />
-								<p:selectOneMenu id="classificacao" style="width:100%"
-									value="#{fornecedor_terceiro_controller.contaBancaria.classificacaoConta}">
-									<f:selectItem itemLabel="Principal" itemValue="PRINCIPAL" />
-									<f:selectItem itemLabel="Secundária" itemValue="SECUNDARIA" />
-								</p:selectOneMenu>
-							</div>
-							<div class="col form-group">
-								<p:commandButton title="Adicionar" value="Adicionar"
-									icon="fa fas fa-save" onclick="start()" oncomplete="stop()"
-									update="contas" onerror="stop()"
-									action="#{fornecedor_terceiro_controller.salvarConta}" />
-							</div>
-						</div>
+							<p:outputLabel value="Agência: " />
+
+							<p:inputMask mask="9999"
+								value="#{fornecedor_terceiro_controller.contaBancaria.numeroAgencia}" />
+
+							<p:outputLabel value="-" />
+
+							<p:inputText
+								value="#{fornecedor_terceiro_controller.contaBancaria.digitoAgencia}"
+								style="width: 25px; text-transform: uppercase" maxlength="2" />
+
+							<p:outputLabel value="Conta: " />
+
+							<p:inputMask mask="99999?999999"
+								value="#{fornecedor_terceiro_controller.contaBancaria.numeroConta}" />
+
+							<p:outputLabel value="-" />
+
+							<p:inputText
+								value="#{fornecedor_terceiro_controller.contaBancaria.digitoConta}"
+								style="width: 25px; text-transform: uppercase" maxlength="1" />
+
+							<p:outputLabel value="Classificação" />
+							<p:selectOneMenu
+								value="#{fornecedor_terceiro_controller.contaBancaria.classificacaoConta}">
+								<f:selectItem itemLabel="Principal" itemValue="PRINCIPAL" />
+								<f:selectItem itemLabel="Secundária" itemValue="SECUNDARIA" />
+							</p:selectOneMenu>
+
+							<p:commandLink process="panelConta"
+								styleClass="btn btn-success btn-sm" onclick="start()"
+								oncomplete="stop()" onerror="stop()"
+								action="#{fornecedor_terceiro_controller.salvarConta}">
+								<i class="fa fas fa-save"></i>
+							Salvar
+							</p:commandLink>
+						</p:panelGrid>
 						<p:spacer></p:spacer>
 						<p:dataTable id="contas" rowIndexVar="index"
 							value="#{fornecedor_terceiro_controller.fornecedor.contasBancarias}"
