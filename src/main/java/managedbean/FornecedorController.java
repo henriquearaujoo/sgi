@@ -610,7 +610,7 @@ public class FornecedorController implements Serializable {
     }
 
     public void handleFileUpload(FileUploadEvent event) throws IOException {
-	String pathFinal = DiretorioUtil.DIRECTORY_UPLOAD + fornecedor.getId() + "_"
+	String pathFinal = DiretorioUtil.DIRECTORY_UPLOAD + File.separator + fornecedor.getId() + "_"
 		+ event.getFile().getFileName();
 	arquivo.setConteudo(event.getFile().getContents());
 	arquivo.setPath(pathFinal);
