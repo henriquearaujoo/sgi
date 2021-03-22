@@ -47,21 +47,19 @@ public class ContaBancariaController implements Serializable {
 
 	@Inject
 	private ContaService service;
-	private @Inject
-	OrcamentoService orcService;
-	private @Inject
-	PagamentoService pagService;
-    @Inject
-    private CustoPessoalService custoService;
+	private @Inject OrcamentoService orcService;
+	private @Inject PagamentoService pagService;
+	@Inject
+	private CustoPessoalService custoService;
 
-    @Inject
-    private LancamentoAcao lancamentoAcao;
+	@Inject
+	private LancamentoAcao lancamentoAcao;
 
-    private BaixaAplicacao baixaAplicacao;
+	private BaixaAplicacao baixaAplicacao;
 
-    private AplicacaoRecurso aplicacao;
+	private AplicacaoRecurso aplicacao;
 
-    private @Inject Orcamento orcamento;
+	private @Inject Orcamento orcamento;
 
 	private MenuLateral menu = new MenuLateral();
 
@@ -91,8 +89,7 @@ public class ContaBancariaController implements Serializable {
 
 	private Date dataAplicacao = new Date();
 
-	private @Inject
-	UsuarioSessao usuarioSessao;
+	private @Inject UsuarioSessao usuarioSessao;
 
 	private Boolean editarAplicacao = false;
 
@@ -117,55 +114,59 @@ public class ContaBancariaController implements Serializable {
 		carregarBaixas();
 		carregarRendimentos();
 		carregarAlocacoes();
-        carregarDoacoes();
+		carregarDoacoes();
 	}
 
 	public void carregarTransacoes() {
 		if (contaBancaria.getId() != null) {
 			filtro.setIdConta(contaBancaria.getId());
 			listaDePagamentosRelatados = service.getPagamentosPorConta(filtro);
-		}else{
+		} else {
 			listaDePagamentosRelatados = new ArrayList<>();
 		}
+	}
+
+	public void limparFiltro() {
+		filtro = new Filtro();
 	}
 
 	public void carregarContas() {
 		contas = service.getContasBancarias(filtro);
 	}
 
-	public void carregarOrcamentos(){
+	public void carregarOrcamentos() {
 		orcamentos = orcService.getOrcamentos(filtro);
 	}
 
-	public void carregarBaixas(){
-        if (contaBancaria.getId() != null)
-	        baixas = service.obterBaixas(contaBancaria.getId());
-        else
-            baixas = new ArrayList<>();
-    }
+	public void carregarBaixas() {
+		if (contaBancaria.getId() != null)
+			baixas = service.obterBaixas(contaBancaria.getId());
+		else
+			baixas = new ArrayList<>();
+	}
 
-    public void carregarAplicacoes(){
-	    if (contaBancaria.getId() != null)
-	        aplicacoes = service.obterAplicacoes(contaBancaria.getId());
-	    else
-	        aplicacoes = new ArrayList<>();
-    }
+	public void carregarAplicacoes() {
+		if (contaBancaria.getId() != null)
+			aplicacoes = service.obterAplicacoes(contaBancaria.getId());
+		else
+			aplicacoes = new ArrayList<>();
+	}
 
-    public void carregarRendimentos(){
+	public void carregarRendimentos() {
 		if (contaBancaria.getId() != null)
 			contaBancaria.setRendimentos(service.obterRendimentos(contaBancaria));
 		else
 			contaBancaria.setRendimentos(new ArrayList<>());
 	}
 
-	public void carregarDoacoes(){
-        if (contaBancaria.getId() != null)
-            contaBancaria.setDoacoes(service.obterDoacoes(contaBancaria));
-        else
-            contaBancaria.setDoacoes(new ArrayList<>());
-    }
+	public void carregarDoacoes() {
+		if (contaBancaria.getId() != null)
+			contaBancaria.setDoacoes(service.obterDoacoes(contaBancaria));
+		else
+			contaBancaria.setDoacoes(new ArrayList<>());
+	}
 
-	public void carregarAlocacoes(){
+	public void carregarAlocacoes() {
 		if (contaBancaria.getId() != null)
 			contaBancaria.setAlocacoesRendimentos(service.obterAlocacoesRendimentos(contaBancaria));
 		else
@@ -227,7 +228,7 @@ public class ContaBancariaController implements Serializable {
 	}
 
 	@Transactional
-	public void salvarRendimento(){
+	public void salvarRendimento() {
 		try {
 
 			rendimentoConta.setConta(contaBancaria);
@@ -243,37 +244,37 @@ public class ContaBancariaController implements Serializable {
 			rendimentoConta = new RendimentoConta();
 
 			addMessage("", "Rendimento salvo com sucesso.", FacesMessage.SEVERITY_INFO);
-		}catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			addMessage("", e.getMessage(), FacesMessage.SEVERITY_ERROR);
 		}
 	}
 
-    @Transactional
-    public void salvarDoacao(){
-        try {
+	@Transactional
+	public void salvarDoacao() {
+		try {
 
-            fonteDoacaoConta.setConta(contaBancaria);
-            fonteDoacaoConta.setUsuario(usuarioSessao.getUsuario());
+			fonteDoacaoConta.setConta(contaBancaria);
+			fonteDoacaoConta.setUsuario(usuarioSessao.getUsuario());
 
-            fonteDoacaoConta = service.salvarDoacao(fonteDoacaoConta);
+			fonteDoacaoConta = service.salvarDoacao(fonteDoacaoConta);
 
-            if (contaBancaria.getDoacoes() == null)
-                contaBancaria.setDoacoes(new ArrayList<>());
+			if (contaBancaria.getDoacoes() == null)
+				contaBancaria.setDoacoes(new ArrayList<>());
 
-            contaBancaria.getDoacoes().add(fonteDoacaoConta);
+			contaBancaria.getDoacoes().add(fonteDoacaoConta);
 
-            fonteDoacaoConta = new FonteDoacaoConta();
+			fonteDoacaoConta = new FonteDoacaoConta();
 
-            addMessage("", "Doação adicionada com sucesso.", FacesMessage.SEVERITY_INFO);
-        }catch (Exception e){
-            e.printStackTrace();
-            addMessage("", e.getMessage(), FacesMessage.SEVERITY_ERROR);
-        }
-    }
+			addMessage("", "Doação adicionada com sucesso.", FacesMessage.SEVERITY_INFO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			addMessage("", e.getMessage(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
 
 	@Transactional
-	public void salvarAlocacaoRendimento(){
+	public void salvarAlocacaoRendimento() {
 		try {
 
 			BigDecimal disponivel = getValorDisponivel();
@@ -292,8 +293,7 @@ public class ContaBancariaController implements Serializable {
 
 			contaBancaria.setAlocacoesRendimentos(service.obterAlocacoesRendimentos(contaBancaria));
 
-			for (AlocacaoRendimento ar :
-					contaBancaria.getAlocacoesRendimentos()) {
+			for (AlocacaoRendimento ar : contaBancaria.getAlocacoesRendimentos()) {
 
 				pagService.deletarRendimento(ar.getId());
 
@@ -322,7 +322,8 @@ public class ContaBancariaController implements Serializable {
 				lancamentoAcao.setValor(ar.getValor());
 				lancamentoAcao.setDespesaReceita(DespesaReceita.RECEITA);
 
-				RubricaOrcamento linhaOrcamento =  orcService.buscarLinhaOrcamentoAlocRendimento(ar.getOrcamento().getId());
+				RubricaOrcamento linhaOrcamento = orcService
+						.buscarLinhaOrcamentoAlocRendimento(ar.getOrcamento().getId());
 
 				if (linhaOrcamento == null) {
 					linhaOrcamento = new RubricaOrcamento();
@@ -332,7 +333,7 @@ public class ContaBancariaController implements Serializable {
 					linhaOrcamento.setComponente(orcService.buscarComponenteDefault());
 					linhaOrcamento.setSubComponente(orcService.buscarSubComponenteDefault());
 					linhaOrcamento.setRubrica(orcService.buscarRubricaAlocRendimentoDefault());
-					linhaOrcamento =  orcService.salvarRubricaOrcamento(linhaOrcamento);
+					linhaOrcamento = orcService.salvarRubricaOrcamento(linhaOrcamento);
 				}
 
 				lancamentoAcao.setRubricaOrcamento(linhaOrcamento);
@@ -364,17 +365,17 @@ public class ContaBancariaController implements Serializable {
 			alocacaoRendimento = new AlocacaoRendimento();
 
 			addMessage("", "Alocação efetuada com sucesso.", FacesMessage.SEVERITY_INFO);
-		}catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			addMessage("", e.getMessage(), FacesMessage.SEVERITY_ERROR);
 		}
 	}
 
 	@Transactional
-	public void removerRendimento(){
+	public void removerRendimento() {
 
 		try {
-			if (contaBancaria.getRendimentos() != null){
+			if (contaBancaria.getRendimentos() != null) {
 
 				if (rendimentoConta.getId() != null) {
 					service.removerRendimento(rendimentoConta);
@@ -393,33 +394,33 @@ public class ContaBancariaController implements Serializable {
 		}
 	}
 
-    @Transactional
-    public void removerDoacao(){
-
-        try {
-            if (contaBancaria.getDoacoes() != null){
-
-                if (fonteDoacaoConta.getId() != null) {
-                    service.removerDoacao(fonteDoacaoConta);
-                }
-
-                contaBancaria.getDoacoes().remove(fonteDoacaoConta);
-            }
-
-            fonteDoacaoConta = new FonteDoacaoConta();
-
-            addMessage("", "Doação removida com sucesso.", FacesMessage.SEVERITY_INFO);
-        } catch (Exception e) {
-            e.printStackTrace();
-            addMessage("", e.getMessage(), FacesMessage.SEVERITY_ERROR);
-        }
-    }
-
 	@Transactional
-	public void removerAlocacaoRendimento(){
+	public void removerDoacao() {
 
 		try {
-			if (contaBancaria.getAlocacoesRendimentos() != null){
+			if (contaBancaria.getDoacoes() != null) {
+
+				if (fonteDoacaoConta.getId() != null) {
+					service.removerDoacao(fonteDoacaoConta);
+				}
+
+				contaBancaria.getDoacoes().remove(fonteDoacaoConta);
+			}
+
+			fonteDoacaoConta = new FonteDoacaoConta();
+
+			addMessage("", "Doação removida com sucesso.", FacesMessage.SEVERITY_INFO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			addMessage("", e.getMessage(), FacesMessage.SEVERITY_ERROR);
+		}
+	}
+
+	@Transactional
+	public void removerAlocacaoRendimento() {
+
+		try {
+			if (contaBancaria.getAlocacoesRendimentos() != null) {
 
 				if (alocacaoRendimento.getId() != null) {
 					service.removerAlocacaoRendimento(alocacaoRendimento);
@@ -438,88 +439,84 @@ public class ContaBancariaController implements Serializable {
 		}
 	}
 
-	private BigDecimal getValorTotalRendimentos(){
+	private BigDecimal getValorTotalRendimentos() {
 
 		BigDecimal total = BigDecimal.ZERO;
 
 		if (contaBancaria.getRendimentos() == null)
 			contaBancaria.setRendimentos(new ArrayList<>());
 
-		for (RendimentoConta r :
-				contaBancaria.getRendimentos()) {
+		for (RendimentoConta r : contaBancaria.getRendimentos()) {
 			total = total.add(r.getValor());
 		}
 
 		return total;
 	}
 
-    private BigDecimal getValorTotalDoacoes(){
+	private BigDecimal getValorTotalDoacoes() {
 
-        BigDecimal total = BigDecimal.ZERO;
+		BigDecimal total = BigDecimal.ZERO;
 
-        if (contaBancaria.getDoacoes() == null)
-            contaBancaria.setDoacoes(new ArrayList<>());
+		if (contaBancaria.getDoacoes() == null)
+			contaBancaria.setDoacoes(new ArrayList<>());
 
-        for (FonteDoacaoConta r :
-                contaBancaria.getDoacoes()) {
-            total = total.add(r.getValor());
-        }
+		for (FonteDoacaoConta r : contaBancaria.getDoacoes()) {
+			total = total.add(r.getValor());
+		}
 
-        return total;
-    }
+		return total;
+	}
 
-	public String getTotalRendimentos(){
+	public String getTotalRendimentos() {
 
-        Locale myLocale = new Locale("pt", "BR");
-        NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
+		Locale myLocale = new Locale("pt", "BR");
+		NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
 
 		BigDecimal rendimentos = getValorTotalRendimentos();
 
 		return format.format(rendimentos);
 	}
 
-    public String getTotalDoacoes(){
+	public String getTotalDoacoes() {
 
-        Locale myLocale = new Locale("pt", "BR");
-        NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
+		Locale myLocale = new Locale("pt", "BR");
+		NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
 
-        BigDecimal doacoes = getValorTotalDoacoes();
+		BigDecimal doacoes = getValorTotalDoacoes();
 
-        return format.format(doacoes);
-    }
+		return format.format(doacoes);
+	}
 
-    public BigDecimal getValotTotalAlocacoes(){
-        BigDecimal total = BigDecimal.ZERO;
+	public BigDecimal getValotTotalAlocacoes() {
+		BigDecimal total = BigDecimal.ZERO;
 
-        if (contaBancaria.getAlocacoesRendimentos() == null)
-            contaBancaria.setAlocacoesRendimentos(new ArrayList<>());
+		if (contaBancaria.getAlocacoesRendimentos() == null)
+			contaBancaria.setAlocacoesRendimentos(new ArrayList<>());
 
-        for (AlocacaoRendimento a :
-                contaBancaria.getAlocacoesRendimentos()) {
-            total = total.add(a.getValor());
-        }
+		for (AlocacaoRendimento a : contaBancaria.getAlocacoesRendimentos()) {
+			total = total.add(a.getValor());
+		}
 
-        return total;
-    }
+		return total;
+	}
 
-	public String getTotalAlocacoes(){
+	public String getTotalAlocacoes() {
 
-        Locale myLocale = new Locale("pt", "BR");
-        NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
+		Locale myLocale = new Locale("pt", "BR");
+		NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
 
 		BigDecimal total = getValotTotalAlocacoes();
 
 		return format.format(total);
 	}
 
-	public BigDecimal getValorTotalAplicacoes(){
+	public BigDecimal getValorTotalAplicacoes() {
 		BigDecimal total = BigDecimal.ZERO;
 
 		if (aplicacoes == null)
 			aplicacoes = new ArrayList<>();
 
-		for (AplicacaoRecurso a :
-				aplicacoes) {
+		for (AplicacaoRecurso a : aplicacoes) {
 			total = total.add(a.getValorTotalComDesconto());
 		}
 
@@ -529,23 +526,22 @@ public class ContaBancariaController implements Serializable {
 		return total;
 	}
 
-    public String getTotalAplicacoes(){
+	public String getTotalAplicacoes() {
 
-        Locale myLocale = new Locale("pt", "BR");
-        NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
-        BigDecimal total = getValorTotalAplicacoes();
+		Locale myLocale = new Locale("pt", "BR");
+		NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
+		BigDecimal total = getValorTotalAplicacoes();
 
-        return format.format(total);
-    }
+		return format.format(total);
+	}
 
-    public BigDecimal getValorTotalBaixas(){
+	public BigDecimal getValorTotalBaixas() {
 		BigDecimal total = BigDecimal.ZERO;
 
 		if (baixas == null)
 			baixas = new ArrayList<>();
 
-		for (BaixaAplicacao a :
-				baixas) {
+		for (BaixaAplicacao a : baixas) {
 			total = total.add(a.getValorTotalComDesconto());
 		}
 
@@ -555,46 +551,44 @@ public class ContaBancariaController implements Serializable {
 		return total;
 	}
 
-    public String getTotalBaixas(){
+	public String getTotalBaixas() {
 
-        BigDecimal total = getValorTotalBaixas();
-        Locale myLocale = new Locale("pt", "BR");
-        NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
+		BigDecimal total = getValorTotalBaixas();
+		Locale myLocale = new Locale("pt", "BR");
+		NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
 
-        return format.format(total);
-    }
+		return format.format(total);
+	}
 
-	public BigDecimal getValorDisponivel(){
+	public BigDecimal getValorDisponivel() {
 		BigDecimal totalRendimentos = BigDecimal.ZERO;
 		BigDecimal totalAplicados = BigDecimal.ZERO;
 
 		if (contaBancaria.getRendimentos() == null)
 			contaBancaria.setRendimentos(new ArrayList<>());
 
-		for (RendimentoConta r :
-				contaBancaria.getRendimentos()) {
+		for (RendimentoConta r : contaBancaria.getRendimentos()) {
 			totalRendimentos = totalRendimentos.add(r.getValor());
 		}
 
-		for (AlocacaoRendimento a :
-				contaBancaria.getAlocacoesRendimentos()) {
+		for (AlocacaoRendimento a : contaBancaria.getAlocacoesRendimentos()) {
 			totalAplicados = totalAplicados.add(a.getValor());
 		}
 
 		return totalRendimentos.subtract(totalAplicados);
 	}
 
-	public String getTotalDisponivel(){
+	public String getTotalDisponivel() {
 
-        Locale myLocale = new Locale("pt", "BR");
-        NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
+		Locale myLocale = new Locale("pt", "BR");
+		NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
 
 		BigDecimal disponivel = getValorDisponivel();
 
 		return format.format(disponivel);
 	}
 
-	public String getSaldoInicial(){
+	public String getSaldoInicial() {
 		Locale myLocale = new Locale("pt", "BR");
 		NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
 		if (contaBancaria.getSaldoInicial() != null) {
@@ -604,88 +598,84 @@ public class ContaBancariaController implements Serializable {
 		return format.format(BigDecimal.ZERO);
 	}
 
-	public BigDecimal getValorOutrasReceitasConta(){
-        BigDecimal total = BigDecimal.ZERO;
+	public BigDecimal getValorOutrasReceitasConta() {
+		BigDecimal total = BigDecimal.ZERO;
 
-        List<RelatorioContasAPagar> receitas = service.getOutrosPagamentosPorConta(contaBancaria.getId(), 1);
+		if (contaBancaria.getId() != null) {
+			List<RelatorioContasAPagar> receitas = service.getOutrosPagamentosPorConta(contaBancaria.getId(), 1);
 
-        for (RelatorioContasAPagar r :
-                receitas) {
-            total = total.add(r.getValor());
-        }
+			for (RelatorioContasAPagar r : receitas) {
+				total = total.add(r.getValor());
+			}
+		}
 
-        return total;
-    }
+		return total;
+	}
 
-    public BigDecimal getValorOutrasDespesasConta(){
-        BigDecimal total = BigDecimal.ZERO;
+	public BigDecimal getValorOutrasDespesasConta() {
+		BigDecimal total = BigDecimal.ZERO;
 
-        List<RelatorioContasAPagar> despesas = service.getOutrosPagamentosPorConta(contaBancaria.getId(), 0);
+		List<RelatorioContasAPagar> despesas = contaBancaria.getId() != null
+				? service.getOutrosPagamentosPorConta(contaBancaria.getId(), 0)
+				: new ArrayList<RelatorioContasAPagar>();
 
-        for (RelatorioContasAPagar r :
-                despesas) {
-            total = total.add(r.getValor());
-        }
+		for (RelatorioContasAPagar r : despesas) {
+			total = total.add(r.getValor());
+		}
 
-        return total;
-    }
+		return total;
+	}
 
-    public String getTotalOutrasDespesas(){
+	public String getTotalOutrasDespesas() {
 
-        Locale myLocale = new Locale("pt", "BR");
-        NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
+		Locale myLocale = new Locale("pt", "BR");
+		NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
 
-        BigDecimal total = getValorOutrasDespesasConta();
+		BigDecimal total = getValorOutrasDespesasConta();
 
-        return format.format(total);
-    }
+		return format.format(total);
+	}
 
-    public String getTotalOutrasReceitas(){
+	public String getTotalOutrasReceitas() {
 
-        Locale myLocale = new Locale("pt", "BR");
-        NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
+		Locale myLocale = new Locale("pt", "BR");
+		NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
 
-        BigDecimal total = getValorOutrasReceitasConta();
+		BigDecimal total = getValorOutrasReceitasConta();
 
-        return format.format(total);
-    }
+		return format.format(total);
+	}
 
-	public String getSaldoTotal(){
+	public String getSaldoTotal() {
 
 		BigDecimal total = BigDecimal.ZERO;
 		BigDecimal totalBaixas = getValorTotalBaixas();
 		BigDecimal totalAplicacoes = getValorTotalAplicacoes();
 		BigDecimal totalRendimentos = getValorTotalRendimentos();
 		BigDecimal totalDoacoes = getValorTotalDoacoes();
-		BigDecimal saldoInicial = contaBancaria.getSaldoInicial() != null ? contaBancaria.getSaldoInicial() : BigDecimal.ZERO;
+		BigDecimal saldoInicial = contaBancaria.getSaldoInicial() != null ? contaBancaria.getSaldoInicial()
+				: BigDecimal.ZERO;
 		BigDecimal totalAlocacoes = getValotTotalAlocacoes();
 		BigDecimal totalOutrasDespesas = getValorOutrasDespesasConta();
 		BigDecimal totalOutrasReceitas = getValorOutrasReceitasConta();
 
-		total = saldoInicial
-                .add(totalDoacoes)
-                .subtract(totalBaixas)
-                .add(totalAplicacoes)
-                .add(totalRendimentos)
-                .subtract(totalAlocacoes)
-                .add(totalOutrasReceitas)
-                .subtract(totalOutrasDespesas);
+		total = saldoInicial.add(totalDoacoes).subtract(totalBaixas).add(totalAplicacoes).add(totalRendimentos)
+				.subtract(totalAlocacoes).add(totalOutrasReceitas).subtract(totalOutrasDespesas);
 
-        Locale myLocale = new Locale("pt", "BR");
-        NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
+		Locale myLocale = new Locale("pt", "BR");
+		NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
 		return format.format(total);
 	}
 
-    public String exportarExcel() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
-                .getRequest();
-        String path = request.getSession().getServletContext().getRealPath("/");
+	public String exportarExcel() {
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
+				.getRequest();
+		String path = request.getSession().getServletContext().getRealPath("/");
 
-        List<RendimentoConta> rendimentos = new ArrayList<>();
+		List<RendimentoConta> rendimentos = new ArrayList<>();
 
-		for (RendimentoConta r:
-			 contaBancaria.getRendimentos()) {
-			if (r.getId() == null){
+		for (RendimentoConta r : contaBancaria.getRendimentos()) {
+			if (r.getId() == null) {
 				r.setDatapagamento(new SimpleDateFormat("dd/MM/yyyy").format(r.getDataPagamento()));
 				r.setNomeusuario(r.getUsuario().getNomeUsuario());
 				r.setFontedoacao(r.getOrcamento() != null ? r.getOrcamento().getTitulo() : "");
@@ -697,24 +687,23 @@ public class ContaBancariaController implements Serializable {
 			rendimentos.addAll(service.obterRendimentosRelatorio(contaBancaria));
 		}
 
-        try {
-        	if (rendimentos.size() > 0) {
+		try {
+			if (rendimentos.size() > 0) {
 				JRDataSource dataSource = new JRBeanCollectionDataSource(rendimentos);
 				JasperDesign jd = JRXmlLoader.load(path + "resources/relatorio/rendimentos_conta_xls.jrxml");
 				JasperReport report = JasperCompileManager.compileReport(jd);
 				ReportUtil.openReportXls("Rendimentos",
 						"rendimentos_" + new SimpleDateFormat("ddMMyyyyHHmmss").format(new Date()), report, null,
 						dataSource);
-			}
-			else
+			} else
 				throw new Exception("Não há dados para exportar.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            addMessage("", e.getMessage(), FacesMessage.SEVERITY_ERROR);
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+			addMessage("", e.getMessage(), FacesMessage.SEVERITY_ERROR);
+		}
 
-        return "";
-    }
+		return "";
+	}
 
 	public String exportarPagamentosExcel() {
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
@@ -731,8 +720,7 @@ public class ContaBancariaController implements Serializable {
 				ReportUtil.openReportXls("Transações",
 						"transacoes_" + new SimpleDateFormat("ddMMyyyyHHmmss").format(new Date()), report, null,
 						dataSource);
-			}
-			else
+			} else
 				throw new Exception("Não há dados para exportar.");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -741,124 +729,124 @@ public class ContaBancariaController implements Serializable {
 
 		return "";
 	}
-	
+
 	@Transactional
 	public void mudarStatus(ContaBancaria contaBancaria) {
 		contaBancaria = service.getContaBancaria(contaBancaria.getId());
-		if(contaBancaria.getStatus() == null || contaBancaria.getStatus().equals(StatusConta.ATIVA)) {
-			contaBancaria.setStatus(StatusConta.INATIVA)	;
-		}else {
+		if (contaBancaria.getStatus() == null || contaBancaria.getStatus().equals(StatusConta.ATIVA)) {
+			contaBancaria.setStatus(StatusConta.INATIVA);
+		} else {
 			contaBancaria.setStatus(StatusConta.ATIVA);
 		}
 		service.salvarContaBancaria(contaBancaria);
 		carregarContas();
-		
+
 	}
 
-	public void inserirBaixaAplicacao(ContaBancaria conta1, ContaBancaria conta2){
+	public void inserirBaixaAplicacao(ContaBancaria conta1, ContaBancaria conta2) {
 		baixaAplicacao = new BaixaAplicacao();
-        baixaAplicacao.setContaPagador(conta1);
-        baixaAplicacao.setContaRecebedor(conta2);
-        baixaAplicacao.setTipoParcelamento(TipoParcelamento.PARCELA_UNICA);
-        baixaAplicacao.setQuantidadeParcela(1);
-        baixaAplicacao.setValorTotalComDesconto(valorAplicacao);
-        baixaAplicacao.setDescricao("Baixa de aplicação");
-        baixaAplicacao.setDataPagamento(dataAplicacao);
+		baixaAplicacao.setContaPagador(conta1);
+		baixaAplicacao.setContaRecebedor(conta2);
+		baixaAplicacao.setTipoParcelamento(TipoParcelamento.PARCELA_UNICA);
+		baixaAplicacao.setQuantidadeParcela(1);
+		baixaAplicacao.setValorTotalComDesconto(valorAplicacao);
+		baixaAplicacao.setDescricao("Baixa de aplicação");
+		baixaAplicacao.setDataPagamento(dataAplicacao);
 		baixaAplicacao.setIdContaAplicacao(contaBancaria.getId());
 		baixaAplicacao.setOrcamento(orcamento);
 
-        if (baixaAplicacao.getId() == null) {
-            baixaAplicacao.setCodigo(gerarCodigo("SP"));
-            baixaAplicacao.setSolicitante(usuarioSessao.getUsuario().getColaborador());
-            baixaAplicacao.setDepesaReceita(DespesaReceita.RECEITA);
-            baixaAplicacao.setLocalidade(custoService.findLocalidadeByIdDefault());
-            baixaAplicacao.setGestao(custoService.findGestaoByIdDefault());
-        }
+		if (baixaAplicacao.getId() == null) {
+			baixaAplicacao.setCodigo(gerarCodigo("SP"));
+			baixaAplicacao.setSolicitante(usuarioSessao.getUsuario().getColaborador());
+			baixaAplicacao.setDepesaReceita(DespesaReceita.RECEITA);
+			baixaAplicacao.setLocalidade(custoService.findLocalidadeByIdDefault());
+			baixaAplicacao.setGestao(custoService.findGestaoByIdDefault());
+		}
 
-        baixaAplicacao.setTipoParcelamento(TipoParcelamento.PARCELA_UNICA);
-        baixaAplicacao.setTipoGestao(TipoGestao.COORD);
-        baixaAplicacao.setTipoLocalidade(TipoLocalidade.SEDE);
-        baixaAplicacao.setVersionLancamento("MODE01");
+		baixaAplicacao.setTipoParcelamento(TipoParcelamento.PARCELA_UNICA);
+		baixaAplicacao.setTipoGestao(TipoGestao.COORD);
+		baixaAplicacao.setTipoLocalidade(TipoLocalidade.SEDE);
+		baixaAplicacao.setVersionLancamento("MODE01");
 
-        lancamentoAcao.setDespesaReceita(DespesaReceita.RECEITA);
+		lancamentoAcao.setDespesaReceita(DespesaReceita.RECEITA);
 
-        RubricaOrcamento linhaOrcamento =  orcService.buscarLinhaOrcamentoBaixaAplicacao(orcamento.getId());
+		RubricaOrcamento linhaOrcamento = orcService.buscarLinhaOrcamentoBaixaAplicacao(orcamento.getId());
 
-        if (linhaOrcamento == null) {
-            linhaOrcamento = new RubricaOrcamento();
-            linhaOrcamento.setOrcamento(orcamento);
-            linhaOrcamento.setTipo("ba");
-            linhaOrcamento.setValor(BigDecimal.ZERO);
-            linhaOrcamento.setComponente(orcService.buscarComponenteDefault());
-            linhaOrcamento.setSubComponente(orcService.buscarSubComponenteDefault());
-            linhaOrcamento.setRubrica(orcService.buscarRubricaBaixaAplicacaoDefault());
-            linhaOrcamento =  orcService.salvarRubricaOrcamento(linhaOrcamento);
-        }
+		if (linhaOrcamento == null) {
+			linhaOrcamento = new RubricaOrcamento();
+			linhaOrcamento.setOrcamento(orcamento);
+			linhaOrcamento.setTipo("ba");
+			linhaOrcamento.setValor(BigDecimal.ZERO);
+			linhaOrcamento.setComponente(orcService.buscarComponenteDefault());
+			linhaOrcamento.setSubComponente(orcService.buscarSubComponenteDefault());
+			linhaOrcamento.setRubrica(orcService.buscarRubricaBaixaAplicacaoDefault());
+			linhaOrcamento = orcService.salvarRubricaOrcamento(linhaOrcamento);
+		}
 
-        lancamentoAcao.setRubricaOrcamento(linhaOrcamento);
-        lancamentoAcao.setValor(baixaAplicacao.getValorTotalComDesconto());
-        lancamentoAcao.setLancamento(baixaAplicacao);
-        baixaAplicacao.getLancamentosAcoes().add(lancamentoAcao);
-        lancamentoAcao = new LancamentoAcao();
+		lancamentoAcao.setRubricaOrcamento(linhaOrcamento);
+		lancamentoAcao.setValor(baixaAplicacao.getValorTotalComDesconto());
+		lancamentoAcao.setLancamento(baixaAplicacao);
+		baixaAplicacao.getLancamentosAcoes().add(lancamentoAcao);
+		lancamentoAcao = new LancamentoAcao();
 
-        orcService.salvarBaixaAplicacao(baixaAplicacao, usuarioSessao.getUsuario());
-    }
+		orcService.salvarBaixaAplicacao(baixaAplicacao, usuarioSessao.getUsuario());
+	}
 
-    public void inserirAplicacao (ContaBancaria conta1, ContaBancaria conta2){
+	public void inserirAplicacao(ContaBancaria conta1, ContaBancaria conta2) {
 		aplicacao = new AplicacaoRecurso();
-        aplicacao.setContaPagador(conta1);
-        aplicacao.setContaRecebedor(conta2);
-        aplicacao.setTipoParcelamento(TipoParcelamento.PARCELA_UNICA);
-        aplicacao.setQuantidadeParcela(1);
-        aplicacao.setValorTotalComDesconto(valorAplicacao);
-        aplicacao.setDescricao("Aplicação");
-        aplicacao.setDataPagamento(dataAplicacao);
-        aplicacao.setIdContaAplicacao(contaBancaria.getId());
-        aplicacao.setOrcamento(orcamento);
+		aplicacao.setContaPagador(conta1);
+		aplicacao.setContaRecebedor(conta2);
+		aplicacao.setTipoParcelamento(TipoParcelamento.PARCELA_UNICA);
+		aplicacao.setQuantidadeParcela(1);
+		aplicacao.setValorTotalComDesconto(valorAplicacao);
+		aplicacao.setDescricao("Aplicação");
+		aplicacao.setDataPagamento(dataAplicacao);
+		aplicacao.setIdContaAplicacao(contaBancaria.getId());
+		aplicacao.setOrcamento(orcamento);
 
-        if (aplicacao.getId() == null) {
-            aplicacao.setCodigo(gerarCodigo("SP"));
-            aplicacao.setSolicitante(usuarioSessao.getUsuario().getColaborador());
-            aplicacao.setDepesaReceita(DespesaReceita.RECEITA);
-            aplicacao.setLocalidade(custoService.findLocalidadeByIdDefault());
-            aplicacao.setGestao(custoService.findGestaoByIdDefault());
-        }
+		if (aplicacao.getId() == null) {
+			aplicacao.setCodigo(gerarCodigo("SP"));
+			aplicacao.setSolicitante(usuarioSessao.getUsuario().getColaborador());
+			aplicacao.setDepesaReceita(DespesaReceita.RECEITA);
+			aplicacao.setLocalidade(custoService.findLocalidadeByIdDefault());
+			aplicacao.setGestao(custoService.findGestaoByIdDefault());
+		}
 
-        aplicacao.setTipoGestao(TipoGestao.COORD);
-        aplicacao.setTipoLocalidade(TipoLocalidade.SEDE);
-        aplicacao.setVersionLancamento("MODE01");
+		aplicacao.setTipoGestao(TipoGestao.COORD);
+		aplicacao.setTipoLocalidade(TipoLocalidade.SEDE);
+		aplicacao.setVersionLancamento("MODE01");
 
-        lancamentoAcao.setDespesaReceita(DespesaReceita.RECEITA);
+		lancamentoAcao.setDespesaReceita(DespesaReceita.RECEITA);
 
-        RubricaOrcamento linhaOrcamento =  orcService.buscarLinhaOrcamentoAplicacao(orcamento.getId());
+		RubricaOrcamento linhaOrcamento = orcService.buscarLinhaOrcamentoAplicacao(orcamento.getId());
 
-        if (linhaOrcamento == null) {
-            linhaOrcamento = new RubricaOrcamento();
-            linhaOrcamento.setOrcamento(orcamento);
-            linhaOrcamento.setTipo("ap");
-            linhaOrcamento.setValor(BigDecimal.ZERO);
-            linhaOrcamento.setComponente(orcService.buscarComponenteDefault());
-            linhaOrcamento.setSubComponente(orcService.buscarSubComponenteDefault());
-            linhaOrcamento.setRubrica(orcService.buscarRubricaAplicacoDefault());
-            linhaOrcamento =  orcService.salvarRubricaOrcamento(linhaOrcamento);
-        }
+		if (linhaOrcamento == null) {
+			linhaOrcamento = new RubricaOrcamento();
+			linhaOrcamento.setOrcamento(orcamento);
+			linhaOrcamento.setTipo("ap");
+			linhaOrcamento.setValor(BigDecimal.ZERO);
+			linhaOrcamento.setComponente(orcService.buscarComponenteDefault());
+			linhaOrcamento.setSubComponente(orcService.buscarSubComponenteDefault());
+			linhaOrcamento.setRubrica(orcService.buscarRubricaAplicacoDefault());
+			linhaOrcamento = orcService.salvarRubricaOrcamento(linhaOrcamento);
+		}
 
-        lancamentoAcao.setRubricaOrcamento(linhaOrcamento);
-        lancamentoAcao.setValor(aplicacao.getValorTotalComDesconto());
-        lancamentoAcao.setLancamento(aplicacao);
-        aplicacao.getLancamentosAcoes().add(lancamentoAcao);
-        lancamentoAcao = new LancamentoAcao();
+		lancamentoAcao.setRubricaOrcamento(linhaOrcamento);
+		lancamentoAcao.setValor(aplicacao.getValorTotalComDesconto());
+		lancamentoAcao.setLancamento(aplicacao);
+		aplicacao.getLancamentosAcoes().add(lancamentoAcao);
+		lancamentoAcao = new LancamentoAcao();
 
-        orcService.salvarAplicacao(aplicacao, usuarioSessao.getUsuario());
+		orcService.salvarAplicacao(aplicacao, usuarioSessao.getUsuario());
 
-    }
+	}
 
-    public void atualizarAplicacao(){
-		ContaBancaria contaPagador =  orcService.findContaTransitoria(new Long(5));
+	public void atualizarAplicacao() {
+		ContaBancaria contaPagador = orcService.findContaTransitoria(new Long(5));
 		if (aplicacao.getContaRecebedor().getId().longValue() == 5) {
 			aplicacao.setContaPagador(contaBancaria);
 			aplicacao.setContaRecebedor(contaPagador);
-		}else if (aplicacao.getContaPagador().getId().longValue() == 5) {
+		} else if (aplicacao.getContaPagador().getId().longValue() == 5) {
 			aplicacao.setContaPagador(contaPagador);
 			aplicacao.setContaRecebedor(orcamento.getContaBancaria());
 		}
@@ -870,12 +858,12 @@ public class ContaBancariaController implements Serializable {
 		orcService.atualizarAplicacao(aplicacao);
 	}
 
-	public void atualizarBaixa(){
-		ContaBancaria contaPagador =  orcService.findContaTransitoria(new Long(5));
+	public void atualizarBaixa() {
+		ContaBancaria contaPagador = orcService.findContaTransitoria(new Long(5));
 		if (baixaAplicacao.getContaRecebedor().getId().longValue() == 5) {
 			baixaAplicacao.setContaPagador(contaBancaria);
 			baixaAplicacao.setContaRecebedor(contaPagador);
-		}else if (baixaAplicacao.getContaPagador().getId().longValue() == 5) {
+		} else if (baixaAplicacao.getContaPagador().getId().longValue() == 5) {
 			baixaAplicacao.setContaPagador(contaPagador);
 			baixaAplicacao.setContaRecebedor(orcamento.getContaBancaria());
 		}
@@ -887,7 +875,7 @@ public class ContaBancariaController implements Serializable {
 		orcService.atualizarBaixa(baixaAplicacao);
 	}
 
-    public void salvarBaixaAplicacao() {
+	public void salvarBaixaAplicacao() {
 		try {
 
 			BigDecimal totalBaixas = getValorTotalBaixas();
@@ -899,10 +887,10 @@ public class ContaBancariaController implements Serializable {
 				throw new Exception("O valor total de baixas é superior ao valor de aplicações.");
 
 			if (!editarBaixa) {
-				ContaBancaria contaPagador =  orcService.findContaTransitoria(new Long(5));
+				ContaBancaria contaPagador = orcService.findContaTransitoria(new Long(5));
 				inserirBaixaAplicacao(contaBancaria, contaPagador);
 				inserirBaixaAplicacao(contaPagador, orcamento.getContaBancaria());
-			}else
+			} else
 				atualizarBaixa();
 			carregarBaixas();
 			orcamento = new Orcamento();
@@ -918,7 +906,7 @@ public class ContaBancariaController implements Serializable {
 		}
 	}
 
-    public void salvarAplicacao() {
+	public void salvarAplicacao() {
 
 		try {
 
@@ -926,7 +914,7 @@ public class ContaBancariaController implements Serializable {
 				ContaBancaria contaRecebedor = orcService.findContaTransitoria(new Long(5));
 				inserirAplicacao(orcamento.getContaBancaria(), contaRecebedor);
 				inserirAplicacao(contaRecebedor, contaBancaria);
-			}else
+			} else
 				atualizarAplicacao();
 			carregarAplicacoes();
 			orcamento = new Orcamento();
@@ -942,7 +930,7 @@ public class ContaBancariaController implements Serializable {
 		}
 	}
 
-	public void editarAplicacao(){
+	public void editarAplicacao() {
 		editarAplicacao = true;
 		tipoAplicacao = 0;
 		valorAplicacao = aplicacao.getValorTotalComDesconto();
@@ -950,7 +938,7 @@ public class ContaBancariaController implements Serializable {
 		orcamento = aplicacao.getOrcamento();
 	}
 
-	public void editarBaixa(){
+	public void editarBaixa() {
 		editarBaixa = true;
 		tipoAplicacao = 1;
 		valorAplicacao = baixaAplicacao.getValorTotalComDesconto();
@@ -958,7 +946,7 @@ public class ContaBancariaController implements Serializable {
 		orcamento = baixaAplicacao.getOrcamento();
 	}
 
-	public void cancelarBaixaAplicacao(){
+	public void cancelarBaixaAplicacao() {
 		orcamento = new Orcamento();
 		aplicacao = new AplicacaoRecurso();
 		lancamentoAcao = new LancamentoAcao();
@@ -972,7 +960,7 @@ public class ContaBancariaController implements Serializable {
 		FacesMessage message = new FacesMessage(severity, summary, detail);
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
-	
+
 	public List<MenuLateral> getMenus() {
 		return MakeMenu.getMenuFinanceiro();
 	}
@@ -1061,53 +1049,53 @@ public class ContaBancariaController implements Serializable {
 		this.contasAlocacao = contasAlocacao;
 	}
 
-    public Integer getTipoAplicacao() {
-        return tipoAplicacao;
-    }
+	public Integer getTipoAplicacao() {
+		return tipoAplicacao;
+	}
 
-    public void setTipoAplicacao(Integer tipoAplicacao) {
-        this.tipoAplicacao = tipoAplicacao;
-    }
+	public void setTipoAplicacao(Integer tipoAplicacao) {
+		this.tipoAplicacao = tipoAplicacao;
+	}
 
-    public Date getDataAplicacao() {
-        return dataAplicacao;
-    }
+	public Date getDataAplicacao() {
+		return dataAplicacao;
+	}
 
-    public void setDataAplicacao(Date dataAplicacao) {
-        this.dataAplicacao = dataAplicacao;
-    }
+	public void setDataAplicacao(Date dataAplicacao) {
+		this.dataAplicacao = dataAplicacao;
+	}
 
-    public BigDecimal getValorAplicacao() {
-        return valorAplicacao;
-    }
+	public BigDecimal getValorAplicacao() {
+		return valorAplicacao;
+	}
 
-    public void setValorAplicacao(BigDecimal valorAplicacao) {
-        this.valorAplicacao = valorAplicacao;
-    }
+	public void setValorAplicacao(BigDecimal valorAplicacao) {
+		this.valorAplicacao = valorAplicacao;
+	}
 
-    public Orcamento getOrcamento() {
-        return orcamento;
-    }
+	public Orcamento getOrcamento() {
+		return orcamento;
+	}
 
-    public void setOrcamento(Orcamento orcamento) {
-        this.orcamento = orcamento;
-    }
+	public void setOrcamento(Orcamento orcamento) {
+		this.orcamento = orcamento;
+	}
 
-    public List<BaixaAplicacao> getBaixas() {
-        return baixas;
-    }
+	public List<BaixaAplicacao> getBaixas() {
+		return baixas;
+	}
 
-    public void setBaixas(List<BaixaAplicacao> baixas) {
-        this.baixas = baixas;
-    }
+	public void setBaixas(List<BaixaAplicacao> baixas) {
+		this.baixas = baixas;
+	}
 
-    public List<AplicacaoRecurso> getAplicacoes() {
-        return aplicacoes;
-    }
+	public List<AplicacaoRecurso> getAplicacoes() {
+		return aplicacoes;
+	}
 
-    public void setAplicacoes(List<AplicacaoRecurso> aplicacoes) {
-        this.aplicacoes = aplicacoes;
-    }
+	public void setAplicacoes(List<AplicacaoRecurso> aplicacoes) {
+		this.aplicacoes = aplicacoes;
+	}
 
 	public BaixaAplicacao getBaixaAplicacao() {
 		return baixaAplicacao;
@@ -1125,11 +1113,11 @@ public class ContaBancariaController implements Serializable {
 		this.aplicacao = aplicacao;
 	}
 
-    public FonteDoacaoConta getFonteDoacaoConta() {
-        return fonteDoacaoConta;
-    }
+	public FonteDoacaoConta getFonteDoacaoConta() {
+		return fonteDoacaoConta;
+	}
 
-    public void setFonteDoacaoConta(FonteDoacaoConta fonteDoacaoConta) {
-        this.fonteDoacaoConta = fonteDoacaoConta;
-    }
+	public void setFonteDoacaoConta(FonteDoacaoConta fonteDoacaoConta) {
+		this.fonteDoacaoConta = fonteDoacaoConta;
+	}
 }
