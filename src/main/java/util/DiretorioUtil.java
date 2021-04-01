@@ -4,8 +4,8 @@ public class DiretorioUtil {
 	
 	
 	
-	public static String DIRECTORY_UPLOAD = "C:/temp/nf/";
-	//public static String DIRECTORY_UPLOAD =  "/home/developer/Documentos/doc/bd/";
+	//public static String DIRECTORY_UPLOAD = "C:/temp/nf/";
+	public static String DIRECTORY_UPLOAD =  "/home/developer/Projects/fas/files/";
 	
 	
 

@@ -1,8 +1,49 @@
 body, html {
-	margin: 0;
 	font: 0.9em "Open Sans", sans-serif;
 	letter-spacing: 0.25px;
 }
+
+body .ui-widget:not(.pi), body .ui-widget .ui-widget:not(.pi) {
+    font-family: "Open Sans","Helvetica Neue",sans-serif;
+    font-size: 17px;
+    
+}
+
+.body-content{
+ width: 80%;
+ margin-right: auto;
+ margin-left: auto;
+ padding-top: 10px; 
+ position: relative;
+ 	
+}
+
+.ui-breadcrumb ul {
+	margin: 0;
+	padding: 0;
+	display: block;
+	margin-left: 5px;
+}
+
+body .ui-breadcrumb {
+	background-color: #fff;
+	border: 1px solid #c8c8c8;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+.ui-breadcrumb ul li span {
+	display: block;
+	overflow: hidden;
+	font-size: 16px;
+	font-weight: 100;
+}
+
+.table thead {
+	background-color: #30383c;
+	color: white;
+}
+
 
 .no-border{
 	border: 0px !important
@@ -27,10 +68,6 @@ body, html {
 	margin-right: 4px;
 }
 
-.corpo-project {
-	
-}
-
 .ui-buttom-alter {
 	background-color: #007ad9;
 	color: #fff;
@@ -52,7 +89,7 @@ body, html {
 
 .link-content-search {
 	margin-right: 5px;
-	margin-bottom: auto; "
+	margin-bottom: auto; 
 	float: right;
 }
 

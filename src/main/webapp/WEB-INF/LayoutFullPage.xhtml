@@ -43,18 +43,6 @@
 	margin-left: 5px;
 }
 
-body .ui-breadcrumb {
-	background-color: #fff;
-	border: 1px solid #c8c8c8;
-	padding-top: 0px;
-	padding-bottom: 0px;
-}
-
-.ui-breadcrumb ul li span {
-	display: block;
-	overflow: hidden;
-	font-size: 12px;
-}
 
 body .ui-tabs .ui-tabs-nav .ui-tabs-header.ui-state-active {
 	background-color: #ffb300;
@@ -98,12 +86,7 @@ body .ui-tabs .ui-tabs-nav .ui-tabs-header {
 	transition: background-color .3s;
 }
 
-.ui-breadcrumb ul {
-	margin: 0;
-	padding: 0;
-	display: block;
-	margin-left: 5px;
-}
+
 
 body .ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-item.ui-state-highlight
 	{
@@ -275,7 +258,7 @@ body .ui-fileupload .ui-fileupload-content {
 
 	<title>Um clique</title>
 
-	<h:outputStylesheet library="algaworks" name="styles/custom.css" />
+	
 	<h:outputStylesheet library="algaworks" name="styles/layout.css" />
 	<h:outputStylesheet library="algaworks" name="styles/components.css" />
 
@@ -311,19 +294,8 @@ body .ui-fileupload .ui-fileupload-content {
 	<h:panelGroup id="panel-script">
 		<h:outputScript library="js" name="tabs.js" target="body" />
 		<h:outputScript library="js" name="menu.js" target="body" />
-		<h:outputScript library="js" name="teste.js" target="body" />
 		<h:outputScript name="mascaras.js" library="js" />
 	</h:panelGroup>
-
-
-	<!-- 		<script type="text/javascript" src="../resources/algaworks/javascripts/app.js"></script> -->
-	<!-- 		<script type="text/javascript" src="../resources/js/teste.js"></script> -->
-	<!-- 		<script type="text/javascript" src="../resources/js/menu.js"></script> -->
-	<!-- 		<script type="text/javascript" src="../resources/js/tabs.js"></script> -->
-	<!-- 		<script type="text/javascript" src="../resources/js/mascaras.js"></script> -->
-
-
-
 
 </h:head>
 
@@ -398,16 +370,12 @@ body .ui-fileupload .ui-fileupload-content {
 	</aside>
 
 	<section class="aw-content  js-content form-wrapper">
-		<div style="padding-top: 10px; position: relative;">
+		<div  class="body-content">
 			<ui:insert name="content" />
 		</div>
 	</section>
 
 	<ui:insert name="adicionais">
-
-
-
-
 	</ui:insert>
 
 

@@ -372,7 +372,7 @@ public class CotacaoRepository {
 		Query query = manager.createQuery(jpql.toString());
 		query.setParameter("nome", "%" + s + "%");
 		query.setMaxResults(20);
-		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<Produto>();
+		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<Fornecedor>();
 	}
 
 	public void remover(Lancamento lancamento) {

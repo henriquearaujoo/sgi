@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
@@ -128,7 +129,7 @@
 						<div class="ui-g-12 ui-lg-6 form-group">
 							<p:outputLabel value="Projeto" styleClass="form-label" />
 							<p:autoComplete value="#{pagamentoController.filtro.projeto}"
-								completeMethod="#{pagamentoController.completeProjetos}"
+								completeMethod="#{pagamentoController.completeProjetos}"  
 								var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}"
 								converter="projetoConverter">
 
@@ -182,7 +183,7 @@
 
 							<p:outputPanel id="panel-table">
 								<table class="table table-sm table-hover">
-									<thead class="thead-dark">
+									<thead >
 										<tr>
 											<th scope="col">Código</th>
 											<th scope="col">Descrição</th>
@@ -426,7 +427,7 @@
 						fileUploadListener="#{pagamentoController.handleFileUpload}"
 						mode="advanced" process="form-arquivo:panel_grid"
 						skinSimple="true" dragDropSupport="false" sizeLimit="100000000"
-						allowTypes="/(\.|\/)(pdf)$/" />
+						allowTypes="/(\.|\/)(pdf)$/" messageTemplate="Não aceita" />
 
 					<p:dataTable id="table-arquivo" styleClass="ui-fluid"
 						paginator="true" rows="4"

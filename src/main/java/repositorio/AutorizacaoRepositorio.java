@@ -84,7 +84,7 @@ public class AutorizacaoRepositorio implements Serializable {
 			query.setParameter("id_colaborador", idCol);
 			query.setParameter("identifys", identificacoes);
 			int updateCount = query.executeUpdate();
-			System.out.println(updateCount);
+			//System.out.println(updateCount);
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

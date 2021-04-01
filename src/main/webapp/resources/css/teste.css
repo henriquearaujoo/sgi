@@ -67,16 +67,6 @@ body .ui-inputfield.ui-state-error:focus{
 	border-radius: 0px; 
 }
 
-body { 
-  background-color: #fff;
-}
-
-.form-wrapper {
-     
- 
- 
-}
-
 .form-group {
   position:relative !important;  
 
@@ -100,7 +90,7 @@ body {
 
 .focused .form-label {
   transform: translateY(-145%) !important;
-  font-size: 14px !important;
+  font-size: 15px !important;
   font-weight: bold;
 }
 

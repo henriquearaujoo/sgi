@@ -35,7 +35,7 @@ public class UsuarioRepository {
 	}
 
 	public User getEmail(String email) {
-		String jpql = "select u from User u where u.email = :toEmail";
+		String jpql = "select u from User u where u.email = :toEmail and ativo is true";
 		Query query = manager.createQuery(jpql);
 		query.setParameter("toEmail", email);
 		return (User) (query.getResultList().size() > 0 ? query.getResultList().get(0) : null);

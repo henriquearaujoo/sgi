@@ -94,7 +94,6 @@ public class LoginBean implements Serializable {
 			int j = (int) (Math.random() * carct.length);
 			senha += carct[j];
 		}
-		System.out.println("Gerar senha  " + senha);
 		return senha;
 	}
 
@@ -134,7 +133,7 @@ public class LoginBean implements Serializable {
 		email.setSubject("Recuperação de senha");
 		email.setSenhaEmail("FAS123fas");
 		email.setContent(
-				"Sua nova senha para acessar o sistema é: "+ senha +"\n");
+				"Olá "+ usuario.getNomeUsuario() +"Sua nova senha para acessar o sistema é: "+ senha +"\n");
 	}
 
 	public LoginBean() {
