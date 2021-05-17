@@ -65,7 +65,7 @@
             </h:panelGroup>
             <h:panelGroup layout="block" class="div">
               <h5>Usuário</h5>
-              <h:inputText class="input" value="#{loginBean.nomeUsuario}" name="username" required="true"/>
+              <h:inputText class="input" value="#{loginBean.nomeUsuario}" autocomplete="off" required="true"/>
             </h:panelGroup>
           </h:panelGroup>
 
@@ -75,7 +75,7 @@
             </h:panelGroup>
             <h:panelGroup layout="block" class="div">
               <h5>Senha</h5>
-              <h:inputSecret layout="block" class="input" value="#{loginBean.senhaUsuario}" name="password"
+              <h:inputSecret layout="block" class="input" value="#{loginBean.senhaUsuario}" autocomplete="off"
                     required="true"/>
             </h:panelGroup>
           </h:panelGroup>
@@ -99,7 +99,7 @@
             </h:panelGroup>
             <h:panelGroup layout="block" class="div">
               <h5>Digite seu email</h5>
-              <h:inputText class="input" name="email" value="#{loginBean.toEmail}" required="true"/>
+              <h:inputText class="input" autocomplete="off" value="#{loginBean.toEmail}" required="true"/>
             </h:panelGroup>
           </h:panelGroup>
           <h:commandButton type="submit" 
