@@ -1,0 +1,1014 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<style type="text/css">
+.valorPropaganda {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(80, 80, 80, 0.79);
+}
+
+.valorPropagandaRED {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(234, 15, 15, 0.79);
+}
+
+.ui-progressbar .ui-progressbar-label {
+	text-align: center;
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	display: none;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+td.jqplot-table-legend {
+	vertical-align: middle;
+	font-size: 15px;
+}
+
+.ui-datatable {
+	margin-bottom: 20px;
+}
+
+.ui-datatable-frozenlayout-left {
+	width: 20%;
+}
+
+.ui-datatable-frozenlayout-right {
+	width: 80%;
+}
+
+.titulo-total {
+	font-size: 14px !important;
+}
+
+.btn-refresh {
+	margin-left: 15px !important;
+}
+
+.collum-mes {
+	width: 35px;
+	text-align: center;
+}
+</style>
+
+
+
+	<p:fieldset legend="Atividades planejadas" toggleable="true"
+		collapsed="true">
+
+		<p:messages id="msg_grant" showSummary="false" showDetail="true"
+			closable="true"></p:messages>
+
+		<p:dataTable id="tabela_atividade_planejado" editable="true"
+			value="#{projetoBean.atividadesPlanejadas}" var="atividade"
+			emptyMessage="Nenhum Registro Encontrado!" rows="10">
+
+			<f:facet name="header">
+
+
+				<p:panelGrid id="panel_totais" columns="2">
+
+					<p:outputLabel value="Total de atividades planejadas:"
+						style="float:right;" styleClass="titulo-total"></p:outputLabel>
+
+					<h:panelGroup>
+
+						<p:outputLabel styleClass="titulo-total"
+							value="#{projetoBean.totalPLanejadas}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</p:outputLabel>
+
+
+						<p:commandLink style="color:#FFF;margin-left:5px;"
+							title="Atualizar cronograma" onclick="start()" onerror="stop()"
+							onsuccess="stop()"
+							action="#{projetoBean.carregarDetalhesPlanejadas()}"
+							styleClass="btn btn-primary btn-xs"
+							process="@this" update="tabela_atividade_planejado">
+							<span class=" glyphicon glyphicon glyphicon-refresh"></span>
+						</p:commandLink>
+
+						<h:commandLink  style="margin:3px"  immediate="true">
+							<p:graphicImage library="image" name="excel.png" width="30" />
+							<p:dataExporter  type="xls" target="tabela_atividade_planejado" 
+								fileName="cronograma" />
+								
+						</h:commandLink>
+
+					</h:panelGroup>
+
+					<p:outputLabel styleClass="titulo-total"
+						value="Quantidade de atividades planejadas:" style="float:right"></p:outputLabel>
+					<p:outputLabel styleClass="titulo-total"
+						value="#{projetoBean.qtdPlanejadas}" />
+
+
+
+				</p:panelGrid>
+			</f:facet>
+
+			<p:ajax event="rowEdit" listener="#{projetoBean.onRowEdit}"
+				update="tab_cadastro:msg_grant tab_cadastro:tabela_atividade_planejado" />
+			<p:ajax event="rowEditCancel" listener="#{projetoBean.onRowCancel}"
+				update="tab_cadastro:msg_grant" />
+
+
+			<p:column style="width:25px" exportable="false">
+				<p:rowEditor />
+			</p:column>
+
+			<p:column headerText="Atividades"  style="width:500px;"
+				filterBy="#{atividade.nome}">
+				<p:outputLabel style="font-size:10px" value="#{atividade.nome}"></p:outputLabel>
+			</p:column>
+
+			<p:column headerText="Responsável" style="width:100px">
+				<p:outputLabel value="#{atividade.responsavel}" />
+			</p:column>
+
+			<p:column headerText="Localizador" style="width:100px">
+				<p:outputLabel value="#{atividade.nomeLocalizador}" />
+			</p:column>
+
+			<p:column style="width:100px" headerText="Valor">
+				<p:outputLabel value="#{atividade.valor}">
+					<f:convertNumber type="currency" maxFractionDigits="2"
+						currencySymbol="R$" />
+				</p:outputLabel>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.jan != 0 and atividade.jan != null ? 'highlight_yellow' : null} collum-mes"
+				headerText="JAN">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.jan != 0 and atividade.jan != null}"
+							value="#{atividade.jan}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.jan}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.fev != 0 and atividade.fev != null ? 'highlight_yellow' : null} collum-mes"
+				headerText="FEV">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.fev != 0 and atividade.fev != null}"
+							value="#{atividade.fev}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.fev}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.mar != 0 and atividade.mar != null ? 'highlight_yellow' : null} collum-mes"
+				headerText="MAR">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.mar != 0 and atividade.mar != null}"
+							value="#{atividade.mar}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.mar}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.abr != 0 and atividade.abr != null ? 'highlight_yellow' : null} collum-mes"
+				headerText="ABR">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.abr != 0 and atividade.abr != null}"
+							value="#{atividade.abr}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.abr}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.mai != 0 and atividade.mai != null ? 'highlight_yellow' : null} collum-mes"
+				headerText="MAI">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.mai != 0 and atividade.mai != null}"
+							value="#{atividade.mai}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.mai}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.jun != 0 and atividade.jun != null ? 'highlight_yellow' : null} collum-mes"
+				headerText="JUN">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.jun != 0 and atividade.jun != null}"
+							value="#{atividade.jun}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.jun}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.jul != 0 and atividade.jul != null ? 'highlight_yellow' : null} collum-mes"
+				headerText="JUL">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.jul != 0 and atividade.jul != null}"
+							value="#{atividade.jul}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.jul}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.ago != 0 and atividade.ago != null ? 'highlight_yellow' : null} collum-mes"
+				headerText="AGO">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.ago != 0 and atividade.ago != null}"
+							value="#{atividade.ago}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.ago}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.set != 0 and atividade.set != null ? 'highlight_yellow' : null} collum-mes"
+				headerText="SET">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.set != 0 and atividade.set != null}"
+							value="#{atividade.set}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.set}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.out != 0 and atividade.out != null ? 'highlight_yellow' : null} collum-mes"
+				headerText="OUT">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.out != 0 and atividade.out != null}"
+							value="#{atividade.out}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.out}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.nov != 0 and atividade.nov != null ? 'highlight_yellow' : null} collum-mes"
+				headerText="NOV">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.nov != 0 and atividade.nov != null}"
+							value="#{atividade.nov}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.nov}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.dez != 0 and atividade.dez != null ? 'highlight_yellow' : null} collum-mes"
+				headerText="DEZ">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.dez != 0 and atividade.dez != null}"
+							value="#{atividade.dez}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.dez}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+
+
+			<p:columnGroup type="footer">
+				<p:row>
+					<p:column footerText="Totais: " colspan="4"
+						style="text-align:right" />
+
+					<p:column
+						footerText="#{projetoBean.buscarValorTotal(projetoBean.totalPLanejadas)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesPlanejado(1)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesPlanejado(2)}" />
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesPlanejado(3)}" />
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesPlanejado(4)}" />
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesPlanejado(5)}" />
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesPlanejado(6)}" />
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesPlanejado(7)}" />
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesPlanejado(8)}" />
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesPlanejado(9)}" />
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesPlanejado(10)}" />
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesPlanejado(11)}" />
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesPlanejado(12)}" />
+				</p:row>
+
+			</p:columnGroup>
+
+
+		</p:dataTable>
+
+
+	</p:fieldset>
+
+	<p:separator />
+
+	<p:fieldset legend="Atividades executadas" toggleable="true"
+		collapsed="true">
+
+		<p:dataTable id="tabela_atividade_executado" editable="true"
+			value="#{projetoBean.atividadesExecutadas}" var="atividade"
+			emptyMessage="Nenhum Registro Encontrado!" rows="10">
+
+			<f:facet name="header">
+
+
+				<p:panelGrid columns="2">
+
+					<p:outputLabel styleClass="titulo-total"
+						value="Total de atividades planejadas:" style="float:right"></p:outputLabel>
+
+					<h:panelGroup>
+						<p:outputLabel styleClass="titulo-total"
+							value="#{projetoBean.totalExecutadas}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</p:outputLabel>
+
+						<p:commandLink style="color:#FFF;margin-left:5px"
+							title="Atualizar cronograma" onclick="start()" onerror="stop()"
+							onsuccess="stop()"
+							action="#{projetoBean.carregarDetalhesExecutadas()}"
+							styleClass="btn btn-primary btn-xs "
+							process="@this" update="tabela_atividade_executado">
+							<span class="glyphicon glyphicon glyphicon-refresh"></span>
+						</p:commandLink>
+						
+						<h:commandLink  style="margin:3px"  immediate="true">
+							<p:graphicImage library="image" name="excel.png" width="30" />
+							<p:dataExporter  type="xls" target="tabela_atividade_executado" 
+								fileName="cronograma_executado" />
+								
+						</h:commandLink>
+						
+					</h:panelGroup>
+
+					<p:outputLabel styleClass="titulo-total"
+						value="Quantidade de atividades executadas:" style="float:right"></p:outputLabel>
+					<p:outputLabel styleClass="titulo-total"
+						value="#{projetoBean.qtdExecutadaPlanejadas}" />
+
+
+				</p:panelGrid>
+
+			</f:facet>
+
+
+			<p:ajax event="rowEdit" listener="#{projetoBean.onRowEditExec}"
+				update="tab_cadastro:msg_grant  tab_cadastro:tabela_atividade_executado" />
+			<p:ajax event="rowEditCancel"
+				listener="#{projetoBean.onRowCancelExec}"
+				update="tab_cadastro:msg_grant" />
+
+			<p:column style="width:25px" exportable="false">
+				<p:rowEditor />
+			</p:column>
+
+			<p:column headerText="Atividades" style="width:500px"
+				filterBy="#{atividade.nome}">
+				<p:outputLabel style="font-size:10px" value="#{atividade.nome}"></p:outputLabel>
+			</p:column>
+
+			<p:column headerText="Responsável" style="width:100px">
+				<p:outputLabel value="#{atividade.responsavel}" />
+			</p:column>
+
+			<p:column headerText="Localizador" style="width:100px">
+				<p:outputLabel value="#{atividade.nomeLocalizador}" />
+			</p:column>
+
+			<p:column style="width:100px" headerText="Valor">
+				<p:outputLabel value="#{atividade.valor}">
+					<f:convertNumber type="currency" maxFractionDigits="2"
+						currencySymbol="R$" />
+				</p:outputLabel>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.janExec != 0 and atividade.janExec != null ? 'highlight' : null} collum-mes"
+				headerText="JAN">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.janExec != 0 and atividade.janExec != null}"
+							value="#{atividade.janExec}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.janExec}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.fevExec != 0 and atividade.fevExec != null ? 'highlight' : null} collum-mes"
+				headerText="FEV">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.fevExec != 0 and atividade.janExec != null}"
+							value="#{atividade.fevExec}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.fevExec}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.marExec != 0 and atividade.marExec != null ? 'highlight' : null} collum-mes"
+				headerText="MAR">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.marExec != 0 and atividade.marExec != null}"
+							value="#{atividade.marExec}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.marExec}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.abrExec != 0 and atividade.abrExec != null ? 'highlight' : null} collum-mes"
+				headerText="ABR">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.abrExec != 0 and atividade.abrExec != null}"
+							value="#{atividade.abrExec}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.abrExec}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.maiExec != 0 and atividade.maiExec != null ? 'highlight' : null} collum-mes"
+				headerText="MAI">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.maiExec != 0 and atividade.maiExec != null}"
+							value="#{atividade.maiExec}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.maiExec}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.junExec != 0 and atividade.junExec != null ? 'highlight' : null} collum-mes"
+				headerText="JUN">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.junExec != 0 and atividade.junExec != null}"
+							value="#{atividade.junExec}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.junExec}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.julExec != 0 and atividade.julExec != null ? 'highlight' : null} collum-mes"
+				headerText="JUL">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.julExec != 0 and atividade.julExec != null}"
+							value="#{atividade.julExec}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.julExec}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.agoExec != 0 and atividade.agoExec != null ? 'highlight' : null} collum-mes"
+				headerText="AGO">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.agoExec != 0 and atividade.agoExec != null}"
+							value="#{atividade.agoExec}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.agoExec}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.setExec != 0 and atividade.setExec != null ? 'highlight' : null} collum-mes"
+				headerText="SET">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.setExec != 0 and atividade.setExec != null}"
+							value="#{atividade.setExec}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.setExec}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.outExec != 0 and atividade.outExec != null ? 'highlight' : null} collum-mes"
+				headerText="OUT">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.outExec != 0 and atividade.outExec != null}"
+							value="#{atividade.outExec}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.outExec}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.novExec != 0 and atividade.novExec != null ? 'highlight' : null} collum-mes"
+				headerText="NOV">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.novExec != 0 and atividade.novExec != null}"
+							value="#{atividade.novExec}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.novExec}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.dezExec != 0 and atividade.dezExec != null ? 'highlight' : null} collum-mes"
+				headerText="DEZ">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.dezExec != 0 and atividade.dezExec != null}"
+							value="#{atividade.dezExec}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.dezExec}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+
+			<p:columnGroup type="footer">
+				<p:row>
+					<p:column footerText="Totais: " colspan="4"
+						style="text-align:right" />
+
+					<p:column
+						footerText="#{projetoBean.buscarValorTotal(projetoBean.totalExecutadas)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesExecutado(1)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesExecutado(2)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesExecutado(3)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesExecutado(4)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesExecutado(5)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesExecutado(6)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesExecutado(7)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesExecutado(8)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesExecutado(9)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesExecutado(10)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesExecutado(11)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesExecutado(12)}" />
+
+				</p:row>
+
+			</p:columnGroup>
+
+
+
+		</p:dataTable>
+
+	</p:fieldset>
+	<p:separator />
+
+	<p:fieldset legend="Atividades não planejadas" toggleable="true"
+		collapsed="true">
+		<p:dataTable id="tabela_atividade_nao_planejado" editable="true"
+			value="#{projetoBean.atividadesExecutadasNaoPlanejadas}"
+			var="atividade" emptyMessage="Nenhum Registro Encontrado!" rows="10">
+
+			<f:facet name="header">
+
+
+				<p:panelGrid columns="2">
+
+					<p:outputLabel styleClass="titulo-total"
+						value="Total de atividades não planejadas:" style="float:right"></p:outputLabel>
+
+					<h:panelGroup>
+
+						<p:outputLabel styleClass="titulo-total"
+							value="#{projetoBean.totalNaoPlanejadas}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+								currencySymbol="R$" />
+						</p:outputLabel>
+
+						<p:commandLink style="color:#FFF;margin-left:5px"
+							title="Atualizar cronograma" onclick="start()" onerror="stop()"
+							onsuccess="stop()"
+							action="#{projetoBean.carregarDetalhesNaoPlanejadas()}"
+							styleClass="btn btn-primary btn-xs "
+							process="@this" update="tabela_atividade_nao_planejado">
+							<span class="glyphicon glyphicon glyphicon-refresh "></span>
+						</p:commandLink>
+						
+						<h:commandLink  style="margin:3px"  immediate="true">
+							<p:graphicImage library="image" name="excel.png" width="30" />
+							<p:dataExporter  type="xls"  target="tabela_atividade_nao_planejado" 
+								fileName="cronograma_nao_planejado" />
+								
+						</h:commandLink>
+
+					</h:panelGroup>
+
+					<p:outputLabel styleClass="titulo-total"
+						value="Quantidade de atividades não planejadas:"
+						style="float:right"></p:outputLabel>
+					<p:outputLabel styleClass="titulo-total"
+						value="#{projetoBean.qtdNaoPlanejadas}" />
+
+				</p:panelGrid>
+
+			</f:facet>
+
+			<p:ajax event="rowEdit" listener="#{projetoBean.onRowEdit}"
+				update="tab_cadastro:msg_grant" />
+			<p:ajax event="rowEditCancel" listener="#{projetoBean.onRowCancel}"
+				update="tab_cadastro:msg_grant" />
+
+
+			<p:column style="width:25px" exportable="false">
+				<p:rowEditor />
+			</p:column>
+
+			<p:column headerText="Atividades" style="width:500px;"
+				filterBy="#{atividade.nome}">
+				<p:outputLabel style="font-size:10px" value="#{atividade.nome}"></p:outputLabel>
+			</p:column>
+
+			<p:column headerText="Responsável" style="width:100px">
+				<p:outputLabel value="#{atividade.responsavel}" />
+			</p:column>
+
+			<p:column headerText="Localizador" style="width:100px">
+				<p:outputLabel value="#{atividade.nomeLocalizador}" />
+			</p:column>
+
+			<p:column style="width:100px" headerText="Valor">
+				<p:outputLabel value="#{atividade.valor}">
+					<f:convertNumber type="currency" maxFractionDigits="2"
+						currencySymbol="R$" />
+				</p:outputLabel>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.jan != 0 and atividade.jan != null ? 'highlight_orange' : null} collum-mes"
+				headerText="JAN">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.jan != 0 and atividade.jan != null}"
+							value="#{atividade.jan}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.jan}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.fev != 0 and atividade.fev != null ? 'highlight_orange' : null} collum-mes"
+				headerText="FEV">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.fev != 0 and atividade.fev != null}"
+							value="#{atividade.fev}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.fev}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.mar != 0 and atividade.mar != null ? 'highlight_orange' : null} collum-mes"
+				headerText="MAR">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.mar != 0 and atividade.mar != null}"
+							value="#{atividade.mar}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.mar}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.abr != 0 and atividade.abr != null ? 'highlight_orange' : null} collum-mes"
+				headerText="ABR">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.abr != 0 and atividade.abr != null}"
+							value="#{atividade.abr}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.abr}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.mai != 0 and atividade.mai != null ? 'highlight_orange' : null} collum-mes"
+				headerText="MAI">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.mai != 0 and atividade.mai != null}"
+							value="#{atividade.mai}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.mai}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.jun != 0 and atividade.jun != null ? 'highlight_orange' : null} collum-mes"
+				headerText="JUN">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.jun != 0 and atividade.jun != null}"
+							value="#{atividade.jun}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.jun}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.jul != 0 and atividade.jul != null ? 'highlight_orange' : null} collum-mes"
+				headerText="JUL">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.jul != 0 and atividade.jul != null}"
+							value="#{atividade.jul}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.jul}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.ago != 0 and atividade.ago != null ? 'highlight_orange' : null} collum-mes"
+				headerText="AGO">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.ago != 0 and atividade.ago != null}"
+							value="#{atividade.ago}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.ago}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.set != 0 and atividade.set != null ? 'highlight_orange' : null} collum-mes"
+				headerText="SET">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.set != 0 and atividade.set != null}"
+							value="#{atividade.set}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.set}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.out != 0 and atividade.out != null ? 'highlight_orange' : null} collum-mes"
+				headerText="OUT">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.out != 0 and atividade.out != null}"
+							value="#{atividade.out}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.out}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.nov != 0 and atividade.nov != null ? 'highlight_orange' : null} collum-mes"
+				headerText="NOV">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.nov != 0 and atividade.nov != null}"
+							value="#{atividade.nov}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.nov}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column
+				styleClass="#{atividade.dez != 0 and atividade.dez != null ? 'highlight_orange' : null} collum-mes"
+				headerText="DEZ">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel
+							rendered="#{atividade.dez != 0 and atividade.dez != null}"
+							value="#{atividade.dez}"></p:outputLabel>
+					</f:facet>
+					<f:facet name="input">
+						<p:inputNumber value="#{atividade.dez}" padControl="false"></p:inputNumber>
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:columnGroup type="footer">
+				<p:row>
+					<p:column footerText="Totais: " colspan="4"
+						style="text-align:right" />
+
+					<p:column
+						footerText="#{projetoBean.buscarValorTotal(projetoBean.totalNaoPlanejadas)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesNaoPlanejado(1)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesNaoPlanejado(2)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesNaoPlanejado(3)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesNaoPlanejado(4)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesNaoPlanejado(5)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesNaoPlanejado(6)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesNaoPlanejado(7)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesNaoPlanejado(8)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesNaoPlanejado(9)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesNaoPlanejado(10)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesNaoPlanejado(11)}" />
+
+					<p:column
+						footerText="#{projetoBean.calcularQuantidadePorMesNaoPlanejado(12)}" />
+
+				</p:row>
+
+			</p:columnGroup>
+
+		</p:dataTable>
+
+
+	</p:fieldset>
+
+
+</ui:fragment>

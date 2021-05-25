@@ -1,1 +1,16 @@
 @charset "UTF-8";
+
+
+body .ui-breadcrumb {
+	background-color: #fff;
+	border: 1px solid #c8c8c8;
+	padding-top: 0px;
+	margin-bottom: 8px;
+	padding-bottom: 0px;
+}
+
+.ui-breadcrumb ul li span {
+	display: block;
+	overflow: hidden;
+	font-size: 12px;
+}

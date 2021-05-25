@@ -1,0 +1,151 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<style type="text/css">
+.valorPropaganda {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(80, 80, 80, 0.79);
+}
+
+.valorPropagandaRED {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(234, 15, 15, 0.79);
+}
+
+.ui-progressbar .ui-progressbar-label {
+	text-align: center;
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	display: none;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+td.jqplot-table-legend {
+	vertical-align: middle;
+	font-size: 15px;
+}
+
+.jqplot-target {
+	position: relative;
+	color: #666;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 2em;
+}
+</style>
+
+
+
+	<div style="padding: 2px 2px">
+
+		<div class="cadastro-projeto"
+			style="margin-right: auto; margin-left: auto;">
+			<div>
+
+
+
+
+
+				<p:separator></p:separator>
+				<h:panelGroup id="panel_atividade_projeto">
+
+					<div class="botao_central" align="left"
+						style="width: 100%; background-color: rgba(51, 122, 183, 0.18); margin: 0px 1px 10px 2px;">
+
+						<p:commandLink id="add"
+							styleClass="btn btn-primary btn-sm"
+							style="color:white;margin:2px 2px"
+							action="#{projetoBean.iniciarNovaAtividade()}"
+							update="form-cadastro-atividade"
+							process="panel_atividade_projeto,form-cadastro-atividade"
+							oncomplete="PF('dlg_cadastro_atividade').show()"
+							title="Adicionar atividade" >
+							<span class="glyphicon glyphicon-plus"></span><span style="margin: 3px;">Novo</span>
+						</p:commandLink>
+
+					</div>
+
+					<p:fieldset legend="Atividades" toggleable="true">
+						<p:dataTable id="tabela_atividade" styleClass="ui-noborder"
+							value="#{projetoBean.atividades}" var="atividade"
+							paginator="true" emptyMessage="Nenhum Registro Encontrado!"
+							rows="10">
+
+							<p:column headerText="Título" filterBy="#{atividade.nome}"
+								filterMatchMode="contains">
+								<h:outputText value="#{atividade.nome}" />
+							</p:column>
+
+							<p:column rendered="false" headerText="Descrição"
+								filterBy="#{atividade.descricao}" filterMatchMode="contains">
+								<h:outputText value="#{atividade.descricao}" />
+							</p:column>
+
+							<p:column headerText="Planejada"
+								style="width:80px;text-align:center">
+								<h:outputText value="SIM" rendered="#{atividade.planejado}" />
+								<h:outputText value="NÃO" rendered="#{!atividade.planejado}" />
+
+							</p:column>
+
+							<p:column headerText="Valor" style="width:80px;text-align:center">
+								<h:outputText value="#{atividade.valor}">
+									<f:convertNumber type="currency" maxFractionDigits="2"
+										currencySymbol="R$" />
+								</h:outputText>
+							</p:column>
+
+							<p:column id="colum_mudanca"
+								style="width:90px;text-align:center;" headerText="Ações">
+								<p:commandLink title="Editar"
+									styleClass="btn btn-default btn-xs"
+									action="#{projetoBean.editarAtividade()}"
+									update="form-cadastro-atividade"
+									process="tabela_atividade,form-cadastro-atividade"
+									style="margin-right:2px"
+									oncomplete="PF('dlg_cadastro_atividade').show()">
+									<span class=" glyphicon glyphicon-edit"></span>
+									<f:setPropertyActionListener value="#{atividade}"
+										target="#{projetoBean.atividadeProjeto}" />
+								</p:commandLink>
+
+								<p:commandLink style="color:#FFF;margin-left:5px"
+									title="Excluir Atividade"
+									styleClass="btn btn-danger btn-xs "
+									action="#{projetoBean.removerAtividade()}" process="@this"
+									update="tabela_atividade,tab_cadastro:graficos">
+									<span class="glyphicon glyphicon-remove-circle"></span>
+									<p:confirm header="Confirmar exclusão" icon="ui-icon-alert"
+										message="Excluir Atividade?" />
+									<f:setPropertyActionListener value="#{atividade}"
+										target="#{projetoBean.atividadeProjeto}" />
+								</p:commandLink>
+
+							</p:column>
+
+
+						</p:dataTable>
+
+
+					</p:fieldset>
+					<br />
+
+
+				</h:panelGroup>
+			</div>
+		</div>
+
+	</div>
+
+</ui:fragment>

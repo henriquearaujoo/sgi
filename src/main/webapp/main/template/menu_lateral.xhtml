@@ -1,0 +1,112 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<h:form id="panel-menu" prependId="false">
+
+
+		<div class="ui-fluid">
+
+			<p:panelMenu id="panel-menu-p">
+
+				<p:submenu label="Solicitações" rendered="true">
+					<p:menuitem value="Compras" url="compra_new.xhtml"
+						onclick="start()" onerror="stop()" />
+					<p:menuitem value="Pagamentos" url="pagamento.xhtml"
+						onclick="start()" onerror="stop()" />
+					<p:menuitem value="Adiantamentos" url="adiantamentos.xhtml"
+						onclick="start()" onerror="stop()" />
+					<p:menuitem value="Viagens" url="SolicitacaoViagem.xhtml"
+						rendered="false" />
+
+				</p:submenu>
+
+				<p:submenu label="Planejamento" rendered="true">
+					<p:menuitem value="Doações" url="orcamentos.xhtml" />
+					<p:menuitem value="Projetos" url="projetos.xhtml" />
+					<p:menuitem value="Plano de trabalho" url="planos.xhtml"
+						rendered="false" />
+					<p:menuitem value="Controladoria" url="recursos_projetos.xhtml"
+						rendered="false" />
+					<p:menuitem value="Controle de projeto" url="liberar_projeto.xhtml"
+						rendered="false" />
+					<p:menuitem value="Custo pessoal" url="custo_pessoal.xhtml"
+						rendered="false" />
+
+				</p:submenu>
+
+				<p:submenu label="Relatórios">
+					<p:menuitem value="Relatórios" url="relatorios_fin.xhtml"
+						onclick="start()" onerror="stop()" />
+					<p:menuitem value="Reclassificação" url="reclassificacao.xhtml"
+						rendered="false" />
+				</p:submenu>
+
+				<p:submenu label="Logística" rendered="true">
+					<p:menuitem value="Termos" url="termo_expedicao.xhtml"
+						rendered="false" />
+					<p:menuitem value="Logística" url="controle_expedicao.xhtml" />
+				</p:submenu>
+
+				<p:submenu label="Financeiro" rendered="true">
+					<p:menuitem value="Custo pessoal" url="custo_pessoal.xhtml"
+						rendered="false" />
+					<p:menuitem value="Lançamentos OLD" url="lancamentos.xhtml"
+						rendered="false" />
+					<p:menuitem value="Lançamentos diversos"
+						url="lancamentos_diversos.xhtml" rendered="false" />
+					<p:menuitem value="Conciliação financeira"
+						url="lancamentosV2.xhtml" />
+					<p:menuitem value="Validação de lançamentos"
+						url="liberacao_lancamento.xhtml" />
+				</p:submenu>
+
+				<p:submenu label="Cadastro" rendered="true">
+					<p:menuitem value="Cargos" url="cargos.xhtml" rendered="true"
+						onclick="start()" onerror="stop()" />
+					<p:menuitem value="Colaboradores" url="cadastro_colaborador.xhtml"
+						onclick="start()" onerror="stop()" />
+					<p:menuitem value="Componentes" url="componentes.xhtml"
+						rendered="true" onclick="start()" onerror="stop()" />
+					<p:menuitem value="Comunidades" url="comunidades.xhtml"
+						rendered="true" onclick="start()" onerror="stop()" />
+					<p:menuitem value="Eventos" url="eventos.xhtml" onclick="start()"
+						onerror="stop()" />
+					<p:menuitem value="Fontes Pagadoras" url="fonte_pagadora.xhtml"
+						rendered="true" onclick="start()" onerror="stop()" />
+					<p:menuitem value="Produtos" url="produtos.xhtml" onclick="start()"
+						onerror="stop()" />
+					<p:menuitem value="Sub-Componentes" url="subcomponentes.xhtml"
+						rendered="true" onclick="start()" onerror="stop()" />
+					<p:menuitem value="Contas" url="contas.xhtml" rendered="false" />
+					<p:menuitem value="Bancos" url="bancos.xhtml" rendered="false" />
+					<p:menuitem value="Usuários" url="cadastro_usuarios_att.xhtml"
+						rendered="true" onclick="start()" onerror="stop()" />
+					<p:menuitem value="Aprovadores" url="aprovadores.xhtml"
+						rendered="false" />
+					<p:menuitem value="Fornecedores" url="fornecedores.xhtml"
+						rendered="false" />
+
+					<p:menuitem value="Rubricas" url="rubrica.xhtml" rendered="false" />
+
+					<p:menuitem value="Unid. Conservação"
+						url="unidadesConservacao.xhtml" rendered="true" onclick="start()"
+						onerror="stop()" />
+				</p:submenu>
+
+				<p:submenu label="PBF" rendered="false">
+					<p:menuitem value="Familiar" url="cadastro_familiar.xhtml" />
+					<p:menuitem value="Comunitário" url="cadastro_comunitario.xhtml" />
+				</p:submenu>
+
+			</p:panelMenu>
+
+		</div>
+	</h:form>
+
+
+</ui:composition>

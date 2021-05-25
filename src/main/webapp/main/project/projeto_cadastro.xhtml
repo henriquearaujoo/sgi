@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+<ui:composition template="/main/template/LayoutFullPage.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -44,12 +44,18 @@
 				<o:viewParam name="project" value="#{projetoBean.projeto}" />
 				<f:viewAction action="#{projetoBean.initCadastro()}" />
 			</f:metadata>
+			
+			<p:messages  showSummary="false" showDetail="true" closable="true">
+				<p:autoUpdate></p:autoUpdate>
+			</p:messages>
 
 			<p:breadCrumb>
 				<p:menuitem value="Categories" url="home_new.xhtml" />
 				<p:menuitem value="Lista de Projetos" url="projetos.xhtml" />
 				<p:menuitem value="Cadastro de Projetos" />
 			</p:breadCrumb>
+			
+			
 
 			<p:tabView id="tab_cadastro" binding="#{projetoBean.tabviewProjeto}">
 
@@ -59,48 +65,48 @@
 					update="form-cadastro-projeto" />
 
 				<p:tab id="cadastro_projeto" title="Cadastro do Projeto">
-					<ui:include src="/main/projeto_tab01.xhtml" />
+					<ui:include src="/main/project/projeto_tab01.xhtml" />
 				</p:tab>
 
 				<p:tab id="cadastro_objetivos" title="Indicadores/Métricas"
 					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/projeto_tab09.xhtml" />
+					<ui:include src="/main/project/projeto_tab09.xhtml" />
 				</p:tab>
 
 				<p:tab id="categoria_projeto" title="Atividades"
 					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/projeto_tab07.xhtml" />
+					<ui:include src="/main/project/projeto_tab07.xhtml" />
 				</p:tab>
 
 				<p:tab id="cadastro_rubrica" title="Orçamento"
 					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/projeto_tab02.xhtml" />
+					<ui:include src="/main/project/projeto_tab02.xhtml" />
 				</p:tab>
 
 
 				<p:tab id="planejamento_projeto" title="Cronograma"
 					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/projeto_tab08.xhtml" />
+					<ui:include src="/main/project/projeto_tab08.xhtml" />
 				</p:tab>
 
 				<p:tab id="graf_projeto" title="Gráficos"
 					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/projeto_tab10.xhtml" />
+					<ui:include src="/main/project/projeto_tab10.xhtml" />
 				</p:tab>
 
 				<p:tab id="painelIndicadores"
 					rendered="#{projetoBean.projeto.id != null}"
 					title="Painel de Indicadores">
-					<ui:include src="/main/projeto_tab11.xhtml" />
+					<ui:include src="/main/project/projeto_tab11.xhtml" />
 				</p:tab>
 
 				<p:tab rendered="false" id="atividade_projeto"
 					title="Linhas dos projetos">
-					<ui:include src="/main/projeto_tab05.xhtml" />
+					<ui:include src="/main/project/projeto_tab05.xhtml" />
 				</p:tab>
 
 				<p:tab rendered="false" id="extrato_projeto" title="Extrato">
-					<ui:include src="/main/projeto_tab04.xhtml" />
+					<ui:include src="/main/project/projeto_tab04.xhtml" />
 				</p:tab>
 
 

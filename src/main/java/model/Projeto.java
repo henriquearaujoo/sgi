@@ -61,10 +61,7 @@ public class Projeto implements Serializable {
 
 	@Column
 	private Boolean tarifado;
-
-	@Column(name = "contextualizacao")
-	@Lob
-	private String contextualizacao;
+	
 	@Temporal(TemporalType.DATE)
 	private Date dataInicio;
 	@Temporal(TemporalType.DATE)

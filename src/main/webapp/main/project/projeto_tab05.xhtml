@@ -1,0 +1,134 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<style type="text/css">
+.valorPropaganda {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(80, 80, 80, 0.79);
+}
+
+.valorPropagandaRED {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(234, 15, 15, 0.79);
+}
+
+.ui-progressbar .ui-progressbar-label {
+	text-align: center;
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	display: none;
+	font-weight: bold;
+	font-size: 14px;
+}
+</style>
+
+
+	<div style="padding: 2px 2px">
+
+		<div class="cadastro-projeto"
+			style="margin-right: auto; margin-left: auto;">
+			<div>
+
+
+
+				<h:panelGroup id="panel_categoria_projeto">
+
+					<p:panelGrid columns="7">
+
+						<h:panelGrid columns="1">
+							<p:outputLabel value="Nome:" for="categoria" />
+							<p:inputText id="categoria"
+								value="#{projetoBean.categoriaProjeto.nome}" />
+						</h:panelGrid>
+
+						<h:panelGrid columns="1">
+							<p:outputLabel value="Valor:" for="valor_liberado_categoria" />
+							<p:inputText id="valor_liberado_categoria"
+								value="#{projetoBean.categoriaProjeto.valor}"
+								onkeydown="mascaraMoeda(this,moeda)" required="true"
+								requiredMessage="Campo obrigatório">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" />
+							</p:inputText>
+							<p:message for="valor_liberado_categoria" escape="true"
+								display="text" showSummary="false" showDetail="true" />
+						</h:panelGrid>
+
+						<h:panelGrid columns="1">
+							<p:outputLabel value=":::" />
+							<h:panelGroup>
+								<p:commandLink
+									styleClass="btn btn-default btn-sm fa fa-cart-plus"
+									style="margin-left:5px" title="Salvar"
+									onclick="start()" oncomplete="stop()" onerror="stop()"
+									process="panel_categoria_projeto"
+									update="panel_categoria_projeto"
+									action="#{projetoBean.salvarCategoriaProjeto()}">
+									<span style="font-family: Arial">Incluir</span>
+								</p:commandLink>
+
+							</h:panelGroup>
+							<p:outputLabel value=":::" />
+						</h:panelGrid>
+
+					</p:panelGrid>
+
+					<p:separator />
+
+					<p:dataTable id="table-relacao-categoria"
+						value="#{projetoBean.categoriasDeProjeto}" var="categoria">
+
+						<p:column headerText="Nome" style="width:120px">
+							<h:outputText value="#{categoria.nome}" />
+						</p:column>
+
+						<p:column width="120" headerText="Valor" style="text-align:right">
+							<h:outputText value="#{categoria.valor}">
+								<f:convertNumber type="currency" maxFractionDigits="2"
+									currencySymbol="R$" />
+							</h:outputText>
+						</p:column>
+
+						<p:column style="width:20px">
+							<p:commandLink process="@this" style="color:#FFF"
+								styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove-circle"
+								update="table-relacao-categoria" onclick="start()" oncomplete="stop()" onerror="stop()"
+								action="#{projetoBean.removerCategoriaProjeto()}">
+								<f:setPropertyActionListener value="#{categoria}"
+									target="#{projetoBean.categoriaProjeto}" />
+									<p:confirm header="Confirmar exclusão"
+											icon="ui-icon-alert" message="Confirmar exclusão de categoria de projeto?" />
+							</p:commandLink>
+						</p:column>
+
+						<p:columnGroup type="footer">
+							<p:row>
+								<p:column colspan="1" footerText="Total: "
+									style="text-align:right" />
+								<p:column style="text-align:right"
+									footerText="#{projetoBean.buscarValorTotalCategoriaDeProjeto()}" />
+								<p:column></p:column>
+							</p:row>
+
+						</p:columnGroup>
+
+					</p:dataTable>
+
+				</h:panelGroup>
+			</div>
+		</div>
+
+	</div>
+
+</ui:fragment>
