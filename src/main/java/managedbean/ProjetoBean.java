@@ -1552,7 +1552,8 @@ public class ProjetoBean implements Serializable {
 		projeto.setVersionProjeto("mode01");
 		projeto.setStatusAprovacao(StatusAprovacaoProjeto.EM_APROVACAO);
 		projeto = gestaoProjeto.salvarMODE01(projeto, usuarioSessao.getUsuario());
-		createChartExecucao();
+		// createChartExecucao();
+		System.out.println(projeto.getId());
 		// messageSalvamento("Projeto salvo com sucesso");
 		// carregarProjetos();
 	}

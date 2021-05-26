@@ -63,50 +63,50 @@
 					listener="#{projetoBean.definirTabProjeto()}" onstart="start();"
 					onsuccess="stop();" onerror="stop();"
 					update="form-cadastro-projeto" />
+					
+				
 
-				<p:tab id="cadastro_projeto" title="Cadastro do Projeto">
+				<p:tab id="cadastro_projeto" title="Informações gerais">
 					<ui:include src="/main/project/projeto_tab01.xhtml" />
 				</p:tab>
-
+				
 				<p:tab id="cadastro_objetivos" title="Indicadores/Métricas"
 					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/project/projeto_tab09.xhtml" />
+					<ui:include src="/main/projeto_tab09.xhtml" />
 				</p:tab>
-
+				
 				<p:tab id="categoria_projeto" title="Atividades"
 					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/project/projeto_tab07.xhtml" />
+					<ui:include src="/main/projeto_tab07.xhtml" />
 				</p:tab>
-
+				
 				<p:tab id="cadastro_rubrica" title="Orçamento"
 					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/project/projeto_tab02.xhtml" />
+					<ui:include src="/main/projeto_tab02.xhtml" />
 				</p:tab>
-
-
+				
 				<p:tab id="planejamento_projeto" title="Cronograma"
 					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/project/projeto_tab08.xhtml" />
+					<ui:include src="/main/projeto_tab08.xhtml" />
 				</p:tab>
-
+				
 				<p:tab id="graf_projeto" title="Gráficos"
 					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/project/projeto_tab10.xhtml" />
+					<ui:include src="/main/projeto_tab10.xhtml" />
 				</p:tab>
-
-				<p:tab id="painelIndicadores"
-					rendered="#{projetoBean.projeto.id != null}"
+				
+				<p:tab  id="painelIndicadores" rendered="#{projetoBean.projeto.id != null}"
 					title="Painel de Indicadores">
-					<ui:include src="/main/project/projeto_tab11.xhtml" />
+					<ui:include src="/main/projeto_tab11.xhtml" />
 				</p:tab>
 
 				<p:tab rendered="false" id="atividade_projeto"
 					title="Linhas dos projetos">
-					<ui:include src="/main/project/projeto_tab05.xhtml" />
+					<ui:include src="/main/projeto_tab05.xhtml" />
 				</p:tab>
-
+				
 				<p:tab rendered="false" id="extrato_projeto" title="Extrato">
-					<ui:include src="/main/project/projeto_tab04.xhtml" />
+					<ui:include src="/main/projeto_tab04.xhtml" />
 				</p:tab>
 
 
@@ -291,7 +291,7 @@
 					style="width: 100%; background-color: rgba(51, 122, 183, 0.18); margin: 0px 1px 10px 2px;">
 					<p:commandLink styleClass="btn btn-primary btn-sm"
 						action="#{projetoBean.salvarAtividade()}"
-						update="@form,tab_cadastro:panel_atividade_projeto"
+						update="@form"
 						style="color:#fff; margin: 2px 2px;" value="Salvar" />
 
 					<p:commandLink id="bt-excluir" styleClass="btn btn-danger btn-sm"
@@ -369,7 +369,7 @@
 					<p:commandLink styleClass="btn btn-primary btn-sm"
 						action="#{projetoBean.salvarMetas()}" onclick="start()"
 						onsuccess="stop()" onerror="stop()" process="form-cadastro-metas"
-						update="@form,:form-cadastro-projeto:tab_cadastro:tabela_metas"
+						update="@form"
 						style="color:#fff; margin: 2px 2px;" value="Salvar" />
 
 				</div>

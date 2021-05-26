@@ -7,37 +7,7 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 
-	<style type="text/css">
-.valorPropaganda {
-	font-family: FontExo, Tahoma, Arial;
-	font-size: 18px;
-	font-weight: bold;
-	color: rgba(80, 80, 80, 0.79);
-}
-
-.valorPropagandaRED {
-	font-family: FontExo, Tahoma, Arial;
-	font-size: 18px;
-	font-weight: bold;
-	color: rgba(234, 15, 15, 0.79);
-}
-
-.ui-progressbar .ui-progressbar-label {
-	text-align: center;
-	height: 100%;
-	width: 100%;
-	position: absolute;
-	display: none;
-	font-weight: bold;
-	font-size: 14px;
-}
-
-td.jqplot-table-legend {
-	vertical-align: middle;
-	font-size: 15px;
-}
-</style>
-
+	
 
 
 	<div style="padding: 2px 2px">
@@ -48,19 +18,17 @@ td.jqplot-table-legend {
 				
 
 
-				<p:separator></p:separator>
+				
 				<h:panelGroup id="panel_metas_projeto">
 
 				
 					<p:fieldset legend="Metas" >
 						<p:dataTable value="#{projetoBean.listaMetas}" rowStyleClass="#{meta.concluido? 'highlight' : null}" id="tabela_metas" emptyMessage="Sem Registros" var="meta" >
 							<f:facet name="header">
-								<div align="center" >
-									<p:outputLabel value="Lista de Metas" style="font-size: 15px;" />
-								</div>
+								
 								
 								<div class="botao_central" align="left"
-									style="width: 100%; background-color: rgba(51, 122, 183, 0.18); margin: 0px 1px 10px 2px;">
+									style="width: 100%; margin: 0px 1px 0px 2px;">
 				
 									<p:commandLink id="add_metas"
 										styleClass="btn btn-primary btn-sm"
@@ -69,7 +37,7 @@ td.jqplot-table-legend {
 										process="@this"
 										update=":form-cadastro-metas"
 										title="Adicionar Meta" >
-										<span class="glyphicon glyphicon-plus"></span><span style="margin: 3px;">Novo</span>
+										<span class="glyphicon glyphicon-plus"></span><span style="margin: 8px;">Novo</span>
 									</p:commandLink>
 				
 								</div>
@@ -128,12 +96,10 @@ td.jqplot-table-legend {
 					<p:fieldset legend="Indicadores"  id="indicadores" >
 						<p:dataTable value="#{projetoBean.listaIndicadores}" rowStyleClass="#{indicador.concluido? 'highlight' : null}"   id="tabela_indicador" emptyMessage="Sem Registros" var="indicador" >
 							<f:facet name="header">
-								<div align="center" >
-									<p:outputLabel value="Lista de Indicadores" style="font-size: 15px;" />
-								</div>
+								
 								
 								<div class="botao_central" align="left"
-									style="width: 100%; background-color: rgba(51, 122, 183, 0.18); margin: 0px 1px 10px 2px;">
+									style="width: 100%; margin: 0px 1px 10px 2px;">
 				
 									<p:commandLink id="add_indicador"
 										styleClass="btn btn-primary btn-sm"
@@ -142,7 +108,7 @@ td.jqplot-table-legend {
 										process="@this"
 										update=":form-cadastro-indicador"
 										title="Adicionar Indicador" >
-										<span class="glyphicon glyphicon-plus"></span><span style="margin: 3px;">Novo</span>
+										<span class="glyphicon glyphicon-plus"></span><span style="margin: 8px;">Novo</span>
 									</p:commandLink>
 				
 								</div>

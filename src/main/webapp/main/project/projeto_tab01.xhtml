@@ -8,13 +8,14 @@
 
 	<p:panel id="panel-info-geral">
 		<div id="div_acoes" class="botao_central" align="left"
-			style="width: 100%; background-color:; margin: 0px 1px 10px 2px;">
+			style="width: 100%; background-color:; margin: 0px 1px 16px 2px;">
 
 			<p:commandLink styleClass="btn btn-success btn-sm "
 				action="#{projetoBean.salvarMODE01()}"
-				process="panel-cadastro-projeto,panel_objetivos,id_enquadramento"
-				update="panel-cadastro-projeto :form-cadastro-projeto"
-				style="color:#fff; margin: 2px 2px;" onstart="start();"
+				
+				update=":form-cadastro-projeto"
+				process="panel-info-geral"
+				style="color:#fff; margin: 2px;" onstart="start();"
 				onsuccess="stop();" onerror="stop();">
 				<span class="glyphicon glyphicon-floppy-disk"></span>
 				<span style="margin: 3px;">Salvar</span>
@@ -165,14 +166,7 @@
 		<div class="cadastro-projeto"
 			style="margin-right: auto; margin-left: auto;">
 			<div>
-				<h:panelGroup id="panel-cadastro-projeto">
-
-
-
-
-
-
-				</h:panelGroup>
+				
 				<p:separator></p:separator>
 				<p:fieldset legend="Enquadramento do Projeto" id="id_enquadramento">
 					<p:panelGrid>
@@ -386,7 +380,5 @@
 
 
 	</div>
-
-
-
+	
 </ui:fragment>
