@@ -2747,8 +2747,6 @@ public class ProjetoBean implements Serializable {
 
 	public void openDialogMetas() {
 		metas = new Metas();
-		PrimeFaces.current().ajax().update("form-cadastro-metas");
-		openDialog("PF('dlg_cadastro_metas').show();");
 	}
 
 	public void removeObjetivo(Objetivo objetivo) {

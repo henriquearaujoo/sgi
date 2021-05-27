@@ -34,10 +34,11 @@
 										styleClass="btn btn-primary btn-sm"
 										style="color:white;margin:2px 2px"
 										action="#{projetoBean.openDialogMetas()}"
+										onclick="setarWidthHeight('form-cadastro-metas');start()"
+										oncomplete="PF('dlg_cadastro_metas').show();stop()"
 										process="@this"
-										update=":form-cadastro-metas"
 										title="Adicionar Meta" >
-										<span class="glyphicon glyphicon-plus"></span><span style="margin: 8px;">Novo</span>
+										<span class="glyphicon glyphicon-plus"></span><span style="margin: 3px;">Novo</span>
 									</p:commandLink>
 				
 								</div>

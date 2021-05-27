@@ -63,4 +63,4 @@ function setarFocused(divPanel) {
 }
 setarFocused("componenet-panel");
 setarFocused("info-geral")
-
+setarfocused("orcamentos")
