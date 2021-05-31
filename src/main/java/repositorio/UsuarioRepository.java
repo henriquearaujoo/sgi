@@ -27,7 +27,7 @@ public class UsuarioRepository {
 	}
 
 	public User getUsuario(String nome, String senha) {
-		String jpql = "select u from User u where u.nomeUsuario = :nome and u.senha = :senha";
+		String jpql = "select u from User u where u.nomeUsuario = :nome and u.senhav4 = :senha";
 		Query query = manager.createQuery(jpql);
 		query.setParameter("nome", nome);
 		query.setParameter("senha", senha);

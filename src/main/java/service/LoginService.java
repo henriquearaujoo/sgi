@@ -1,16 +1,11 @@
 package service;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.inject.Inject;
-import javax.persistence.Query;
 
 import anotacoes.Transactional;
-import model.Indicador;
-import model.Projeto;
 import model.User;
-import repositorio.IndicadorRepositorio;
 import repositorio.UsuarioRepository;
 
 public class LoginService implements Serializable {
@@ -25,7 +20,7 @@ public class LoginService implements Serializable {
 
 	@Transactional
 	public void updateSenhaAutomatica(User usuario, String senha) {
-		usuario.setSenha(senha);
+		usuario.setSenhav4(senha);
 		usuario.setSenhaAuto(true);	
 		userRepositorio.updateSenha(usuario);
 	}

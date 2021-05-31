@@ -117,7 +117,7 @@ public class UsuarioService implements Serializable {
 	public boolean updateSenha(User usuario, String senha) {
 		try {
 			usuario.setSenhaAuto(false);
-			usuario.setSenha(senha);
+			usuario.setSenhav4(senha);
 			repositorio.updateSenha(usuario);
 			addMessage("", "Senha alterada com sucesso", FacesMessage.SEVERITY_INFO);
 			return true;

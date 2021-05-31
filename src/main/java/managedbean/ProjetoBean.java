@@ -347,7 +347,7 @@ public class ProjetoBean implements Serializable {
 		if (!auxTotal.equals(new BigDecimal(0)))
 			execucaoFisica = Double.parseDouble(
 					(auxEx.divide(auxTotal, 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100))).toString());
-		
+
 		openDialog("PF('dialog_detail').show();");
 	}
 
@@ -1974,7 +1974,6 @@ public class ProjetoBean implements Serializable {
 		hp.put("CEP_RESP", getNullValue(uc.getCepAssociacao(), "Não cadastrado"));
 		hp.put("TELEFONE_RESP", getNullValue(uc.getTelefonePresidente(), "Não cadastrado"));
 		hp.put("ID_PLANO", getNullValue(projeto.getNome(), "Não cadastrado"));
-		hp.put("CONTEXT", getNullValue(projeto.getContextualizacao(), "Não cadastrado"));
 		hp.put("OBJ_GERAL", getNullValue(projeto.getObjetivo(), "Não cadastrado"));
 		hp.put("OBJ_ESPECIFICO", getNullValue(projeto.getObjetivoEspecifico(), "Não cadastrado"));
 		hp.put("NOME_RESPONSAVEL", getNullValue(uc.getPresidenteAssociacao(), "Não cadastrado"));

@@ -32,6 +32,8 @@ public class User implements Serializable {
 
 	@Column
 	private String senha;
+	@Column
+	private String senhav4;
 	@ManyToOne
 	private Perfil perfil;
 	@Column
@@ -217,6 +219,38 @@ public class User implements Serializable {
 
 	public void setSenhaAuto(Boolean senhaAuto) {
 		this.senhaAuto = senhaAuto;
+	}
+
+	public String getSenhav4() {
+		return senhav4;
+	}
+
+	public void setSenhav4(String senhav4) {
+		
+		MessageDigest algorithm = null;
+		try {
+			algorithm = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+
+		byte messageDigest[] = null;
+
+		try {
+			messageDigest = algorithm.digest(senhav4.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		StringBuilder hexString = new StringBuilder();
+
+		for (byte b : messageDigest) {
+			hexString.append(String.format("%02X", 0xFF & b));
+		}
+		
+		senhav4 = hexString.toString();
+
+		this.senhav4 = senhav4;
 	}
 
 }

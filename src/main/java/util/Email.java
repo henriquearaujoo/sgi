@@ -153,13 +153,15 @@ public class Email {
 	}
 
 	private Session criarSessionMail(String email, String senha) {
+		
 		Properties props = new Properties();
-
+		
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.socketFactory.port", 465);
 		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		props.put("mail.smtp.auth", true);
 		props.put("mail.smtp.port", 465);
+		//props.put("mail.smtp.starttls.enable", "true");
 
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 
@@ -295,7 +297,6 @@ public class Email {
 
 		MimeBodyPart part1 = new MimeBodyPart();
 		part1.setText(content);
-		// part1.setContent(content, "text/html; charset=UTF-8");
 		partes.addBodyPart(part1);
 	}
 

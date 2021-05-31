@@ -62,9 +62,6 @@ public class Projeto implements Serializable {
 	@Column
 	private Boolean tarifado;
 
-	@Column(name = "contextualizacao")
-	@Lob
-	private String contextualizacao;
 	@Temporal(TemporalType.DATE)
 	private Date dataInicio;
 	@Temporal(TemporalType.DATE)
@@ -602,14 +599,6 @@ public class Projeto implements Serializable {
 
 	public void setObjetivoEspecifico(String objetivoEspecifico) {
 		this.objetivoEspecifico = objetivoEspecifico;
-	}
-
-	public String getContextualizacao() {
-		return contextualizacao;
-	}
-
-	public void setContextualizacao(String contextualizacao) {
-		this.contextualizacao = contextualizacao;
 	}
 
 	public String getResponsavel() {

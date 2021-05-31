@@ -51,12 +51,10 @@ $(document).on('blur','input',function() {
 
 function setarFocused(divPanel) {	
 	divs = document.getElementById(divPanel).getElementsByClassName('form-group');
-	
 	for (var i = 0; i < divs.length; i++) {
 		var input = divs[i].getElementsByClassName('ui-inputfield')[0];
 		if (input != null && input.value != "") {
 			divs[i].classList.add("focused");
-			//console.log(input);
 		}
 	}
 	
