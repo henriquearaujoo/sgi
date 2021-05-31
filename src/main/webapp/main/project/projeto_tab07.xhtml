@@ -7,44 +7,6 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 
-	<style type="text/css">
-.valorPropaganda {
-	font-family: FontExo, Tahoma, Arial;
-	font-size: 18px;
-	font-weight: bold;
-	color: rgba(80, 80, 80, 0.79);
-}
-
-.valorPropagandaRED {
-	font-family: FontExo, Tahoma, Arial;
-	font-size: 18px;
-	font-weight: bold;
-	color: rgba(234, 15, 15, 0.79);
-}
-
-.ui-progressbar .ui-progressbar-label {
-	text-align: center;
-	height: 100%;
-	width: 100%;
-	position: absolute;
-	display: none;
-	font-weight: bold;
-	font-size: 14px;
-}
-
-td.jqplot-table-legend {
-	vertical-align: middle;
-	font-size: 15px;
-}
-
-.jqplot-target {
-	position: relative;
-	color: #666;
-	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-	font-size: 2em;
-}
-</style>
-
 
 
 	<div style="padding: 2px 2px">
@@ -57,7 +19,7 @@ td.jqplot-table-legend {
 
 
 
-				
+				<p:separator></p:separator>
 				<h:panelGroup id="panel_atividade_projeto">
 
 					<div class="botao_central" align="left"
@@ -67,11 +29,11 @@ td.jqplot-table-legend {
 							styleClass="btn btn-primary btn-sm"
 							style="color:white;margin:2px 2px"
 							action="#{projetoBean.iniciarNovaAtividade()}"
-							update="form-cadastro-atividade"
-							process="panel_atividade_projeto,form-cadastro-atividade"
-							oncomplete="PF('dlg_cadastro_atividade').show()"
+							onclick="setarWidthHeight('form-cadastro-atividade');start()"
+							oncomplete="PF('dlg_cadastro_atividade').show();stop()"
+							process="@this"
 							title="Adicionar atividade" >
-							<span class="glyphicon glyphicon-plus"></span><span style="margin: 3px;">Novo</span>
+							<span class="glyphicon glyphicon-plus"></span><span style="margin: 16px;">Novo</span>
 						</p:commandLink>
 
 					</div>

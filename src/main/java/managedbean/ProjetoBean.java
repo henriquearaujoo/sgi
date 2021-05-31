@@ -1552,7 +1552,8 @@ public class ProjetoBean implements Serializable {
 		projeto.setVersionProjeto("mode01");
 		projeto.setStatusAprovacao(StatusAprovacaoProjeto.EM_APROVACAO);
 		projeto = gestaoProjeto.salvarMODE01(projeto, usuarioSessao.getUsuario());
-		createChartExecucao();
+		// createChartExecucao();
+		System.out.println(projeto.getId());
 		// messageSalvamento("Projeto salvo com sucesso");
 		// carregarProjetos();
 	}
@@ -2745,8 +2746,6 @@ public class ProjetoBean implements Serializable {
 
 	public void openDialogMetas() {
 		metas = new Metas();
-		PrimeFaces.current().ajax().update("form-cadastro-metas");
-		openDialog("PF('dlg_cadastro_metas').show();");
 	}
 
 	public void removeObjetivo(Objetivo objetivo) {

@@ -10,6 +10,7 @@
 
 	<ui:define name="content">
 	
+	
 		<f:metadata>
 				<f:viewAction action="#{orcamento_controller.init()}" />
 			</f:metadata>
@@ -29,19 +30,22 @@
 		
 		<p:panel> 
 
-				<p:link styleClass="btn btn-success btn-sm" style="margin-left:5px"
+				<p:link  styleClass="btn btn-success btn-sm" id="table-doacao" style="position: absolute;
+    margin-right: 3vh;
+    margin-top: 4px;
+    right: 0;"
 					outcome="/main/orcamento_cadastro" title="Adicionar orçamento">
 					<span class="glyphicon glyphicon-plus"></span>
-					<span style="margin: 3px;">Novo</span>
+					<span style="padding: 24px">Novo cadastro</span>
 				</p:link>
+				
+				
 
-
-			<p:separator></p:separator>
-
-			<p:dataTable id="table_doacao" paginator="true" rows="12"
+			<p:dataTable id="table_doacao" paginator="true" style="color: white" rows="12"
 				value="#{orcamento_controller.orcamentos}" var="doacao">
 
-				<p:column headerText="Nome" filterBy="#{doacao.titulo}">
+				
+				<p:column headerText="Nome" >
 					<h:outputText value="#{doacao.titulo}" />
 				</p:column>
 

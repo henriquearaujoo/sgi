@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
+<ui:composition template="/main/template/LayoutFullPage.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -11,25 +11,27 @@
 	<ui:define name="content">
 
 		<script type="text/javascript">
-				function start() {
-				    PF('statusDialog').show();
-				}
-				 
-				function stop() {
-				    PF('statusDialog').hide();
-				}
-				
-				function stopDlgfilter() {
-				    PF('dlg_filtro_compra').hide();
-				}
+			function start() {
+				PF('statusDialog').show();
+			}
 
-				function setarWidthHeight(id) {
-					var htmlTag = document.getElementById(id);
-					htmlTag.style.height = Math.floor(window.innerHeight*0.98)+"px";	
-					htmlTag.style.width = Math.floor(window.innerWidth*0.98)+"px";	
-					
-				}
-			</script>
+			function stop() {
+				PF('statusDialog').hide();
+			}
+
+			function stopDlgfilter() {
+				PF('dlg_filtro_compra').hide();
+			}
+
+			function setarWidthHeight(id) {
+				var htmlTag = document.getElementById(id);
+				htmlTag.style.height = Math.floor(window.innerHeight * 0.98)
+						+ "px";
+				htmlTag.style.width = Math.floor(window.innerWidth * 0.98)
+						+ "px";
+
+			}
+		</script>
 
 		<style type="text/css">
 .oppt .ui-widget {
@@ -39,8 +41,8 @@
 
 
 
-		<h:form  id="form-projeto">
-
+		<h:form id="form-projeto">
+			
 
 
 			<f:metadata>
@@ -54,10 +56,13 @@
 			</p:messages>
 
 
-			<p:breadCrumb>
-				<p:menuitem value="Categories" url="home_new.xhtml" />
-				<p:menuitem value="Projetos" />
-			</p:breadCrumb>
+			
+				<p:breadCrumb>
+					<p:menuitem value="Categories" url="home_new.xhtml" />
+					<p:menuitem value="Projetos" />
+				</p:breadCrumb>
+			
+
 
 			<p:panel>
 				<div class="ui-g ui-fluid" style="margin-top: 8px">
@@ -163,7 +168,7 @@
 										<td><p:selectBooleanCheckbox style="cursor: pointer">
 												<p:ajax listener="#{projetoBean.addList(projeto)}" />
 											</p:selectBooleanCheckbox></td>
-										<td><h:outputText value="#{projeto.codigo}"/></td>
+										<td><h:outputText value="#{projeto.codigo}" /></td>
 										<td><h:outputText value="#{projeto.nome}" /></td>
 										<td><h:outputText
 												value="#{projeto.statusAprovacao.descricao}" /></td>
@@ -173,7 +178,7 @@
 											</h:outputText></td>
 										<td><p:menuButton value="Opções">
 												<p:menuitem value="#{message['ACTION_EDIT']}"
-													outcome="/main/projetos_cadastro" onstart="start()"
+													outcome="/main/project/projeto_cadastro" onstart="start()"
 													oncomplete="stop()" onerror="stop()">
 													<f:param name="project" value="#{projeto.id}" />
 												</p:menuitem>

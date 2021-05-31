@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+<h:head>
+	<h:outputStylesheet library="css" name="project/style.css" />
+
+	<style type="text/css">
+	
+	body .ui-carousel .ui-carousel-header {
+    background-color: #30383c;
+    color: #fff;
+    padding: .571em 1em .571em 1em;
+    border: 1px solid #007ad9;
+    margin: 0;
+    font-weight: 400;
+    -moz-border-radius-bottomleft: 0;
+    -webkit-border-bottom-left-radius: 0;
+    border-bottom-left-radius: 0;
+    -moz-border-radius-bottomright: 0;
+    -webkit-border-bottom-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+	
+.item-selected-bc {
+	background: #caccc645;
+	font-weight: bold;
+}
+
+.ui-outputlabel .ui-outputlabel-rfi {
+	margin-left: .4em;
+	color: red;
+}
+
+.label-subtitle {
+	margin-top: 1px;
+	margin-left: 5px;
+}
+
+
+body .ui-tabs .ui-tabs-nav .ui-tabs-header.ui-state-active {
+	background-color: #ffb300;
+	border: 1px solid #ffb300;
+}
+
+body .ui-tabs .ui-tabs-nav .ui-tabs-header.ui-state-active a {
+	color: #212121;
+}
+
+body .ui-tabs .ui-tabs-nav .ui-tabs-header.ui-state-hover, body .ui.tabs .ui-tabs-nav .ui-tabs-header.ui-tabs-outline
+	{
+	outline: 0 none;
+	background-color: #393c3f;
+	border: 1px solid #393c3f;
+	color: #000;
+}
+
+body .ui-tabs .ui-tabs-nav .ui-tabs-header.ui-state-hover a, body .ui.tabs .ui-tabs-nav .ui-tabs-header.ui-tabs-outline a
+	{
+	color: #ffb300;
+}
+
+body .ui-tabs .ui-tabs-nav .ui-tabs-header {
+	list-style: none;
+	position: static;
+	margin: 0 .214em 0 0;
+	padding: 0;
+	white-space: nowrap;
+	display: inline-block;
+	vertical-align: top;
+	float: none;
+	padding: 0;
+	border: 1px solid #393c3f;
+	background-color: #393c3f;
+	font-weight: 400;
+	top: 0;
+	-moz-transition: background-color .3s;
+	-o-transition: background-color .3s;
+	-webkit-transition: background-color .3s;
+	transition: background-color .3s;
+}
+
+.ui-breadcrumb ul {
+	margin: 0;
+	padding: 0;
+	display: block;
+	margin-left: 5px;
+}
+
+body .ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-item.ui-state-highlight
+	{
+	background-color: #30383c;
+	color: #fff;
+	border-bottom: 1px solid #fff;
+}
+
+body .ui-paginator .ui-paginator-pages .ui-paginator-page.ui-state-active
+	{
+	background-color: #2e6da470;
+	color: #000;
+}
+
+body .ui-datatable .ui-datatable-data>tr.ui-state-highlight {
+	border: 1px solid #c8c8c8;
+	background-color: #30383c;
+	color: #fff;
+	cursor: default;
+}
+
+body .ui-dialog .ui-dialog-titlebar {
+	border: 1px solid #30383c;
+	background-color: #30383c;
+	color: #fff;
+	padding: .571em 1em .571em 1em;
+	font-weight: 400;
+	border-bottom: 0 none;
+}
+
+body .ui-fileupload .ui-fileupload-buttonbar {
+	border: 1px solid #0f61003d;
+	background-color: #f9fafb00;
+	color: #fff;
+	padding: .571em 1em .571em 1em;
+}
+
+body .ui-selectonemenu-panel .ui-selectonemenu-filter-container {
+	padding: .429em .857em .429em .857em;
+	margin: 0;
+	border-bottom: 1px solid #eaeaea;
+	background-color: #fff;
+	color: #333;
+	width: 100%;
+}
+
+body .ui-inputfield.ui-state-focus {
+	border-width: 0;
+	background-size: 100% 2px, 100% 1px;
+	outline: none;
+	padding-bottom: 2px;
+	border-color: #849A39 !important;
+}
+
+body .ui-inputfield.ui-state-disabled {
+	border-bottom: 1px dotted;
+}
+
+body .ui-inputfield.ui-widget-content {
+	border-width: 1px;
+	background: transparent;
+	background-image: none;
+}
+
+body .ui-widget-header .ui-inputfield, body .ui-selectlistbox-filter-container .ui-inputfield
+	{
+	background-image: linear-gradient(to bottom, #ffffff, #ffffff),
+		linear-gradient(to bottom, #a0c3e3, #a0c3e3);
+	padding-bottom: 2px;
+}
+
+body .form-wrapper .ui-selectonemenu . .ui-state-error {
+	box-shadow: 0 1px 0 0 red !important;
+	background-image: linear-gradient(to bottom, #fff, #fff),
+		linear-gradient(to bottom, #fff, #fff) !important;
+}
+
+body .ui-selectonemenu-panel .ui-selectonemenu-items .ui-selectonemenu-item.ui-state-highlight
+	{
+	background-color: #d6dbcf94;
+	color: #000;
+}
+
+body .ui-steps .ui-steps-item {
+	background-color: transparent;
+	text-align: center;
+	opacity: 1;
+	margin-left: 100px;
+	filter: alpha(opacity = 100);
+}
+
+body .ui-dialog .ui-dialog-footer {
+	text-align: center;
+}
+
+body .ui-datatable .ui-datatable-header, body .ui-datatable .ui-datatable-footer
+	{
+	background-color: #ffffff;
+	border: 1px solid #007ad91f;
+	color: #fff;
+	padding: .571em 1em .571em 1em;
+	font-weight: 400;
+}
+
+.semBorda tr, .semBorda td {
+	border: none !important;
+}
+
+.btn-primary-vi {
+	color: #fff;
+	background-color: #03a9f4;
+	border-color: #03a9f4;
+}
+
+.fontFilter {
+	font-size: 10px;
+}
+
+body .ui-panel .ui-panel-titlebar {
+	border: 1px solid #00000036 !important;
+	background-color: #ffffff !important;
+	color: #000;
+}
+
+body .ui-chkbox .ui-chkbox-box.ui-state-active {
+	border-color: #007ad9;
+	background-color: #30383c;
+	color: #fff;
+}
+
+body .ui-panelmenu .ui-panelmenu-header {
+	border: 1px solid #30383c !important;
+	background-color: #30383c !important;
+	border-bottom: 1.5px solid #1f8214d9 !important;
+}
+
+.status-efetivado {
+	height: 25px;
+	width: 25px;
+	background-color: green;
+	border-radius: 50%;
+	display: inline-block;
+}
+
+.status-provisionado {
+	height: 25px;
+	width: 25px;
+	background-color: red;
+	border-radius: 50%;
+	display: inline-block;
+}
+
+body .ui-fileupload .ui-fileupload-content {
+	display: none !important;
+}
+</style>
+
+
+
+	<f:facet name="first">
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	</f:facet>
+
+	<link rel="shortcut icon"
+		href="http://fas-amazonas.org/versao/2012/wordpress/wp-content/uploads/2016/03/favicon.png" />
+
+
+	<title>Um clique</title>
+
+	<h:outputStylesheet library="algaworks" name="styles/custom.css" />
+	<h:outputStylesheet library="algaworks" name="styles/layout.css" />
+	<h:outputStylesheet library="algaworks" name="styles/components.css" />
+
+	<link rel="stylesheet" href="../../resources/css/estilos.css" />
+	<link rel="stylesheet" href="../../resources/css/global.css" />
+	<link rel="stylesheet" href="../../resources/css/menu.css" />
+	<link rel="stylesheet"
+		href="../../resources/bootstrap-4.3.1-dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="../../resources/bootsnip/css/style.css" />
+	<link rel="stylesheet" href="../../resources/icomoon/style.css" />
+	<link rel="stylesheet" href="../../resources/css/primefaces_alter.css" />
+	<link rel="stylesheet" href="../../resources/css/bootstrap_alter.css" />
+	<link rel="stylesheet" href="../../resources/css/intranet_coments.css" />
+	<link rel="stylesheet" href="../../resources/css/teste.css" />
+
+
+	<h:outputScript library="bootstrap-4.3.1-dist"
+		name="js/bootstrap.min.js" target="body" />
+
+	<h:outputScript library="primefaces" name="jquery/jquery.js"
+		target="body" />
+
+	<h:outputScript target="body" library="algaworks"
+		name="javascripts/app.js" />
+		
+	<h:outputScript target="body" library="javascript"
+		name="app.js" />
+	
+
+	<h:outputScript library="primefaces" name="jquery/jquery-plugins.js"
+		target="body" />
+
+	<h:outputScript library="js" name="app.js" target="body" />
+
+
+	<h:panelGroup id="panel-script">
+		<h:outputScript library="js" name="tabs.js" target="body" />
+		<h:outputScript library="js" name="menu.js" target="body" />
+		<h:outputScript library="js" name="teste.js" target="body" />
+		<h:outputScript name="mascaras.js" library="js" />
+	</h:panelGroup>
+
+
+	<!-- 		<script type="text/javascript" src="../resources/algaworks/javascripts/app.js"></script> -->
+	<!-- 		<script type="text/javascript" src="../resources/js/teste.js"></script> -->
+	<!-- 		<script type="text/javascript" src="../resources/js/menu.js"></script> -->
+	<!-- 		<script type="text/javascript" src="../resources/js/tabs.js"></script> -->
+	<!-- 		<script type="text/javascript" src="../resources/js/mascaras.js"></script> -->
+
+
+
+
+</h:head>
+
+<h:body>
+
+
+	<h:form id="form-layout">
+
+		<ul id="profile-menu" class="profile-menu fadeInDown  js-profile-menu">
+			<li><a href="#" class="ripplelink"> <span>Conta</span>
+			</a></li>
+
+			<li><a href="#" class="ripplelink"> <span>Aprovador</span>
+			</a></li>
+
+			<li><a href="tutorial.xhtml" class="ripplelink"> <span>Tutoriais</span>
+			</a></li>
+
+			<li><p:commandLink action="#{loginBean.logout()}">
+					<span>Sair</span>
+				</p:commandLink></li>
+
+		</ul>
+
+		<header class="aw-topbar">
+
+			<div class="input-menu-search js-menu fadeInDown form-wrapper">
+				<div id="form-group">
+					<p:inputText id="menu-find" style="color:#fff; background:#30383c"
+						placeholder="Procurar" onkeyup="findMenu(this.value);" />
+				</div>
+			</div>
+			<a href="#" id="link-bar" class="aw-toggle  js-toggle"> <i
+				id="bar" style="font-size: 18px;" class="fa  fa-bars"> </i>
+			</a> <a href="#" class="profile-menu-button js-menu-toggle"> <img
+				src="../resources/image/#{loginBean.nome}.jpg" />
+			</a>
+
+			<p:commandLink title="status" styleClass="aw-toggle-config"
+				update=":form_cadastro_gestao"
+				rendered="#{gestnaoController.sessao.gestor}"
+				oncomplete="PF('cadastro_gestao').show();"
+				action="#{gestaoController.editarGestao(gestaoController.sessao.usuario)}">
+
+				<span class="fa fa-gear"></span>
+			</p:commandLink>
+
+			<ul class="ul-menu-principal">
+
+
+				<li><p:commandLink
+						action="#{loginBean.redirecionaPage('home')}">
+						SGI - Sistema de Gestão Integrada</p:commandLink></li>
+
+
+			</ul>
+		</header>
+
+	</h:form>
+
+
+	<aside class="aw-sidebar  js-sidebar is-toggled">
+		<!-- <ui:include src="Menu.xhtml" />  -->
+		<nav class="aw-menu">
+			<div
+				style="margin-left: 1px; padding-left: 2px; padding-right: 2px; padding-top: 5px;">
+				<ui:insert name="menu_lateral" />
+				<ui:include src="./menu_lateral.xhtml" />
+			</div>
+		</nav>
+
+	</aside>
+
+	<section class="aw-content  js-content form-wrapper">
+		<div style="padding-top: 10px; position: relative;">
+			<ui:insert name="content" />
+		</div>
+	</section>
+
+	<ui:insert name="adicionais">
+
+
+
+
+	</ui:insert>
+
+
+</h:body>
+
+</html>

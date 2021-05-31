@@ -1,0 +1,59 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<style type="text/css">
+.valorPropaganda {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(80, 80, 80, 0.79);
+}
+
+.valorPropagandaRED {
+	font-family: FontExo, Tahoma, Arial;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(234, 15, 15, 0.79);
+}
+
+.ui-progressbar .ui-progressbar-label {
+	text-align: center;
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	display: none;
+	font-weight: bold;
+	font-size: 14px;
+}
+</style>
+
+
+	<div style="padding: 2px 2px">
+
+		<div class="cadastro-projeto"
+			style="margin-right: auto; margin-left: auto;">
+			<div>
+
+
+
+				<h:panelGroup id="panel_categoria_projeto">
+
+					<p:dataTable id="table-relacao-categoria"
+						value="#{projetoBean.categoriasDeProjeto}" var="categoria">
+
+
+					</p:dataTable>
+
+				</h:panelGroup>
+			</div>
+		</div>
+
+	</div>
+
+</ui:fragment>

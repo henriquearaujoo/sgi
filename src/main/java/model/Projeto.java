@@ -61,7 +61,6 @@ public class Projeto implements Serializable {
 
 	@Column
 	private Boolean tarifado;
-
 	@Temporal(TemporalType.DATE)
 	private Date dataInicio;
 	@Temporal(TemporalType.DATE)

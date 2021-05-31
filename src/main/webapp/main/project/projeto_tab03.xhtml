@@ -1,0 +1,190 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<div style="padding: 2px 2px">
+
+		<div class="cadastro-projeto"
+			style="margin-right: auto; margin-left: auto;">
+
+			<h:panelGroup id="panel-investimentos">
+
+				<div class="botao_central" align="left">
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						action="#{projetoBean.salvarAcaoMODE01()}"
+						update="panel-investimentos" process="panel-investimentos"
+						style="color:#fff; margin: 8px 2px;" value="Salvar" />
+
+				</div>
+
+				<p:scrollPanel mode="native" style="width:100%">
+
+					<p:panelGrid columns="4" id="gridi" styleClass="semBorda">
+						<h:panelGrid columns="1">
+							<p:outputLabel value="Investimentos/Produtos/Serviços:" />
+							<p:inputText value="#{projetoBean.acao.ips}"
+								styleClass="font11-vi" />
+						</h:panelGrid>
+
+						<h:panelGrid columns="1" styleClass="width-100-vi">
+							<p:outputLabel value="Localização:" />
+							<p:autoComplete styleClass="font11-vi" panelStyle="width:180px"
+								requiredMessage="Destino é obrigatório" rendered="true"
+								placeholder="Destino" required="true"
+								value="#{projetoBean.acao.localidade}"
+								completeMethod="#{fornecedor_controller.completeLocalidade}"
+								var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+								converter="localConverterVI" minQueryLength="3"
+								forceSelection="true" />
+
+						</h:panelGrid>
+
+						<h:panelGrid columns="1" styleClass="width-100-vi">
+							<p:outputLabel value="Cadeias:" for="cadeia" />
+							<p:selectOneMenu id="cadeia" filter="true" styleClass="font11-vi"
+								value="#{projetoBean.acao.projArranjosInfra}"
+								converter="cadeiaConverter" filterMatchMode="startsWith">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.cadeias}" var="cad"
+									itemLabel="#{cad.nome}" itemValue="#{cad}">
+								</f:selectItems>
+							</p:selectOneMenu>
+						</h:panelGrid>
+
+						<h:panelGrid columns="1" styleClass="width-100-vi">
+							<p:outputLabel value="Grupo de investimento:"
+								for="grupo_investimento" />
+
+							<p:selectOneMenu id="grupo_investimento" styleClass="font11-vi"
+								value="#{projetoBean.acao.grupoInvestimento}" filter="true"
+								filterMatchMode="startsWith">
+								<f:selectItem itemLabel="Selecione um" noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.gruposDeInvestimentos}"
+									var="group" itemLabel="#{group.nome}" itemValue="#{group}" />
+							</p:selectOneMenu>
+
+						</h:panelGrid>
+
+						<h:panelGrid columns="1" styleClass="width-100-vi">
+							<p:outputLabel value="ED/RR:" for="repasse" />
+							<p:selectOneMenu id="repasse" styleClass="font11-vi"
+								panelStyle="width:180px" value="#{projetoBean.acao.repasse}">
+								<f:selectItem itemLabel="Selecione um" noSelectionOption="true" />
+								<f:selectItem itemLabel="ED" itemValue="ED" />
+								<f:selectItem itemLabel="RR" itemValue="RR" />
+							</p:selectOneMenu>
+						</h:panelGrid>
+
+						<h:panelGrid columns="1" styleClass="width-100-vi">
+							<p:outputLabel value="Quantidade:" />
+							<p:inputText value="#{projetoBean.acao.quantidade}"
+								styleClass="font11-vi" />
+						</h:panelGrid>
+
+						<h:panelGrid columns="1" styleClass="width-100-vi">
+							<p:outputLabel value="Valor:" />
+							<p:inputText value="#{projetoBean.acao.valor}"
+								styleClass="font11-vi" onkeydown="mascaraMoeda(this,moeda)">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" />
+							</p:inputText>
+						</h:panelGrid>
+
+
+						<h:panelGrid columns="1">
+							<p:outputLabel value="Rubrica:" />
+							<p:selectOneMenu value="#{projetoBean.acao.projetoRubrica}"
+								converter="projetoRubricaConverter">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.listaDeRubricasProjeto}"
+									var="rubric"
+									itemLabel="#{rubric.rubricaOrcamento.rubrica.nome}"
+									itemValue="#{rubric}" />
+							</p:selectOneMenu>
+						</h:panelGrid>
+
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" styleClass="width-100-vi"
+						columnClasses="ui-grid-col-2, ui-grid-col-10">
+						<p:outputLabel value="Objetivo:" for="obj" style="float:right" />
+						<p:inputText id="obj" value="#{projetoBean.acao.objetivo}"
+							style="width:100%;font-size:11px" />
+
+						<p:outputLabel value="Observações:" for="obs" style="float:right" />
+						<p:inputText id="obs" style="width:100%;font-size:11px"
+							value="#{projetoBean.acao.observacao}" />
+
+					</p:panelGrid>
+
+
+				</p:scrollPanel>
+
+				<p:dataTable id="table_investimento" value="#{projetoBean.acoes}"
+					var="acao">
+
+
+					<p:column headerText="Rubrica/Elem. despesa">
+						<h:outputText value="#{acao.rubrica.nome}" />
+					</p:column>
+
+					<p:column headerText="Investimento">
+						<h:outputText value="#{acao.ips}" />
+					</p:column>
+
+					<p:column headerText="Localização">
+						<h:outputText value="#{acao.localidade.mascara}" />
+					</p:column>
+
+					<p:column headerText="Cadeia">
+						<h:outputText value="#{acao.projArranjosInfra.nome}" />
+					</p:column>
+
+					<p:column headerText="Ex Direta/Repasse">
+						<h:outputText value="#{acao.repasse}" />
+					</p:column>
+
+					<p:column headerText="Valor" style="text-align:right">
+						<h:outputText value="#{acao.valor}" />
+					</p:column>
+
+					<p:column headerText="Opções">
+						<p:commandLink value="Excluir"
+							action="#{projetoBean.removerAcao()}" update="table_investimento" process="@this">
+							<f:setPropertyActionListener value="#{acao}"
+								target="#{projetoBean.acao}" />
+						</p:commandLink>
+					</p:column>
+
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column colspan="5" footerText="Subtotal: "
+								style="text-align:right" />
+							<p:column style="text-align:right"
+								footerText="#{projetoBean.buscarValorTotalAcao()}" />
+							<p:column></p:column>
+						</p:row>
+
+					</p:columnGroup>
+
+				</p:dataTable>
+
+
+
+
+
+			</h:panelGroup>
+
+		</div>
+
+
+
+	</div>
+
+
+
+</ui:fragment>
