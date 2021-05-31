@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<ui:composition template="/WEB-INF/Layout.xhtml"
+<ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -7,224 +7,172 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
-
-
-	<ui:define name="menu_lateral">
-
-
-		<script type="text/javascript">
-
-			function start() {
-			    PF('statusDialog').show();
-			}
-			 
-			function stop() {
-			    PF('statusDialog').hide();
-			}
-			
-		</script>
-
-
-
-
-		<f:metadata>
-			<o:viewParam name="forn"
-				value="#{fornecedor_terceiro_controller.fornecedor}" />
-			<f:viewAction action="#{fornecedor_terceiro_controller.carregarCidades()}" />
-		</f:metadata>
-
-		<h:form id="tabela_menu">
-
-
-
-			<p:ajaxStatus onstart="PF('statusDialog').show()"
-				onsuccess="PF('statusDialog').hide()" />
-
-			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
-				closable="false" resizable="false" showHeader="false"
-				style="background-color:#FFFFFF; z-index:1009">
-				<p:graphicImage library="image" name="aguarde.gif" />
-			</p:dialog>
-
-			<p:dataTable id="tab-menu" scrollable="true" emptyMessage="..."
-				scrollHeight="300" styleClass="table table-hover"
-				value="#{fornecedor_terceiro_controller.menus}" var="menu">
-
-				<p:column>
-					<p:commandLink
-						action="#{fornecedor_terceiro_controller.redirecionar()}"
-						style="font-size:1em;" value="#{menu.nome}">
-						<f:setPropertyActionListener value="#{menu}"
-							target="#{fornecedor_terceiro_controller.menu}" />
-					</p:commandLink>
-					<span style="margin-left: 4px; float: right;" class="#{menu.icon}"></span>
-				</p:column>
-
-			</p:dataTable>
-		</h:form>
-
-	</ui:define>
 	<ui:define name="content">
-		<h:form id="formFornecedor" acceptcharset="ISO-8859-1">
-			<p:tabView id="cadastroFornecedor" prependId="false">
-				<p:tab title="Cadastro de terceiros">
-					<p:messages id="msgs"  showSummary="false"
-						showDetail="true" showIcon="true" closable="true" />
+		<script type="text/javascript">
+					function start() {
+						PF("statusDialog").show();
+					}
 
+					function stop() {
+						PF("statusDialog").hide();
+					}
+				</script>
+		<div class="container mt-3">
+			<h:form id="formFornecedor" acceptcharset="ISO-8859-1">
+				<p:messages id="msgs" showSummary="false" showDetail="true"
+					showIcon="true" closable="true" />
 
-					<p:panel id="PanelCadastro">
+				<f:metadata>
+					<o:viewParam name="forn"
+						value="#{fornecedor_terceiro_controller.fornecedor}" />
+					<f:viewAction
+						action="#{fornecedor_terceiro_controller.carregarCidades()}" />
+				</f:metadata>
 
-						<div class="botao_central" align="left"
-							style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
+				<p:panel header="Cadastro de Terceiros" id="PanelCadastro">
+					<div class="row mb-3">
+						<div class="col">
 
-							<p:commandLink styleClass="btn btn-primary btn-sm" type="button"
-								action="#{fornecedor_terceiro_controller.insert()}"
-								onclick="start()" oncomplete="stop()" onerror="stop()"
-								style="color:#fff; margin: 2px 2px;" value="Salvar"
-								process="PanelCadastro" />
+							<p:commandLink styleClass="btn btn-success"
+								action="#{fornecedor_terceiro_controller.salvarTerceiro}"
+								ajax="false" onclick="start()" onsuccess="stop()"
+								onerror="stop()">
+								<i class="fa fas fa-check"></i> Salvar
+						</p:commandLink>
 
-							<p:commandLink
-								action="#{fornecedor_terceiro_controller.voltarTelaDeListagem()}"
-								value="voltar" ajax="false" immediate="true"
-								styleClass="btn btn-info btn-sm" />
-
+							<p:link outcome="/main/fornecedores_terceiros" ajax="false"
+								immediate="true" styleClass="btn btn-outline-dark">
+								<i class="fa fa-fw fa-arrow-left"></i>
+							Voltar
+						</p:link>
 						</div>
+					</div>
 
+					<p:fieldset legend="Dados Gerais" styleClass="mb-3">
+						<div class="row">
+							<div class="col form-group">
+								<p:outputLabel value="Tipo:" for="tipo" />
+								<p:selectOneRadio id="tipo"
+									disabled="#{fornecedor_terceiro_controller.fornecedor.id != null}"
+									value="#{fornecedor_terceiro_controller.fornecedor.tipo}"
+									required="true" requiredMessage="Tipo é obrigatório">
+									<f:selectItem itemLabel="PESSOA JURIDICA" itemValue="juridica" />
+									<f:selectItem itemLabel="PESSOA FISICA" itemValue="fisica" />
+									<f:selectItem itemLabel="ESTRANGEIRO" itemValue="int" />
+									<p:ajax update="PanelCadastro formFornecedor"
+										resetValues="true" />
+								</p:selectOneRadio>
+							</div>
+							<div class="col form-group">
+								<p:outputLabel value="CNPJ:" for="cnpj"
+									rendered="#{fornecedor_terceiro_controller.fornecedor.tipo.equals('juridica')}" />
 
-						<p:panelGrid columns="2" style="width:100%" layout="grid"
-							columnClasses="ui-grid-col-2,ui-grid-col-10">
+								<p:inputMask mask="99.999.999/9999-99"
+									onblur="verificarCNPJ(this);" id="cnpj"
+									value="#{fornecedor_terceiro_controller.fornecedor.cnpj}"
+									disabled="#{fornecedor_terceiro_controller.fornecedor.id != null}"
+									required="true" title="Digite o CNPJ"
+									rendered="#{fornecedor_terceiro_controller.fornecedor.tipo.equals('juridica')}"
+									requiredMessage="CNPJ é obrigatório" styleClass="form-control" />
 
-							<p:outputLabel value="Tipo: " />
+								<p:outputLabel value="CPF:" for="cpf"
+									rendered="#{fornecedor_terceiro_controller.fornecedor.tipo.equals('fisica')}" />
 
-							<p:selectOneRadio id="tipo"
-								disabled="#{fornecedor_terceiro_controller.fornecedor.id != null}"
-								value="#{fornecedor_terceiro_controller.fornecedor.tipo}"
-								styleClass="form-control" required="true"
-								requiredMessage="Tipo é obrigatório">
-								<f:selectItem itemLabel="PESSOA JURIDICA" itemValue="juridica" />
-								<f:selectItem itemLabel="PESSOA FISICA" itemValue="fisica" />
-								<f:selectItem itemLabel="ESTRANGEIRO" itemValue="int" />
-								<p:ajax update="PanelCadastro formFornecedor" resetValues="true" />
+								<p:inputMask mask="999.999.999-99" id="cpf"
+									value="#{fornecedor_terceiro_controller.fornecedor.cpf}"
+									onblur="verificarCPF(this);" title="Digite o CPF"
+									required="true"
+									disabled="#{fornecedor_terceiro_controller.fornecedor.id != null}"
+									rendered="#{fornecedor_terceiro_controller.fornecedor.tipo.equals('fisica')}"
+									requiredMessage="CPF é obrigatório" styleClass="form-control" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col form-group">
+								<p:outputLabel value="Nome:" for="nome" />
 
-							</p:selectOneRadio>
-
-							<p:outputLabel value="CNPJ:"
-								rendered="#{fornecedor_terceiro_controller.fornecedor.tipo.equals('juridica')}"/>
-
-							<p:inputMask mask="99.999.999/9999-99" size="30"
-								onblur="verificarCNPJ(this);"
-								value="#{fornecedor_terceiro_controller.fornecedor.cnpj}"
-								disabled="#{fornecedor_terceiro_controller.fornecedor.id != null}"
-								required="true" title="Dígite o CNPJ"
-								rendered="#{fornecedor_terceiro_controller.fornecedor.tipo.equals('juridica')}"
-								requiredMessage="CNPJ é obrigatório"
-								styleClass="#{fornecedor_terceiro_controller.fornecedor.tipo.equals('juridica') ? 'field_border_red' : null}; text-transform: uppercase"/>
-
-
-							<p:outputLabel value="CPF: "
-								rendered="#{fornecedor_terceiro_controller.fornecedor.tipo.equals('fisica')}" />
-
-							<p:inputMask mask="999.999.999-99" size="30" 
-								value="#{fornecedor_terceiro_controller.fornecedor.cpf}"
-								onblur="validarCPF(this);"
-								title="Dígite o CPF" required="true"
-								disabled="#{fornecedor_terceiro_controller.fornecedor.id != null}"
-								rendered="#{fornecedor_terceiro_controller.fornecedor.tipo.equals('fisica')}"
-								requiredMessage="CPF é obrigatório"
-								styleClass="#{fornecedor_terceiro_controller.fornecedor.tipo.equals('fisica') ? 'field_border_red' : null}" />
-
-
-							<p:outputLabel value="Nome: " />
-
-							<h:panelGroup>
 								<p:inputText
 									value="#{fornecedor_terceiro_controller.fornecedor.razaoSocial}"
-									style="width:300px; text-transform: uppercase" requiredMessage="Nome é obrigatório"
+									style="text-transform: uppercase"
+									requiredMessage="Nome é obrigatório" id="nome"
 									disabled="#{fornecedor_terceiro_controller.fornecedor.id != null}"
 									required="#{fornecedor_terceiro_controller.verificarObrigatoriedade('nome')}"
-									styleClass="#{fornecedor_terceiro_controller.verificarObrigatoriedade('nome') ? 'field_border_red' : null}" />
+									styleClass="form-control" />
+							</div>
+							<div class="col form-group">
+								<p:outputLabel value="Nome Fantasia:" for="nomeFantasia" />
 
-								<p:outputLabel value="1º TEL/CEL:"
-									style="margin-left:5px;margin-right:5px" />
-								<p:inputMask mask="(99) 99999-9999"
+								<p:inputText id="nomeFantasia"
+									value="#{fornecedor_terceiro_controller.fornecedor.nomeFantasia}"
+									style="width: 300px; text-transform: uppercase"
+									requiredMessage="Nome fantasia é obrigatório"
+									required="#{fornecedor_terceiro_controller.verificarObrigatoriedade('nome_fantasia')}"
+									styleClass="form-control" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col form-group">
+								<p:outputLabel value="1º TEL/CEL:" for="tel1" />
+								<p:inputMask mask="(99) 99999-9999" id="tel1"
 									required="#{fornecedor_terceiro_controller.verificarObrigatoriedade('telefone')}"
 									value="#{fornecedor_terceiro_controller.fornecedor.telefone}"
 									requiredMessage="TEL/CEL é obrigatório"
-									styleClass="#{fornecedor_terceiro_controller.verificarObrigatoriedade('telefone') ? 'field_border_red' : null}" />
-
-							</h:panelGroup>
-
-							<p:outputLabel value="Nome Fantasia: " />
-
-							<h:panelGroup>
-								<p:inputText
-									value="#{fornecedor_terceiro_controller.fornecedor.nomeFantasia}"
-									style="width:300px; text-transform: uppercase"
-									requiredMessage="Nome fantasia é obrigatório"
-									required="#{fornecedor_terceiro_controller.verificarObrigatoriedade('nome_fantasia')}"
-									styleClass="#{fornecedor_terceiro_controller.verificarObrigatoriedade('nome_fantasia') ? 'field_border_red' : null}" />
-
-								<p:outputLabel value="2º TEL/CEL:"
-									style="margin-left:5px;margin-right:5px" />
-								<p:inputMask mask="(99) 99999-9999"
+									styleClass="form-control" />
+							</div>
+							<div class="col form-group">
+								<p:outputLabel value="2º TEL/CEL:" for="tel2" />
+								<p:inputMask mask="(99) 99999-9999" id="tel2"
 									value="#{fornecedor_terceiro_controller.fornecedor.telefoneSecundario}" />
 
-							</h:panelGroup>
+							</div>
+						</div>
 
-							<p:outputLabel value="Endereço: " />
-							<h:panelGroup>
-								<p:inputText
+						<div class="row">
+							<div class="col-6 form-group">
+								<p:outputLabel value="Endereço:" for="endereco" />
+								<p:inputText id="endereco"
 									value="#{fornecedor_terceiro_controller.fornecedor.endereco}"
-									style="width:300px; text-transform: uppercase" requiredMessage="Endereço é obrigatório"
+									style="text-transform: uppercase"
+									requiredMessage="Endereço é obrigatório"
 									required="#{fornecedor_terceiro_controller.verificarObrigatoriedade('endereco')}"
-									styleClass="#{fornecedor_terceiro_controller.verificarObrigatoriedade('endereco') ? 'field_border_red' : null}" />
+									styleClass="form-control" />
+							</div>
+							<div class="col-1 form-group">
+								<p:outputLabel value="Nº:" for="numero" />
 
-								<p:outputLabel value="Nº:"
-									style="margin-left:5px;margin-right:5px" />
-
-								<p:inputText
+								<p:inputText id="numero"
 									value="#{fornecedor_terceiro_controller.fornecedor.numero}"
 									size="10" requiredMessage="Nº é obrigatório"
 									required="#{fornecedor_terceiro_controller.verificarObrigatoriedade('numero')}"
-									styleClass="#{fornecedor_terceiro_controller.verificarObrigatoriedade('numero') ? 'field_border_red' : null}" />
+									styleClass="form-control" />
+							</div>
+							<div class="col-2 form-group">
+								<p:outputLabel value="CEP:" for="cep" />
 
-							</h:panelGroup>
-
-
-
-
-							<p:outputLabel value="CEP: " />
-
-							<h:panelGroup>
-								<p:inputMask mask="99.999-999" 
+								<p:inputMask mask="99.999-999" id="cep"
 									value="#{fornecedor_terceiro_controller.fornecedor.cep}"
-									requiredMessage="CEP é obrigatório"
-									required="#{fornecedor_terceiro_controller.verificarObrigatoriedade('cep')}"
-									styleClass="#{fornecedor_terceiro_controller.verificarObrigatoriedade('cep') ? 'field_border_red' : null}" />
-
-								<p:outputLabel value="Bairro: "
-									style="margin-left:5px;margin-right:5px; " />
-								<p:inputText
-									styleClass="#{fornecedor_terceiro_controller.verificarObrigatoriedade('bairro') ? 'field_border_red' : null} ; text-transform: uppercase"
+									requiredMessage="CEP é obrigatório" styleClass="form-control"
+									required="#{fornecedor_terceiro_controller.verificarObrigatoriedade('cep')}" />
+							</div>
+							<div class="col-3 form-group">
+								<p:outputLabel value="Bairro:" for="bairro" />
+								<p:inputText id="bairro"
 									required="#{fornecedor_terceiro_controller.verificarObrigatoriedade('bairro')}"
 									requiredMessage="Bairro é obrigatório"
-									value="#{fornecedor_terceiro_controller.fornecedor.bairro}"
-									size="40" />
-
-							</h:panelGroup>
-
-
-							<p:outputLabel value="Contato: " />
-							<p:inputText
-								value="#{fornecedor_terceiro_controller.fornecedor.contato}"
-								style="width:300px">
-							</p:inputText>
-
-							<p:outputLabel value="Estado: " />
-
-							<h:panelGroup>
-								<p:selectOneMenu id="est" filter="true"
-									styleClass="#{fornecedor_terceiro_controller.verificarObrigatoriedade('cidade') ? 'field_border_red' : null}"
+									styleClass="form-control" style="text-transform: uppercase;"
+									value="#{fornecedor_terceiro_controller.fornecedor.bairro}" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col form-group">
+								<p:outputLabel value="Contato:" for="contato" />
+								<p:inputText id="contato"
+									value="#{fornecedor_terceiro_controller.fornecedor.contato}" />
+							</div>
+							<div class="col form-group">
+								<p:outputLabel value="Estado:" for="est" />
+								<br />
+								<p:selectOneMenu id="est" filter="true" style="border: none; width: 100%;"
 									value="#{fornecedor_terceiro_controller.fornecedor.estado}"
 									requiredMessage="Estado é obrigatório"
 									converter="estadoConverter"
@@ -233,89 +181,79 @@
 									<f:selectItems
 										value="#{fornecedor_terceiro_controller.estados}" var="est"
 										itemValue="#{est}" itemLabel="#{est.nome}">
-
 									</f:selectItems>
 
 									<p:ajax
 										listener="#{fornecedor_terceiro_controller.carregarCidades()}"
 										process="@this" update="cidade2" />
 								</p:selectOneMenu>
+							</div>
+							<div class="col form-group">
 
-								<p:outputLabel value="Cidade:"
-									style="margin-left:5px;margin-right:5px" />
-
-
+								<p:outputLabel value="Cidade:" for="cidade2" />
+								<br />
 								<p:selectOneMenu id="cidade2" filter="true"
-									styleClass="#{fornecedor_terceiro_controller.verificarObrigatoriedade('cidade') ? 'field_border_red' : null}"
 									value="#{fornecedor_terceiro_controller.fornecedor.cidade}"
 									required="#{fornecedor_terceiro_controller.verificarObrigatoriedade('cidade')}"
-									requiredMessage="Cidade é obrigatório"
+									requiredMessage="Cidade é obrigatório" style="width:100%"
 									converter="localConverter">
 									<f:selectItem noSelectionOption="true" />
-									<f:selectItems value="#{fornecedor_terceiro_controller.listaLocalidade}"
+									<f:selectItems
+										value="#{fornecedor_terceiro_controller.listaLocalidade}"
 										converter="localConverter" var="cid"
 										itemLabel="#{cid.mascara}" itemValue="#{cid}"></f:selectItems>
 								</p:selectOneMenu>
-							</h:panelGroup>
+							</div>
+							<div class="col form-group">
+								<p:outputLabel value="Email pessoal:" for="email" />
+								<p:inputText id="email"
+									value="#{fornecedor_terceiro_controller.fornecedor.email}"
+									placeholder="exemplo@fas-amazonas.org"
+									styleClass="form-control">
+								</p:inputText>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-6 form-group">
+								<p:outputLabel value="Complemento: " for="complemento" />
+								<p:inputText styleClass="form-control" id="complemento"
+									value="#{fornecedor_terceiro_controller.fornecedor.complemento}"
+									style="text-transform: uppercase">
+								</p:inputText>
+							</div>
+							<div class="col-2 form-group">
+								<h:outputLabel value="Ativo:" for="ativo" />
+								<br />
+								<p:inputSwitch id="ativo"
+									value="#{fornecedor_terceiro_controller.fornecedor.ativo}"
+									offLabel="Não" onLabel="Sim">
+								</p:inputSwitch>
+							</div>
+							<div class="col-4 form-group">
+								<p:outputLabel value="Tipo de pagamentos:" for="tipo_pagamento" />
+								<br />
+								<p:selectOneRadio id="tipo_pagamento" required="true"
+									requiredMessage="Tipo de pagamento é obribatório"
+									value="#{fornecedor_terceiro_controller.fornecedor.tipoPagamento}">
+									<f:selectItem itemLabel="Depósito em conta"
+										itemValue="DEP_CONTA" />
+									<f:selectItem itemLabel="Boleto bancário" itemValue="BOLETO" />
+								</p:selectOneRadio>
+							</div>
+						</div>
 
-
-							<p:outputLabel value="Email pessoal: " />
-							<p:inputText
-								value="#{fornecedor_terceiro_controller.fornecedor.email}"
-								placeholder="exemplo@fas-amazonas.org" style="width:300px; text-transform: uppercase">
-
-							</p:inputText>
-
-							<p:outputLabel value="Complemento: " />
-							<p:inputText
-								value="#{fornecedor_terceiro_controller.fornecedor.complemento}"
-								style="width:300px; text-transform: uppercase">
-
-							</p:inputText>
-
-							<h:outputText value="Ativo:" />
-							<p:inputSwitch
-								value="#{fornecedor_terceiro_controller.fornecedor.ativo}"
-								offLabel="Não" onLabel="Sim">
-							</p:inputSwitch>
-
-
-							<p:outputLabel value="Tipo de pagamentos: " />
-							<p:selectOneRadio id="tipo_pagamento" required="true"
-								requiredMessage="Tipo de pagamento é obribatório"
-								value="#{fornecedor_terceiro_controller.fornecedor.tipoPagamento}"
-								styleClass="form-control">
-								<f:selectItem itemLabel="Depósito em conta"
-									itemValue="DEP_CONTA" />
-								<f:selectItem itemLabel="Boleto bancário" itemValue="BOLETO" />
-
-							</p:selectOneRadio>
-
-						</p:panelGrid>
-
-					</p:panel>
-
-					<p:separator></p:separator>
-
-					<p:panel id="panelConta">
-						<f:facet name="header">
-							<p:outputLabel value="Contas bancárias"></p:outputLabel>
-						</f:facet>
-
-						<p:messages id="msgConta"  showSummary="false"
-									showDetail="true" showIcon="true" closable="true" />
+					</p:fieldset>
+					<p:fieldset legend="Contas Bancárias" id="panelConta">
 
 						<p:panelGrid columns="10">
 							<p:outputLabel value="Banco: " />
 
-							<p:autoComplete id="banco_conta" required="true"
-											placeholder="Banco" inputStyle="width:155px"
-											requiredMessage="Banco é obrigatório"
-											value="#{fornecedor_terceiro_controller.contaBancaria.banco}"
-											completeMethod="#{fornecedor_terceiro_controller.completeBanco}"
-											var="banc" itemLabel="#{banc.nomeBanco}" itemValue="#{banc}"
-											forceSelection="true">
-
+							<p:autoComplete id="banco_conta" placeholder="Banco"
+								inputStyle="width:155px"
+								value="#{fornecedor_terceiro_controller.contaBancaria.banco}"
+								completeMethod="#{fornecedor_terceiro_controller.completeBanco}"
+								var="banc" itemLabel="#{banc.nomeBanco}" itemValue="#{banc}"
+								forceSelection="true">
 								<p:column>
 									<h:outputText value="#{banc.numeroBanco}" />
 								</p:column>
@@ -323,103 +261,95 @@
 								<p:column>
 									<h:outputText value="#{banc.nomeBanco}" />
 								</p:column>
-
 							</p:autoComplete>
-
 
 							<p:outputLabel value="Agência: " />
 
-							<p:inputMask mask="9999" required="true"
-										 requiredMessage="Agência é obrigatório"
-										 value="#{fornecedor_terceiro_controller.contaBancaria.numeroAgencia}" />
+							<p:inputMask mask="9999"
+								value="#{fornecedor_terceiro_controller.contaBancaria.numeroAgencia}" />
 
 							<p:outputLabel value="-" />
 
-							<p:inputText required="true"
-										 requiredMessage="Digito da agência é obrigatório"
-										 value="#{fornecedor_terceiro_controller.contaBancaria.digitoAgencia}"
-										 style="width: 25px;text-transform: uppercase" maxlength="2"/>
+							<p:inputText
+								value="#{fornecedor_terceiro_controller.contaBancaria.digitoAgencia}"
+								style="width: 25px; text-transform: uppercase" maxlength="2" />
 
 							<p:outputLabel value="Conta: " />
 
-							<p:inputMask mask="99999?999999" required="true"
-										 requiredMessage="Conta é obrigatório é obrigatório"
-										 value="#{fornecedor_terceiro_controller.contaBancaria.numeroConta}" />
-
+							<p:inputMask mask="99999?999999"
+								value="#{fornecedor_terceiro_controller.contaBancaria.numeroConta}" />
 
 							<p:outputLabel value="-" />
 
-							<p:inputText required="true"
-										 requiredMessage="Digito da conta é obrigatório"
-										 value="#{fornecedor_terceiro_controller.contaBancaria.digitoConta}"
-										 style="width: 25px;text-transform: uppercase" maxlength="1"/>
+							<p:inputText
+								value="#{fornecedor_terceiro_controller.contaBancaria.digitoConta}"
+								style="width: 25px; text-transform: uppercase" maxlength="1" />
 
 							<p:outputLabel value="Classificação" />
 							<p:selectOneMenu
-									value="#{fornecedor_terceiro_controller.contaBancaria.classificacaoConta}">
+								value="#{fornecedor_terceiro_controller.contaBancaria.classificacaoConta}">
 								<f:selectItem itemLabel="Principal" itemValue="PRINCIPAL" />
 								<f:selectItem itemLabel="Secundária" itemValue="SECUNDARIA" />
 							</p:selectOneMenu>
 
-							<p:commandButton title="Adicionar" value="Adicionar"
-											 process="panelConta" icon="fa fa-save" update="@parent contas msgConta"
-											 onclick="start()" oncomplete="stop()" onerror="stop()"
-											 style="font-size:10px;"
-											 action="#{fornecedor_terceiro_controller.salvarConta}" />
+							<p:commandLink process="panelConta"
+								styleClass="btn btn-success btn-sm" onclick="start()"
+								oncomplete="stop()" onerror="stop()"
+								action="#{fornecedor_terceiro_controller.salvarConta}">
+								<i class="fa fas fa-save"></i>
+							Salvar
+							</p:commandLink>
 						</p:panelGrid>
-
+						<p:spacer></p:spacer>
 						<p:dataTable id="contas" rowIndexVar="index"
-									 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-									 value="#{fornecedor_terceiro_controller.fornecedor.contasBancarias}"
-									 tableStyle="table-layout: auto;" var="bean" paginator="true"
-									 widgetVar="filteredFornecedor" rows="50">
-
-							<p:column filterStyle="display:none" headerText="Banco">
+							value="#{fornecedor_terceiro_controller.fornecedor.contasBancarias}"
+							tableStyle="table-layout: auto;" var="bean" paginator="true"
+							widgetVar="filteredFornecedor" rows="50">
+							<p:autoUpdate />
+							<p:column headerText="Banco">
 								<p:outputLabel value="#{bean.banco.nomeBanco}" />
 							</p:column>
 
-							<p:column filterStyle="display:none" headerText="Agência">
+							<p:column headerText="Agência">
 								<p:outputLabel value="#{bean.agencia}" />
 							</p:column>
 
-							<p:column filterStyle="display:none" headerText="Conta">
+							<p:column headerText="Conta">
 								<p:outputLabel value="#{bean.conta}" />
 							</p:column>
 
-
-							<p:column filterStyle="display:none" headerText="Classificação">
+							<p:column headerText="Classificação">
 								<p:outputLabel value="#{bean.classificacaoConta}" />
 							</p:column>
 
-
-
-
-							<p:column style="width:120px;text-align:center" headerText="Ação"
-									  exportable="false">
-
-								<p:commandButton title="Editar" icon="fa fa-edit"
-												 update=":formFornecedor:cadastroFornecedor:panelConta"
-												 process="@this"
-												 action="#{fornecedor_terceiro_controller.editarConta(index)}">
+							<p:column style="width: 120px; text-align: center"
+								headerText="Ação" exportable="false">
+								<p:commandButton title="Editar" icon="fa fa-edit" update="@this"
+									action="#{fornecedor_terceiro_controller.editarConta(index)}">
 									<f:setPropertyActionListener
-											target="#{fornecedor_terceiro_controller.contaBancaria}"
-											value="#{bean}" />
+										target="#{fornecedor_terceiro_controller.contaBancaria}"
+										value="#{bean}" />
 								</p:commandButton>
 								<p:spacer />
 
 								<p:commandButton title="Excluir" icon="fa fa-remove"
-												 rendered="true" update="contas" process="@this"
-												 action="#{fornecedor_terceiro_controller.removerConta(bean)}" />
+									rendered="true" update="contas" process="@this"
+									action="#{fornecedor_terceiro_controller.removerConta(bean)}" />
 							</p:column>
-
 						</p:dataTable>
+					</p:fieldset>
+				</p:panel>
 
-					</p:panel>
-
-
-				</p:tab>
-			</p:tabView>
-		</h:form>
+			</h:form>
+		</div>
 	</ui:define>
-
+	<ui:define name="adicionais">
+		<p:dialog modal="true" style="z-index: 1000" widgetVar="statusDialog"
+			showHeader="false" draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage library="image" name="aguarde.gif" />
+			<p:graphicImage style="width: 120px; height: 70px" library="image"
+				name="logofas.png" />
+		</p:dialog>
+	</ui:define>
 </ui:composition>

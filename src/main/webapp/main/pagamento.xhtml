@@ -37,321 +37,323 @@
 		</script>
 
 		<!-- Painle de listagem -->
+		<div class="container">
+
+			<h:panelGroup id="panel-listagem">
+
+				<h:form id="form-listagem" prependId="false">
+
+					<p:messages id="message" showSummary="false"
+						style="margin-top:10px" showDetail="true" closable="true"
+						showIcon="true">
+
+						<p:autoUpdate />
+					</p:messages>
 
 
-		<h:panelGroup id="panel-listagem">
-
-			<h:form id="form-listagem" prependId="false">
-
-				<p:messages id="message" showSummary="false" style="margin-top:10px"
-					showDetail="true" closable="true" showIcon="true">
-
-					<p:autoUpdate />
-				</p:messages>
+					<p:breadCrumb styleClass="mb-3 px-2 py-2">
+						<p:menuitem value="Categories" url="home_new.xhtml" />
+						<p:menuitem value="Pagamentos" url="pagamento.xhtml" />
+					</p:breadCrumb>
 
 
-				<p:breadCrumb>
-					<p:menuitem value="Categories" url="home_new.xhtml" />
-					<p:menuitem value="Pagamentos" url="pagamento.xhtml" />
-				</p:breadCrumb>
+					<p:panel id="filter-pgto" header="Pagamentos">
+						<div class="ui-g ui-fluid" style="margin-top: 8px">
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+								<p:outputLabel value="Código" styleClass="form-label" />
+								<p:inputText value="#{pagamentoController.filtro.codigo}" />
+							</div>
 
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+								<p:outputLabel value="Solicitante" styleClass="form-label" />
+								<p:inputText value="#{pagamentoController.filtro.nome}" />
+							</div>
 
-				<p:panel id="filter-pgto">
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+								<p:outputLabel value="Data início" styleClass="form-label" />
+								<p:calendar id="dt_inicio" placeholder="Inicio"
+									value="#{pagamentoController.filtro.dataInicio}"
+									navigator="true" pattern="dd/MM/yyyy" />
+							</div>
 
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
 
-					<div class="ui-g ui-fluid" style="margin-top: 8px">
-						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-							<p:outputLabel value="Código" styleClass="form-label" />
-							<p:inputText value="#{pagamentoController.filtro.codigo}" />
-						</div>
+								<p:outputLabel value="Data final" styleClass="form-label" />
+								<p:calendar id="dt_final"
+									value="#{pagamentoController.filtro.dataFinal}"
+									navigator="true" pattern="dd/MM/yyyy" />
 
-						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-							<p:outputLabel value="Solicitante" styleClass="form-label" />
-							<p:inputText value="#{pagamentoController.filtro.nome}" />
-						</div>
-
-						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-							<p:outputLabel value="Data início" styleClass="form-label" />
-							<p:calendar id="dt_inicio" placeholder="Inicio"
-								value="#{pagamentoController.filtro.dataInicio}"
-								navigator="true" pattern="dd/MM/yyyy" />
-						</div>
-
-						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-
-							<p:outputLabel value="Data final" styleClass="form-label" />
-							<p:calendar id="dt_final"
-								value="#{pagamentoController.filtro.dataFinal}" navigator="true"
-								pattern="dd/MM/yyyy" />
-
-						</div>
-
-					</div>
-
-					<div class="ui-g ui-fluid">
-
-						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-							<p:outputLabel value="Gestão" styleClass="form-label" />
-							<p:autoComplete styleClass="font12-vi" panelStyle="width:180px"
-								value="#{pagamentoController.filtro.gestao}"
-								completeMethod="#{pagamentoController.completeGestao}"
-								var="gestao" itemLabel="#{gestao.nome}" itemValue="#{gestao}"
-								converter="gestaoConverterVI" minQueryLength="3" />
-						</div>
-
-						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-							<p:outputLabel value="Destino/Localização"
-								styleClass="form-label" />
-							<p:autoComplete styleClass="font12-vi" panelStyle="width:180px"
-								value="#{pagamentoController.filtro.localidade}"
-								completeMethod="#{pagamentoController.completeLocalidade}"
-								var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
-								converter="localConverterVI" minQueryLength="3">
-							</p:autoComplete>
-						</div>
-
-						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-							<p:outputLabel value="Fornecedor" styleClass="form-label" />
-							<p:inputText value="#{pagamentoController.filtro.nomeFornecedor}" />
+							</div>
 
 						</div>
 
-						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-							<p:outputLabel value="Descrição" styleClass="form-label" />
-							<p:inputText value="#{pagamentoController.filtro.descricao}"
-								style="margin-left:5px"></p:inputText>
+						<div class="ui-g ui-fluid">
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+								<p:outputLabel value="Gestão" styleClass="form-label" />
+								<p:autoComplete styleClass="font12-vi" panelStyle="width:180px"
+									value="#{pagamentoController.filtro.gestao}"
+									completeMethod="#{pagamentoController.completeGestao}"
+									var="gestao" itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+									converter="gestaoConverterVI" minQueryLength="3" />
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+								<p:outputLabel value="Destino/Localização"
+									styleClass="form-label" />
+								<p:autoComplete styleClass="font12-vi" panelStyle="width:180px"
+									value="#{pagamentoController.filtro.localidade}"
+									completeMethod="#{pagamentoController.completeLocalidade}"
+									var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+									converter="localConverterVI" minQueryLength="3">
+								</p:autoComplete>
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+								<p:outputLabel value="Fornecedor" styleClass="form-label" />
+								<p:inputText
+									value="#{pagamentoController.filtro.nomeFornecedor}" />
+
+							</div>
+
+							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+								<p:outputLabel value="Descrição" styleClass="form-label" />
+								<p:inputText value="#{pagamentoController.filtro.descricao}"
+									style="margin-left:5px"></p:inputText>
+
+							</div>
 
 						</div>
 
-					</div>
+						<div class="ui-g ui-fluid">
+							<div class="ui-g-12 ui-lg-6 form-group">
+								<p:outputLabel value="Projeto" styleClass="form-label" />
+								<p:autoComplete value="#{pagamentoController.filtro.projeto}"
+									completeMethod="#{pagamentoController.completeProjetos}"
+									var="projeto" itemLabel="#{projeto.nome}"
+									itemValue="#{projeto}" converter="projetoConverter">
 
-					<div class="ui-g ui-fluid">
-						<div class="ui-g-12 ui-lg-6 form-group">
-							<p:outputLabel value="Projeto" styleClass="form-label" />
-							<p:autoComplete value="#{pagamentoController.filtro.projeto}"
-								completeMethod="#{pagamentoController.completeProjetos}"  
-								var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}"
-								converter="projetoConverter">
+									<p:column>
+										<h:outputText value="#{projeto.codigo}" />
+									</p:column>
 
-								<p:column>
-									<h:outputText value="#{projeto.codigo}" />
-								</p:column>
+									<p:column>
+										<h:outputText value="#{projeto.nome}" />
+									</p:column>
 
-								<p:column>
-									<h:outputText value="#{projeto.nome}" />
-								</p:column>
+								</p:autoComplete>
 
-							</p:autoComplete>
+							</div>
+							<div class="ui-g-12 ui-lg-6" style="text-align: right">
+								<p:commandLink styleClass="btn btn-primary btn-sm"
+									action="#{pagamentoController.filtrar()}" onclick="start()"
+									onsuccess="stop()" onerror="stop()" update="panel-table"
+									style="color:#fff; margin: 8px 2px;">
+									<span class="fa fa-fw fa-search"></span>
+									<span>#{message['BUTTON_LABEL_SEARCH']}</span>
+								</p:commandLink>
 
-						</div>
-						<div class="ui-g-12 ui-lg-6" style="text-align: right">
-							<p:commandLink styleClass="btn btn-primary btn-sm"
-								action="#{pagamentoController.filtrar()}" onclick="start()"
-								onsuccess="stop()" onerror="stop()" update="panel-table"
-								style="color:#fff; margin: 8px 2px;">
-								<span class="fa fa-fw fa-search"></span>
-								<span>#{message['BUTTON_LABEL_SEARCH']}</span>
-							</p:commandLink>
-
-							<p:commandLink styleClass="btn btn-danger btn-sm"
-								action="#{pagamentoController.limparFiltro()}" onclick="start()"
-								onsuccess="stop()" onerror="stop()" update="@form"
-								process="@this" style="color:#fff; margin: 8px 2px;">
-								<span class="fa fa-fw fa-trash-o"></span>
-								<span>#{message['BUTTON_LABEL_CLS']}</span>
-							</p:commandLink>
+								<p:commandLink styleClass="btn btn-danger btn-sm"
+									action="#{pagamentoController.limparFiltro()}"
+									onclick="start()" onsuccess="stop()" onerror="stop()"
+									update="@form" process="@this"
+									style="color:#fff; margin: 8px 2px;">
+									<span class="fa fa-fw fa-trash-o"></span>
+									<span>#{message['BUTTON_LABEL_CLS']}</span>
+								</p:commandLink>
 
 
-							<p:link styleClass="btn btn-success btn-sm"
-								style="color:#fff;margin: 8px 2px;" onclick="start()"
-								outcome="/main/pagamento_cadastro" title="Adicionar pagamento">
-								<span class="fa fa-fw fa-plus" style="font-size: 12px"></span>
-								<span style="font-family: Arial">#{message['BUTTON_LABEL_NEW']}</span>
-							</p:link>
+								<p:link styleClass="btn btn-success btn-sm"
+									style="color:#fff;margin: 8px 2px;" onclick="start()"
+									outcome="/main/pagamento_cadastro" title="Adicionar pagamento">
+									<span class="fa fa-fw fa-plus" style="font-size: 12px"></span>
+									<span style="font-family: Arial">#{message['BUTTON_LABEL_NEW']}</span>
+								</p:link>
 
-							<p:commandLink styleClass="btn btn-primary btn-sm"
-								oncomplete="PF('dialog_help').show();" update="main-panel-help"
-								onclick="start();setarWidthHeight('id-help')" onsuccess="stop()"
-								onerror="stop()" style="color:#fff; margin: 8px 2px;">
-								<span class="fa fa-fw fa-question"></span>
-								<span>#{message['BUTTON_LABEL_HELP']}</span>
-							</p:commandLink>
+								<p:commandLink styleClass="btn btn-primary btn-sm"
+									oncomplete="PF('dialog_help').show();" update="main-panel-help"
+									onclick="start();setarWidthHeight('id-help')"
+									onsuccess="stop()" onerror="stop()"
+									style="color:#fff; margin: 8px 2px;">
+									<span class="fa fa-fw fa-question"></span>
+									<span>#{message['BUTTON_LABEL_HELP']}</span>
+								</p:commandLink>
 
-						</div>
+							</div>
 
-						<div class="ui-g-12">
+							<div class="ui-g-12">
 
-							<p:outputPanel id="panel-table">
-								<table class="table table-sm table-hover">
-									<thead >
-										<tr>
-											<th scope="col">Código</th>
-											<th scope="col">Descrição</th>
-											<th scope="col">Gestão</th>
-											<th scope="col">Fornecedor</th>
-											<th scope="col">Status</th>
-											<th scope="col">Data</th>
-											<th scope="col">Valor</th>
-											<th scope="col" style="text-align: center">#</th>
+								<p:outputPanel id="panel-table">
+									<table class="table table-sm table-hover">
+										<thead class="thead-dark">
+											<tr>
+												<th scope="col">Código</th>
+												<th scope="col">Descrição</th>
+												<th scope="col">Gestão</th>
+												<th scope="col">Fornecedor</th>
+												<th scope="col">Status</th>
+												<th scope="col">Data</th>
+												<th scope="col">Valor</th>
+												<th scope="col" style="text-align: center">#</th>
 
-										</tr>
-									</thead>
-									<tbody>
-										<ui:repeat value="#{pagamentoController.pagamentos}"
-											var="pagamento">
-											<tr
-												class="#{pagamento.statusCompra.nome.equals('Recusado') ?
-											 'bg-danger' : ''} ">
-												<td><p:link value="SP#{pagamento.id}"
-														outcome="/main/pagamento_cadastro">
-														<f:param name="lanc" value="#{pagamento.id}" />
-													</p:link></td>
-
-												<td>#{pagamento.descricao}</td>
-												<td>#{pagamento.nomeGestao}</td>
-												<td>#{pagamento.nomeFornecedor}</td>
-												<td>#{pagamento.statusCompra.nome}</td>
-												<td><h:outputText value="#{pagamento.dataEmissao}">
-														<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-													</h:outputText></td>
-												<td><h:outputText
-														value="#{pagamento.valorTotalComDesconto}">
-														<f:convertNumber type="currency" maxFractionDigits="2"
-															currencySymbol="R$" />
-													</h:outputText></td>
-
-												<td><p:menuButton value="Opções">
-														<p:menuitem icon="fa fa-envelope-o" value="Notas e anexos"
-															update=":form-arquivo"
-															action="#{pagamentoController.carregarArquivos(pagamento.id)}"
-															onstart="start()" onerror="stop()"
-															oncomplete="stop(); PF('dialog_arquivo').show(); ">
-														</p:menuitem>
-
-														<p:menuitem value="Imprimir" target="_blank" ajax="false"
-															icon="fa fa-print"
-															action="#{pagamentoController.imprimir(pagamento.id)}">
-														</p:menuitem>
-													</p:menuButton></td>
 											</tr>
-										</ui:repeat>
-									</tbody>
-								</table>
-							</p:outputPanel>
+										</thead>
+										<tbody>
+											<ui:repeat value="#{pagamentoController.pagamentos}"
+												var="pagamento">
+												<tr
+													class="#{pagamento.statusCompra.nome.equals('Recusado') ?
+											 'bg-danger' : ''} ">
+													<td><p:link value="SP#{pagamento.id}"
+															outcome="/main/pagamento_cadastro">
+															<f:param name="lanc" value="#{pagamento.id}" />
+														</p:link></td>
+
+													<td>#{pagamento.descricao}</td>
+													<td>#{pagamento.nomeGestao}</td>
+													<td>#{pagamento.nomeFornecedor}</td>
+													<td>#{pagamento.statusCompra.nome}</td>
+													<td><h:outputText value="#{pagamento.dataEmissao}">
+															<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+														</h:outputText></td>
+													<td><h:outputText
+															value="#{pagamento.valorTotalComDesconto}">
+															<f:convertNumber type="currency" maxFractionDigits="2"
+																currencySymbol="R$" />
+														</h:outputText></td>
+
+													<td><p:menuButton value="Opções">
+															<p:menuitem icon="fa fa-envelope-o"
+																value="Notas e anexos" update=":form-arquivo"
+																action="#{pagamentoController.carregarArquivos(pagamento.id)}"
+																onstart="start()" onerror="stop()"
+																oncomplete="stop(); PF('dialog_arquivo').show(); ">
+															</p:menuitem>
+
+															<p:menuitem value="Imprimir" target="_blank" ajax="false"
+																icon="fa fa-print"
+																action="#{pagamentoController.imprimir(pagamento.id)}">
+															</p:menuitem>
+														</p:menuButton></td>
+												</tr>
+											</ui:repeat>
+										</tbody>
+									</table>
+								</p:outputPanel>
+							</div>
+
+							<div id="div-table" class="ui-g-12">
+								<p:dataTable rendered="false"
+									emptyMessage="Não há solicitações de pagamento" id="table"
+									value="#{pagamentoController.pagamentos}" var="pagamento"
+									paginator="true" widgetVar="comprasTable" rows="10"
+									reflow="true">
+
+									<p:column headerText="Código" filterBy="#{pagamento.id}"
+										filterMatchMode="contains">
+
+										<p:link value="SP#{pagamento.id}"
+											outcome="/main/pagamento_cadastro">
+											<f:param name="lanc" value="#{pagamento.id}" />
+										</p:link>
+									</p:column>
+
+									<p:column headerText="Descrição">
+
+
+										<h:outputText id="motivo"
+											value="#{pagamento.descricao.length() > 30 ? pagamento.descricao.substring(0,30) : pagamento.descricao}" />
+
+										<h:outputText rendered="#{pagamento.descricao.length() > 30}"
+											id="mot" value=" . . ." />
+
+										<p:tooltip id="toolTipFade" for="mot"
+											value="#{pagamento.descricao}" style="width:50%"
+											position="top" />
+
+
+									</p:column>
+
+									<p:column headerText="Destino"
+										filterBy="#{pagamento.nomeDestino}" filterMatchMode="contains">
+										<h:outputText value="#{pagamento.nomeDestino}" />
+									</p:column>
+
+									<p:column headerText="Gestão"
+										filterBy="#{pagamento.nomeGestao}" filterMatchMode="contains">
+										<h:outputText value="#{pagamento.nomeGestao}" />
+									</p:column>
+
+									<p:column headerText="Fornecedor"
+										filterBy="#{pagamento.nomeFornecedor}"
+										filterMatchMode="contains">
+										<h:outputText value="#{pagamento.nomeFornecedor}" />
+									</p:column>
+
+									<p:column headerText="Status"
+										filterBy="#{pagamento.statusCompra.nome}"
+										filterMatchMode="contains">
+										<h:outputText value="#{pagamento.statusCompra.nome}" />
+									</p:column>
+
+									<p:column headerText="Data">
+										<h:outputText value="#{pagamento.dataEmissao}">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+												timeZone="America/Manaus" />
+										</h:outputText>
+									</p:column>
+
+
+									<p:column headerText="Solicitante"
+										filterBy="#{pagamento.nomeSolicitante}"
+										filterMatchMode="contains">
+										<h:outputText
+											value="#{pagamento.nomeSolicitante.toLowerCase()}" />
+									</p:column>
+
+									<p:column headerText="valor">
+										<h:outputText value="#{pagamento.valorTotalComDesconto}">
+											<f:convertNumber type="currency" maxFractionDigits="2"
+												currencySymbol="R$" />
+										</h:outputText>
+									</p:column>
+
+									<p:column headerText="Opções">
+
+										<p:menuButton value="Opções">
+
+
+											<p:menuitem icon="fa fa-envelope-o" value="Notas e anexos"
+												update=":form-arquivo"
+												action="#{pagamentoController.carregarArquivos(pagamento.id)}"
+												onstart="start()" onerror="stop()"
+												oncomplete="stop(); PF('dialog_arquivo').show(); ">
+											</p:menuitem>
+
+											<p:menuitem value="Imprimir" target="_blank" ajax="false"
+												icon="fa fa-print"
+												action="#{pagamentoController.imprimir(pagamento.id)}">
+											</p:menuitem>
+
+
+										</p:menuButton>
+
+
+									</p:column>
+
+								</p:dataTable>
+
+
+							</div>
 						</div>
 
-						<div id="div-table" class="ui-g-12">
-							<p:dataTable rendered="false"
-								emptyMessage="Não há solicitações de pagamento" id="table"
-								value="#{pagamentoController.pagamentos}" var="pagamento"
-								paginator="true" widgetVar="comprasTable" rows="10"
-								reflow="true">
-
-								<p:column headerText="Código" filterBy="#{pagamento.id}"
-									filterMatchMode="contains">
-
-									<p:link value="SP#{pagamento.id}"
-										outcome="/main/pagamento_cadastro">
-										<f:param name="lanc" value="#{pagamento.id}" />
-									</p:link>
-								</p:column>
-
-								<p:column headerText="Descrição">
-
-
-									<h:outputText id="motivo"
-										value="#{pagamento.descricao.length() > 30 ? pagamento.descricao.substring(0,30) : pagamento.descricao}" />
-
-									<h:outputText rendered="#{pagamento.descricao.length() > 30}"
-										id="mot" value=" . . ." />
-
-									<p:tooltip id="toolTipFade" for="mot"
-										value="#{pagamento.descricao}" style="width:50%"
-										position="top" />
-
-
-								</p:column>
-
-								<p:column headerText="Destino"
-									filterBy="#{pagamento.nomeDestino}" filterMatchMode="contains">
-									<h:outputText value="#{pagamento.nomeDestino}" />
-								</p:column>
-
-								<p:column headerText="Gestão" filterBy="#{pagamento.nomeGestao}"
-									filterMatchMode="contains">
-									<h:outputText value="#{pagamento.nomeGestao}" />
-								</p:column>
-
-								<p:column headerText="Fornecedor"
-									filterBy="#{pagamento.nomeFornecedor}"
-									filterMatchMode="contains">
-									<h:outputText value="#{pagamento.nomeFornecedor}" />
-								</p:column>
-
-								<p:column headerText="Status"
-									filterBy="#{pagamento.statusCompra.nome}"
-									filterMatchMode="contains">
-									<h:outputText value="#{pagamento.statusCompra.nome}" />
-								</p:column>
-
-								<p:column headerText="Data">
-									<h:outputText value="#{pagamento.dataEmissao}">
-										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
-											timeZone="America/Manaus" />
-									</h:outputText>
-								</p:column>
-
-
-								<p:column headerText="Solicitante"
-									filterBy="#{pagamento.nomeSolicitante}"
-									filterMatchMode="contains">
-									<h:outputText
-										value="#{pagamento.nomeSolicitante.toLowerCase()}" />
-								</p:column>
-
-								<p:column headerText="valor">
-									<h:outputText value="#{pagamento.valorTotalComDesconto}">
-										<f:convertNumber type="currency" maxFractionDigits="2"
-											currencySymbol="R$" />
-									</h:outputText>
-								</p:column>
-
-								<p:column headerText="Opções">
-
-									<p:menuButton value="Opções">
-
-
-										<p:menuitem icon="fa fa-envelope-o" value="Notas e anexos"
-											update=":form-arquivo"
-											action="#{pagamentoController.carregarArquivos(pagamento.id)}"
-											onstart="start()" onerror="stop()"
-											oncomplete="stop(); PF('dialog_arquivo').show(); ">
-										</p:menuitem>
-
-										<p:menuitem value="Imprimir" target="_blank" ajax="false"
-											icon="fa fa-print"
-											action="#{pagamentoController.imprimir(pagamento.id)}">
-										</p:menuitem>
-
-
-									</p:menuButton>
-
-
-								</p:column>
-
-							</p:dataTable>
-
-
-						</div>
-					</div>
-
-				</p:panel>
+					</p:panel>
 
 
 
-			</h:form>
-		</h:panelGroup>
-
+				</h:form>
+			</h:panelGroup>
+		</div>
 
 
 

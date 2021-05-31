@@ -112,6 +112,8 @@ public class ContaBancariaController implements Serializable {
 		 * carregarAplicacoes(); carregarBaixas(); carregarRendimentos();
 		 * carregarAlocacoes(); carregarDoacoes();
 		 */
+
+		
 	}
 
 	public void carregarTransacoes() {
@@ -121,6 +123,10 @@ public class ContaBancariaController implements Serializable {
 		} else {
 			listaDePagamentosRelatados = new ArrayList<>();
 		}
+	}
+
+	public void limparFiltro() {
+		filtro = new Filtro();
 	}
 
 	public void carregarContas() {
@@ -436,6 +442,7 @@ public class ContaBancariaController implements Serializable {
 
 		BigDecimal total = BigDecimal.ZERO;
 
+
 		/*
 		 * if (contaBancaria.getRendimentos() == null) contaBancaria.setRendimentos(new
 		 * ArrayList<>());
@@ -443,6 +450,7 @@ public class ContaBancariaController implements Serializable {
 		 * for (RendimentoConta r : contaBancaria.getRendimentos()) { total =
 		 * total.add(r.getValor()); }
 		 */
+
 		return total;
 	}
 
@@ -457,6 +465,7 @@ public class ContaBancariaController implements Serializable {
 		 * for (FonteDoacaoConta r : contaBancaria.getDoacoes()) { total =
 		 * total.add(r.getValor()); }
 		 */
+
 
 		return total;
 	}
@@ -492,8 +501,14 @@ public class ContaBancariaController implements Serializable {
 		 * = total.add(a.getValor()); }
 		 */
 
+		//Locale myLocale = new Locale("pt", "BR");
+		//NumberFormat format = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(myLocale));
+
+		//BigDecimal doacoes = getValorTotalDoacoes();
+
 		return total;
 	}
+
 
 	public String getTotalAlocacoes() {
 

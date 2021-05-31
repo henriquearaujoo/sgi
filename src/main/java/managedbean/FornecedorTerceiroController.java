@@ -47,9 +47,9 @@ public class FornecedorTerceiroController implements Serializable {
 
 	@Inject
 	private UsuarioService usuarioService;
-	
+
 	private List<Estado> estados = new ArrayList<Estado>();
-	
+
 	private Boolean editandoConta = false;
 
 	private Filtro filtro = new Filtro();
@@ -72,7 +72,7 @@ public class FornecedorTerceiroController implements Serializable {
 	private MenuLateral menu = new MenuLateral();
 
 	private Boolean cadastroConitnuo = false;
-	
+
 	private LancamentoAuxiliar lancamento = new LancamentoAuxiliar();
 
 	private boolean tipo;
@@ -88,24 +88,22 @@ public class FornecedorTerceiroController implements Serializable {
 
 		return new ArrayList<Localidade>();
 	}
-	
-	
+
 	public void carregarEstados() {
 		estados = fornecedorService.getEstados();
 	}
-	
+
 	public void carregarCidades() {
-		if (fornecedor.getEstado() != null) 
-		listaLocalidade = fornecedorService.findCidadeByEstado(fornecedor.getEstado().getId());
+		if (fornecedor.getEstado() != null)
+			listaLocalidade = fornecedorService.findCidadeByEstado(fornecedor.getEstado().getId());
 	}
-	
 
 	@PostConstruct
 	public void init() {
 		carregarFornecedores();
 		carregarEstados();
 		contaBancaria = new ContaBancaria();
-		
+
 	}
 
 	public void carregarConta() {
@@ -123,12 +121,12 @@ public class FornecedorTerceiroController implements Serializable {
 
 		listaFornecedor = fornecedorService.getForcedoresTerceiros(filtro);
 	}
-	
+
 	public void removerConta(ContaBancaria contaBancaria) {
 		if (fornecedor.getContasBancarias() != null)
 			fornecedor.getContasBancarias().remove(contaBancaria);
 	}
-	
+
 	public void editarConta() {
 
 		if (contaBancaria.getId() != null) {
@@ -148,8 +146,7 @@ public class FornecedorTerceiroController implements Serializable {
 
 		editandoConta = true;
 	}
-	
-	
+
 	public void criarContaFleg() {
 		contaBancaria = new ContaBancaria();
 		contaBancaria.setNumeroConta("conta_fleg");
@@ -174,9 +171,9 @@ public class FornecedorTerceiroController implements Serializable {
 		contaBancaria = new ContaBancaria();
 
 	}
-	
+
 	private Integer indexConta;
-	
+
 	public String salvarConta() {
 
 		try {
@@ -196,9 +193,9 @@ public class FornecedorTerceiroController implements Serializable {
 				fornecedor.setContasBancarias(new ArrayList<>());
 
 			if (!editandoConta) {
-				for (ContaBancaria contaBancaria :
-						fornecedor.getContasBancarias()) {
-					if (this.contaBancaria.getClassificacaoConta().equals("PRINCIPAL") && contaBancaria.getClassificacaoConta().equals("PRINCIPAL"))
+				for (ContaBancaria contaBancaria : fornecedor.getContasBancarias()) {
+					if (this.contaBancaria.getClassificacaoConta().equals("PRINCIPAL")
+							&& contaBancaria.getClassificacaoConta().equals("PRINCIPAL"))
 						throw new Exception("Já existe uma conta principal");
 				}
 			}
@@ -222,7 +219,6 @@ public class FornecedorTerceiroController implements Serializable {
 		return "";
 	}
 
-
 	public void filtrar() {
 		carregarFornecedores();
 	}
@@ -242,18 +238,17 @@ public class FornecedorTerceiroController implements Serializable {
 	public String redirecionar() {
 		return menu.getEndereco() + "?faces-redirect=true";
 	}
-	
+
 	public String voltarTelaDeListagem() {
-		return  "fornecedores_terceiros?faces-redirect=true";
+		return "fornecedores_terceiros?faces-redirect=true";
 	}
 
 	public void setListaFornecedor(List<Fornecedor> listaFornecedor) {
 		this.listaFornecedor = listaFornecedor;
 	}
-	
-	
+
 	private List<Banco> bancos = new ArrayList<>();
-	
+
 	public List<Banco> completeBanco(String query) {
 		bancos = new ArrayList<>();
 		bancos = fornecedorService.getBancoAutoComplete(query);
@@ -282,7 +277,7 @@ public class FornecedorTerceiroController implements Serializable {
 //
 //	}
 
-	public String insert() {
+	public String salvarTerceiro() {
 
 		if (fornecedor.getTipoPagamento().compareTo(TipoPagamento.DEP_CONTA) == 0) {
 			if (!(fornecedor.getContasBancarias().size() > 0)) {
@@ -290,11 +285,11 @@ public class FornecedorTerceiroController implements Serializable {
 						FacesMessage.SEVERITY_ERROR);
 				return "";
 			} else {
-				 contaBancaria = fornecedorService.buscarContaFleg(fornecedor.getId());
+				contaBancaria = fornecedorService.buscarContaFleg(fornecedor.getId());
 				if (contaBancaria != null) {
 					fornecedor.getContasBancarias().add(contaBancaria);
 				}
-				
+
 				contaBancaria = new ContaBancaria();
 			}
 		} else if (fornecedor.getTipoPagamento().compareTo(TipoPagamento.BOLETO) == 0) {
@@ -306,7 +301,7 @@ public class FornecedorTerceiroController implements Serializable {
 			} else {
 				criarContaFleg();
 			}
-			
+
 			contaBancaria = new ContaBancaria();
 		}
 
@@ -331,7 +326,7 @@ public class FornecedorTerceiroController implements Serializable {
 		}
 
 	}
-	
+
 //	if (!fornecedor.getTipo().equals("int")) {
 //		ContaBancaria contaAuxiliar = pagamentoService.getContaBancaria(contaBancaria);
 //
@@ -341,53 +336,53 @@ public class FornecedorTerceiroController implements Serializable {
 //			return "";
 //		}
 //	}
-	
+
 	public Boolean verificarObrigatoriedade(String field) {
-		
+
 		if (fornecedor.getTipo() == null) {
 			return false;
 		}
-		
+
 		if (field.equals("nome")) {
 			return true;
 		}
-		
+
 		if (field.equals("nome_fantasia")) {
 			if (fornecedor.getTipo().equals("juridica")) {
 				return true;
-			}else if(fornecedor.getTipo().equals("fisica")){
+			} else if (fornecedor.getTipo().equals("fisica")) {
 				return false;
-			}else {
+			} else {
 				return false;
 			}
 		}
-		
+
 		if (field.equals("telefone")) {
 			if (fornecedor.getTipo().equals("juridica")) {
 				return true;
-			}else if(fornecedor.getTipo().equals("fisica")){
+			} else if (fornecedor.getTipo().equals("fisica")) {
 				return true;
-			}else {
+			} else {
 				return false;
 			}
 		}
-		
+
 		if (field.equals("endereco")) {
 			return true;
 		}
-		
+
 		if (field.equals("numero")) {
 			return true;
 		}
-		
+
 		if (field.equals("cep")) {
 			return true;
 		}
-		
+
 		if (field.equals("bairro")) {
 			return true;
 		}
-		
+
 		if (field.equals("cidade")) {
 			return true;
 		}

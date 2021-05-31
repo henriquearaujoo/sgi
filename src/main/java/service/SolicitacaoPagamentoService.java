@@ -41,6 +41,7 @@ import model.ProjetoRubrica;
 import model.SolicitacaoPagamento;
 import model.StatusAdiantamento;
 import model.StatusCompra;
+import model.TipoDeDocumentoFiscal;
 import model.TipoGestao;
 import model.TipoLocalidade;
 import model.TipoParcelamento;
@@ -74,14 +75,13 @@ import util.GeradorConteudoHTML;
 import util.ReportUtil;
 import util.Util;
 
-
 public class SolicitacaoPagamentoService implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Inject
 	private LancamentoRepository repositorio;
 	@Inject
@@ -92,59 +92,55 @@ public class SolicitacaoPagamentoService implements Serializable {
 	private AcaoRepositorio acaoRepositorio;
 	@Inject
 	private FontePagadoraRepositorio fonteRespositorio;
-	
-	@Inject 
+
+	@Inject
 	private FornecedorRepositorio fornecedorRepositorio;
-	
+
 	@Inject
 	private CotacaoRepository Cotacaorepositorio;
 	@Inject
 	private ContaRepository contaRepositorio;
-	
+
 	@Inject
-	private  PagamentoLancamentoRepository pagtoRepositorio;
-	
+	private PagamentoLancamentoRepository pagtoRepositorio;
+
 	@Inject
 	private CategoriaRepositorio categoriaRepositorio;
-	
+
 	@Inject
 	private AprouveRepositorio aprouveRepositorio;
-	
+
 	@Inject
-	private  OrcamentoRepositorio orcamentoRepositorio;
-	
+	private OrcamentoRepositorio orcamentoRepositorio;
+
 	@Inject
-	private  ProjetoRepositorio projetoRepositorio;
-	
-	
-	
-	
-	//metodo movido para CalculatorRubricaRepositorio
+	private ProjetoRepositorio projetoRepositorio;
+
+	// metodo movido para CalculatorRubricaRepositorio
 	@Deprecated
 	public List<ProjetoRubrica> completeRubricasDeProjetoJOIN(String s) {
 		return orcamentoRepositorio.completeRubricasDeProjetoJOIN(s);
 	}
-	
-	
-	
-	public List<CategoriaFinanceira> buscarCategoriasFin(){
+
+	public List<CategoriaFinanceira> buscarCategoriasFin() {
 		return categoriaRepositorio.buscarGategoriasFin();
 	}
-	
-	public SolicitacaoPagamentoService(){}
-	
+
+	public SolicitacaoPagamentoService() {
+	}
+
 	@Transactional
-	public ArquivoLancamento salvarArquivo(ArquivoLancamento arquivo){
+	public ArquivoLancamento salvarArquivo(ArquivoLancamento arquivo) {
 		return repositorio.salvarArquivo(arquivo);
 	}
-	
+
 	public Boolean verificarExigencia(SolicitacaoPagamento pagamento) {
 
-		if (pagamento.getTipoDocumentoFiscal() == null) {
+		TipoDeDocumentoFiscal tdf = pagamento.getTipoDocumentoFiscal();
+		if (tdf == null) {
 			return true;
 		}
-
-		switch (pagamento.getTipoDocumentoFiscal()) {
+		switch (tdf) {
 		case OUTRO:
 			return false;
 		case RECIBO:
@@ -153,47 +149,44 @@ public class SolicitacaoPagamentoService implements Serializable {
 			return true;
 		}
 	}
-	
-	
-	
+
 	public Boolean verificarSaldo(Long projeto, BigDecimal valor) {
 		BigDecimal orcado = Util.getNullValue(projetoRepositorio.getOrcamentoDeProjeto(projeto));
 		BigDecimal saida = Util.getNullValue(orcamentoRepositorio.getTotalDespesa(projeto));
 		BigDecimal entrada = Util.getNullValue(orcamentoRepositorio.getTotalReceita(projeto));
 		BigDecimal saldo = orcado.subtract(saida).add(entrada);
-		return (saldo.compareTo(valor) > 0 || saldo.compareTo(valor) >= 0); 
+		return (saldo.compareTo(valor) > 0 || saldo.compareTo(valor) >= 0);
 	}
-	//metodo movido e atualizado para a class CalculatorRubricaRepositorio
+
+	// metodo movido e atualizado para a class CalculatorRubricaRepositorio
 	@Deprecated
 	public Boolean verificarSaldoRubrica(LancamentoAcao lancamentoAcao, BigDecimal valor) {
-		
+
 		BigDecimal asomar = BigDecimal.ZERO;
-		
+
 		if (lancamentoAcao.getId() != null) {
 			asomar = asomar.add(orcamentoRepositorio.findByIdLancamentoAcao(lancamentoAcao.getId()).getValor());
 		}
-		
-		
-		BigDecimal orcado = Util.getNullValue(projetoRepositorio.getOrcamentoDeRubrica(lancamentoAcao.getProjetoRubrica().getId()));
-		BigDecimal saida = Util.getNullValue(orcamentoRepositorio.getTotalDespesaPorRubrica(lancamentoAcao.getProjetoRubrica().getId()));
-		BigDecimal entrada = Util.getNullValue(orcamentoRepositorio.getTotalReceitaPorRubrica(lancamentoAcao.getProjetoRubrica().getId()));
+
+		BigDecimal orcado = Util
+				.getNullValue(projetoRepositorio.getOrcamentoDeRubrica(lancamentoAcao.getProjetoRubrica().getId()));
+		BigDecimal saida = Util.getNullValue(
+				orcamentoRepositorio.getTotalDespesaPorRubrica(lancamentoAcao.getProjetoRubrica().getId()));
+		BigDecimal entrada = Util.getNullValue(
+				orcamentoRepositorio.getTotalReceitaPorRubrica(lancamentoAcao.getProjetoRubrica().getId()));
 		BigDecimal saldo = orcado.subtract(saida).add(entrada).add(asomar);
-		return (saldo.compareTo(valor) > 0 || saldo.compareTo(valor) >= 0); 
+		return (saldo.compareTo(valor) > 0 || saldo.compareTo(valor) >= 0);
 	}
-	
-	
-	
-	
-	
-	public Lancamento getLancamentoById(Long id){
+
+	public Lancamento getLancamentoById(Long id) {
 		return repositorio.getLancamentoById(id);
 	}
-	
+
 	@Transactional
-	public SolicitacaoPagamento salvar(SolicitacaoPagamento pagamento, User usuario, Integer type){
-		
+	public SolicitacaoPagamento salvar(SolicitacaoPagamento pagamento, User usuario, Integer type) {
+
 		try {
-			
+
 			pagamento.setTipoGestao(buscarTipoGestao(pagamento));
 			pagamento.setTipoLocalidade(buscarTipoLocalidade(pagamento));
 			pagamento.setVersionLancamento("MODE01");
@@ -203,7 +196,7 @@ public class SolicitacaoPagamentoService implements Serializable {
 				throw new Exception("Selecione uma conta bancária.");
 
 			if (pagamento.getLancamentosAcoes().size() >= 1) {
-				
+
 				if (pagamento.getId() == null) {
 					pagamento.setCodigo("");
 					System.out.println(new Date());
@@ -213,22 +206,24 @@ public class SolicitacaoPagamentoService implements Serializable {
 				}
 
 				SolicitacaoPagamento p = new SolicitacaoPagamento();
-				
+
 				verificarNF(pagamento, p);
 
-				pagamento.setCategoriaDespesaClass(null);				
-				
+				pagamento.setCategoriaDespesaClass(null);
+
 				if (type == 1) {
 					pagamento.setStatusCompra(StatusCompra.PENDENTE_APROVACAO);
 					pagamento = repositorio.salvarSolicitacaoPagamento(pagamento, usuario);
 					enviarEmailAutorizacaoSP(pagamento, type);
-					addMessage("", "Salvo com sucesso,  confirme o e-mail na sua caixa de entrada, caso não tenha recebido clique em reenviar", FacesMessage.SEVERITY_INFO);
-				}else {
+					addMessage("",
+							"Salvo com sucesso,  confirme o e-mail na sua caixa de entrada, caso não tenha recebido clique em reenviar",
+							FacesMessage.SEVERITY_INFO);
+				} else {
 					pagamento.setStatusCompra(StatusCompra.PENDENTE_APROVACAO);
 					repositorio.salvarSolicitacaoPagamento(pagamento, usuario);
 					addMessage("", "Salvo com sucesso.", FacesMessage.SEVERITY_INFO);
 				}
-				
+
 			} else {
 				throw new Exception(
 						"Você deve adicionar ao menos 1(uma) linha Orçamentária/ação ao lançamento para que o armazenamento seja concluído.");
@@ -236,13 +231,11 @@ public class SolicitacaoPagamentoService implements Serializable {
 		} catch (Exception e) {
 			addMessage("", e.getMessage(), FacesMessage.SEVERITY_WARN);
 		}
-		
-		
+
 		return pagamento;
 
-		
 	}
-	
+
 	public TipoGestao buscarTipoGestao(SolicitacaoPagamento pagamento) {
 		String type = pagamento.getGestao().getType();
 		switch (type) {
@@ -272,204 +265,191 @@ public class SolicitacaoPagamentoService implements Serializable {
 		}
 	}
 
-
 	private void verificarNF(SolicitacaoPagamento pagamento, SolicitacaoPagamento p) throws Exception {
 		if (pagamento.getNotaFiscal().length() > 1 && pagamento.getContaRecebedor() != null)
 			p = verificarNotaFiscal(pagamento.getNotaFiscal(),
-					pagamento.getId() != null ? pagamento.getId() : new Long(0),
-					pagamento.getContaRecebedor().getId());
+					pagamento.getId() != null ? pagamento.getId() : new Long(0), pagamento.getContaRecebedor().getId());
 
 		if (p != null && p.getId() != null) {
 			p = null;
 			throw new Exception("Nota fiscal já foi paga no lançamento de número: " + p.getId());
 		}
 	}
-	
-	public Boolean verificarPrivilegioENF(Aprouve aprouve){
+
+	public Boolean verificarPrivilegioENF(Aprouve aprouve) {
 		return aprouveRepositorio.verificaPrivilegioNF(aprouve);
 	}
-	
-	public List<CategoriaDespesaClass> buscarCategorias(){
+
+	public List<CategoriaDespesaClass> buscarCategorias() {
 		return categoriaRepositorio.buscarGategorias();
 	}
-	
-	public List<CategoriaDespesaClass> buscarCategoriasFinanceira(){
+
+	public List<CategoriaDespesaClass> buscarCategoriasFinanceira() {
 		return categoriaRepositorio.buscarGategoriasFinanceira();
 	}
-	
-	public SolicitacaoPagamento verificarNotaFiscal(String nf, Long id, Long idConta){
+
+	public SolicitacaoPagamento verificarNotaFiscal(String nf, Long id, Long idConta) {
 		return pagtoRepositorio.verificarNotaFiscal(nf, id, idConta);
 	}
-	
-	public List<ArquivoLancamento> getArquivoByLancamento(Long lancamento){
+
+	public List<ArquivoLancamento> getArquivoByLancamento(Long lancamento) {
 		return repositorio.getArquivosByLancamento(lancamento);
 	}
-	
+
 	@Transactional
-	public void removerArquivo(ArquivoLancamento arquivo){
+	public void removerArquivo(ArquivoLancamento arquivo) {
 		repositorio.removerArquivo(arquivo);
 	}
-	
+
 	private TipoParcelamento tipoParcelamento;
-	
+
 	@Transactional
-	public void mudarStatus(Long id,StatusCompra statusCompra, LogStatus logStatus) {
-		
- 		
+	public void mudarStatus(Long id, StatusCompra statusCompra, LogStatus logStatus) {
+
 		repositorio.mudarStatusPagamento(id, statusCompra);
 		repositorio.salvarLog(logStatus);
 	}
-	
+
 	public Date setarData(Date dataBase) {
 		Parcela parcela = tipoParcelamento.obterParcela();
 		Date data = parcela.calculaData(dataBase);
 		return data;
 	}
-	
-	public boolean findAprouve(Aprouve aprouve){
+
+	public boolean findAprouve(Aprouve aprouve) {
 		return aprouveRepositorio.findAprouvePedido(aprouve);
 	}
-	
-	public ContaBancaria getContaById(Long id){
+
+	public ContaBancaria getContaById(Long id) {
 		return contaRepositorio.getContaById(id);
 	}
-	
-	public ContaBancaria getContaByFornecedor(Long fornecedor){
+
+	public ContaBancaria getContaByFornecedor(Long fornecedor) {
 		return contaRepositorio.getContaByFornecedor(fornecedor);
 	}
-	
-	
-	public Localidade getLocalidade(Long id){
+
+	public Localidade getLocalidade(Long id) {
 		return localRepositorio.getLocalPorId(id);
 	}
-	
-	public List<LancamentoAcao> getLancamentosAcoes(Lancamento lancamento){
-		
+
+	public List<LancamentoAcao> getLancamentosAcoes(Lancamento lancamento) {
+
 		return repositorio.getLancamentosAcoes(lancamento);
 	}
-	
+
 	public List<Estado> getEstados(Filtro filtro) {
 		return estadoRepositorio.getEatados(filtro);
 	}
-	
+
 	public List<Localidade> getMunicipioByEstado(Long id) {
 		return localRepositorio.getMunicipioByEstado(id);
 	}
 
-	
-	
-	public SolicitacaoPagamento getPagamentoById(Long id){
+	public SolicitacaoPagamento getPagamentoById(Long id) {
 		return repositorio.getPagamentoPorId(id);
 	}
-	
 
-	public List<Acao> acoesAutoComplete(String acao){
+	public List<Acao> acoesAutoComplete(String acao) {
 		return acaoRepositorio.getAcaoAutoComplete(acao);
 	}
-	
-	public List<FontePagadora> fontesAutoComplete(String fonte){
+
+	public List<FontePagadora> fontesAutoComplete(String fonte) {
 		return fonteRespositorio.getFonteAutoComplete(fonte);
 	}
-	
-	
-	public SolicitacaoPagamentoService(LancamentoRepository repositorio){
+
+	public SolicitacaoPagamentoService(LancamentoRepository repositorio) {
 		this.repositorio = repositorio;
 	}
-	
-	public Fornecedor getFornecedorById(Long id){
+
+	public Fornecedor getFornecedorById(Long id) {
 		return fornecedorRepositorio.getFornecedorPorId(id);
 	}
-	
+
 	public List<Fornecedor> getFornecedores(String s) {
 		return Cotacaorepositorio.getFornecedores(s);
 	}
-	
-	public List<ContaBancaria> getContasFornecedoresEAdiantamentos(String s){
+
+	public List<ContaBancaria> getContasFornecedoresEAdiantamentos(String s) {
 		return contaRepositorio.getContasFornecedoresEAdiantamentos(s);
 	}
-	
-	
-	public List<ContaBancaria> getContasFornecedoresAtivos(String s){
+
+	public List<ContaBancaria> getContasFornecedoresAtivos(String s) {
 		return contaRepositorio.getContasFornecedoresAtivos(s);
 	}
 
 	public List<ContaBancaria> getContasFornecedor(Fornecedor fornecedor) {
 		try {
 			return contaRepositorio.getContasFornecedor(fornecedor);
-		}catch (NoResultException e) {
+		} catch (NoResultException e) {
 			return new ArrayList<ContaBancaria>();
 		}
-		
+
 	}
-	
-	public List<SolicitacaoPagamento> getSolicitacaoPagamentos(Filtro filtro) {	
+
+	public List<SolicitacaoPagamento> getSolicitacaoPagamentos(Filtro filtro) {
 		if (filtro.getDataInicio() != null && filtro.getDataFinal() != null) {
-			 if (filtro.getDataInicio().after(filtro.getDataFinal())) {
+			if (filtro.getDataInicio().after(filtro.getDataFinal())) {
 				addMessage("", "Data inicio maior que data final", FacesMessage.SEVERITY_ERROR);
 				return new ArrayList<SolicitacaoPagamento>();
-			 }
-			
-			 Calendar calInicio =  Calendar.getInstance();
-			 calInicio.setTime(filtro.getDataInicio());
-			 
-			 Calendar calFinal =  Calendar.getInstance();
-			 calFinal.setTime(filtro.getDataFinal());
-			 
-			 
-			 calInicio.set(Calendar.HOUR, 0);
-			 calInicio.set(Calendar.MINUTE, 0);
-			 calInicio.set(Calendar.SECOND, 0);
-			 calInicio.set(Calendar.MILLISECOND, 0);
-			 
-			 calFinal.set(Calendar.HOUR, 24);
-			 calFinal.set(Calendar.MINUTE, 0);
-			 calFinal.set(Calendar.SECOND, 0);
-			 calFinal.set(Calendar.MILLISECOND, 0);
-			 
-			 filtro.setDataInicio(calInicio.getTime()); 
-			 filtro.setDataFinal(calFinal.getTime()); 
-			 
-			 
-			 //System.out.println(filtro.getDataInicio());
-			 //System.out.println(filtro.getDataFinal());
-			
-		}else if(filtro.getDataInicio() != null){
-			 Calendar calInicio =  Calendar.getInstance();
-			 calInicio.set(Calendar.HOUR, 0);
-			 calInicio.set(Calendar.MINUTE, 0);
-			 calInicio.set(Calendar.SECOND, 0);
-			 calInicio.set(Calendar.MILLISECOND, 0);
-			 filtro.setDataInicio(calInicio.getTime());
+			}
+
+			Calendar calInicio = Calendar.getInstance();
+			calInicio.setTime(filtro.getDataInicio());
+
+			Calendar calFinal = Calendar.getInstance();
+			calFinal.setTime(filtro.getDataFinal());
+
+			calInicio.set(Calendar.HOUR, 0);
+			calInicio.set(Calendar.MINUTE, 0);
+			calInicio.set(Calendar.SECOND, 0);
+			calInicio.set(Calendar.MILLISECOND, 0);
+
+			calFinal.set(Calendar.HOUR, 24);
+			calFinal.set(Calendar.MINUTE, 0);
+			calFinal.set(Calendar.SECOND, 0);
+			calFinal.set(Calendar.MILLISECOND, 0);
+
+			filtro.setDataInicio(calInicio.getTime());
+			filtro.setDataFinal(calFinal.getTime());
+
+			// System.out.println(filtro.getDataInicio());
+			// System.out.println(filtro.getDataFinal());
+
+		} else if (filtro.getDataInicio() != null) {
+			Calendar calInicio = Calendar.getInstance();
+			calInicio.set(Calendar.HOUR, 0);
+			calInicio.set(Calendar.MINUTE, 0);
+			calInicio.set(Calendar.SECOND, 0);
+			calInicio.set(Calendar.MILLISECOND, 0);
+			filtro.setDataInicio(calInicio.getTime());
 		}
-		
+
 		return repositorio.getPagamentos(filtro);
 	}
 
-	public List<Localidade> buscaLocalidade(String s){
+	public List<Localidade> buscaLocalidade(String s) {
 		return localRepositorio.buscarLocalidade(s);
 	}
-	
-	
+
 	public void addMessage(String summary, String detail, Severity severity) {
 		FacesMessage message = new FacesMessage(severity, summary, detail);
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
-	
-	
+
 	public void enviarEmailAutorizacaoSP(SolicitacaoPagamento pagamento, Integer type) {
 		Email email = new Email();
-		
+
 		if (type == 0) {
-			 repositorio.mudarStatusPagamento(pagamento.getId(), StatusCompra.PENDENTE_APROVACAO);
+			repositorio.mudarStatusPagamento(pagamento.getId(), StatusCompra.PENDENTE_APROVACAO);
 		}
-		
+
 		prepararEmailAutorizacaoSP(email, pagamento);
 
 		try {
 			try {
 				if (email.verificaInternet()) { // verificar internet
 					email.enviarSolicitacaoPagamento(pagamento);
-					//addMessage("", "Mensagem enviada com sucesso", FacesMessage.SEVERITY_INFO);
+					// addMessage("", "Mensagem enviada com sucesso", FacesMessage.SEVERITY_INFO);
 				}
 			} catch (IOException e) {
 
@@ -485,7 +465,7 @@ public class SolicitacaoPagamentoService implements Serializable {
 
 		}
 	}
-	
+
 	public void prepararEmailAutorizacaoSP(Email email, SolicitacaoPagamento pagamento) {
 
 		email.setFromEmail(getFromEmail());
@@ -498,8 +478,7 @@ public class SolicitacaoPagamentoService implements Serializable {
 				"Solicito autorização para solicitação de pagamento em anexo.", pagamento));
 
 	}
-	
-	
+
 	public String getToEmail(Lancamento lancamento) {
 		List<String> listEmail = configRepositorio.getToEmail(lancamento);
 		StringBuilder stb = new StringBuilder();
@@ -521,21 +500,19 @@ public class SolicitacaoPagamentoService implements Serializable {
 
 		return stb.toString();
 	}
-	
-	
+
 	@Inject
 	protected ConfiguracaoRepositorio configRepositorio;
 
 	public String getFromEmail() {
-		return configRepositorio.getFromEmail().get(0).getEmail();
+//		return configRepositorio.getFromEmail().get(0).getEmail();
+		return "comprasgi@fas-amazonas.org";
 	}
-	
-	
-	
+
 	public UnidadeConservacao findByIdUnidadeConservacao(Long id) {
 		return localRepositorio.findByIdUnidadeDeConservacao(id);
 	}
-	
+
 	public void imprimir(Long id, CompraService compraService) {
 
 		// List<ItemCompra> itens =
@@ -598,8 +575,8 @@ public class SolicitacaoPagamentoService implements Serializable {
 		parametros.put("gestao", pagamento.getGestao().getNome());
 		parametros.put("tipo_localidade", pagamento.getTipoLocalidade().getNome());
 		parametros.put("localidade", pagamento.getLocalidade().getNome());
-		parametros.put("usuario",
-				pagamento.getSolicitante().getNome() + " " + new SimpleDateFormat("dd/MM/yyyy hh:mm").format(new Date()));
+		parametros.put("usuario", pagamento.getSolicitante().getNome() + " "
+				+ new SimpleDateFormat("dd/MM/yyyy hh:mm").format(new Date()));
 		parametros.put("solicitacao", pagamento.getId().toString());
 		parametros.put("observ", "");
 		parametros.put("acao", acs.toString());
@@ -680,5 +657,5 @@ public class SolicitacaoPagamentoService implements Serializable {
 		}
 
 	}
-	
+
 }
