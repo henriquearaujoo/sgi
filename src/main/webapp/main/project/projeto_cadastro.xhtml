@@ -17,7 +17,6 @@
 			function start() {
 				PF('statusDialog').show();
 			}
-
 			function stop() {
 				PF('statusDialog').hide();
 			}
@@ -170,7 +169,7 @@
 					style="margin-right: auto; margin-left: auto;">
 
 					<p:panelGrid columns="1" styleClass="ui-noborder"
-						style="width:100%">
+						style="width:100%" id="atividade-gridi">
 						<p:panel id="panel-form-nova-atividade">
 							<div class="ui-g ui-fluid">
 								<div class="ui-g-3 form-group focused">
@@ -314,7 +313,8 @@
 				<div class="botao_central" align="center"
 					style="width: 100%; margin: 0px 1px 16px 2px;">
 					<p:commandLink styleClass="btn btn-primary btn-sm"
-						action="#{projetoBean.salvarAtividade()}" update="@form"
+						action="#{projetoBean.salvarAtividade()}"
+						update=":form-cadastro-projeto:tab_cadastro, :form-cadastro-atividade:msg-frontal-atividade"
 						style="color:#fff; padding:8px 16px;margin: 2px 2px;"
 						value="Salvar" />
 
@@ -330,7 +330,7 @@
 
 			<div
 				style="position: absolute; background: whitesmoke; font-family: 'Open Sans'; top: 550px; width: 50%; padding: 24px; text-align: center; margin-left: 25%; border-radius: 16px;">
-				<h1>Inclusão de metas</h1>
+				<h1>Cadastro de metas</h1>
 				<p style="margin-top: 16px; font-size: 16px">Mussum Ipsum,
 					cacilds vidis litro abertis. Todo mundo vê os porris que eu tomo,
 					mas ninguém vê os tombis que eu levo! Não sou faixa preta cumpadi,
@@ -342,7 +342,7 @@
 
 		<p:dialog id="dlg-objetivo" header="Cadastrar Objetivo Específico"
 			widgetVar="dlg_cadastro_objetivo" modal="true" resizable="false"
-			showEffect="clip" hideEffect="clip" height="100%" width="800px">
+			showEffect="clip" hideEffect="clip" height="100%" width="100%">
 
 			<h:form id="form-cadastro-objetivo">
 
@@ -355,27 +355,35 @@
 						onclick="start()" onsuccess="stop()" onerror="stop()"
 						action="#{projetoBean.salvarObjetivo()}"
 						process="form-cadastro-objetivo"
-						update=":form-cadastro-projeto:tab_cadastro:objetivos"
+						update=":form-cadastro-projeto:tab_cadastro:objetivos, form-cadastro-objetivo:msg-frontal-objetivo"
 						style="color:#fff; margin: 2px 2px;" value="Salvar" />
 				</div>
 
 
-				<p:panelGrid columns="2" id="gridi" styleClass="ui-noborder">
+				<p:panel id="gridi">
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-4 form-group focused">
+							<p:outputLabel value="Nome:" for="nome" />
+							<p:inputText id="nome" value="#{projetoBean.objetivo.nome}"
+								required="true" requiredMessage="Campo 'Nome' é obrigatório"
+								maxlength="100" />
+						</div>
+
+						<div class="ui-g-8 form-group focused">
+							<p:outputLabel value="Descrição:" for="descricao_objetivo" />
+							<p:inputText cols="30" rows="3" id="descricao_objetivo"
+								autoResize="false" maxlength="255"
+								value="#{projetoBean.objetivo.descricao}" />
+						</div>
+					</div>
 
 
 
-					<p:outputLabel value="Nome:" for="nome" />
-					<p:inputText id="nome" value="#{projetoBean.objetivo.nome}"
-						required="true" requiredMessage="Campo 'Nome' é obrigatório"
-						maxlength="100" />
 
 
-					<p:outputLabel value="Descrição:" for="descricao_objetivo" />
-					<p:inputTextarea cols="30" rows="3" id="descricao_objetivo"
-						autoResize="false" maxlength="255"
-						value="#{projetoBean.objetivo.descricao}" />
 
-				</p:panelGrid>
+
+				</p:panel>
 				<p:fieldset legend="Metas" id="metas" toggleable="true">
 					<p:dataTable value="#{projetoBean.listaMetasPorObjetivo}"
 						var="metas" emptyMessage="Sem Registros!">
@@ -391,6 +399,17 @@
 
 				</p:fieldset>
 			</h:form>
+
+			<div
+				style="position: absolute; background: whitesmoke; font-family: 'Open Sans'; top: 400px; width: 50%; padding: 24px; text-align: center; margin-left: 23%; border-radius: 16px;">
+				<h1>Cadastro de Objetivos</h1>
+				<p style="margin-top: 16px; font-size: 16px">Mussum Ipsum,
+					cacilds vidis litro abertis. Todo mundo vê os porris que eu tomo,
+					mas ninguém vê os tombis que eu levo! Não sou faixa preta cumpadi,
+					sou preto inteiris, inteiris. Casamentiss faiz malandris se
+					pirulitá. Sapien in monti palavris qui num significa nadis i pareci
+					latim.</p>
+			</div>
 		</p:dialog>
 
 		<p:dialog widgetVar="dlg_cadastro_metas" modal="true" width="100%"
@@ -408,11 +427,12 @@
 					<p:commandLink styleClass="btn btn-primary btn-sm"
 						action="#{projetoBean.salvarMetas()}" onclick="start()"
 						onsuccess="stop()" onerror="stop()" process="form-cadastro-metas"
-						update="@form" style="color:#fff; margin: 2px 2px;" value="Salvar" />
+						update=":form-cadastro-projeto:tab_cadastro"
+						style="color:#fff; margin: 2px 2px;" value="Salvar" />
 
 				</div>
 
-				<p:panel id="panel-form-nova-diaria">
+				<p:panel id="panel-form-nova-metas">
 					<div class="ui-g ui-fluid">
 						<div class="ui-g-3 form-group focused">
 
@@ -465,7 +485,7 @@
 
 		<p:dialog id="dlg-indicador" header="Cadastrar Indicador"
 			widgetVar="dlg_cadastro_indicador" modal="true" resizable="false"
-			showEffect="clip" hideEffect="clip" height="100%" width="800px">
+			showEffect="clip" hideEffect="clip" height="100%" width="100%">
 
 			<h:form id="form-cadastro-indicador">
 
@@ -473,7 +493,7 @@
 					showDetail="true" closable="true" />
 
 				<div class="botao_central" align="left"
-					style="width: 100%; background-color: rgba(51, 122, 183, 0.18); margin: 0px 1px 10px 2px;">
+					style="width: 100%; margin: 0px 1px 10px 2px;">
 					<p:commandLink styleClass="btn btn-primary btn-sm"
 						onclick="start()" onsuccess="stop()" onerror="stop()"
 						action="#{projetoBean.salvarIndicador()}"
@@ -481,36 +501,43 @@
 						style="color:#fff; margin: 2px 2px;" value="Salvar" />
 				</div>
 
-				<p:panelGrid columns="2" id="gridi" styleClass="ui-noborder">
+				<p:panel id="gridi-indi">
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-4 form-group focused">
+							<p:outputLabel value="Nome:" for="nome" />
+							<p:inputText id="nome" value="#{projetoBean.indicador.nome}"
+								required="true" requiredMessage="Campo 'Nome' é obrigatório"
+								maxlength="100" />
+						</div>
 
+						<div class="ui-g-4 form-group focused">
+							<p:outputLabel value="Valor de Rerência" for="valorReferencia" />
+							<p:inputText id="valorReferencia"
+								value="#{projetoBean.indicador.valorReferencia}" maxlength="20" />
+						</div>
 
-					<p:outputLabel value="Nome:" for="nome" />
-					<p:inputText id="nome" value="#{projetoBean.indicador.nome}"
-						required="true" requiredMessage="Campo 'Nome' é obrigatório"
-						maxlength="100" />
+						<div class="ui-g-4 form-group focused">
+							<p:outputLabel value="Peridiocidade:" for="periodicidade" />
+							<p:inputText id="periodicidade"
+								value="#{projetoBean.indicador.periodicidade}" maxlength="20" />
+						</div>
 
-					<p:outputLabel value="Valor de Referência:" for="valorReferencia" />
-					<p:inputText id="valorReferencia"
-						value="#{projetoBean.indicador.valorReferencia}" maxlength="20" />
+						<div class="ui-g-4 form-group focused">
+							<p:outputLabel value="Responsável:" for="responsavel" />
+							<p:inputText id="responsavel"
+								value="#{projetoBean.indicador.responsavel}" maxlength="50" />
+						</div>
 
-					<p:outputLabel value="Periodicidade:" for="periodicidade" />
-					<p:inputText id="periodicidade"
-						value="#{projetoBean.indicador.periodicidade}" maxlength="20" />
+						<div class="ui-g-4 form-group focused">
+							<p:outputLabel value="Descrição" for="descricao_indicador" />
+							<p:inputText  id="descricao_indicador"
+								 maxlength="255"
+								value="#{projetoBean.indicador.descricao}" />
+						</div>
+					</div>
+				</p:panel>
 
-					<p:outputLabel value="Responsável:" for="responsavel" />
-					<p:inputText id="responsavel"
-						value="#{projetoBean.indicador.responsavel}" maxlength="50" />
-
-					<p:outputLabel value="Descrição:" for="descricao_indicador" />
-					<p:inputTextarea cols="30" rows="3" id="descricao_indicador"
-						autoResize="false" maxlength="255"
-						value="#{projetoBean.indicador.descricao}" />
-
-
-
-
-
-				</p:panelGrid>
+				
 			</h:form>
 		</p:dialog>
 
