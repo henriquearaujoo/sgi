@@ -1,5 +1,6 @@
 package managedbean;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -41,9 +42,6 @@ public class LoginBean implements Serializable {
 	@Inject
 	private UsuarioSessao sessao;
 
-	@Inject
-	private UsuarioRepository repository;
-
 	private Gestao gestao;
 
 	private Colaborador colaborador;
@@ -52,18 +50,20 @@ public class LoginBean implements Serializable {
 
 	@Inject
 	private GestaoService gestaoService;
-
-	private List<Colaborador> colaboradorList = new ArrayList<>();
+	
+	@Inject
+	private LoginService loginService;
 
 	@Inject
 	private ColaboradorService colaboradorService;
+
+	private List<Colaborador> colaboradorList = new ArrayList<>();
 
 	private String emailUsuario;
 	private String nomeUsuario;
 	private String senhaUsuario;
 	private Boolean senhaAuto;
 	private String toEmail;
-	private String senha = "";
 	private String toReturn = "";
 
 	private Boolean teste;
@@ -71,6 +71,9 @@ public class LoginBean implements Serializable {
 	// public String getWelcome() {
 	// return "Bem vindo !";
 	// }
+	
+	public LoginBean() {
+	}
 
 	public String getWelcome() {
 		return "Bem vindo " + this.sessao.getUsuario().getNomeUsuario() + "!";
@@ -85,80 +88,15 @@ public class LoginBean implements Serializable {
 
 	}
 
-	public String gerarNovaSenha() {
-		String[] carct = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h",
-				"i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C",
-				"D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
-				"Y", "Z" };
-		for (int x = 0; x < 10; x++) {
-			int j = (int) (Math.random() * carct.length);
-			senha += carct[j];
-		}
-		System.out.println("Gerar senha  " + senha);
-		return senha;
-	}
-
-	@Inject
-	private LoginService loginService;
-
+//	@Inject
+//	private UsuarioRepository userRepositorio;
+	
 	public void recuperarNovaSenha() throws AddressException, MessagingException {
-		FacesContext context = FacesContext.getCurrentInstance();
-		usuario = repository.getEmail(toEmail);
-
-		if (usuario != null) {
-			gerarNovaSenha();
-
-			loginService.updateSenhaAutomatica(usuario, senha);
-			prepararEmail(senha);
-
-			email.setToEmail(toEmail);
-			email.EnviarEmailSimples();
-//			System.out.println("com shar " + toReturn);
-//			System.out.println("com rec " + senha);
-
-			FacesMessage message = new FacesMessage("Um email com uma nova senha foi enviado!");
-			message.setSeverity(FacesMessage.SEVERITY_INFO);
-			context.addMessage(null, message);
-
-		} else {
-			FacesMessage message = new FacesMessage("Email nao existe");
-			message.setSeverity(FacesMessage.SEVERITY_ERROR);
-			context.addMessage(null, message);
-			System.out.println("derror");
-		}
+		loginService.getNovaSenha(usuario, toEmail);
 	}
 
-	public void prepararEmail(String senha) {
-
-		email.setFromEmail("comprasgi@fas-amazonas.org");
-		email.setSubject("Recuperação de senha");
-		email.setSenhaEmail("FAS123fas");
-		email.setContent(
-				"Sua nova senha para acessar o sistema é: "+ senha +"\n");
-	}
-
-	public LoginBean() {
-	}
-
-	public String logar() {
-		FacesContext context = FacesContext.getCurrentInstance();
-		usuario = repository.getUsuario(nomeUsuario, getCriptografada());
-//		usuario = loginService.getUsuario(nomeUsuario, senhaUsuario);
-
-		if (usuario != null) {
-			sessao.setNomeUsuario(nomeUsuario);
-			sessao.setLogado(true);
-			sessao.setDataLogin(new Date());
-			sessao.setUsuario(usuario);
-			sessao.setGestor(gestaoService.verificaGestao(usuario.getColaborador().getId()));
-
-			return "/main/home_new.xhtml?faces-redirect=true";
-		} else {
-			FacesMessage message = new FacesMessage("Usuario/Senha inválido");
-			message.setSeverity(FacesMessage.SEVERITY_ERROR);
-			context.addMessage(null, message);
-		}
-		return null;
+	public void logar() throws IOException {
+		loginService.getLogin(nomeUsuario, senhaUsuario, gestaoService);
 	}
 
 	// Trabalhando com dialog do gestao//
@@ -191,39 +129,12 @@ public class LoginBean implements Serializable {
 
 	// Finalizando com dialog de gestao
 
-	public String getCriptografada() {
-
-		MessageDigest algorithm = null;
-
-		try {
-			algorithm = MessageDigest.getInstance("SHA-256");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-
-		byte messageDigest[] = null;
-
-		try {
-			messageDigest = algorithm.digest(senhaUsuario.getBytes("UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		StringBuilder hexString = new StringBuilder();
-
-		for (byte b : messageDigest) {
-			hexString.append(String.format("%02X", 0xFF & b));
-		}
-
-		senhaUsuario = hexString.toString();
-
-		return senhaUsuario;
-	}
-
-	public String logout() {
-		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-		return "/main/login.xhtml?faces-redirect=true";
+	
+	public void logout() throws IOException {
+		loginService.getLogout();
+		
+//		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+//		return "/main/login.xhtml?faces-redirect=true";
 	}
 
 	public User getUsuario() {
@@ -300,45 +211,7 @@ public class LoginBean implements Serializable {
 
 	// private List<MenuLateral> menus = new ArrayList<>();
 	//
-	public String redirecionaPage(String refencia) {
 
-		if (!refencia.equals("pagamento") && !refencia.equals("projetos")) {
-			if (this.sessao.getUsuario().getPerfil().getDescricao().equals("contabil")) {
-				return "page_bloqueio?faces-redirect=true";
-			}
-		}
-
-		switch (refencia) {
-		case "compras":
-			return "compras?faces-redirect=true";
-		case "home":
-			return "home_new?faces-redirect=true";
-		case "pagamento":
-			if (this.sessao.getUsuario().getPerfil().getDescricao().equals("contabil")) {
-				return "gerenciamentoLancamento?faces-redirect=true";
-			} else {
-				return "pagamento?faces-redirect=true";
-			}
-		case "logistica":
-			return "controle_expedicao?faces-redirect=true";
-		case "rh":
-			return "cadastro_colaborador?faces-redirect=true";
-		case "config":
-			return "cadastro_usuarios_att?faces-redirect=true";
-		case "liberar":
-			return "liberar_projeto?faces-redirect=true";
-		case "pbf":
-			return "cadastro_familiar?faces-redirect=true";
-		case "tuto":
-			return "tutorial?faces-redirect=true";
-		case "versao":
-			return "versao?faces-redirect=true";
-		default:
-			return "projetos?faces-redirect=true";
-
-		}
-
-	}
 	//
 	// public List<MenuLateral> getMenus() {
 	// return menus;
