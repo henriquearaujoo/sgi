@@ -22,7 +22,9 @@ body {
   z-index: -1;
 }
 
-
+#fas-logo {
+	width: 450px;
+}
 
 .container {
   width: 100vw;

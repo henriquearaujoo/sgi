@@ -7,7 +7,7 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 
-	
+
 
 
 	<div style="padding: 2px 2px">
@@ -15,21 +15,23 @@
 		<div style="margin-right: auto; margin-left: auto;">
 			<div>
 
-				
 
 
-				
+
+
 				<h:panelGroup id="panel_metas_projeto">
 
-				
-					<p:fieldset legend="Metas" >
-						<p:dataTable value="#{projetoBean.listaMetas}" rowStyleClass="#{meta.concluido? 'highlight' : null}" id="tabela_metas" emptyMessage="Sem Registros" var="meta" >
+
+					<p:fieldset legend="Metas">
+						<p:dataTable value="#{projetoBean.listaMetas}"
+							rowStyleClass="#{meta.concluido? 'highlight' : null}"
+							id="tabela_metas" emptyMessage="Sem Registros" var="meta">
 							<f:facet name="header">
-								
-								
+
+
 								<div class="botao_central" align="left"
 									style="width: 100%; margin: 0px 1px 0px 2px;">
-				
+
 									<p:commandLink id="add_metas"
 										styleClass="btn btn-primary btn-sm"
 										style="color:white;margin:2px 2px"
@@ -37,141 +39,150 @@
 										onclick="setarWidthHeight('form-cadastro-metas');start()"
 										oncomplete="PF('dlg_cadastro_metas').show();stop()"
 										process="@this"
-										title="Adicionar Meta" >
-										<span class="glyphicon glyphicon-plus"></span><span style="margin: 16px;">Novo</span>
+										update=":form-cadastro-metas:panel-form-nova-metas"
+										title="Adicionar Meta">
+										<span class="glyphicon glyphicon-plus"></span>
+										<span style="margin: 16px;">Novo</span>
 									</p:commandLink>
-				
+
 								</div>
-								
+
 							</f:facet>
-							<p:column headerText="Nome" style="text-align:center" width="20%" >
+							<p:column headerText="Nome" style="text-align:center" width="20%">
 								<p:outputLabel value="#{meta.nome}" />
 							</p:column>
-							
-							<p:column headerText="Descrição"  width="70%" >
+
+							<p:column headerText="Descrição" width="70%">
 								<p:outputLabel value="#{meta.descricao}" />
 							</p:column>
-							<p:column width="10%" headerText="Ação" style="text-align:center" >
-								<p:commandLink action="#{projetoBean.editarMeta()}" id="bottuneditarMetas"
-									styleClass="btn btn-default btn-xs"
-									process="@this" 
-									update="form-cadastro-objetivo,form-cadastro-metas"
+							<p:column headerText="Opções"
+								style="width:120px;text-align:center">
+								<p:commandLink action="#{projetoBean.editarMeta()}"
+									styleClass="btn btn-primary btn-sm" process="@this"
+									update=":form-cadastro-metas:panel-form-nova-metas"
+									onclick="setarWidthHeight('form-cadastro-metas');start()"
+									oncomplete="PF('dlg_cadastro_metas').show();stop()"
 									>
-									<span class=" glyphicon glyphicon-edit"></span>
+									<span class=" pi pi-pencil"></span>
 									<f:setPropertyActionListener value="#{meta}"
 										target="#{projetoBean.metas}" />
 								</p:commandLink>
-								
+
 								<p:commandLink update="tabela_metas"
 									style="margin-left:5px;font-size:12px;color:#fff"
-									styleClass="btn btn-danger btn-xs"
-									process="@this" title="Excluir"
-									action="#{projetoBean.removerMetas(meta)}">
-									<span class=" glyphicon glyphicon-remove-circle">  </span>
+									styleClass="btn btn-danger btn-xs" process="@this"
+									title="Excluir" action="#{projetoBean.removerMetas(meta)}">
+									<span class=" pi pi-times-circle"> </span>
 									<p:confirm header="Confirmar exclusão da meta"
-										icon="ui-icon-alert"
-										message="Excluir Meta. Deseja continuar?" />
+										icon="ui-icon-alert" message="Excluir Meta. Deseja continuar?" />
 
 								</p:commandLink>
-								
+
 								<p:commandLink update="@form" id="concluirMeta"
 									style="margin-left:5px;font-size:12px;color:#fff"
-									styleClass="btn btn-success btn-xs"
-									title="Concluir" process="concluirMeta"
+									styleClass="btn btn-success btn-xs" title="Concluir"
+									process="concluirMeta"
 									action="#{projetoBean.concluirMeta(meta)}">
 									<span class=" glyphicon glyphicon-ok-circle"> </span>
 								</p:commandLink>
-								
-								
+
+
 							</p:column>
 						</p:dataTable>
 					</p:fieldset>
 
 
 				</h:panelGroup>
-				
+
 				<p:separator></p:separator>
 				<h:panelGroup id="panel_indicador_projeto">
 
-				
-					<p:fieldset legend="Indicadores"  id="indicadores" >
-						<p:dataTable value="#{projetoBean.listaIndicadores}" rowStyleClass="#{indicador.concluido? 'highlight' : null}"   id="tabela_indicador" emptyMessage="Sem Registros" var="indicador" >
+
+					<p:fieldset legend="Indicadores" id="indicadores">
+						<p:dataTable value="#{projetoBean.listaIndicadores}"
+							rowStyleClass="#{indicador.concluido? 'highlight' : null}"
+							id="tabela_indicador" emptyMessage="Sem Registros"
+							var="indicador">
 							<f:facet name="header">
-								
-								
+
+
 								<div class="botao_central" align="left"
 									style="width: 100%; margin: 0px 1px 10px 2px;">
-				
+
 									<p:commandLink id="add_indicador"
 										styleClass="btn btn-primary btn-sm"
 										style="color:white;margin:2px 2px"
-										action="#{projetoBean.openDialogIndicador()}"
-										process="@this"
-										update=":form-cadastro-indicador"
-										title="Adicionar Indicador" >
-										<span class="glyphicon glyphicon-plus"></span><span style="margin: 16px;">Novo</span>
+										action="#{projetoBean.openDialogIndicador()}" process="@this"
+										onclick="setarWidthHeight('form-cadastro-indicador');start();"
+										oncomplete="PF('dlg_cadastro_indicador').show();stop()"
+										title="Adicionar Indicador">
+										<span class="glyphicon glyphicon-plus"></span>
+										<span style="margin: 16px;">Novo</span>
 									</p:commandLink>
-				
+
 								</div>
-								
+
 							</f:facet>
-							<p:column headerText="Nome" style="text-align:center" width="20%" >
+							<p:column headerText="Nome" style="text-align:center" width="20%">
 								<p:outputLabel value="#{indicador.nome}" />
 							</p:column>
-							<p:column headerText="Referência"   >
+							<p:column headerText="Referência">
 								<p:outputLabel value="#{indicador.valorReferencia}" />
 							</p:column>
-							<p:column headerText="Periodicidade"   >
+							<p:column headerText="Periodicidade">
 								<p:outputLabel value="#{indicador.periodicidade}" />
 							</p:column>
-							
-							<p:column headerText="Responsável"   >
+
+							<p:column headerText="Responsável">
 								<p:outputLabel value="#{indicador.responsavel}" />
 							</p:column>
-							<p:column width="10%" headerText="Ação" style="text-align:center" >
-								<p:commandLink action="#{projetoBean.editarIndicador()}" id="bottuneditarIndicador"
-									styleClass="btn btn-default btn-xs "
-									process="@this" 
-									update="form-cadastro-indicador"
-									>
-									<span class="glyphicon glyphicon-edit"></span>
+							<p:column headerText="Opções"
+								style="width:120px;text-align:center">
+								<p:commandLink action="#{projetoBean.editarIndicador()}"
+									 styleClass="btn btn-primary btn-sm"
+									 onclick="setarWidthHeight('form-cadastro-indicador');start()"
+									 oncomplete="PF('dlg_cadastro_indicador').show();stop()"
+									 update="form-cadastro-indicador:gridi-indi">
+									<span class="pi pi-pencil"></span>
 									<f:setPropertyActionListener value="#{indicador}"
 										target="#{projetoBean.indicador}" />
 								</p:commandLink>
 								
+								
+
 								<p:commandLink update="@form"
 									style="margin-left:5px;font-size:12px;color:#fff"
-									styleClass="btn btn-danger btn-xs"
-									process="@this" title="Excluir" 
+									styleClass="btn btn-danger btn-xs" process="@this"
+									title="Excluir"
 									action="#{projetoBean.excluirIndicador(indicador)}">
-									<span class=" glyphicon glyphicon-remove-circle"></span>
+									<span class="pi pi-times-circle"></span>
 									<p:confirm header="Confirmar exclusão do Indicador"
 										icon="ui-icon-alert"
-										message="Excluir Indicador. Deseja continuar?" />
+										 />
 
 								</p:commandLink>
-								
+
 								<p:commandLink update="@form" id="teste"
 									style="margin-left:5px;font-size:12px;color:#fff"
-									styleClass="btn btn-success btn-xs"
-									title="Concluir" process="teste"
+									styleClass="btn btn-success btn-xs" title="Concluir"
+									process="teste"
 									action="#{projetoBean.concluirIndicador(indicador)}">
 									<span class=" glyphicon glyphicon-ok-circle"></span>
 								</p:commandLink>
-								
-								
-								
-								
+
+
+
+
 							</p:column>
 						</p:dataTable>
 					</p:fieldset>
 
 
 				</h:panelGroup>
-				
-				
-				
-				
+
+
+
+
 			</div>
 		</div>
 

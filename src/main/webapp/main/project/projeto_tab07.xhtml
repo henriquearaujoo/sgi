@@ -31,6 +31,7 @@
 							action="#{projetoBean.iniciarNovaAtividade()}"
 							onclick="setarWidthHeight('form-cadastro-atividade');start()"
 							oncomplete="PF('dlg_cadastro_atividade').show();stop()"
+							update=":form-cadastro-atividade:panel-form-nova-atividade"
 							process="@this"
 							title="Adicionar atividade" >
 							<span class="glyphicon glyphicon-plus"></span><span style="margin: 16px;">Novo</span>
@@ -68,16 +69,16 @@
 								</h:outputText>
 							</p:column>
 
-							<p:column id="colum_mudanca"
-								style="width:90px;text-align:center;" headerText="Ações">
+							<p:column headerText="Opções" style="width:120px;text-align:center">
 								<p:commandLink title="Editar"
-									styleClass="btn btn-default btn-xs"
+									styleClass="btn btn-primary btn-sm"
 									action="#{projetoBean.editarAtividade()}"
-									update="form-cadastro-atividade"
+									update="form-cadastro-atividade:atividade-gridi"
+									onclick="setarWidthHeight('form-cadastro-atividade');start()"
 									process="tabela_atividade,form-cadastro-atividade"
 									style="margin-right:2px"
-									oncomplete="PF('dlg_cadastro_atividade').show()">
-									<span class=" glyphicon glyphicon-edit"></span>
+									oncomplete="PF('dlg_cadastro_atividade').show();stop()">
+									<span class=" pi pi-pencil"></span>
 									<f:setPropertyActionListener value="#{atividade}"
 										target="#{projetoBean.atividadeProjeto}" />
 								</p:commandLink>
@@ -87,7 +88,7 @@
 									styleClass="btn btn-danger btn-xs "
 									action="#{projetoBean.removerAtividade()}" process="@this"
 									update="tabela_atividade,tab_cadastro:graficos">
-									<span class="glyphicon glyphicon-remove-circle"></span>
+									<span class="pi pi-times-circle"></span>
 									<p:confirm header="Confirmar exclusão" icon="ui-icon-alert"
 										message="Excluir Atividade?" />
 									<f:setPropertyActionListener value="#{atividade}"

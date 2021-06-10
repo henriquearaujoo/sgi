@@ -2724,7 +2724,6 @@ public class ProjetoBean implements Serializable {
 
 	public void openDialogObjetivo() {
 		objetivo = new Objetivo();
-		openDialog("PF('dlg_cadastro_objetivo').show();");
 	}
 
 	public void openDialogEditObjetivo() {
@@ -2741,7 +2740,7 @@ public class ProjetoBean implements Serializable {
 	public void editarObjetivo() {
 		objetivo = objetivoService.getId(objetivo.getId());
 		listaMetasPorObjetivo = metasService.findMetasByObjetivo(objetivo);
-		openDialog("PF('dlg_cadastro_objetivo').show();");
+		
 	}
 
 	public void openDialogMetas() {
@@ -3193,7 +3192,7 @@ public class ProjetoBean implements Serializable {
 		if (indicador == null)
 			indicador = new Indicador();
 		PrimeFaces current = PrimeFaces.current();
-		current.executeScript("PF('dlg_cadastro_indicador').show();");
+		
 	}
 
 	private void findIndicadoresByProjeto() {
