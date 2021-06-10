@@ -95,6 +95,7 @@ public class UsuarioRepository {
 		this.manager.merge(usuario);
 	}
 
+	@Transactional
 	public void updateSenha(User usuario) {
 		manager.merge(usuario);
 	}
