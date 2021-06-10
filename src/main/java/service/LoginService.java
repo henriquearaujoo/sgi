@@ -17,6 +17,8 @@ public class LoginService implements Serializable {
 	
 	public LoginService() {
 	}
+	
+	//mTXaPMXLdB
 
 	@Transactional
 	public void updateSenhaAutomatica(User usuario, String senha) {
