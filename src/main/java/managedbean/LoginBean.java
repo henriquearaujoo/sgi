@@ -1,6 +1,5 @@
 package managedbean;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -42,6 +41,9 @@ public class LoginBean implements Serializable {
 	@Inject
 	private UsuarioSessao sessao;
 
+	@Inject
+	private UsuarioRepository repository;
+
 	private Gestao gestao;
 
 	private Colaborador colaborador;
@@ -50,20 +52,17 @@ public class LoginBean implements Serializable {
 
 	@Inject
 	private GestaoService gestaoService;
-	
-	@Inject
-	private LoginService loginService;
-
-	@Inject
-	private ColaboradorService colaboradorService;
 
 	private List<Colaborador> colaboradorList = new ArrayList<>();
+
+	
 
 	private String emailUsuario;
 	private String nomeUsuario;
 	private String senhaUsuario;
 	private Boolean senhaAuto;
 	private String toEmail;
+	private String senha = "";
 	private String toReturn = "";
 
 	private Boolean teste;
@@ -71,9 +70,6 @@ public class LoginBean implements Serializable {
 	// public String getWelcome() {
 	// return "Bem vindo !";
 	// }
-	
-	public LoginBean() {
-	}
 
 	public String getWelcome() {
 		return "Bem vindo " + this.sessao.getUsuario().getNomeUsuario() + "!";
@@ -113,8 +109,8 @@ public class LoginBean implements Serializable {
 			loginService.updateSenhaAutomatica(usuario, senha);
 			
 			System.out.println("com rec " + senha);
+			
 			//prepararEmail(senha);
-			//TODO: Registrar na nova versão
 			//email.setToEmail(toEmail);
 			//email.EnviarEmailSimples();
 //			System.out.println("com shar " + toReturn);
@@ -195,12 +191,39 @@ public class LoginBean implements Serializable {
 
 	// Finalizando com dialog de gestao
 
-	
-	public void logout() throws IOException {
-		loginService.getLogout();
-		
-//		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-//		return "/main/login.xhtml?faces-redirect=true";
+	public String getCriptografada() {
+
+		MessageDigest algorithm = null;
+
+		try {
+			algorithm = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+
+		byte messageDigest[] = null;
+
+		try {
+			messageDigest = algorithm.digest(senhaUsuario.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		StringBuilder hexString = new StringBuilder();
+
+		for (byte b : messageDigest) {
+			hexString.append(String.format("%02X", 0xFF & b));
+		}
+
+		senhaUsuario = hexString.toString();
+
+		return senhaUsuario;
+	}
+
+	public String logout() {
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		return "/main/login.xhtml?faces-redirect=true";
 	}
 
 	public User getUsuario() {
@@ -277,7 +300,45 @@ public class LoginBean implements Serializable {
 
 	// private List<MenuLateral> menus = new ArrayList<>();
 	//
+	public String redirecionaPage(String refencia) {
 
+		if (!refencia.equals("pagamento") && !refencia.equals("projetos")) {
+			if (this.sessao.getUsuario().getPerfil().getDescricao().equals("contabil")) {
+				return "page_bloqueio?faces-redirect=true";
+			}
+		}
+
+		switch (refencia) {
+		case "compras":
+			return "compras?faces-redirect=true";
+		case "home":
+			return "home_new?faces-redirect=true";
+		case "pagamento":
+			if (this.sessao.getUsuario().getPerfil().getDescricao().equals("contabil")) {
+				return "gerenciamentoLancamento?faces-redirect=true";
+			} else {
+				return "pagamento?faces-redirect=true";
+			}
+		case "logistica":
+			return "controle_expedicao?faces-redirect=true";
+		case "rh":
+			return "cadastro_colaborador?faces-redirect=true";
+		case "config":
+			return "cadastro_usuarios_att?faces-redirect=true";
+		case "liberar":
+			return "liberar_projeto?faces-redirect=true";
+		case "pbf":
+			return "cadastro_familiar?faces-redirect=true";
+		case "tuto":
+			return "tutorial?faces-redirect=true";
+		case "versao":
+			return "versao?faces-redirect=true";
+		default:
+			return "projetos?faces-redirect=true";
+
+		}
+
+	}
 	//
 	// public List<MenuLateral> getMenus() {
 	// return menus;

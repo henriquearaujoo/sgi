@@ -158,7 +158,7 @@ body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-st
 							<p:row>
 								<p:column colspan="3">
 									<p:commandLink value="Salvar" process="panel_comp"
-										update="form_tab_orcamento:panel_comp"
+										update="panel_comp"
 										styleClass="btn btn-default btn-sm" onclick="start()"
 										oncomplete="stop()" onerror="stop();"
 										action="#{orcamento_controller.salvarOrcamentoPainel()}"
@@ -296,24 +296,14 @@ body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-st
 							</p:column>
 						</p:row>
 
-
-
-
 					</p:panelGrid>
 
 
 
-
 				</div>
 
 
-				<div id="panel_chart" class="ui-g-6">
 
-					<p:chart type="bar"
-						model="#{orcamento_controller.horizontalBarModel}"
-						style="height:300px;width:100%" />
-
-				</div>
 
 			</div>
 

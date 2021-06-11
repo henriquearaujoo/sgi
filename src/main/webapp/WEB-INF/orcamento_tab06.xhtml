@@ -125,8 +125,7 @@ body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-st
 
 
 				<div class="ui-g-12">
-					<p:messages  showDetail="true" showSummary="false"
-						closable="true"></p:messages>
+					<p:messages showDetail="true" showSummary="false" closable="true"></p:messages>
 				</div>
 
 
@@ -137,10 +136,11 @@ body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-st
 						<f:facet name="header">
 							<p:row>
 
+								<p:column>Tipo</p:column>
 								<p:column>Saldo inicial</p:column>
 								<p:column>Transferido</p:column>
 								<p:column>Disponível</p:column>
-								<p:column>Tipo</p:column>
+
 							</p:row>
 
 						</f:facet>
@@ -148,9 +148,14 @@ body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-st
 
 						<p:row>
 
+							<p:column>
+								<p:outputLabel value="Overhead direto"
+									styleClass="font-label-totais" style="text-align:center" />
+							</p:column>
+
 
 							<p:column>
-
+								
 								<p:outputLabel styleClass="font-label-totais"
 									value="#{orcamento_controller.valorOrcadoOverhead}"
 									style="text-align:left;width:100%">
@@ -161,7 +166,7 @@ body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-st
 							</p:column>
 
 							<p:column>
-
+								
 								<p:outputLabel styleClass="font-label-totais"
 									value="#{orcamento_controller.valorPagoOverhead}"
 									style="text-align:left;width:100%">
@@ -182,18 +187,20 @@ body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-st
 
 							</p:column>
 
-							<p:column>
-								<p:outputLabel value="Overhead direto" styleClass="font-label-totais"
-									style="text-align:center" />
-							</p:column>
+
 						</p:row>
 
 
 						<p:row>
 
+							<p:column>
+								<p:outputLabel styleClass="font-label-totais"
+									value="Overhead indireto" style="text-align:center;" />
+							</p:column>
 
 							<p:column>
 
+                                <!-- Valor de rendimentos  alocados -->
 								<p:outputLabel styleClass="font-label-totais"
 									value="#{orcamento_controller.valorOrcadoOverheadIndireto}"
 									style="text-align:left;width:100%">
@@ -225,10 +232,7 @@ body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-st
 
 							</p:column>
 
-							<p:column>
-								<p:outputLabel styleClass="font-label-totais" value="Overhead indireto"
-									style="text-align:center;" />
-							</p:column>
+
 						</p:row>
 
 					</p:panelGrid>
@@ -308,12 +312,13 @@ body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-st
 
 				<div class="ui-g-12" style="text-align: right">
 
-					<p:commandLink styleClass="btn btn-primary btn-sm" 
+					<p:commandLink styleClass="btn btn-primary btn-sm"
 						style="color:#fff"
 						action="#{orcamento_controller.salvarTransferenciaOverHead()}"
 						onclick="start();" oncomplete="stop();" onerror="stop();"
 						process="cad_overhead" update="cad_overhead">
-						<span class="glyphicon glyphicon-floppy-disk"></span><span style="margin: 3px;">Salvar</span>
+						<span class="glyphicon glyphicon-floppy-disk"></span>
+						<span style="margin: 3px;">Salvar</span>
 
 					</p:commandLink>
 
@@ -398,7 +403,7 @@ body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-st
 								styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove-circle"
 								action="#{orcamento_controller.removerTransferenciaOverHead()}"
 								process="@this"
-								update="table-overhead :form_tab_orcamento:overhead">
+								update="table-overhead,overhead">
 								<p:confirm header="Confirmar exclusão" icon="ui-icon-alert"
 									message="Excluir overhead?" />
 								<f:setPropertyActionListener value="#{overhead}"

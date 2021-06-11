@@ -978,10 +978,11 @@ public class OrcamentoController implements Serializable {
 
 	public void definirTabOrcamento() {
 		int index = 0;
-		if (tabviewOrcamento != null)
+		if (tabviewOrcamento != null) {
 			index = tabviewOrcamento.getActiveIndex();
+			
+		}
 		
-
 		if (index == 0) {
 			System.out.println("Tab 1");
 			executeScript("setarFocused('info-geral')", "focus");

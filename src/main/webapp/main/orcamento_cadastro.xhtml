@@ -19,7 +19,7 @@
 				<f:viewAction action="#{orcamento_controller.initCadastro()}" />
 			</f:metadata>
 
-			<p:messages  showSummary="false" showDetail="true" closable="true">
+			<p:messages showSummary="false" showDetail="true" closable="true">
 				<p:autoUpdate></p:autoUpdate>
 			</p:messages>
 
@@ -32,7 +32,7 @@
 
 			<div id="panel-geral" style="margin-top: 3px">
 
-				<p:tabView prependId="false"
+				<p:tabView prependId="false" scrollable="true"
 					binding="#{orcamento_controller.tabviewOrcamento}">
 
 					<p:ajax event="tabChange" onstart="start();" onsuccess="stop();"
@@ -42,10 +42,11 @@
 
 					<p:tab id="tab-info-geral" title="Info geral"
 						rendered="#{!orcamento_controller.preCadastro}">
-						<ui:include src="/main/doacao/info_geral.xhtml"/>
+						<ui:include src="/main/doacao/info_geral.xhtml" />
 					</p:tab>
 
-					<p:tab id="tab-info-permissoes" title="Permissões">
+					<p:tab id="tab-info-permissoes" title="Permissões"
+						rendered="#{orcamento_controller.orcamento.id != null and !orcamento_controller.preCadastro}">
 						<ui:include src="/main/doacao/permissoes.xhtml" />
 					</p:tab>
 
@@ -54,7 +55,7 @@
 					<!-- 						<ui:include src="/WEB-INF/orcamento_pre_cadastro.xhtml" /> -->
 					<!-- 					</p:tab> -->
 
-					<p:tab id="cad_rubricas"
+					<p:tab id="cad_rubricas" 
 						rendered="#{orcamento_controller.orcamento.id != null and !orcamento_controller.preCadastro}"
 						title="Requisitos de doação">
 						<ui:include src="/main/doacao/requisitos_doacao.xhtml" />
@@ -66,11 +67,11 @@
 						<ui:include src="/main/doacao/extrato.xhtml" />
 					</p:tab>
 
-					<!-- 					<p:tab id="doacao" -->
-					<!-- 						rendered="#{orcamento_controller.orcamento.id != null and !orcamento_controller.preCadastro}" -->
-					<!-- 						title="Doações efetivadas"> -->
-					<!-- 						<ui:include src="/WEB-INF/orcamento_tab04.xhtml" /> -->
-					<!-- 					</p:tab> -->
+					<p:tab id="doacao"
+						rendered="#{orcamento_controller.orcamento.id != null and !orcamento_controller.preCadastro}"
+						title="Doações efetivadas">
+						<ui:include src="/WEB-INF/orcamento_tab04.xhtml" />
+					</p:tab>
 
 					<p:tab id="projetos_vinculados"
 						rendered="#{orcamento_controller.orcamento.id != null and !orcamento_controller.preCadastro}"
@@ -84,17 +85,17 @@
 						<ui:include src="/main/doacao/prestacoes.xhtml" />
 					</p:tab>
 
-					<!-- 					<p:tab id="overhead" -->
-					<!-- 						rendered="#{orcamento_controller.orcamento.id != null}" -->
-					<!-- 						title="Overhead"> -->
-					<!-- 						<ui:include src="/WEB-INF/orcamento_tab06.xhtml" /> -->
-					<!-- 					</p:tab> -->
+					<p:tab id="overhead"
+						rendered="#{orcamento_controller.orcamento.id != null}"
+						title="Overhead">
+						<ui:include src="/WEB-INF/orcamento_tab06.xhtml" />
+					</p:tab>
 
-					<!-- 					<p:tab id="comp_orcamento" -->
-					<!-- 						rendered="#{orcamento_controller.orcamento.id != null}" -->
-					<!-- 						title="Composição de orçamento"> -->
-					<!-- 						<ui:include src="/WEB-INF/orcamento_tab08.xhtml" /> -->
-					<!-- 					</p:tab> -->
+					<p:tab id="comp_orcamento"
+						rendered="#{orcamento_controller.orcamento.id != null}"
+						title="Composição de orçamento">
+						<ui:include src="/WEB-INF/orcamento_tab08.xhtml" />
+					</p:tab>
 
 				</p:tabView>
 

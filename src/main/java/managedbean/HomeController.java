@@ -155,7 +155,7 @@ public class HomeController implements Serializable {
 
 	public void cancelarTrocaDeSenha() {
 		usuario = sessao.getUsuario();
-		loginService.cancelarTrocaDeSenha(usuario, checado);
+		//loginService.cancelarTrocaDeSenha(usuario, checado);
 	}
 
 	public void openDialogSenha() {

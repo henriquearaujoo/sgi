@@ -177,7 +177,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>sgi_v4</finalName>
+		<finalName>sgi_0.0.1</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
