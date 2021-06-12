@@ -241,7 +241,7 @@ body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-st
 				</div>
 
 
-				<div class="ui-g-6">
+				<div class="ui-g-12">
 					<p:outputLabel value="Doação Recebedora:"
 						styleClass="font-label-grid" />
 					<p:selectOneMenu converter="orcamentoConverter" filter="true"
@@ -260,7 +260,7 @@ body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-st
 
 
 
-				<div class="ui-g-6">
+				<div class="ui-g-12">
 					<p:outputLabel value="Conta Recebedora:"
 						styleClass="font-label-grid" />
 					<p:selectOneMenu id="conta_recebedora" converter="contaConverter"
@@ -384,33 +384,38 @@ body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-st
 
 						</p:column>
 
-						<p:column headerText="Ações" style="width:120px">
+						<p:column headerText="Opções"
+								style="width:120px;text-align:center">
 
 
-							<p:commandLink style="color:#000;margin-left:5px"
+							<p:commandLink 
 								title="Editar Overhead"
-								styleClass="btn btn-default btn-xs glyphicon glyphicon-edit"
+								styleClass="btn btn-primary btn-sm"
 								process="@this" update=":form_tab_orcamento">
 								<p:confirm header="Confirmar ediçao" icon="ui-icon-alert"
 									message="Editar overhead?" />
+								<span class="pi pi-pencil"></span>
 								<f:setPropertyActionListener value="#{overhead}"
 									target="#{orcamento_controller.overhead}" />
 							</p:commandLink>
 
 
-							<p:commandLink style="color:#FFF;margin-left:5px"
+							<p:commandLink 
 								title="Excluir Overhead"
-								styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove-circle"
+								styleClass="btn btn-danger btn-xs "
 								action="#{orcamento_controller.removerTransferenciaOverHead()}"
 								process="@this"
 								update="table-overhead,overhead">
 								<p:confirm header="Confirmar exclusão" icon="ui-icon-alert"
 									message="Excluir overhead?" />
+								<span class="pi pi-times-circle"></span>
 								<f:setPropertyActionListener value="#{overhead}"
 									target="#{orcamento_controller.overhead}" />
 							</p:commandLink>
 
 						</p:column>
+						
+						
 
 					</p:dataTable>
 
