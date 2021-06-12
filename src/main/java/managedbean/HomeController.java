@@ -147,10 +147,10 @@ public class HomeController implements Serializable {
 	}
 
 	public void salvarNovaSenha() {
+		PrimeFaces current = PrimeFaces.current();
 		usuario = sessao.getUsuario();
 		usuarioService.updateSenha(usuario, novaSenha);
-		fecharDialog("trocasenha");
-
+		current.executeScript("PF('trocasenha').hide();");
 	}
 
 	public void cancelarTrocaDeSenha() {
@@ -177,11 +177,6 @@ public class HomeController implements Serializable {
 	public void carregarListPost() {
 		posts = new ArrayList<Post>();
 		posts = postService.getAll(new Filtro());
-	}
-
-	public void fecharDialog(String dialog) {
-		PrimeFaces current = PrimeFaces.current();
-		current.executeScript("PF(" + dialog + ").hide();");
 	}
 
 	public void initRangeShowList() {
