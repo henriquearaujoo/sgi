@@ -84,6 +84,7 @@ public class OrcamentoController implements Serializable {
 	private @Inject ProjetoService gestaoProjeto;
 	private @Inject GestaoRepositorio gestaoRepositorio;
 	private @Inject CalculatorRubricaRepositorio calculatorRubricaRepositorio;
+	
 	private Projeto projetoDespesa;
 
 	private List<SubComponente> subComponentes = new ArrayList<>();
@@ -1030,6 +1031,13 @@ public class OrcamentoController implements Serializable {
 
 		carregarRubrica();
 	}
+	
+	////////// FILTROS///////////
+	
+	public void limparFiltro() {
+		filtro = new Filtro();
+	}
+	///////////
 
 	public void verificarTabs() {
 	}
@@ -1336,10 +1344,8 @@ public class OrcamentoController implements Serializable {
 		this.orcamentos = orcamentos;
 	}
 
-	public List<FontePagadora> completeFonte(String query) {
-		List<FontePagadora> allFontes = new ArrayList<FontePagadora>();
-		allFontes = compraService.fontesAutoComplete(query);
-		return allFontes;
+	public List<String> completeFonte(String query) {
+		return compraService.fontesAutoComplete(query);
 	}
 
 	public List<Colaborador> completeColaborador(String s) {
