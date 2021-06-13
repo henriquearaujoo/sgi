@@ -84,6 +84,7 @@ public class OrcamentoController implements Serializable {
 	private @Inject ProjetoService gestaoProjeto;
 	private @Inject GestaoRepositorio gestaoRepositorio;
 	private @Inject CalculatorRubricaRepositorio calculatorRubricaRepositorio;
+	private @Inject OrcamentoService orcamentoService;
 	
 	private Projeto projetoDespesa;
 
@@ -1344,15 +1345,29 @@ public class OrcamentoController implements Serializable {
 		this.orcamentos = orcamentos;
 	}
 
+	// PARCEIRO/FONTE
 	public List<String> completeFonte(String query) {
 		return compraService.fontesAutoComplete(query);
 	}
+	
+	// TITULOS
+	public List<Orcamento> completeTitulo(String query) {
+		List<Orcamento> orcamentos = orcamentoService.getOrcamentoTitulosAutoComplete(query); 
+		return orcamentos;
+	}
 
-	public List<Colaborador> completeColaborador(String s) {
+	public List<String> completeColaborador(String query) {
 		List<Colaborador> colaboradores = new ArrayList<>();
-		if (s.length() > 3)
-			return viagemService.buscarColaboradores(s);
-		return colaboradores;
+		colaboradores = viagemService.buscarColaboradores(query);
+		
+		List<String> colaboradoresString = new ArrayList<>();
+		
+		for(Colaborador c : colaboradores) {
+			colaboradoresString.add(c.getNome());
+		}
+		
+		return colaboradoresString;
+		
 	}
 
 	public List<Rubrica> completeRubrica(String query) {

@@ -296,6 +296,10 @@ public class OrcamentoService implements Serializable {
 	public List<Projeto> getProjetoAutoCompleteMODE01(String s) {
 		return projetoRepositorio.getProjetoAutocompleteMODE01(s);
 	}
+	
+	public List<Orcamento> getOrcamentoTitulosAutoComplete(String query) {
+		return repositorio.completeTitulos(query);
+	}
 
 	public List<RubricaOrcamento> getRubricasDeOrcamento(Long idOrcamento, Filtro filtro) {
 		return repositorio.getRubricasDeOrcamento(idOrcamento, filtro);

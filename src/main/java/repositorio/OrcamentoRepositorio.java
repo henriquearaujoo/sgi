@@ -818,6 +818,14 @@ public class OrcamentoRepositorio implements Serializable {
 
 		return orcamentos;
 	}
+	
+	public List<Orcamento> completeTitulos(String s){
+		String jpql = "select o.titulo from Orcamento o where lower(o.titulo) like lower(:titulo)";
+		Query query = this.manager.createQuery(jpql);
+		
+		query.setParameter("titulo", "%" + s + "%");
+		return query.getResultList();
+	}
 
 	public List<OrcamentoProjeto> getOrcamentosProjeto(Long id) {
 		String jpql = "from OrcamentoProjeto where projeto.id = :id";
