@@ -98,6 +98,11 @@ public class LoginBean implements Serializable {
 	public void logar() throws IOException {
 		loginService.getLogin(nomeUsuario, senhaUsuario, gestaoService);
 	}
+	
+	public void redirecionaPage(String page) throws IOException {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		facesContext.getExternalContext().redirect(page+"_new.xhtml");
+	}
 
 	// Trabalhando com dialog do gestao//
 
