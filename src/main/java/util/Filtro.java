@@ -34,7 +34,7 @@ public class Filtro {
 	private PlanoDeTrabalho planoDeTrabalho;
 	private Long id;
 	private Boolean verificVigenciaMenosDias;
-	private Orcamento orcamento;
+	private Orcamento orcamento = new Orcamento();
 	private Boolean ativo;
 	private Gestao superintendencia;
 	private Gestao coordenadoria;
