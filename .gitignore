@@ -7,3 +7,4 @@
 target/
 src/test
 .vscode
+src/main/java/META-INF
