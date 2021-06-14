@@ -9,81 +9,163 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 	<ui:define name="content">
-	
-	
-		<f:metadata>
-				<f:viewAction action="#{orcamento_controller.init()}" />
-			</f:metadata>
 
+
+		<f:metadata>
+			<f:viewAction action="#{orcamento_controller.init()}" />
+		</f:metadata>
+
+		<p:link styleClass="btn btn-success btn-sm" id="table-doacao"
+			style="position: absolute;
+    margin-right: 3vh;
+    margin-top: 225px;
+    right: 0;"
+			outcome="/main/orcamento_cadastro" title="Adicionar orçamento">
+			<span class="glyphicon glyphicon-plus"></span>
+			<span style="padding: 24px">Novo cadastro</span>
+		</p:link>
 		<h:form id="form_listagem_orcamento">
 
 			<p:messages showSummary="false" showDetail="true" closable="true">
 				<p:autoUpdate></p:autoUpdate>
 			</p:messages>
 
-	
+
 
 			<p:breadCrumb>
 				<p:menuitem value="Categories" url="home_new.xhtml" />
 				<p:menuitem value="Doações" />
 			</p:breadCrumb>
-		
-		<p:panel> 
 
-				<p:link  styleClass="btn btn-success btn-sm" id="table-doacao" style="position: absolute;
-    margin-right: 3vh;
-    margin-top: 4px;
-    right: 0;"
-					outcome="/main/orcamento_cadastro" title="Adicionar orçamento">
-					<span class="glyphicon glyphicon-plus"></span>
-					<span style="padding: 24px">Novo cadastro</span>
-				</p:link>
-				
-				
+			<p:panel>
 
-			<p:dataTable id="table_doacao" paginator="true" style="color: white" rows="12"
-				value="#{orcamento_controller.orcamentos}" var="doacao">
 
-				
-				<p:column headerText="Nome" >
-					<h:outputText value="#{doacao.titulo}" />
-				</p:column>
 
-				<p:column headerText="Contrato" style="text-align:center">
-					<h:outputText value="#{doacao.contrato}" />
-				</p:column>
+				<div class="ui-g ui-fluid">
 
-				<p:column headerText="Parceiro" style="text-align:center">
-					<h:outputText value="#{doacao.fonte.nome}" />
-				</p:column>
+					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+						<p:outputLabel for="filter-fonte" value="Parceiro:"
+							styleClass="form-label" />
+						<p:autoComplete id="filter-fonte" styleClass="font12-vi"
+							value="#{orcamento_controller.orcamento.fonte}"
+							scrollHeight="250"
+							completeMethod="#{orcamento_controller.completeFonte}" />
+					</div>
 
-				<p:column headerText="Valor" style="width:160px;text-align:center">
-					<h:outputText value="#{doacao.valor}" style="float:right">
-						<f:convertNumber type="currency" locale="pt_BR" />
-					</h:outputText>
-				</p:column>
+					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+						<p:outputLabel for="filter-title" value="Título:"
+							styleClass="form-label" />
+						<p:autoComplete id="filter-title" styleClass="font12-vi"
+							value="#{orcamento_controller.orcamento.titulo}"
+							scrollHeight="250"
+							completeMethod="#{orcamento_controller.completeTitulo}" />
+					</div>
 
-				<p:column headerText="Opções" style="width:120px;text-align:center">
+					
+					
+					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
 
-					<p:link styleClass="btn btn-primary btn-sm"
-						outcome="/main/orcamento_cadastro">
-						<span class="pi pi-pencil"></span>
-						<f:param name="doacao" value="#{doacao.id}" />
-					</p:link>
+						<p:outputLabel for="filter-dt-inicio" value="Data incial:"
+							styleClass="form-label" />
+						<p:calendar id="filter-dt-inicio"
+							value="#{orcamento_controller.filtro.dataInicio}" navigator="true"
+							pattern="dd/MM/yyyy" />
 
-					<p:commandLink style="color:#FFF;margin-left:5px"
-						styleClass="btn btn-danger btn-sm "
-						action="#{orcamento_controller.remover()}" process="@this"
-						update="table_doacao :form_listagem_orcamento">
-						<span class="pi pi-times-circle"></span>
-						<f:setPropertyActionListener value="#{doacao}"
-							target="#{orcamento_controller.orcamento}" />
-					</p:commandLink>
+					</div>
+					
+					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
 
-				</p:column>
-			</p:dataTable>
+						<p:outputLabel for="filter-dt-final" value="Data final:"
+							styleClass="form-label" />
+						<p:calendar id="filter-dt-final"
+							value="#{orcamento_controller.filtro.dataFinal}" navigator="true"
+							pattern="dd/MM/yyyy" />
 
-		</p:panel>
+					</div>
+
+					
+
+					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+						<p:outputLabel for="filter-tecnic" value="Responsável técnico:"
+							styleClass="form-label" />
+						<p:autoComplete id="filter-tecnic" styleClass="font12-vi"
+							value="#{orcamento_controller.orcamento.colaborador}"
+							scrollHeight="250"
+							completeMethod="#{orcamento_controller.completeColaborador}" />
+					</div>
+
+					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+						<p:outputLabel for="filter-analist" value="Analista financeiro"
+							styleClass="form-label" />
+						<p:autoComplete id="filter-analist" styleClass="font12-vi"
+							value="#{orcamento_controller.orcamento.colaborador}"
+							scrollHeight="250"
+							completeMethod="#{orcamento_controller.completeColaborador}" />
+					</div>
+
+					
+
+				</div>
+
+
+
+				<p:dataTable id="table_doacao" paginator="true" style="color: white"
+					rows="12" value="#{orcamento_controller.orcamentos}" var="doacao">
+
+					<p:column headerText="Parceiro" style="text-align:center">
+						<h:outputText value="#{doacao.fonte.nome}" />
+					</p:column>
+
+					<p:column headerText="Título" style="text-align:center">
+						<h:outputText value="#{doacao.titulo}" />
+					</p:column>
+
+					<p:column headerText="Data inicial" style="text-align:center">
+						<h:outputText value="#{doacao.dataInicio}" />
+					</p:column>
+					<p:column headerText="Data final" style="text-align:center">
+						<h:outputText value="#{doacao.dataFinal}" />
+					</p:column>
+
+					<p:column headerText="Responsável técnico"
+						style="text-align:center">
+						<h:outputText value="#{doacao.colaborador.nome}" />
+					</p:column>
+
+					<p:column headerText="Analista financeiro">
+						<h:outputText value="#{doacao.colaborador.nome}" />
+					</p:column>
+
+
+
+
+					<p:column headerText="Valor" style="width:160px;text-align:center">
+						<h:outputText value="#{doacao.valor}" style="float:right">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Opções" style="width:120px;text-align:center">
+
+						<p:link styleClass="btn btn-primary btn-sm"
+							outcome="/main/orcamento_cadastro">
+							<span class="pi pi-pencil"></span>
+							<f:param name="doacao" value="#{doacao.id}" />
+						</p:link>
+
+						<p:commandLink style="color:#FFF;margin-left:5px"
+							styleClass="btn btn-danger btn-sm "
+							action="#{orcamento_controller.remover()}" process="@this"
+							update="table_doacao :form_listagem_orcamento">
+							<span class="pi pi-times-circle"></span>
+							<f:setPropertyActionListener value="#{doacao}"
+								target="#{orcamento_controller.orcamento}" />
+						</p:commandLink>
+
+					</p:column>
+				</p:dataTable>
+
+			</p:panel>
 		</h:form>
 
 	</ui:define>

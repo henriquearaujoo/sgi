@@ -86,6 +86,8 @@ public class OrcamentoService implements Serializable {
 	}
 
 	public List<Orcamento> getOrcamentosFilter(Filtro filtro) {
+//		if(filtro.orcamento)
+		
 		return repositorio.getOrcamentosFilter(filtro, "");
 	}
 

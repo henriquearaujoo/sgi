@@ -1038,6 +1038,10 @@ public class OrcamentoController implements Serializable {
 	public void limparFiltro() {
 		filtro = new Filtro();
 	}
+	
+	public void filtroOrcamento() {
+		orcamentos = orcamentoService.getOrcamentosFilter(filtro);
+	}
 	///////////
 
 	public void verificarTabs() {
