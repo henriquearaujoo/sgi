@@ -41,7 +41,15 @@ public class Filtro {
 	private Gestao gerencia;
 	private String statusConta;
 	private String titulo;
+	private FontePagadora fontePagadora = new FontePagadora();
 	
+	public FontePagadora getFontePagadora() {
+		return fontePagadora;
+	}
+	
+	public void setFontePagadora(FontePagadora fontePagadora) {
+		this.fontePagadora = fontePagadora;
+	}
 
 	public Orcamento getOrcamento() {
 		return orcamento;

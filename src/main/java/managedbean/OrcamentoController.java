@@ -1040,7 +1040,9 @@ public class OrcamentoController implements Serializable {
 	}
 	
 	public void filtroOrcamento() {
-		orcamentos = orcamentoService.getOrcamentosFilter(filtro);
+		System.out.println("passou aqui");
+		System.out.println(filtro.getFontePagadora().getNome());
+//		orcamentos = orcamentoService.getOrcamentosFilter(filtro);
 	}
 	///////////
 
@@ -1351,7 +1353,15 @@ public class OrcamentoController implements Serializable {
 
 	// PARCEIRO/FONTE
 	public List<String> completeFonte(String query) {
-		return compraService.fontesAutoComplete(query);
+		System.out.println(query);
+		List<FontePagadora> fontesPagadora = compraService.fontesAutoComplete(query);
+		List<String> fontes = new ArrayList<>();
+		
+		for(FontePagadora fontePagadora : fontesPagadora) {
+			fontes.add(fontePagadora.getNome());
+		}
+		
+		return fontes;
 	}
 	
 	// TITULOS
