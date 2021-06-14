@@ -785,6 +785,10 @@ public class OrcamentoRepositorio implements Serializable {
 		if (filtro.getFontes() != null && filtro.getFontes().length > 0) {
 			jpql.append(" and o.fonte_id in (:fontes) ");
 		}
+		
+		if (filtro.getTitulo() != null && filtro.getTitulo().length() > 0) {
+			jpql.append(" and o.titulo in (:titulo)");
+		}
 
 		Query query = this.manager.createNativeQuery(jpql.toString());
 
@@ -797,6 +801,16 @@ public class OrcamentoRepositorio implements Serializable {
 			}
 
 			query.setParameter("acoes", list);
+		}
+		
+		if(filtro.getTitulo() != null && filtro.getTitulo().length() > 0) {
+			List<Integer> list = new ArrayList<>();
+			Integer[] mList = filtro.getFontes();
+
+			for (int i = 0; i < filtro.getFontes().length; i++) {
+				list.add(mList[i]);
+			}
+			query.setParameter("titulo", list);
 		}
 
 		if (filtro.getFontes() != null && filtro.getFontes().length > 0) {
@@ -817,6 +831,14 @@ public class OrcamentoRepositorio implements Serializable {
 		}
 
 		return orcamentos;
+	}
+	
+	public List<Orcamento> completeTitulos(String s){
+		String jpql = "select o.titulo from Orcamento o where lower(o.titulo) like lower(:titulo)";
+		Query query = this.manager.createQuery(jpql);
+		
+		query.setParameter("titulo", "%" + s + "%");
+		return query.getResultList();
 	}
 
 	public List<OrcamentoProjeto> getOrcamentosProjeto(Long id) {

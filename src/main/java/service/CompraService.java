@@ -550,8 +550,17 @@ public class CompraService implements Serializable {
 		return acaoRepositorio.getAcaoAutoComplete(acao);
 	}
 
-	public List<FontePagadora> fontesAutoComplete(String fonte) {
-		return fonteRespositorio.getFonteAutoComplete(fonte);
+	public List<String> fontesAutoComplete(String fonte) {
+		List<FontePagadora> fontesPagadora = new ArrayList<>();
+		fontesPagadora = fonteRespositorio.getFonteAutoComplete(fonte);
+		
+		List<String> fontes = new ArrayList<>();
+		
+		for(FontePagadora fontePagadora : fontesPagadora) {
+			fontes.add(fontePagadora.getNome());
+		}
+		
+		return fontes;
 	}
 
 	public CompraService(LancamentoRepository repositorio) {

@@ -160,6 +160,11 @@ public class LoginBean implements Serializable {
 		}
 		return null;
 	}
+	
+	public void redirecionaPage(String page) throws IOException {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		facesContext.getExternalContext().redirect(page+"_new.xhtml");
+	}
 
 	// Trabalhando com dialog do gestao//
 

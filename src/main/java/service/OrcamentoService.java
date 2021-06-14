@@ -86,6 +86,8 @@ public class OrcamentoService implements Serializable {
 	}
 
 	public List<Orcamento> getOrcamentosFilter(Filtro filtro) {
+//		if(filtro.orcamento)
+		
 		return repositorio.getOrcamentosFilter(filtro, "");
 	}
 
@@ -295,6 +297,10 @@ public class OrcamentoService implements Serializable {
 
 	public List<Projeto> getProjetoAutoCompleteMODE01(String s) {
 		return projetoRepositorio.getProjetoAutocompleteMODE01(s);
+	}
+	
+	public List<Orcamento> getOrcamentoTitulosAutoComplete(String query) {
+		return repositorio.completeTitulos(query);
 	}
 
 	public List<RubricaOrcamento> getRubricasDeOrcamento(Long idOrcamento, Filtro filtro) {
