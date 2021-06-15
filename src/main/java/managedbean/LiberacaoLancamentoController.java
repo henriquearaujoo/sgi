@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -132,6 +133,16 @@ public class LiberacaoLancamentoController implements Serializable {
 		;
 		allContas = service.getAllConta(query);
 		return allContas;
+	}
+	
+	public void dialogHelp() {
+		HashMap<String, Object> options = new HashMap<>();
+		options.put("width", "95%");
+		options.put("height", "95%");
+		options.put("contentWidth", "100%");
+		options.put("contentHeight", "100%");
+		options.put("resizable", false);
+		PrimeFaces.current().dialog().openDynamic("dialog/help/help_liberacao_lancamento", options, null);
 	}
 
 	public List<Acao> completeAcoes(String query) {
