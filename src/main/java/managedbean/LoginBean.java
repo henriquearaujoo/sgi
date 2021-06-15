@@ -1,5 +1,6 @@
 package managedbean;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -20,7 +21,6 @@ import model.Colaborador;
 import model.Gestao;
 import model.User;
 import repositorio.UsuarioRepository;
-import service.ColaboradorService;
 import service.GestaoService;
 import service.LoginService;
 import util.Email;
@@ -305,45 +305,30 @@ public class LoginBean implements Serializable {
 
 	// private List<MenuLateral> menus = new ArrayList<>();
 	//
-	public String redirecionaPage(String refencia) {
-
-		if (!refencia.equals("pagamento") && !refencia.equals("projetos")) {
-			if (this.sessao.getUsuario().getPerfil().getDescricao().equals("contabil")) {
-				return "page_bloqueio?faces-redirect=true";
-			}
-		}
-
-		switch (refencia) {
-		case "compras":
-			return "compras?faces-redirect=true";
-		case "home":
-			return "home_new?faces-redirect=true";
-		case "pagamento":
-			if (this.sessao.getUsuario().getPerfil().getDescricao().equals("contabil")) {
-				return "gerenciamentoLancamento?faces-redirect=true";
-			} else {
-				return "pagamento?faces-redirect=true";
-			}
-		case "logistica":
-			return "controle_expedicao?faces-redirect=true";
-		case "rh":
-			return "cadastro_colaborador?faces-redirect=true";
-		case "config":
-			return "cadastro_usuarios_att?faces-redirect=true";
-		case "liberar":
-			return "liberar_projeto?faces-redirect=true";
-		case "pbf":
-			return "cadastro_familiar?faces-redirect=true";
-		case "tuto":
-			return "tutorial?faces-redirect=true";
-		case "versao":
-			return "versao?faces-redirect=true";
-		default:
-			return "projetos?faces-redirect=true";
-
-		}
-
-	}
+	/*
+	 * public String redirecionaPage(String refencia) {
+	 * 
+	 * if (!refencia.equals("pagamento") && !refencia.equals("projetos")) { if
+	 * (this.sessao.getUsuario().getPerfil().getDescricao().equals("contabil")) {
+	 * return "page_bloqueio?faces-redirect=true"; } }
+	 * 
+	 * switch (refencia) { case "compras": return "compras?faces-redirect=true";
+	 * case "home": return "home_new?faces-redirect=true"; case "pagamento": if
+	 * (this.sessao.getUsuario().getPerfil().getDescricao().equals("contabil")) {
+	 * return "gerenciamentoLancamento?faces-redirect=true"; } else { return
+	 * "pagamento?faces-redirect=true"; } case "logistica": return
+	 * "controle_expedicao?faces-redirect=true"; case "rh": return
+	 * "cadastro_colaborador?faces-redirect=true"; case "config": return
+	 * "cadastro_usuarios_att?faces-redirect=true"; case "liberar": return
+	 * "liberar_projeto?faces-redirect=true"; case "pbf": return
+	 * "cadastro_familiar?faces-redirect=true"; case "tuto": return
+	 * "tutorial?faces-redirect=true"; case "versao": return
+	 * "versao?faces-redirect=true"; default: return "projetos?faces-redirect=true";
+	 * 
+	 * }
+	 * 
+	 * }
+	 */
 	//
 	// public List<MenuLateral> getMenus() {
 	// return menus;
