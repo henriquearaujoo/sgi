@@ -39,12 +39,6 @@
 			<artifactId>mail</artifactId>
 			<version>1.4.7</version>
 		</dependency>
-		<dependency>
-			<groupId>org.olap4j</groupId>
-			<artifactId>olap4j</artifactId>
-			<version>1.2.0</version>
-		</dependency>
-
 
 		<!-- http://mvnrepository.com/artifact/javax.activation/activation -->
 		<dependency>
