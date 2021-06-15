@@ -15,15 +15,14 @@
 
 		<script type="text/javascript">
 			function start() {
-			    PF('statusDialog').show();
+				PF('statusDialog').show();
 			}
-			 
 			function stop() {
-			    PF('statusDialog').hide();
+				PF('statusDialog').hide();
 			}
-			
+
 			function stopDlgfilter() {
-			    PF('dlg_filtro_compra').hide();
+				PF('dlg_filtro_compra').hide();
 			}
 		</script>
 
@@ -34,18 +33,28 @@
 </style>
 
 
-		<f:metadata>
-			<o:viewParam name="project" value="#{projetoBean.projeto}" />
-			<f:viewAction action="#{projetoBean.initCadastro()}" />
-		</f:metadata>
+
 
 		<h:form id="form-cadastro-projeto" prependId="false">
+
+			<h:outputStylesheet library="css" name="project/style.css" />
+
+			<f:metadata>
+				<o:viewParam name="project" value="#{projetoBean.projeto}" />
+				<f:viewAction action="#{projetoBean.initCadastro()}" />
+			</f:metadata>
+
+			<p:messages showSummary="false" showDetail="true" closable="true">
+				<p:autoUpdate></p:autoUpdate>
+			</p:messages>
 
 			<p:breadCrumb>
 				<p:menuitem value="Categories" url="home_new.xhtml" />
 				<p:menuitem value="Lista de Projetos" url="projetos.xhtml" />
 				<p:menuitem value="Cadastro de Projetos" />
 			</p:breadCrumb>
+
+
 
 			<p:tabView id="tab_cadastro" binding="#{projetoBean.tabviewProjeto}">
 
@@ -54,26 +63,27 @@
 					onsuccess="stop();" onerror="stop();"
 					update="form-cadastro-projeto" />
 
-				<p:tab id="cadastro_projeto" title="Cadastro do Projeto">
-					<ui:include src="/main/projeto_tab01.xhtml" />
-				</p:tab>
-				
-				<p:tab id="cadastro_objetivos" title="Indicadores/Métricas"
-					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/projeto_tab09.xhtml" />
-				</p:tab>
-				
-				<p:tab id="categoria_projeto" title="Atividades"
-					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/projeto_tab07.xhtml" />
-				</p:tab>
-				
-				<p:tab id="cadastro_rubrica" title="Orçamento"
-					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/projeto_tab02.xhtml" />
+
+
+				<p:tab id="cadastro_projeto" title="Informações gerais">
+					<ui:include src="/main/project/projeto_tab01.xhtml" />
 				</p:tab>
 
-				
+				<p:tab id="cadastro_objetivos" title="Indicadores/Métricas"
+					rendered="#{projetoBean.projeto.id != null}">
+					<ui:include src="/main/project/projeto_tab09.xhtml" />
+				</p:tab>
+
+				<p:tab id="categoria_projeto" title="Atividades"
+					rendered="#{projetoBean.projeto.id != null}">
+					<ui:include src="/main/project/projeto_tab07.xhtml" />
+				</p:tab>
+
+				<p:tab id="cadastro_rubrica" title="Orçamento"
+					rendered="#{projetoBean.projeto.id != null}">
+					<ui:include src="/main/project/projeto_tab02.xhtml" />
+				</p:tab>
+
 				<p:tab id="planejamento_projeto" title="Cronograma"
 					rendered="#{projetoBean.projeto.id != null}">
 					<ui:include src="/main/projeto_tab08.xhtml" />
@@ -81,21 +91,22 @@
 
 				<p:tab id="graf_projeto" title="Gráficos"
 					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/projeto_tab10.xhtml" />
+					<ui:include src="/main/project/projeto_tab10.xhtml" />
 				</p:tab>
-				
-				<p:tab  id="painelIndicadores" rendered="#{projetoBean.projeto.id != null}"
+
+				<p:tab id="painelIndicadores"
+					rendered="#{projetoBean.projeto.id != null}"
 					title="Painel de Indicadores">
 					<ui:include src="/main/projeto_tab11.xhtml" />
 				</p:tab>
 
 				<p:tab rendered="false" id="atividade_projeto"
 					title="Linhas dos projetos">
-					<ui:include src="/main/projeto_tab05.xhtml" />
+					<ui:include src="/main/project/projeto_tab05.xhtml" />
 				</p:tab>
 
 				<p:tab rendered="false" id="extrato_projeto" title="Extrato">
-					<ui:include src="/main/projeto_tab04.xhtml" />
+					<ui:include src="/main/project/projeto_tab04.xhtml" />
 				</p:tab>
 
 
@@ -114,6 +125,17 @@
 
 	<ui:define name="adicionais">
 
+		<script type="text/javascript">
+			function setarWidthHeight(id) {
+				var htmlTag = document.getElementById(id);
+				htmlTag.style.height = Math.floor(window.innerHeight * 0.98)
+						+ "px";
+				htmlTag.style.width = Math.floor(window.innerWidth * 0.98)
+						+ "px";
+
+			}
+		</script>
+
 		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
 			showHeader="false" draggable="false" closable="false"
 			resizable="false">
@@ -127,7 +149,7 @@
 
 		<p:dialog id="dlg-atividade" header="Cadastrar Atividade"
 			widgetVar="dlg_cadastro_atividade" modal="true" resizable="false"
-			showEffect="clip" hideEffect="clip" height="100%" width="80%">
+			showEffect="clip" hideEffect="clip" height="100%" width="100%">
 
 			<h:form id="form-cadastro-atividade">
 
@@ -139,76 +161,88 @@
 				</p:confirmDialog>
 
 
-				<p:messages id="msg-frontal-atividade" 
-					showSummary="false" showDetail="true" closable="true" />
+				<p:messages id="msg-frontal-atividade" showSummary="false"
+					showDetail="true" closable="true" />
 
 
 				<div class="cadastro-atividade"
 					style="margin-right: auto; margin-left: auto;">
 
 					<p:panelGrid columns="1" styleClass="ui-noborder"
-						style="width:100%">
-						<p:panelGrid columns="2" id="gridi" style="width:100%"
-							styleClass="ui-noborder">
-
-
-							<p:outputLabel value="Título:" for="titulo" />
-							<p:inputText id="titulo"
-								value="#{projetoBean.atividadeProjeto.nome}" size="100"
-								required="true" requiredMessage="Campo 'Título' é obrigatório"
-								maxlength="100" />
-
-							<p:outputLabel value="Descrição:" for="descricao_atividade" />
-							<p:inputTextarea cols="102" rows="5" id="descricao_atividade"
-								autoResize="false" maxlength="255"
-								value="#{projetoBean.atividadeProjeto.descricao}" />
-
-							<p:outputLabel value="Localizador:" for="localizador" />
-							<p:autoComplete id="localizador" 
-								panelStyle="width:180px"
-								requiredMessage="Campo 'Localizador' obrigatório"
-								rendered="true" placeholder="Destino" required="true"
-								value="#{projetoBean.atividadeProjeto.localizador}"
-								completeMethod="#{fornecedor_controller.completeLocalidade}"
-								var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
-								converter="localConverterVI" minQueryLength="3"
-								forceSelection="true" />
-
-							<p:outputLabel for="metas" value="Meta:" />
-							<p:selectOneMenu id="metas" required="true"
-								value="#{projetoBean.atividadeProjeto.meta}"
-								converter="metaConversor" panelStyle="width:160px" effect="fade"
-								style="width:200px" filter="true" filterMatchMode="startsWith">
-								<f:selectItem noSelectionOption="true"/>
-								<f:selectItems value="#{projetoBean.listaMetas}" var="meta"
-									itemLabel="#{meta.nome}" itemValue="#{meta}" />
-							</p:selectOneMenu>
-
-
-							<p:outputLabel value="Responsável" for="respo" />
-							<p:inputText id="respo"
-								value="#{projetoBean.atividadeProjeto.responsavel}"
-								required="true"
-								requiredMessage="Campo 'Responsável' obrigatório." />
-
-
-							<p:outputLabel value="Valor:" for="valorAtividade" />
-							<p:inputText value="#{projetoBean.atividadeProjeto.valor}" id="valorAtividade"  required="true"
-								onkeypress="return formatarNumero(this,event,19,2);">
-								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
-									locale="pt_BR" />
-							</p:inputText>
-
-							<p:outputLabel value="Atividade Planejada :" />
-							<p:selectBooleanButton
-								value="#{projetoBean.atividadeProjeto.planejado}" onLabel="Sim"
-								offLabel="Não" style="width:60px" />
+						style="width:100%" id="atividade-gridi">
+						<p:panel id="panel-form-nova-atividade">
+							<div class="ui-g ui-fluid">
+								<div class="ui-g-3 form-group focused">
+									<p:outputLabel value="Título" for="titulo" />
+									<p:inputText id="titulo"
+										value="#{projetoBean.atividadeProjeto.nome}" size="100"
+										required="true" requiredMessage="Campo 'Título' é obrigatório"
+										maxlength="100" />
+								</div>
 
 
 
+								<div class="ui-g-3 form-group focused">
+									<p:outputLabel value="Localizador:" for="localizador" />
+									<p:autoComplete id="localizador" panelStyle="width:180px"
+										requiredMessage="Campo 'Localizador' obrigatório"
+										rendered="true" placeholder="Destino" required="true"
+										value="#{projetoBean.atividadeProjeto.localizador}"
+										completeMethod="#{fornecedor_controller.completeLocalidade}"
+										var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+										converter="localConverterVI" minQueryLength="3"
+										forceSelection="true" />
+								</div>
+
+								<div class="ui-g-6 form-group focused">
+									<p:outputLabel value="Descrição" for="descricao_atividade" />
+									<p:inputText id="descricao_atividade"
+										value="#{projetoBean.atividadeProjeto.descricao}" />
+								</div>
+
+								<div class="ui-g-3 form-group focused">
+									<p:outputLabel value="Metas" for="metas" />
+									<p:selectOneMenu id="metas" required="true"
+										value="#{projetoBean.atividadeProjeto.meta}"
+										converter="metaConversor" panelStyle="width:160px"
+										effect="fade" filter="true" filterMatchMode="startsWith">
+										<f:selectItem noSelectionOption="true" />
+										<f:selectItems value="#{projetoBean.listaMetas}" var="meta"
+											itemLabel="#{meta.nome}" itemValue="#{meta}" />
+									</p:selectOneMenu>
+								</div>
+
+								<div class="ui-g-3 form-group focused">
+									<p:outputLabel value="Valor:" for="valorAtividade" />
+									<p:inputText value="#{projetoBean.atividadeProjeto.valor}"
+										id="valorAtividade" required="true"
+										onkeypress="return formatarNumero(this,event,19,2);">
+										<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+											locale="pt_BR" />
+									</p:inputText>
+								</div>
+
+								<div class="ui-g-3 form-group focused">
+									<p:outputLabel value="Responsável" for="respo" />
+									<p:inputText id="respo"
+										value="#{projetoBean.atividadeProjeto.responsavel}"
+										required="true"
+										requiredMessage="Campo 'Responsável' obrigatório." />
+								</div>
+
+								<div class="ui-g-3 form-group focused">
+									<p:outputLabel value="Atividade Planejada" />
+									<p:selectOneRadio id="hospedagem"
+										value="#{projetoBean.atividadeProjeto.planejado}">
+										<f:selectItem itemLabel="Sim" itemValue="true" />
+										<f:selectItem itemLabel="Não" itemValue="false" />
+									</p:selectOneRadio>
 
 
-						</p:panelGrid>
+								</div>
+
+							</div>
+						</p:panel>
 
 						<div class="ui-g">
 							<div class="ui-g-12" style="font-size: 17px; font-weight: bold">Quantidade
@@ -277,55 +311,79 @@
 				</div>
 
 				<div class="botao_central" align="center"
-					style="width: 100%; background-color: rgba(51, 122, 183, 0.18); margin: 0px 1px 10px 2px;">
+					style="width: 100%; margin: 0px 1px 16px 2px;">
 					<p:commandLink styleClass="btn btn-primary btn-sm"
 						action="#{projetoBean.salvarAtividade()}"
-						update="@form,tab_cadastro:panel_atividade_projeto"
-						style="color:#fff; margin: 2px 2px;" value="Salvar" />
+						update=":form-cadastro-projeto:tab_cadastro, :form-cadastro-atividade:msg-frontal-atividade"
+						style="color:#fff; padding:8px 16px;margin: 2px 2px;"
+						value="Salvar" />
 
 					<p:commandLink id="bt-excluir" styleClass="btn btn-danger btn-sm"
 						onclick="PF('dlg_cadastro_atividade').hide()" process="@this"
-						style="color:#fff; margin: 2px 2px;" value="Cancelar">
+						style="color:#fff;padding:8px 16px; margin: 2px 2px;"
+						value="Cancelar">
 					</p:commandLink>
 
 				</div>
 
 			</h:form>
+
+			<div
+				style="position: absolute; background: whitesmoke; font-family: 'Open Sans'; top: 550px; width: 50%; padding: 24px; text-align: center; margin-left: 25%; border-radius: 16px;">
+				<h1>Cadastro de metas</h1>
+				<p style="margin-top: 16px; font-size: 16px">Mussum Ipsum,
+					cacilds vidis litro abertis. Todo mundo vê os porris que eu tomo,
+					mas ninguém vê os tombis que eu levo! Não sou faixa preta cumpadi,
+					sou preto inteiris, inteiris. Casamentiss faiz malandris se
+					pirulitá. Sapien in monti palavris qui num significa nadis i pareci
+					latim.</p>
+			</div>
 		</p:dialog>
 
 		<p:dialog id="dlg-objetivo" header="Cadastrar Objetivo Específico"
 			widgetVar="dlg_cadastro_objetivo" modal="true" resizable="false"
-			showEffect="clip" hideEffect="clip" height="100%" width="800px">
+			showEffect="clip" hideEffect="clip" height="100%" width="100%">
 
 			<h:form id="form-cadastro-objetivo">
 
-				<p:messages id="msg-frontal-objetivo" 
-					showSummary="false" showDetail="true" closable="true" />
+				<p:messages id="msg-frontal-objetivo" showSummary="false"
+					showDetail="true" closable="true" />
 
 				<div class="botao_central" align="left"
-					style="width: 100%; background-color: rgba(51, 122, 183, 0.18); margin: 0px 1px 10px 2px;">
-					<p:commandLink styleClass="btn btn-primary btn-sm" onclick="start()" onsuccess="stop()" onerror="stop()"
+					style="margin: 0px 1px 10px 2px;">
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						onclick="start()" onsuccess="stop()" onerror="stop()"
 						action="#{projetoBean.salvarObjetivo()}"
 						process="form-cadastro-objetivo"
-						update=":form-cadastro-projeto:tab_cadastro:objetivos"
+						update=":form-cadastro-projeto:tab_cadastro:objetivos, form-cadastro-objetivo:msg-frontal-objetivo"
 						style="color:#fff; margin: 2px 2px;" value="Salvar" />
 				</div>
 
-				<p:panelGrid columns="2" id="gridi" styleClass="ui-noborder">
+
+				<p:panel id="gridi">
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-4 form-group focused">
+							<p:outputLabel value="Nome:" for="nome" />
+							<p:inputText id="nome" value="#{projetoBean.objetivo.nome}"
+								required="true" requiredMessage="Campo 'Nome' é obrigatório"
+								maxlength="100" />
+						</div>
+
+						<div class="ui-g-8 form-group focused">
+							<p:outputLabel value="Descrição:" for="descricao_objetivo" />
+							<p:inputText cols="30" rows="3" id="descricao_objetivo"
+								autoResize="false" maxlength="255"
+								value="#{projetoBean.objetivo.descricao}" />
+						</div>
+					</div>
 
 
-					<p:outputLabel value="Nome:" for="nome" />
-					<p:inputText id="nome" value="#{projetoBean.objetivo.nome}"
-						required="true" requiredMessage="Campo 'Nome' é obrigatório"
-						maxlength="100" />
 
 
-					<p:outputLabel value="Descrição:" for="descricao_objetivo" />
-					<p:inputTextarea cols="30" rows="3" id="descricao_objetivo"
-						autoResize="false" maxlength="255"
-						value="#{projetoBean.objetivo.descricao}" />
 
-				</p:panelGrid>
+
+
+				</p:panel>
 				<p:fieldset legend="Metas" id="metas" toggleable="true">
 					<p:dataTable value="#{projetoBean.listaMetasPorObjetivo}"
 						var="metas" emptyMessage="Sem Registros!">
@@ -341,108 +399,161 @@
 
 				</p:fieldset>
 			</h:form>
+
+			<div
+				style="position: absolute; background: whitesmoke; font-family: 'Open Sans'; top: 400px; width: 50%; padding: 24px; text-align: center; margin-left: 23%; border-radius: 16px;">
+				<h1>Cadastro de Objetivos</h1>
+				<p style="margin-top: 16px; font-size: 16px">Mussum Ipsum,
+					cacilds vidis litro abertis. Todo mundo vê os porris que eu tomo,
+					mas ninguém vê os tombis que eu levo! Não sou faixa preta cumpadi,
+					sou preto inteiris, inteiris. Casamentiss faiz malandris se
+					pirulitá. Sapien in monti palavris qui num significa nadis i pareci
+					latim.</p>
+			</div>
 		</p:dialog>
 
-		<p:dialog id="dlg-metas" header="Cadastrar Metas"
-			widgetVar="dlg_cadastro_metas" modal="true" resizable="false"
-			showEffect="clip" hideEffect="clip" height="100%" width="800px">
+		<p:dialog widgetVar="dlg_cadastro_metas" modal="true" width="100%"
+			height="100%" closable="true" closeOnEscape="true" showHeader="true"
+			header="Inclusão de metas" showEffect="clip" hideEffect="clip">
+
 
 			<h:form id="form-cadastro-metas">
 
-				<p:messages id="msg-frontal-metas" 
-					showSummary="false" showDetail="true" closable="true" />
+				<p:messages id="msg-frontal-metas" showSummary="false"
+					showDetail="true" closable="true" />
 
 				<div class="botao_central" align="left"
-					style="width: 100%; background-color: rgba(51, 122, 183, 0.18); margin: 0px 1px 10px 2px;">
+					style="width: 100%; margin: 0px 1px 10px 2px;">
 					<p:commandLink styleClass="btn btn-primary btn-sm"
-						action="#{projetoBean.salvarMetas()}" onclick="start()" onsuccess="stop()" onerror="stop()"
-						process="form-cadastro-metas"
-						update="@form,:form-cadastro-projeto:tab_cadastro:tabela_metas"
+						action="#{projetoBean.salvarMetas()}" onclick="start()"
+						onsuccess="stop()" onerror="stop()" process="form-cadastro-metas"
+						update=":form-cadastro-projeto:tab_cadastro"
 						style="color:#fff; margin: 2px 2px;" value="Salvar" />
 
 				</div>
 
-				<p:panelGrid columns="2" id="gridi" styleClass="ui-noborder">
+				<p:panel id="panel-form-nova-metas">
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-3 form-group focused">
 
-					<p:outputLabel value="Objetivo: " />
-					<p:selectOneMenu value="#{projetoBean.metas.objetivo}" required="true"
-						converter="objetivoConv">
-						<f:selectItems value="#{projetoBean.listaObjetivos}"
-							var="objetivo" itemLabel="#{objetivo.nome}"
-							itemValue="#{objetivo}" />
-					</p:selectOneMenu>
 
-					<p:outputLabel value="Nome:" for="nome" />
-					<p:inputText id="nome" value="#{projetoBean.metas.nome}"
-						required="true" requiredMessage="Campo 'Nome' é obrigatório"
-						maxlength="100" />
+							<p:outputLabel value="Objetivo:" />
+							<p:selectOneMenu value="#{projetoBean.metas.objetivo}"
+								required="true" converter="objetivoConv">
+								<f:selectItems value="#{projetoBean.listaObjetivos}"
+									var="objetivo" itemLabel="#{objetivo.nome}"
+									itemValue="#{objetivo}" />
+							</p:selectOneMenu>
 
-					<p:outputLabel value="Descrição:" for="descricao_metas" />
-					<p:inputTextarea cols="30" rows="3" id="descricao_metas"
-						autoResize="false" maxlength="255"
-						value="#{projetoBean.metas.descricao}" />
-						
-					
-				</p:panelGrid>
+						</div>
+
+						<div class="ui-g-3 form-group focused">
+
+
+							<p:outputLabel value="Nome:" for="nome" />
+							<p:inputText id="nome" value="#{projetoBean.metas.nome}"
+								required="true" requiredMessage="Campo 'Nome' é obrigatório"
+								maxlength="100" />
+
+						</div>
+
+						<div class="ui-g-6 form-group focused">
+
+
+							<p:outputLabel value="Descrição:" for="descricao_metas" />
+							<p:inputText id="descricao_metas"
+								value="#{projetoBean.metas.descricao}" />
+
+						</div>
+					</div>
+				</p:panel>
+
 			</h:form>
+
+			<div
+				style="position: absolute; background: whitesmoke; font-family: 'Open Sans'; top: 230px; width: 50%; padding: 24px; text-align: center; margin-left: 23%; border-radius: 16px;">
+				<h1>Inclusão de metas</h1>
+				<p style="margin-top: 16px; font-size: 16px">Mussum Ipsum,
+					cacilds vidis litro abertis. Todo mundo vê os porris que eu tomo,
+					mas ninguém vê os tombis que eu levo! Não sou faixa preta cumpadi,
+					sou preto inteiris, inteiris. Casamentiss faiz malandris se
+					pirulitá. Sapien in monti palavris qui num significa nadis i pareci
+					latim.</p>
+			</div>
+
 		</p:dialog>
-		
+
 		<p:dialog id="dlg-indicador" header="Cadastrar Indicador"
 			widgetVar="dlg_cadastro_indicador" modal="true" resizable="false"
-			showEffect="clip" hideEffect="clip" height="100%" width="800px">
+			showEffect="clip" hideEffect="clip" height="100%" width="100%">
 
 			<h:form id="form-cadastro-indicador">
 
-				<p:messages id="msg-frontal-indicador" 
-					showSummary="false" showDetail="true" closable="true" />
+				<p:messages id="msg-frontal-indicador" showSummary="false"
+					showDetail="true" closable="true" />
 
 				<div class="botao_central" align="left"
-					style="width: 100%; background-color: rgba(51, 122, 183, 0.18); margin: 0px 1px 10px 2px;">
-					<p:commandLink styleClass="btn btn-primary btn-sm" onclick="start()" onsuccess="stop()" onerror="stop()"
+					style="width: 100%; margin: 0px 1px 10px 2px;">
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						onclick="start()" onsuccess="stop()" onerror="stop()"
 						action="#{projetoBean.salvarIndicador()}"
 						process="form-cadastro-indicador"
 						style="color:#fff; margin: 2px 2px;" value="Salvar" />
 				</div>
 
-				<p:panelGrid columns="2" id="gridi" styleClass="ui-noborder">
+				<p:panel id="gridi-indi">
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-4 form-group focused">
+							<p:outputLabel value="Nome:" for="nome" />
+							<p:inputText id="nome" value="#{projetoBean.indicador.nome}"
+								required="true" requiredMessage="Campo 'Nome' é obrigatório"
+								maxlength="100" />
+						</div>
 
+						<div class="ui-g-4 form-group focused">
+							<p:outputLabel value="Valor de Rerência" for="valorReferencia" />
+							<p:inputText id="valorReferencia"
+								value="#{projetoBean.indicador.valorReferencia}" maxlength="20" />
+						</div>
 
-					<p:outputLabel value="Nome:" for="nome" />
-					<p:inputText id="nome" value="#{projetoBean.indicador.nome}"
-						required="true" requiredMessage="Campo 'Nome' é obrigatório"
-						maxlength="100" />
+						<div class="ui-g-4 form-group focused">
+							<p:outputLabel value="Peridiocidade:" for="periodicidade" />
+							<p:inputText id="periodicidade"
+								value="#{projetoBean.indicador.periodicidade}" maxlength="20" />
+						</div>
 
-					<p:outputLabel value="Valor de Referência:" for="valorReferencia" />
-       				<p:inputText id="valorReferencia" value="#{projetoBean.indicador.valorReferencia}"  maxlength="20" />
-					
-					<p:outputLabel value="Periodicidade:" for="periodicidade" />
-       				<p:inputText id="periodicidade" value="#{projetoBean.indicador.periodicidade}"  maxlength="20" />
-       				
-       				<p:outputLabel value="Responsável:" for="responsavel" />
-       				<p:inputText id="responsavel" value="#{projetoBean.indicador.responsavel}"  maxlength="50" />
-					
-					<p:outputLabel value="Descrição:" for="descricao_indicador" />
-					<p:inputTextarea cols="30" rows="3" id="descricao_indicador"
-						autoResize="false" maxlength="255"
-						value="#{projetoBean.indicador.descricao}" />
-						
-					
-       				
-       				
-       				
-				</p:panelGrid>
+						<div class="ui-g-4 form-group focused">
+							<p:outputLabel value="Responsável:" for="responsavel" />
+							<p:inputText id="responsavel"
+								value="#{projetoBean.indicador.responsavel}" maxlength="50" />
+						</div>
+
+						<div class="ui-g-4 form-group focused">
+							<p:outputLabel value="Descrição" for="descricao_indicador" />
+							<p:inputText  id="descricao_indicador"
+								 maxlength="255"
+								value="#{projetoBean.indicador.descricao}" />
+						</div>
+					</div>
+				</p:panel>
+
+				
 			</h:form>
 		</p:dialog>
 
 
-		<p:confirmDialog header="Aprovação de projeto" message="Confirma a aprovação do projeto?" widgetVar="dlgAprovacaoProjeto"
-						 global="true" showEffect="fade" hideEffect="fade"  >
+		<p:confirmDialog header="Aprovação de projeto"
+			message="Confirma a aprovação do projeto?"
+			widgetVar="dlgAprovacaoProjeto" global="true" showEffect="fade"
+			hideEffect="fade">
 			<h:form>
-				<p:commandButton value="Sim"
-								 styleClass="ui-confirmdialog-yes" icon="ui-icon-check" action="#{projetoBean.aprovarProjeto()}"
-								 update="form-cadastro-projeto" oncomplete="PF('dlgAprovacaoProjeto').hide()"/>
+				<p:commandButton value="Sim" styleClass="ui-confirmdialog-yes"
+					icon="ui-icon-check" action="#{projetoBean.aprovarProjeto()}"
+					update="form-cadastro-projeto"
+					oncomplete="PF('dlgAprovacaoProjeto').hide()" />
 				<p:commandButton value="Não" type="button"
-								 styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('dlgAprovacaoProjeto').hide()"/>
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+					onclick="PF('dlgAprovacaoProjeto').hide()" />
 			</h:form>
 		</p:confirmDialog>
 	</ui:define>

@@ -110,9 +110,9 @@ public class LoginBean implements Serializable {
 			
 			System.out.println("com rec " + senha);
 			
-			//prepararEmail(senha);
-			//email.setToEmail(toEmail);
-			//email.EnviarEmailSimples();
+			prepararEmail(senha);
+			email.setToEmail(toEmail);
+			email.EnviarEmailSimples();
 //			System.out.println("com shar " + toReturn);
 			
 

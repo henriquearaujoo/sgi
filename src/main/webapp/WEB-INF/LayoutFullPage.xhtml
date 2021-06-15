@@ -9,25 +9,24 @@
 
 
 <h:head>
+	<h:outputStylesheet library="css" name="project/style.css" />
 
 	<style type="text/css">
-	
-	body .ui-carousel .ui-carousel-header {
-    background-color: #30383c;
-    color: #fff;
-    padding: .571em 1em .571em 1em;
-    border: 1px solid #007ad9;
-    margin: 0;
-    font-weight: 400;
-    -moz-border-radius-bottomleft: 0;
-    -webkit-border-bottom-left-radius: 0;
-    border-bottom-left-radius: 0;
-    -moz-border-radius-bottomright: 0;
-    -webkit-border-bottom-right-radius: 0;
-    border-bottom-right-radius: 0;
+body .ui-carousel .ui-carousel-header {
+	background-color: #30383c;
+	color: #fff;
+	padding: .571em 1em .571em 1em;
+	border: 1px solid #007ad9;
+	margin: 0;
+	font-weight: 400;
+	-moz-border-radius-bottomleft: 0;
+	-webkit-border-bottom-left-radius: 0;
+	border-bottom-left-radius: 0;
+	-moz-border-radius-bottomright: 0;
+	-webkit-border-bottom-right-radius: 0;
+	border-bottom-right-radius: 0;
 }
 
-	
 .item-selected-bc {
 	background: #caccc645;
 	font-weight: bold;
@@ -42,7 +41,6 @@
 	margin-top: 1px;
 	margin-left: 5px;
 }
-
 
 body .ui-tabs .ui-tabs-nav .ui-tabs-header.ui-state-active {
 	background-color: #ffb300;
@@ -86,7 +84,12 @@ body .ui-tabs .ui-tabs-nav .ui-tabs-header {
 	transition: background-color .3s;
 }
 
-
+.ui-breadcrumb ul {
+	margin: 0;
+	padding: 0;
+	display: block;
+	margin-left: 5px;
+}
 
 body .ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-item.ui-state-highlight
 	{
@@ -258,7 +261,7 @@ body .ui-fileupload .ui-fileupload-content {
 
 	<title>Um clique</title>
 
-	
+	<h:outputStylesheet library="algaworks" name="styles/custom.css" />
 	<h:outputStylesheet library="algaworks" name="styles/layout.css" />
 	<h:outputStylesheet library="algaworks" name="styles/components.css" />
 
@@ -269,7 +272,6 @@ body .ui-fileupload .ui-fileupload-content {
 		href="../resources/bootstrap-4.3.1-dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="../resources/bootsnip/css/style.css" />
 	<link rel="stylesheet" href="../resources/icomoon/style.css" />
-
 	<link rel="stylesheet" href="../resources/css/primefaces_alter.css" />
 	<link rel="stylesheet" href="../resources/css/bootstrap_alter.css" />
 	<link rel="stylesheet" href="../resources/css/intranet_coments.css" />
@@ -285,6 +287,9 @@ body .ui-fileupload .ui-fileupload-content {
 	<h:outputScript target="body" library="algaworks"
 		name="javascripts/app.js" />
 
+	<h:outputScript target="body" library="javascript" name="app.js" />
+
+
 	<h:outputScript library="primefaces" name="jquery/jquery-plugins.js"
 		target="body" />
 
@@ -294,8 +299,20 @@ body .ui-fileupload .ui-fileupload-content {
 	<h:panelGroup id="panel-script">
 		<h:outputScript library="js" name="tabs.js" target="body" />
 		<h:outputScript library="js" name="menu.js" target="body" />
+		<h:outputScript library="js" name="teste.js" target="body" />
 		<h:outputScript name="mascaras.js" library="js" />
 	</h:panelGroup>
+
+
+	<script type="text/javascript"
+		src="../resources/algaworks/javascripts/app.js"></script>
+	<script type="text/javascript" src="../resources/js/teste.js"></script>
+	<script type="text/javascript" src="../resources/js/menu.js"></script>
+	<script type="text/javascript" src="../resources/js/tabs.js"></script>
+	<script type="text/javascript" src="../resources/js/mascaras.js"></script>
+
+
+
 
 </h:head>
 
@@ -363,19 +380,23 @@ body .ui-fileupload .ui-fileupload-content {
 			<div
 				style="margin-left: 1px; padding-left: 2px; padding-right: 2px; padding-top: 5px;">
 				<ui:insert name="menu_lateral" />
-				<ui:include src="./menu_lateral_novo.xhtml" />
+				<ui:include src="./menu_lateral.xhtml" />
 			</div>
 		</nav>
 
 	</aside>
 
 	<section class="aw-content  js-content form-wrapper">
-		<div  class="body-content">
+		<div style="padding-top: 10px; position: relative;">
 			<ui:insert name="content" />
 		</div>
 	</section>
 
 	<ui:insert name="adicionais">
+
+
+
+
 	</ui:insert>
 
 
