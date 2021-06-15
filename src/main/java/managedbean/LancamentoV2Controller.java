@@ -796,11 +796,13 @@ public class LancamentoV2Controller implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 	public Boolean getContaAlterada() {
 		
-		if (pagamentoLancAuxiliar != null && conta != null && pagamentoLancAuxiliar.getConta() != null
-				&& pagamentoLancAuxiliar.getConta().getId().longValue() != conta.getId().longValue()) {
+		if (pagamentoLancAuxiliar != null && conta != null && conta.getId() != null && pagamentoLancAuxiliar.getConta() != null
+				&& (pagamentoLancAuxiliar.getConta().getId().longValue() != conta.getId().longValue())) {
 			return true;
 		} else {
 			dataReembolso = null;

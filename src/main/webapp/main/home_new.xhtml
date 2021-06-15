@@ -46,7 +46,7 @@ body #form-home .ui-panel .ui-panel-content {
 			<p:tabView prependId="false"
 				style="margin-top:10px;margin-right:auto;margin-left:auto; width:98%">
 				<p:tab id="tab-post" title="#{message['HOME_INFORM']}"
-					rendered="true">
+					rendered="false">
 					<ui:include src="/main/home/post.xhtml" />
 				</p:tab>
 				<p:tab id="tab-evento" title="#{message['HOME_EVENT']}">
@@ -57,11 +57,11 @@ body #form-home .ui-panel .ui-panel-content {
 					<ui:include src="/main/home/codigo_conduta.xhtml" />
 				</p:tab>
 				<p:tab id="tab-remoto" title="#{message['HOME_UTIL']}"
-					rendered="true">
+					rendered="false">
 					<ui:include src="/main/home/utilidades.xhtml" />
 				</p:tab>
 				<p:tab id="tab-colaborador" title="#{message['HOME_COL']}"
-					rendered="true">
+					rendered="false">
 					<ui:include src="/main/home/colaborador_vi.xhtml" />
 				</p:tab>
 			</p:tabView>

@@ -134,7 +134,7 @@ public class LoginBean implements Serializable {
 		email.setSubject("Recuperação de senha");
 		email.setSenhaEmail("FAS123fas");
 		email.setContent(
-				"Olá "+ usuario.getNomeUsuario() +"Sua nova senha para acessar o sistema é: "+ senha +"\n");
+				"Olá "+ usuario.getNomeUsuario() +" sua nova senha para acessar o sistema é: "+ senha +"\n");
 	}
 
 	public LoginBean() {
