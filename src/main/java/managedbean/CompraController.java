@@ -1079,7 +1079,7 @@ public class CompraController implements Serializable {
 		return allProdutos;
 	}
 
-	public List<String> completeFonte(String query) {
+	public List<FontePagadora> completeFonte(String query) {
 		return compraService.fontesAutoComplete(query);
 	}
 

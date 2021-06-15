@@ -86,8 +86,10 @@ public class OrcamentoService implements Serializable {
 	}
 
 	public List<Orcamento> getOrcamentosFilter(Filtro filtro) {
-//		if(filtro.orcamento)
-		
+		String titulo = filtro.getOrcamento().getTitulo();
+		if(titulo != null && titulo.length() > 0) {
+			filtro.setOrcamento(filtro.getOrcamento());
+		}
 		return repositorio.getOrcamentosFilter(filtro, "");
 	}
 

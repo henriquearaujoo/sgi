@@ -18,7 +18,7 @@
 		<p:link styleClass="btn btn-success btn-sm" id="table-doacao"
 			style="position: absolute;
     margin-right: 3vh;
-    margin-top: 225px;
+    margin-top: 204px;
     right: 0;"
 			outcome="/main/orcamento_cadastro" title="Adicionar orçamento">
 			<span class="glyphicon glyphicon-plus"></span>
@@ -41,13 +41,13 @@
 
 
 
-				<div class="ui-g ui-fluid">
+				<div class="ui-g ui-fluid" style="margin-top: 8px">
 
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
 						<p:outputLabel for="filter-fonte" value="Parceiro:"
 							styleClass="form-label" />
 						<p:autoComplete id="filter-fonte" styleClass="font12-vi"
-							value="#{orcamento_controller.orcamento.fonte}"
+							value="#{orcamento_controller.filtro.fontePagadora.nome}"
 							scrollHeight="250"
 							completeMethod="#{orcamento_controller.completeFonte}" />
 					</div>
@@ -56,23 +56,22 @@
 						<p:outputLabel for="filter-title" value="Título:"
 							styleClass="form-label" />
 						<p:autoComplete id="filter-title" styleClass="font12-vi"
-							value="#{orcamento_controller.orcamento.titulo}"
-							scrollHeight="250"
+							value="#{orcamento_controller.filtro.nome}" scrollHeight="250"
 							completeMethod="#{orcamento_controller.completeTitulo}" />
 					</div>
 
-					
-					
+
+
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
 
 						<p:outputLabel for="filter-dt-inicio" value="Data incial:"
 							styleClass="form-label" />
 						<p:calendar id="filter-dt-inicio"
-							value="#{orcamento_controller.filtro.dataInicio}" navigator="true"
-							pattern="dd/MM/yyyy" />
+							value="#{orcamento_controller.filtro.dataInicio}"
+							navigator="true" pattern="dd/MM/yyyy" />
 
 					</div>
-					
+
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
 
 						<p:outputLabel for="filter-dt-final" value="Data final:"
@@ -87,7 +86,7 @@
 						<p:outputLabel for="filter-tecnic" value="Responsável técnico:"
 							styleClass="form-label" />
 						<p:autoComplete id="filter-tecnic" styleClass="font12-vi"
-							value="#{orcamento_controller.orcamento.colaborador}"
+							value="#{orcamento_controller.filtro.orcamento.responsavelTecnico}"
 							scrollHeight="250"
 							completeMethod="#{orcamento_controller.completeColaborador}" />
 					</div>
@@ -96,12 +95,24 @@
 						<p:outputLabel for="filter-analist" value="Analista financeiro"
 							styleClass="form-label" />
 						<p:autoComplete id="filter-analist" styleClass="font12-vi"
-							value="#{orcamento_controller.orcamento.colaborador}"
+							value="#{orcamento_controller.filtro.orcamento.colaborador}"
 							scrollHeight="250"
 							completeMethod="#{orcamento_controller.completeColaborador}" />
 					</div>
 
-					
+
+					<div>
+						
+
+						<p:commandButton styleClass="btn btn-primary btn-sm"
+							action="#{orcamento_controller.filtroOrcamento()}"
+							onclick="start()" update="table_doacao" onsuccess="stop()"
+							onerror="stop()" oncomplete="stop();"
+							style="color:#fff; margin: 8px 2px;" value="Buscar" />
+
+
+
+					</div>
 
 				</div>
 
