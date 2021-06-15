@@ -123,8 +123,8 @@
 								onerror="stop()" 
 								style="margin-left:5px"
 								title="Salvar" 
-								update=":form-cadastro-projeto"
-								process="tab_cadastro"
+								update="form-cadastro-projeto "
+								process="@this, form-cadastro-projeto"
 								action="#{projetoBean.salvarMODE01()}">
 								<span style="margin: 3px;">Salvar</span>
 							</p:commandLink>
