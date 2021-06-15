@@ -134,6 +134,16 @@ public class ControleExpedicaoController implements Serializable {
 		return existePedido;
 	}
 	
+	public void dialogHelp() {
+		HashMap<String, Object> options = new HashMap<>();
+		options.put("width", "100%");
+		options.put("height", "100%");
+		options.put("contentWidth", "100%");
+		options.put("contentHeight", "100%");
+		options.put("resizable", false);
+		PrimeFaces.current().dialog().openDynamic("dialog/help/help_controle_expedicao", options, null);
+	}
+	
 	public List<Gestao> completeGestao(String query) {
 		return service.getGestaoAutoComplete(query);
 	}

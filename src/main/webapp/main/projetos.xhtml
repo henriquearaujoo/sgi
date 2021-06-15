@@ -11,25 +11,27 @@
 	<ui:define name="content">
 
 		<script type="text/javascript">
-				function start() {
-				    PF('statusDialog').show();
-				}
-				 
-				function stop() {
-				    PF('statusDialog').hide();
-				}
-				
-				function stopDlgfilter() {
-				    PF('dlg_filtro_compra').hide();
-				}
+			function start() {
+				PF('statusDialog').show();
+			}
 
-				function setarWidthHeight(id) {
-					var htmlTag = document.getElementById(id);
-					htmlTag.style.height = Math.floor(window.innerHeight*0.98)+"px";	
-					htmlTag.style.width = Math.floor(window.innerWidth*0.98)+"px";	
-					
-				}
-			</script>
+			function stop() {
+				PF('statusDialog').hide();
+			}
+
+			function stopDlgfilter() {
+				PF('dlg_filtro_compra').hide();
+			}
+
+			function setarWidthHeight(id) {
+				var htmlTag = document.getElementById(id);
+				htmlTag.style.height = Math.floor(window.innerHeight * 0.98)
+						+ "px";
+				htmlTag.style.width = Math.floor(window.innerWidth * 0.98)
+						+ "px";
+
+			}
+		</script>
 
 		<style type="text/css">
 .oppt .ui-widget {
@@ -39,7 +41,7 @@
 
 
 
-		<h:form  id="form-projeto">
+		<h:form id="form-projeto">
 
 
 
@@ -137,11 +139,10 @@
 						</p:commandLink>
 
 						<p:commandLink styleClass="btn btn-primary btn-sm"
-							oncomplete="PF('dialog_help').show();"
-							onclick="start();setarWidthHeight('id-help')" onsuccess="stop()"
-							onerror="stop()" style="color:#fff; margin: 8px 2px;">
+							action="#{projetoBean.dialogHelp()}"
+							style="color:#fff; margin: 8px 2px;">
 							<span class="fa fa-fw fa-question"></span>
-							<span>#{message['BUTTON_LABEL_HELP']}</span>
+							<span>Ajuda</span>
 						</p:commandLink>
 
 					</div>
@@ -163,7 +164,7 @@
 										<td><p:selectBooleanCheckbox style="cursor: pointer">
 												<p:ajax listener="#{projetoBean.addList(projeto)}" />
 											</p:selectBooleanCheckbox></td>
-										<td><h:outputText value="#{projeto.codigo}"/></td>
+										<td><h:outputText value="#{projeto.codigo}" /></td>
 										<td><h:outputText value="#{projeto.nome}" /></td>
 										<td><h:outputText
 												value="#{projeto.statusAprovacao.descricao}" /></td>

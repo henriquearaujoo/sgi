@@ -169,6 +169,14 @@
 								<span class="fa fa-fw fa-plus"></span>
 								<span style="margin: 3px;">#{message['BUTTON_LABEL_NEW']}</span>
 							</p:link>
+							
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								action="#{compraController.dialogHelp()}"
+								onclick="start();" onerror="stop();" onsuccess="stop();"
+								style="color:#fff; margin: 8px 2px;">
+								<span class="fa fa-fw fa-question"></span>
+								<span>#{message['BUTTON_LABEL_HELP']}</span>
+							</p:commandLink>
 
 						</div>
 

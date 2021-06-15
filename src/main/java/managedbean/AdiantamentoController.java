@@ -242,6 +242,16 @@ public class AdiantamentoController implements Serializable {
 		}
 
 	}
+	
+	public void dialogHelp() {
+		HashMap<String, Object> options = new HashMap<>();
+		options.put("width", "95%");
+		options.put("height", "95%");
+		options.put("contentWidth", "100%");
+		options.put("contentHeight", "100%");
+		options.put("resizable", false);
+		PrimeFaces.current().dialog().openDynamic("dialog/help/help_adiantamentos", options, null);
+	}
 
 	public void steping(String modo) {
 		if (modo.equalsIgnoreCase("next")) {

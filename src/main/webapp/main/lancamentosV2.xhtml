@@ -12,15 +12,15 @@
 
 		<script type="text/javascript">
 			function start() {
-			    PF('statusDialog').show();
+				PF('statusDialog').show();
 			}
-			 
+
 			function stop() {
-			    PF('statusDialog').hide();
+				PF('statusDialog').hide();
 			}
-			
+
 			function stopDlgfilter() {
-			    PF('dlg_filtro_compra').hide();
+				PF('dlg_filtro_compra').hide();
 			}
 		</script>
 
@@ -139,7 +139,7 @@ body .ui-fileupload .ui-fileupload-content {
 							action="#{lancamentos_v2.carregarLancamentos()}"
 							update=":form-lancamento-pagamento:table-lancamentos"
 							style="color:#fff; margin: 8px 2px;">
-							<span class="glyphicon glyphicon-search"></span>
+							<span class="fa fa-fw fa-search"></span>
 							<span style="margin: 3px;">Buscar</span>
 						</p:commandLink>
 
@@ -147,8 +147,15 @@ body .ui-fileupload .ui-fileupload-content {
 							process="@this" onstart="start()" onsuccess="stop()"
 							onerror="stop()" action="#{lancamentos_v2.limpar()}"
 							update=":form-lancamento-pagamento" style=" margin: 8px 2px;">
-							<span class="glyphicon glyphicon-trash"></span>
+							<span class="fa fa-fw fa-trash-o"></span>
 							<span style="margin: 3px;">Limpar</span>
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							action="#{lancamentos_v2.dialogHelp()}"
+							style="color:#fff; margin: 8px 2px;">
+							<span class="fa fa-fw fa-question"></span>
+							<span>Ajuda</span>
 						</p:commandLink>
 
 					</div>
@@ -340,9 +347,11 @@ body .ui-fileupload .ui-fileupload-content {
 		<script type="text/javascript">
 			function setarWidthHeight(id) {
 				var htmlTag = document.getElementById(id);
-				htmlTag.style.height = Math.floor(window.innerHeight*0.98)+"px";	
-				htmlTag.style.width = Math.floor(window.innerWidth*0.98)+"px";	
-				
+				htmlTag.style.height = Math.floor(window.innerHeight * 0.98)
+						+ "px";
+				htmlTag.style.width = Math.floor(window.innerWidth * 0.98)
+						+ "px";
+
 			}
 		</script>
 
