@@ -7,6 +7,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -211,6 +212,16 @@ public class OrcamentoController implements Serializable {
 
 	public TipoParcelamento[] tiposParcelas() {
 		return TipoParcelamento.values();
+	}
+	
+	public void dialogHelp() {
+		HashMap<String, Object> options = new HashMap<>();
+		options.put("width", "100%");
+		options.put("height", "100%");
+		options.put("contentWidth", "100%");
+		options.put("contentHeight", "100%");
+		options.put("resizable", false);
+		PrimeFaces.current().dialog().openDynamic("dialog/help/help_orcamento", options, null);
 	}
 
 	public void editarLancamentoEfetivo() {

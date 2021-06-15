@@ -312,6 +312,16 @@ public class ProjetoBean implements Serializable {
 		}
 
 	}
+	
+	public void dialogHelp() {
+		HashMap<String, Object> options = new HashMap<>();
+		options.put("width", "100%");
+		options.put("height", "100%");
+		options.put("contentWidth", "100%");
+		options.put("contentHeight", "100%");
+		options.put("resizable", false);
+		PrimeFaces.current().dialog().openDynamic("dialog/help/help_projeto", options, null);
+	}
 
 	// Metodo Usado para Abrir Dialoge carregar informaÃ§Ãµes de projetos by
 	// Christophe Alexander 03/10/2018

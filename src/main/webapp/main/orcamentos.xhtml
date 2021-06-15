@@ -24,6 +24,8 @@
 			<span class="glyphicon glyphicon-plus"></span>
 			<span style="padding: 24px">Novo cadastro</span>
 		</p:link>
+
+
 		<h:form id="form_listagem_orcamento">
 
 			<p:messages showSummary="false" showDetail="true" closable="true">
@@ -102,7 +104,7 @@
 
 
 					<div>
-						
+
 
 						<p:commandButton styleClass="btn btn-primary btn-sm"
 							action="#{orcamento_controller.filtroOrcamento()}"
@@ -115,7 +117,12 @@
 					</div>
 
 				</div>
-
+				<p:commandLink styleClass="btn btn-primary btn-sm"
+					action="#{orcamento_controller.dialogHelp()}"
+					style="color:#fff; margin: 8px 2px;">
+					<span class="fa fa-fw fa-question"></span>
+					<span>Ajuda</span>
+				</p:commandLink>
 
 
 				<p:dataTable id="table_doacao" paginator="true" style="color: white"

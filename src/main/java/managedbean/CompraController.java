@@ -326,7 +326,18 @@ public class CompraController implements Serializable {
 		}
 
 	}
-
+	
+	public void dialogHelp() {
+		HashMap<String, Object> options = new HashMap<>();
+		options.put("width", "95%");
+		options.put("height", "95%");
+		options.put("contentWidth", "100%");
+		options.put("contentHeight", "100%");
+		options.put("resizable", false);
+		options.put("draggable", false);
+		options.put("closeOnEscape", true);
+		PrimeFaces.current().dialog().openDynamic("dialog/help/help_compra_new", options, null);
+	}
 	private Lancamento lancamentoAux = new Lancamento();
 
 	public void carregarArquivos() {
