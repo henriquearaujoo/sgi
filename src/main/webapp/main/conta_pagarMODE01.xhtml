@@ -12,39 +12,61 @@
 	<ui:define name="content">
 
 
-		<h:form id="form-relatorio-cp">
+		<h:form id="form-relatorio-cp" prependId="false">
+
+			<div id="panel-geral" style="margin-top: 8px">
+				<p:tabView prependId="false" scrollable="true">
+
+					<p:tab id="tab-info-geral" title="Gerar relatório">
+						<div id="info-geral" class="ui-g ui-fluid">
+							<div class="ui-g-2 form-group">
+								<p:outputLabel value="Data inicial:" styleClass="form-label"
+									style="width: 100%" />
+
+								<p:calendar navigator="true"
+									value="#{cp_controler_mode01.filtro.dataInicio}"
+									pattern="dd/MM/yyyy" />
+							</div>
+
+							<div class="ui-g-2 form-group">
+								<p:outputLabel value="Data Final:" styleClass="form-label"
+									style="width: 100%" />
+
+								<p:calendar navigator="true"
+									value="#{cp_controler_mode01.filtro.dataFinal}"
+									pattern="dd/MM/yyyy" />
+							</div>
+
+							<div class="ui-g-3 form-group">
+
+								<p:selectCheckboxMenu id="contas"
+									value="#{cp_controler_mode01.filtro.contas}" label="Contas"
+									filter="true" filterMatchMode="contains" panelStyle="400px">
+									<f:selectItems value="#{cp_controler_mode01.contas}"
+										var="conta" itemLabel="#{conta.nomeConta}"
+										itemValue="#{conta.id}" style="width: 100%" />
+								</p:selectCheckboxMenu>
+
+							</div>
+							<div class="ui-g-2 form-group" style="margin-top: 10px">
+								<h:outputText value="Detalhado por dia?" style="margin-right: 12px"/>
+								<p:selectBooleanCheckbox
+									value="#{cp_controler_mode01.detalhado}" />
+							</div>
+
+							<div class="ui-g-3 form-group" style="margin-top: 8px">
+								<p:commandLink style="color:#fff; width: 80%" ajax="false"
+									action="#{cp_controler_mode01.gerarContasApagar()}"
+									styleClass="btn btn-primary btn-xs" value="Gerar" />
+							</div>
 
 
-			<p:panelGrid columns="10">
+						</div>
+						
+					</p:tab>
 
-				<h:outputText value="Dt. Inicio Pgto:" />
-
-				<p:calendar navigator="true"
-					value="#{cp_controler_mode01.filtro.dataInicio}" 
-					pattern="dd/MM/yyyy" />
-					
-				<h:outputText value="Dt. Fim Pagto:" />	
-
-				<p:calendar navigator="true"
-					value="#{cp_controler_mode01.filtro.dataFinal}" 
-					pattern="dd/MM/yyyy" />
-
-				<h:outputText value="Contas:" />
-				<p:selectCheckboxMenu id="menu"
-					value="#{cp_controler_mode01.filtro.contas}" label="Contas" filter="true"
-					filterMatchMode="contains" panelStyle="width:270px">
-					<f:selectItems value="#{cp_controler_mode01.contas}" var="conta"
-						itemLabel="#{conta.nomeConta}" itemValue="#{conta.id}" />
-				</p:selectCheckboxMenu>
-				<h:outputText value="Detalhado por dia?"/>
-				<p:selectBooleanCheckbox
-					value="#{cp_controler_mode01.detalhado}" />
-
-				<p:commandLink style="color:#fff" ajax="false"
-					action="#{cp_controler_mode01.gerarContasApagar()}"
-					styleClass="btn btn-primary btn-xs" value="Gerar" />
-
-			</p:panelGrid>
+				</p:tabView>
+			</div>
 		</h:form>
 
 	</ui:define>

@@ -9,97 +9,97 @@
 
 	<div id="info-geral" class="ui-g ui-fluid py-2 px-2">
 
-						<div class="ui-g-4 form-group">
-							<p:outputLabel for="input_gestao" value="Gestão"
-								styleClass="form-label" />
-							<p:autoComplete id="input_gestao" styleClass="font12-vi"
-								panelStyle="width:180px" required="true"
-								requiredMessage="Preencha o campo 'Gestão'"
-								value="#{pagamentoController.pagamento.gestao}"
-								completeMethod="#{projetoBean.completeGestao}" var="gestao"
-								itemLabel="#{gestao.nome}" itemValue="#{gestao}"
-								converter="gestaoConverterVI" minQueryLength="3" />
-						</div>
+		<div class="ui-g-4 form-group">
+			<p:outputLabel for="input_gestao" value="Gestão"
+				styleClass="form-label" />
+			<p:autoComplete id="input_gestao" styleClass="font12-vi"
+				panelStyle="width:180px" required="true"
+				requiredMessage="Preencha o campo 'Gestão'"
+				value="#{pagamentoController.pagamento.gestao}"
+				completeMethod="#{projetoBean.completeGestao}" var="gestao"
+				itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+				converter="gestaoConverterVI" minQueryLength="3" />
+		</div>
 
-						<div class="ui-g-4 form-group">
-							<p:outputLabel for="input_destino" value="Destino"
-								styleClass="form-label" />
-							<p:autoComplete id="input_destino" styleClass="font12-vi"
-								required="true" requiredMessage="Preencha o campo 'Destino'"
-								panelStyle="width:180px"
-								value="#{pagamentoController.pagamento.localidade}"
-								completeMethod="#{pagamentoController.completeLocalidade}"
-								var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
-								converter="localConverterVI" minQueryLength="3" />
-						</div>
+		<div class="ui-g-4 form-group">
+			<p:outputLabel for="input_destino" value="Destino"
+				styleClass="form-label" />
+			<p:autoComplete id="input_destino" styleClass="font12-vi"
+				required="true" requiredMessage="Preencha o campo 'Destino'"
+				panelStyle="width:180px"
+				value="#{pagamentoController.pagamento.localidade}"
+				completeMethod="#{pagamentoController.completeLocalidade}"
+				var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+				converter="localConverterVI" minQueryLength="3" />
+		</div>
 
-						<div class="ui-g-4 form-group">
-							<p:outputLabel for="input_fornecedor" value="Fornecedor"
-								styleClass="form-label" />
-							<p:autoComplete id="input_fornecedor" required="true"
-								requiredMessage="Preencha o campo Fornecedor"
-								value="#{pagamentoController.pagamento.fornecedor}"
-								completeMethod="#{pagamentoController.completeFornecedor}"
-								var="fornecedor" itemLabel="#{fornecedor.nomeFantasia}"
-								itemValue="#{fornecedor}" converter="fornecedorConverter"
-								forceSelection="true">
-								<p:ajax update="panelConta" event="itemSelect" onstart="start()"
-									oncomplete="stop()" onerror="stop()"
-									listener="#{pagamentoController.contasFornecedor()}" />
-							</p:autoComplete>
+		<div class="ui-g-4 form-group">
+			<p:outputLabel for="input_fornecedor" value="Fornecedor"
+				styleClass="form-label" />
+			<p:autoComplete id="input_fornecedor" required="true"
+				requiredMessage="Preencha o campo Fornecedor"
+				value="#{pagamentoController.pagamento.fornecedor}"
+				completeMethod="#{pagamentoController.completeFornecedor}"
+				var="fornecedor" itemLabel="#{fornecedor.nomeFantasia}"
+				itemValue="#{fornecedor}" converter="fornecedorConverter"
+				forceSelection="true">
+				<p:ajax update="panelConta" event="itemSelect" onstart="start()"
+					oncomplete="stop()" onerror="stop()"
+					listener="#{pagamentoController.contasFornecedor()}" />
+			</p:autoComplete>
 
-						</div>
+		</div>
 
-						<div class="ui-g-4 form-group">
-							<p:outputLabel for="panelConta" value="Conta Bancária"
-								styleClass="form-label" />
-							<p:selectOneMenu id="panelConta" filterMatchMode="contains"
-								converter="contaConverter"
-								value="#{pagamentoController.pagamento.contaRecebedor}">
-								<f:selectItem noSelectionOption="true" />
-								<f:selectItems value="#{pagamentoController.contas}" var="conta"
-									itemValue="#{conta}" itemLabel="#{conta.contaFornecedor}" />
-							</p:selectOneMenu>
+		<div class="ui-g-4 form-group">
+			<p:outputLabel for="panelConta" value="Conta Bancária"
+				styleClass="form-label" />
+			<p:selectOneMenu id="panelConta" filterMatchMode="contains"
+				converter="contaConverter"
+				value="#{pagamentoController.pagamento.contaRecebedor}">
+				<f:selectItem noSelectionOption="true" />
+				<f:selectItems value="#{pagamentoController.contas}" var="conta"
+					itemValue="#{conta}" itemLabel="#{conta.contaFornecedor}" />
+			</p:selectOneMenu>
 
-						</div>
+		</div>
 
-						<div class="ui-g-8 form-group">
+		<div class="ui-g-8 form-group">
 
-							<p:outputLabel for="input_categoria" value="Categoria"
-								styleClass="form-label" />
-							<p:selectOneMenu id="input_categoria" filter="true"
-								required="true" requiredMessage="Preencha o campo 'Categoria'"
-								filterMatchMode="contains" converter="categoriaFinConverter"
-								value="#{pagamentoController.pagamento.categoriaFinanceira}">
-								<f:selectItem noSelectionOption="true" />
-								<f:selectItems
-									value="#{pagamentoController.listCategoriaFinanceira}"
-									var="categoria" itemLabel="#{categoria.nome}"
-									itemValue="#{categoria}" />
+			<p:outputLabel for="input_categoria" value="Categoria"
+				styleClass="form-label" />
+			<p:selectOneMenu id="input_categoria" filter="true" required="true"
+				requiredMessage="Preencha o campo 'Categoria'"
+				filterMatchMode="contains" converter="categoriaFinConverter"
+				value="#{pagamentoController.pagamento.categoriaFinanceira}">
+				<f:selectItem noSelectionOption="true" />
+				<f:selectItems
+					value="#{pagamentoController.listCategoriaFinanceira}"
+					var="categoria" itemLabel="#{categoria.nome}"
+					itemValue="#{categoria}" />
 
-							</p:selectOneMenu>
+			</p:selectOneMenu>
 
-						</div>
+		</div>
 
-						<div class="ui-g-12 form-group">
+		<div class="ui-g-12 form-group">
 
-							<p:outputLabel value="Descrição" for="input_descricao"
-								styleClass="form-label" />
-							<p:inputText id="input_descricao" required="true"
-								requiredMessage="Preencha a 'Descrição'"
-								value="#{pagamentoController.pagamento.descricao}" />
+			<p:outputLabel value="Descrição" for="input_descricao"
+				styleClass="form-label" />
+			<p:inputText id="input_descricao" required="true"
+				requiredMessage="Preencha a 'Descrição'"
+				value="#{pagamentoController.pagamento.descricao}" />
 
-						</div>
+		</div>
 
-						<div class="ui-g-12 form-group">
-							<p:outputLabel for="input_obs" value="Observação"
-								styleClass="form-label" />
-							<p:inputText id="input_obs"
-								value="#{pagamentoController.pagamento.observacao}" />
-						</div>
+		<div class="ui-g-12 form-group">
+			<p:outputLabel for="input_obs" value="Observação"
+				styleClass="form-label" />
+			<p:inputText id="input_obs"
+				value="#{pagamentoController.pagamento.observacao}" />
+		</div>
 
 
-					</div>
-	
+	</div>
+
 
 </ui:fragment>
