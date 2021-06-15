@@ -275,8 +275,8 @@ public class PagamentoController implements Serializable {
 	
 	public void dialogHelp() {
 		HashMap<String, Object> options = new HashMap<>();
-		options.put("width", "10%");
-		options.put("height", "10%");
+		options.put("width", "100%");
+		options.put("height", "100%");
 		options.put("contentWidth", "100%");
 		options.put("contentHeight", "100%");
 		options.put("resizable", false);
