@@ -80,28 +80,36 @@
 
 			</p:column>
 
-			<p:column style="width:100px;text-align:center">
+			<p:column headerText="Opções" style="width:120px;text-align:center">
 				<p:commandLink update=":form_gerador_doacao"
 					onclick="PF('dlg_gerar_doacao').show();"
 					action="#{orcamento_controller.editarLancamentoEfetivo()}"
-					styleClass="btn btn-default btn-xs glyphicon glyphicon-edit">
+					styleClass="btn btn-primary btn-sm">
+					<span class="pi pi-pencil"></span>
 					<f:setPropertyActionListener value="#{lancamento}"
 						target="#{orcamento_controller.lancamentoAuxiliar}" />
 				</p:commandLink>
+				
+				
 
 				<p:commandLink style="color:#FFF;margin-left:4px"
-					styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove-circle"
+					styleClass="btn btn-danger btn-sm"
 					action="#{orcamento_controller.excluirLancamentoEfetivo()}"
 					process="@this" update="table_doacao_efetiva">
+					<span class="pi pi-times-circle"></span>
 					<f:setPropertyActionListener value="#{lancamento}"
 						target="#{orcamento_controller.lancamentoAuxiliar}" />
 
 					<p:confirm header="Confirmar suspensão do pedido"
 						icon="ui-icon-alert" message="Excluir?" />
 				</p:commandLink>
+				
+				
 
 
 			</p:column>
+			
+			
 
 
 
