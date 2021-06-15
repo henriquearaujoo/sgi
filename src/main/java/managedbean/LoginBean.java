@@ -108,7 +108,7 @@ public class LoginBean implements Serializable {
 
 			loginService.updateSenhaAutomatica(usuario, senha);
 			
-			System.out.println("com rec " + senha);
+			//System.out.println("com rec " + senha);
 			
 			prepararEmail(senha);
 			email.setToEmail(toEmail);

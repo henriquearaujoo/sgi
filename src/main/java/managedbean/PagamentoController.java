@@ -281,8 +281,6 @@ public class PagamentoController implements Serializable {
 		options.put("contentWidth", "100%");
 		options.put("contentHeight", "100%");
 		options.put("resizable", false);
-		options.put("draggable", false);
-		options.put("closeOnEscape", true);
 		PrimeFaces.current().dialog().openDynamic("dialog/help/help_pagamento", options, null);
 	}
 
