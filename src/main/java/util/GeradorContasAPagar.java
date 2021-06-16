@@ -207,9 +207,7 @@ public class GeradorContasAPagar implements Serializable {
 
 				Locale locale = new Locale("pt", "BR");
 				NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
-				System.out.println(currencyFormatter.format(conta.getTotalEntrada().doubleValue()));
-				System.out.println(currencyFormatter.format(conta.getTotalSaida().doubleValue()));
-			    System.out.println(currencyFormatter.format(conta.getSaldoInicial().doubleValue()));
+				
 
 			} else {
 				filtro.setIdConta(conta.getId());
@@ -360,9 +358,6 @@ public class GeradorContasAPagar implements Serializable {
 
 				Locale locale = new Locale("pt", "BR");
 				NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
-				System.out.println(currencyFormatter.format(conta.getTotalEntrada().doubleValue()));
-				System.out.println(currencyFormatter.format(conta.getTotalSaida().doubleValue()));
-				System.out.println(currencyFormatter.format(conta.getSaldoInicial().doubleValue()));
 
 			} else {
 				filtro.setIdConta(conta.getId());

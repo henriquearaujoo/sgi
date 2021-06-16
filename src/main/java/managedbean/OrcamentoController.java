@@ -422,19 +422,14 @@ public class OrcamentoController implements Serializable {
 		int minuto = calendar.get(Calendar.MINUTE);
 		int segundo = calendar.get(Calendar.SECOND);
 		int milisegundo = calendar.get(Calendar.MILLISECOND);
-		/*
-		 * System.out.println("Ano: "+ano); System.out.println("M�s: "+mes);
-		 * System.out.println("Dia: "+dia); System.out.println("Minuto: " +minuto);
-		 * System.out.println("Segundo: "+segundo);
-		 * System.out.println("Milisegundo: "+milisegundo);
-		 */
+		
 		s.append(String.valueOf(ano).substring(2));
 		s.append(String.valueOf(mes));
 		s.append(String.valueOf(dia));
 		s.append(String.valueOf(minuto));
 		s.append(String.valueOf(segundo));
 		// s.append(String.valueOf(milisegundo).substring(0, 2));
-		// System.out.println(s.toString());
+
 		return s.toString();
 	}
 
@@ -997,7 +992,6 @@ public class OrcamentoController implements Serializable {
 		}
 		
 		if (index == 0) {
-			System.out.println("Tab 1");
 			executeScript("setarFocused('info-geral')", "focus");
 		} else if (index == 1) {
 			
@@ -1052,8 +1046,6 @@ public class OrcamentoController implements Serializable {
 	}
 	
 	public void filtroOrcamento() {
-		System.out.println("passou aqui");
-		System.out.println(filtro.getFontePagadora().getNome());
 //		orcamentos = orcamentoService.getOrcamentosFilter(filtro);
 	}
 	///////////
@@ -1365,7 +1357,7 @@ public class OrcamentoController implements Serializable {
 
 	// PARCEIRO/FONTE
 	public List<String> completeFonte(String query) {
-		System.out.println(query);
+
 		List<FontePagadora> fontesPagadora = compraService.fontesAutoComplete(query);
 		List<String> fontes = new ArrayList<>();
 		

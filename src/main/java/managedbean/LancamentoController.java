@@ -167,7 +167,6 @@ public class LancamentoController implements Serializable{
 	}
 	
 	public void salvarPagamento(){
-		//System.out.println(pagamento.getDataPagamento());
 		pagamento.setStt(StatusPagamentoLancamento.PROVISIONADO);
 		pagamento.setDataEmissao(new Date());
 		service.salvar(pagamento);

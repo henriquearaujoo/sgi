@@ -52,10 +52,10 @@ public class AutorizacaoRepositorio implements Serializable {
 			query.setParameter("id_colaborador", idCol);
 			query.setParameter("identifys", identificacoes);
 			int updateCount = query.executeUpdate();
-			System.out.println(updateCount);
+			
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		return true;
@@ -84,10 +84,10 @@ public class AutorizacaoRepositorio implements Serializable {
 			query.setParameter("id_colaborador", idCol);
 			query.setParameter("identifys", identificacoes);
 			int updateCount = query.executeUpdate();
-			//System.out.println(updateCount);
+		
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		return true;
@@ -106,10 +106,10 @@ public class AutorizacaoRepositorio implements Serializable {
 			query.setParameter("id_colaborador", idCol);
 			query.setParameter("identify", identificacao);
 			int updateCount = query.executeUpdate();
-			System.out.println(updateCount);
+			
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		return true;
@@ -175,7 +175,7 @@ public class AutorizacaoRepositorio implements Serializable {
 
 			}
 		} catch (Exception e) {
-			System.out.println("deu erro");
+			e.printStackTrace();
 		}
 
 		return ausentes;
@@ -269,7 +269,7 @@ public class AutorizacaoRepositorio implements Serializable {
 				lancamentos.add(lancamento);
 			}
 		} catch (Exception e) {
-			System.out.println("deu erro");
+			e.printStackTrace();
 		}
 
 		return lancamentos;

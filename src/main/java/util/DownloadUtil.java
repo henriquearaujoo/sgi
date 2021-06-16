@@ -38,7 +38,6 @@ public class DownloadUtil {
 			out.close();
 			facesContext.responseComplete();
 		} catch (IOException ex) {
-			System.out.println("Error in downloadFile: " + ex.getMessage());
 			ex.printStackTrace();
 		}
 	}
@@ -67,7 +66,7 @@ public class DownloadUtil {
 			out.close();
 			facesContext.responseComplete();
 		} catch (IOException ex) {
-			System.out.println("Error in downloadFile: " + ex.getMessage());
+		
 			ex.printStackTrace();
 		}
 	}
@@ -96,7 +95,7 @@ public class DownloadUtil {
 			out.close();
 			facesContext.responseComplete();
 		} catch (IOException ex) {
-			System.out.println("Error in downloadFile: " + ex.getMessage());
+			
 			ex.printStackTrace();
 		}
 	}
@@ -125,7 +124,7 @@ public class DownloadUtil {
 			out.close();
 			facesContext.responseComplete();
 		} catch (IOException ex) {
-			System.out.println("Error in downloadFile: " + ex.getMessage());
+			
 			ex.printStackTrace();
 		}
 	}

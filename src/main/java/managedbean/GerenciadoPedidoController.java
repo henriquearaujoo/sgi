@@ -123,13 +123,7 @@ public class GerenciadoPedidoController implements Serializable{
 	}
 	
 	public void editarPedido(Pedido pedido){
-//		System.out.println(pedido.getId());
-//		System.out.println(pedido.getDescricao());
-//		System.out.println(pedido.getNomeFornecedor());
-//		System.out.println(pedido.getValorTotalComDesconto());
-//		System.out.println(pedido.getDescricao());
-//		System.out.println(pedido.getNotaFiscal());
-		
+
 		gerenciadorService.editarPedido(pedido);
 	}
 	

@@ -274,7 +274,7 @@ public class CalculatorRubricaRepositorio implements Serializable {
 		jpql.append("and orc.datafinal >= CURRENT_DATE");
 		Query query = this.manager.createNativeQuery(jpql.toString());
 		
-		System.out.println(jpql.toString());
+		
 		
 		query.setParameter("idProjeto", idProjeto);
 
@@ -376,7 +376,7 @@ public class CalculatorRubricaRepositorio implements Serializable {
 		jpql.append("where (p.ativo  is true ) and pr.id in (select la.projetorubrica_id from lancamento_acao la where la.lancamento_id = (select l.id from lancamento l where l.id = :idLancamento ))");
 		Query query = this.manager.createNativeQuery(jpql.toString());
 		
-		System.out.println(jpql.toString());
+		
 		
 		query.setParameter("idLancamento", idLancamento);
 

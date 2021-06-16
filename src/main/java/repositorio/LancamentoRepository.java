@@ -239,7 +239,7 @@ public class LancamentoRepository implements Serializable {
 					"where l.tipolancamento  = 'ad' and l.versionlancamento = 'MODE01'  and l.statuscompra = 'CONCLUIDO' order by l.data_emissao desc ");
 
 		}
-		System.out.println(jpql.toString());
+		
 		Query query = this.manager.createNativeQuery(jpql.toString());
 
 		if (idConta != null) {
@@ -253,7 +253,7 @@ public class LancamentoRepository implements Serializable {
 				adiantamentos.add(ad);
 			}
 		} catch (Exception e) {
-			System.out.println("deu erro");
+			e.printStackTrace();
 		}
 
 		return adiantamentos;
@@ -326,7 +326,7 @@ public class LancamentoRepository implements Serializable {
 			int reuslt = query.executeUpdate();
 			return true;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 			return false;
 		}
 
@@ -629,7 +629,7 @@ public class LancamentoRepository implements Serializable {
 
 			LancamentoAuxiliar lancamento = new LancamentoAuxiliar();
 
-			System.out.println(new Long(objects[3].toString()));
+			
 
 			lancamento.setDataEmissao(DataUtil.converteDataSql(objects[0].toString()));
 			lancamento.setDataPagamento(DataUtil.converteDataSql(objects[1].toString()));
@@ -830,7 +830,7 @@ public class LancamentoRepository implements Serializable {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-		System.out.println(hql.toString());
+		
 
 		if (filtro.getLancamentoID() != null) {
 			hql.append(" and l.id = :lancamento");
@@ -1119,7 +1119,7 @@ public class LancamentoRepository implements Serializable {
 		hql.append(" and (l.categoriadespesaclass_id != 30 OR l.categoriadespesaclass_id IS NULL) ");
 		Query query = this.manager.createNativeQuery(hql.toString());
 
-		System.out.println(query.getResultList().size());
+		
 
 		List<LancamentoAvulso> lancamentos = new ArrayList<>();
 		List<Object[]> result = query.getResultList();
@@ -1171,7 +1171,7 @@ public class LancamentoRepository implements Serializable {
 		hql.append(" and (l.categoriadespesaclass_id != 30 OR l.categoriadespesaclass_id IS NULL) ");
 		Query query = this.manager.createNativeQuery(hql.toString());
 
-		System.out.println(query.getResultList().size());
+		
 
 		List<LancamentoAvulso> lancamentos = new ArrayList<>();
 		List<Object[]> result = query.getResultList();
@@ -2448,7 +2448,7 @@ public class LancamentoRepository implements Serializable {
 
 		jpql.append(" order by c.dataEmissao desc");
 
-		System.out.println(jpql.toString());
+		
 
 		Query query = manager.createQuery(jpql.toString());
 

@@ -58,11 +58,11 @@ public class GerarComunidadeFabio{
 			
 		}catch (FileNotFoundException e) {
 			e.printStackTrace();
-			System.out.println("file error");	
+	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("outro error");
+
 		}
 		
 		

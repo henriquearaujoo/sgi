@@ -147,7 +147,6 @@ public class EscolhaCotacaoController implements Serializable {
 		 * compra = (Compra)
 		 * FacesContext.getCurrentInstance().getExternalContext().getFlash()
 		 * .get("compra" + usuarioSessao.getNomeUsuario());
-		 * System.out.println(redireciona);
 		 */
 		if (compra == null || compra.getId() == null) {
 			// FacesContext.getCurrentInstance().getExternalContext().getFlash().put("compra"+usuarioSessao.getNomeUsuario(),
@@ -199,7 +198,7 @@ public class EscolhaCotacaoController implements Serializable {
 
 	public void testeIteracao() {
 		for (Pedido pedido : pedidosSelecionados) {
-			System.out.println(pedido.getId());
+
 		}
 	}
 
@@ -1005,7 +1004,7 @@ public class EscolhaCotacaoController implements Serializable {
 	}
 
 	public void setarFornecedor() {
-		System.out.println("Teste");
+
 	}
 
 	private List<Projeto> listaProjeto = new ArrayList<>();
@@ -1225,7 +1224,7 @@ public class EscolhaCotacaoController implements Serializable {
 	}
 
 	public void testarMetodo() {
-		System.out.println("Testando método");
+
 	}
 
 	public String getTotais(BigDecimal total) {

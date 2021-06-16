@@ -103,13 +103,13 @@ public class ConfigController implements Serializable {
 		
 			panelBlock = false;
 			panelListagem = true;
-			System.out.println("Permitido");
+
 			
 		}else{
 			
 			panelBlock = true;
 			panelListagem = false;
-			System.out.println("Nao permitido");
+
 				
 		}
 		

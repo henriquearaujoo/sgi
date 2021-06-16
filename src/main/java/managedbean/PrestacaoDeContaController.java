@@ -213,7 +213,7 @@ public class PrestacaoDeContaController implements Serializable {
 		for (LancamentoAvulso lancamentoAvulso : mListAux) {
 			LancamentoAvulso l = new LancamentoAvulso();
 
-			System.out.println(l.getNumeroDocumento());
+
 
 			l.setDtEmissao(sdf.format(lancamentoAvulso.getDataEmissao()));
 			l.setDtPagto(sdf.format(lancamentoAvulso.getDataPagamento()));

@@ -167,7 +167,6 @@ public class AutorizacaoService implements Serializable {
 			stb.append(email);
 		}
 
-		// System.out.println(stb.toString());
 
 		return stb.toString();
 	}
@@ -557,7 +556,6 @@ public class AutorizacaoService implements Serializable {
 		for (LancamentoAvulso lancamentoAvulso : mListAux) {
 			LancamentoAvulso l = new LancamentoAvulso();
 
-			System.out.println(l.getNumeroDocumento());
 
 			l.setDtEmissao(sdf.format(lancamentoAvulso.getDataEmissao()));
 			l.setDtPagto(sdf.format(lancamentoAvulso.getDataPagamento()));

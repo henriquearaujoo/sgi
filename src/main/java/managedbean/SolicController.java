@@ -165,14 +165,6 @@ public class SolicController implements Serializable {
 		if (tabview != null)
 			index = tabview.getActiveIndex();
 
-		if (index == 0) {
-			System.out.println(index);
-		} else if (index == 1) {
-			System.out.println(index);
-		} else if (index == 2) {
-			System.out.println(index);
-		}
-
 	}
 
 	public TabView getTabview() {

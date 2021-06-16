@@ -74,7 +74,7 @@ public class CotacaoRepository {
 			int reuslt = query.executeUpdate();
 			return true;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -90,7 +90,7 @@ public class CotacaoRepository {
 			int reuslt = query.executeUpdate();
 			return true;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -160,7 +160,7 @@ public class CotacaoRepository {
 				int reuslt = query.executeUpdate();
 				return true;
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				e.printStackTrace();
 				return false;
 			}
 		
@@ -178,7 +178,7 @@ public class CotacaoRepository {
 			int reuslt = query.executeUpdate();
 			return true;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 			return false;
 		}
 	

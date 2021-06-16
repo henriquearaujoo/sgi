@@ -404,7 +404,7 @@ public class ContaRepository implements Serializable {
 		// hql.append("and pl.stt = 'EFETIVADO' ");
 
 		hql.append("order by pl.datapagamento asc");
-		System.out.println(hql.toString());
+		
 		Query query = manager.createNativeQuery(hql.toString());
 		query.setParameter("conta", Integer.valueOf(filtro.getIdConta().toString()));
 
@@ -740,7 +740,7 @@ public class ContaRepository implements Serializable {
 		hql.append("and pl.datapagamento between '" + sdf.format(filtro.getDataInicio()) + "' and '"
 				+ sdf.format(filtro.getDataFinal()) + "' ");
 		hql.append("order by pl.datapagamento asc \n");
-		System.out.println(hql.toString());
+		
 		Query query = manager.createNativeQuery(hql.toString());
 		query.setParameter("conta", Integer.valueOf(filtro.getIdConta().toString()));
 
@@ -887,7 +887,7 @@ public class ContaRepository implements Serializable {
 		hql.append("where (pl.conta_id = :conta or pl.contarecebedor_id = :conta)");
 		hql.append("and pl.datapagamento between '" + sdf.format(filtro.getDataInicio()) + "' and '" + sdf.format(filtro.getDataFinal()) + "' ");
 		hql.append("order by pl.datapagamento asc \n");
-		System.out.println(hql.toString());
+	
 		Query query = manager.createNativeQuery(hql.toString());
 		query.setParameter("conta", Integer.valueOf(filtro.getIdConta().toString()));
 

@@ -140,7 +140,7 @@ public class CotacaoCadastroController implements Serializable {
 		lancamento.setArquivos(new ArrayList<ArquivoLancamento>());
 		
 		if (lancamento instanceof Pedido) {
-			System.out.println();
+			
 			lancamento.setArquivos(service.getArquivoByLancamento(id, ((Pedido) lancamento).getCompra().getId()));
 		}else {
 			lancamento.setArquivos(service.getArquivoByLancamento(id));
@@ -203,7 +203,6 @@ public class CotacaoCadastroController implements Serializable {
 	
 	public void handleFileUpload(FileUploadEvent event) throws IOException {
 		// String pathFinal = DiretorioUtil.DIRECTORY_UPLOAD_LINUX;
-		// System.out.println(inputNomeArquivo.getValue());
 		String pathFinal = DiretorioUtil.DIRECTORY_UPLOAD;
 		// arquivo.setConteudo(event.getFile().getContents());
 
@@ -230,8 +229,6 @@ public class CotacaoCadastroController implements Serializable {
 			cotacaoParent.setValorTotalComDesconto(cotacaoParent.getValorTotalComDesconto()
 					.add(cotacao.getValorDesconto().multiply(new BigDecimal(cotacao.getQuantidade())))
 					.setScale(2, RoundingMode.HALF_EVEN));
-			// System.out.println("Valor sem desconto: " + valorTotalSemDesconto);
-			// System.out.println("Valor com desconto: " + valorTotalComDesconto);
 
 		}
 	}

@@ -151,10 +151,10 @@ public class CustoPessoalController implements Serializable {
 		totalReembolso = BigDecimal.ZERO;
 		for (CustoPessoal custo : listaSelected) {
 			totalReembolso = totalReembolso.add(custo.getValorTotalComDesconto());
-			System.out.println(custo.getCompetencia());
+
 		}
 
-		System.out.println(totalReembolso);
+
 	}
 
 	public void carregarIdContaRecebedor() {
@@ -307,19 +307,14 @@ public class CustoPessoalController implements Serializable {
 		int minuto = calendar.get(Calendar.MINUTE);
 		int segundo = calendar.get(Calendar.SECOND);
 		int milisegundo = calendar.get(Calendar.MILLISECOND);
-		/*
-		 * System.out.println("Ano: "+ano); System.out.println("M�s: "+mes);
-		 * System.out.println("Dia: "+dia); System.out.println("Minuto: "
-		 * +minuto); System.out.println("Segundo: "+segundo);
-		 * System.out.println("Milisegundo: "+milisegundo);
-		 */
+		
 		s.append(String.valueOf(ano).substring(2));
 		s.append(String.valueOf(mes));
 		s.append(String.valueOf(dia));
 		s.append(String.valueOf(minuto));
 		s.append(String.valueOf(segundo));
 		// s.append(String.valueOf(milisegundo).substring(0, 2));
-		// System.out.println(s.toString());
+
 		return s.toString();
 	}
 

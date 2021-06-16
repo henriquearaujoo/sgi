@@ -13,7 +13,6 @@ public class DataUtil {
 		int diaSemana = calendar.get(Calendar.DAY_OF_WEEK);
 		
 		while((diaSemana >= 6 || diaSemana <= 2)){
-		 //System.out.println(diaSemana);	
 		 calendar.add(Calendar.DAY_OF_YEAR, 1);	 
 		 diaSemana = calendar.get(Calendar.DAY_OF_WEEK);
 		}	

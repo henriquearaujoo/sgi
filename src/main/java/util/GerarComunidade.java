@@ -42,22 +42,22 @@ public class GerarComunidade {
 					
 					String linha[] = br.readLine().split(",");
 					String unidadeCon = linha[0] != null ? linha[0] : "";
-					System.out.println("unidade:" + linha[0]  + "!");
+
 					String municipio = linha[1] != null ? linha[1] : "";
-					System.out.println("municipio:" + linha[1]);
+
 					String setor = linha[2] != null ? linha[2] : "";
 					String  comunidade = linha[3] != null ? linha [3] : "";  
 					Integer nFamilia =	linha[4] != null ? Integer.valueOf(linha[4]) : null;
-					System.out.println("nFamilia:" + linha[4]);
+
 					Integer nPessoas = linha[5] != null ? Integer.valueOf(linha[5]) : null;
-					System.out.println("nPessoas:" + linha[5]);
+
 					
 					
 						UnidadeConservacao unidade = getUnidadeConservacao(manager, unidadeCon);
 						Municipio nMunicipio = getMunicipio(manager, municipio);
 						
 						Comunidade ncomunidade = new Comunidade();
-						System.out.println("unidade salva:");
+
 						ncomunidade.setUnidadeConservacao(unidade);
 						ncomunidade.setNome(comunidade);
 						ncomunidade.setMunicipio(nMunicipio);
@@ -71,11 +71,11 @@ public class GerarComunidade {
 			
 		}catch (FileNotFoundException e) {
 			e.printStackTrace();
-			System.out.println("file error");	
+	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("outro error");
+
 		}
 		
 		

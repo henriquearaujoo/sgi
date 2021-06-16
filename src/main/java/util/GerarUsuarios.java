@@ -23,7 +23,6 @@ public class GerarUsuarios {
 		    tx.begin();
 			
 		    GerarUsuarios(manager);
-		    System.out.println("Banco populado!!!");
 			
 			tx.commit();
 			manager.close();
@@ -67,9 +66,6 @@ public class GerarUsuarios {
            String lastName = nomeCompleto[nomeCompleto.length -1];
            
            String UserName = (firstName +"."+ lastName);
-           
-           System.out.println(UserName);
-           System.out.println(senha);
            
            
            Perfil perfil = new Perfil();

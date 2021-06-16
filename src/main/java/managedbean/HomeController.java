@@ -132,8 +132,6 @@ public class HomeController implements Serializable {
 		// carregarUtilidades();
 		// carregarColaboradores();
 		initSchedule();
-
-		System.out.println("Home");
 	}
 
 	public void carregarColaboradores() {

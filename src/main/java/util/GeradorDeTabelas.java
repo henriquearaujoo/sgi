@@ -39,32 +39,24 @@ public class GeradorDeTabelas {
 	    tx.begin();
 		
 			//criarComunidade(manager);
-			//System.out.println("Comunidade cadastradas");
 	        //criarUnidade(manager);
-	        //System.out.println("UCS criadas");
 		    criarNucleos(manager);
-		    System.out.println("Núcleos cadastrados");
+
 		    criarEstado(manager);
-		    System.out.println("Estados cadastrados");
+
 			criarMunicipio(manager);
-			System.out.println("Municipios cadastrados");
+
 			criarSede(manager);
-			System.out.println("Sedes cadastradas");
+
 		    criarGestao(manager);
-		    System.out.println("Gestões cadastradas");
+
 			criarUsuario(manager);
-			System.out.println("Usuarios cadastrados");
+
 	    	criarFonteDeRecurso(manager);
-	    	System.out.println("Fontes cadastradas");
+
 	        criarProduto(manager);
-	        System.out.println("Produtos cadastrados");
-	    	System.out.println("**********************************");
-	    	System.out.println("**********************************");
-	    	
-		
+
 	        criarColaborador(manager);
-	        
-	    	System.out.println("Banco populado!!!");
 	        
 	    	//criarComunidade(manager);
 	    
@@ -501,7 +493,6 @@ public class GeradorDeTabelas {
 				
 				manager.persist(produto);
 				
-				//System.out.println("Estado: "+estado);
 			}
 			
 		} catch (FileNotFoundException e) {
@@ -529,7 +520,6 @@ public class GeradorDeTabelas {
 				Estado estado = new Estado();
 				estado.setNome(nomeEstado);
 				manager.persist(estado);
-				//System.out.println("Estado: "+estado);
 			}
 			
 		} catch (FileNotFoundException e) {
@@ -558,7 +548,6 @@ public class GeradorDeTabelas {
 				String linha[] = br.readLine().split(";");
 				String cpf = linha[0];
 				String dataString = linha[1];
-				System.out.println(dataString);
 				Date dataNascimento = new Date(dataString);
 				String nome =  linha[2];
 				String rg = linha[3];
@@ -592,7 +581,6 @@ public class GeradorDeTabelas {
 				Integer gestao =  linha[16] != null ? Integer.valueOf(linha[16]) : null;
 				
 				Integer localide = linha[17] != null ? Integer.valueOf(linha[17]) : null;
-				//System.out.println(linha[2]);
 				
 				Colaborador colaborador = new Colaborador();
 				colaborador.setCpf(cpf);
@@ -622,7 +610,6 @@ public class GeradorDeTabelas {
 				
 				manager.persist(colaborador);
 				
-				//System.out.println(cont);
 				
 				cont++;
 			}
@@ -649,7 +636,6 @@ public class GeradorDeTabelas {
 				String ibge = linha[0];
 				String nomeMunicipio = linha[1];
 				
-				//System.out.println(linha[2]);
 				
 				Estado estado = getEstado(manager, linha[2]);
 				Municipio municipio = new Municipio();
@@ -658,7 +644,6 @@ public class GeradorDeTabelas {
 				municipio.setNome(nomeMunicipio);
 				municipio.setNumeroIbge(ibge);
 				manager.persist(municipio);
-				//System.out.println("Estado: "+estado);
 			}
 			
 			
@@ -713,26 +698,18 @@ public class GeradorDeTabelas {
 		
 		List<Localidade> locais = manager.createQuery("from Comunidade").getResultList();
 		
-		/*for (Localidade local : comunidades) {
+		for (Localidade local : locais) {
 			
 			if(local instanceof Comunidade){
 				Comunidade comunidade = new Comunidade();
 				comunidade = (Comunidade) local;
-				System.out.println("RDS: "+comunidade.getUnidadeConservacao().getMascara()+" - Comunidade: "+comunidade.getMascara());
 			}else if(local instanceof UnidadeConservacao){
 				UnidadeConservacao unidadeConservacao =  new UnidadeConservacao();
 				unidadeConservacao = (UnidadeConservacao) local;
-				System.out.println("RDS: "+unidadeConservacao.getMascara()+" - Comunidade: ");
 				
 			}
-		}*/
-		
-		
-		for (Localidade local : locais) {
-			
-			System.out.println("Comunidade: "+local.getMascara());
-			
 		}
+	
 	}
 	
 	
@@ -741,9 +718,9 @@ public class GeradorDeTabelas {
 		
 		for (Acao acao : acoes) {
 			if(acao.getLocalidade() instanceof UnidadeConservacao){
-			 System.out.println("Ação: "+acao.getCodigo()+" - RDS: "+((UnidadeConservacao)acao.getLocalidade()).getMascara()+" - Comunidade: ");
+			 
 			}else if(acao.getLocalidade() instanceof Comunidade){
-			 System.out.println("Ação: "+acao.getCodigo()+" - RDS: "+((Comunidade)acao.getLocalidade()).getUnidadeConservacao().getMascara()+" - Comunidade: "+acao.getLocalidade().getMascara());
+			 
 			}
 		}
 		

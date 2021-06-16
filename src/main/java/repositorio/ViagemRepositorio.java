@@ -120,7 +120,6 @@ public class ViagemRepositorio {
 		jpql.append(" order by c.dataEmissao desc");
 
 		Query query = manager.createQuery(jpql.toString());
-		System.out.println(jpql.toString());
 
 		if(filtro.getCodigo() != null && !filtro.getCodigo().equals("")){
 			/*jpql.append(" and lower(c.codigo) like lower(:codigo)");*/
@@ -167,7 +166,7 @@ public class ViagemRepositorio {
 			query.setParameter("pMissao", filtro.getMissao());
 		}
 		
-		System.out.println(jpql.toString());
+		
 		return query.getResultList().size() > 0  ? query.getResultList() : (List) new ArrayList<SolicitacaoViagem>();
 	}
 

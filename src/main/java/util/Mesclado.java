@@ -33,7 +33,6 @@ public class Mesclado {
 	    tx.begin();
 		
 	    GeraContasBancarias(manager);
-	    System.out.println("Banco populado!!!");
 		
 		tx.commit();
 		manager.close();
@@ -54,7 +53,6 @@ public class Mesclado {
 		
 		for(Fornecedor f : fornecedores){
 			
-			System.out.println(f.getNomeFantasia());
 			
 			String banco = f.getBanco();
 			String nomeFantasia = f.getNomeFantasia();

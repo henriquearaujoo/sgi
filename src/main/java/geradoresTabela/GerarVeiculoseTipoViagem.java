@@ -16,10 +16,7 @@ public class GerarVeiculoseTipoViagem {
 		tx.begin();
 		
 		GerarVeiculos(manager);
-		System.out.println("Carros Gerados");
 		GerarTipoViagem(manager);
-		System.out.println("TipoViagem Gerados ");
-
 		tx.commit();
 		manager.close();
 		

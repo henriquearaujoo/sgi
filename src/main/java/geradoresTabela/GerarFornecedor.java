@@ -17,8 +17,7 @@ import util.JpaUtil;
 public class GerarFornecedor {
 
 	public static void main(String[] args){
-		
-		System.out.println("hello world");
+
 		EntityManager manager = JpaUtil.getEntityManager();
 	    EntityTransaction tx = manager.getTransaction();
 	    tx.begin();
@@ -26,7 +25,7 @@ public class GerarFornecedor {
 	    
 	    criarFornecedor2(manager);
         
-    	System.out.println("Banco populado!!!");
+
         
     	//criarComunidade(manager);
     
@@ -64,12 +63,12 @@ public class GerarFornecedor {
 				
 				String linha[] = br.readLine().split(";");
 				String nomeFornecedor = linha[0] != null ? linha[0] : "";
-				System.out.println("Nome do Fornecedor " + linha[1]);
+
 				String endereco = linha[1] != null ? linha[1] : "";
-				System.out.println("Endereco" + linha[2]);
+
 				//Integer cidade = linha[2] != null ? Integer.valueOf(linha[2]) : null;
 				String nestado = linha[3];
-				System.out.println("Estado: " + linha[3]);
+
 				String cnpj = linha[4] != null ? linha[4] : "";
 				String ie = linha[5] != null ? linha[5] : "";
 				String im = linha[6] != null ? linha[6] : "";
@@ -100,7 +99,7 @@ public class GerarFornecedor {
 					
 					Fornecedor fornecedor = new Fornecedor();
 					fornecedor.setRazaoSocial(nomeFornecedor);
-					System.out.println("Persistencia:" + fornecedor.getRazaoSocial().toString() );
+
 					fornecedor.setEndereco(endereco);
 					fornecedor.setEstado(estado);
 					fornecedor.setCnpj(cnpj);
@@ -128,11 +127,11 @@ public class GerarFornecedor {
 		
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			System.out.println("file error");	
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("outro error");
+
 		}
 	}
 	
@@ -159,7 +158,6 @@ public class GerarFornecedor {
 				
 				String linha[] = br.readLine().split(";");
 				String nomeFornecedor = linha[0] != null ? linha[0] : "";
-				System.out.println("Nome do Fornecedor " + linha[0]);
 				
 			
 				/*gambiarra pra pular uma linha do csv*/
@@ -183,11 +181,11 @@ public class GerarFornecedor {
 		
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			System.out.println("file error");	
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("outro error");
+
 		}
 	}
 

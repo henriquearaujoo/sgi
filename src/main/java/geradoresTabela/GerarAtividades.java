@@ -24,7 +24,7 @@ public class GerarAtividades {
 		tx.begin();
 		
 		GerarAtividades(manager);
-		System.out.println("Atividades Carregadas");
+		
 		tx.commit();
 		manager.close();
 		

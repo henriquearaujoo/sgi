@@ -223,7 +223,6 @@ public class ProjetoRepositorio implements Serializable {
 		hql.append("from projeto_rubrica  pr inner join projeto p on pr.projeto_id = p.id ");
 		hql.append("where pr.rubricaorcamento_id = :rubricaOrcamento");
 
-		System.out.println(hql.toString());
 
 		Query query = this.manager.createNativeQuery(hql.toString());
 
@@ -1011,7 +1010,7 @@ public class ProjetoRepositorio implements Serializable {
 
 			jpql.append("group by p.id, p.nome order by p.nome");
 
-			System.out.println(jpql.toString());
+			
 
 			Query query = manager.createQuery(jpql.toString());
 
@@ -1048,7 +1047,7 @@ public class ProjetoRepositorio implements Serializable {
 
 		jpql.append("group by p.id, p.nome order by p.nome");
 
-		System.out.println(jpql.toString());
+		
 
 		Query query = manager.createQuery(jpql.toString());
 
@@ -1114,7 +1113,7 @@ public class ProjetoRepositorio implements Serializable {
 
 		jpql.append("group by p.id, p.nome order by p.nome");
 
-		System.out.println(jpql.toString());
+		
 
 		Query query = manager.createQuery(jpql.toString());
 
@@ -1151,7 +1150,7 @@ public class ProjetoRepositorio implements Serializable {
 
 		jpql.append("group by p.id, p.nome order by p.nome");
 
-		System.out.println(jpql.toString());
+		
 
 		Query query = manager.createQuery(jpql.toString());
 
@@ -1404,7 +1403,7 @@ public class ProjetoRepositorio implements Serializable {
 			query.setParameter("pProjeto", projeto.getId());
 		}
 
-		System.out.println(jpql.toString());
+		
 
 		List<Object[]> result = query.getResultList();
 
@@ -1447,7 +1446,7 @@ public class ProjetoRepositorio implements Serializable {
 			query.setParameter("pGestao", filtro.getGestao().getId());
 		}
 
-		System.out.println(jpql.toString());
+		
 
 		List<Object[]> result = query.getResultList();
 

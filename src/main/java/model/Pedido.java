@@ -247,7 +247,7 @@ public class Pedido extends Lancamento implements LancamentoIterface{
 
 	@Override
 	public void autorizar(Lancamento lancamento) {
-		System.out.println("Email pedido");
+		
 	}
 
 
@@ -255,7 +255,6 @@ public class Pedido extends Lancamento implements LancamentoIterface{
 
 	@Override
 	public void desautorizar(Lancamento lancamento, String texto) {
-		System.out.println("Desautorizar pedido");
 		
 	}
 

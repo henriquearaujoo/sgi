@@ -1563,7 +1563,7 @@ public class ProjetoBean implements Serializable {
 		projeto.setStatusAprovacao(StatusAprovacaoProjeto.EM_APROVACAO);
 		projeto = gestaoProjeto.salvarMODE01(projeto, usuarioSessao.getUsuario());
 		// createChartExecucao();
-		System.out.println(projeto.getId());
+
 		// messageSalvamento("Projeto salvo com sucesso");
 		// carregarProjetos();
 	}
@@ -1779,8 +1779,6 @@ public class ProjetoBean implements Serializable {
 			TreeNode nod = new DefaultTreeNode(a, root);
 			TreeNode node = new DefaultTreeNode(acao, nod);
 		}
-		// if (tabview != null)
-		// System.out.println(tabview.getActiveIndex());
 	}
 
 	public String buscarValorTotal() {
@@ -1841,7 +1839,6 @@ public class ProjetoBean implements Serializable {
 			index = tabviewProjeto.getActiveIndex();
 
 		if (index == 0) {
-			System.out.println("Tab 1");
 
 		} else if (index == 1) {
 
@@ -2788,7 +2785,7 @@ public class ProjetoBean implements Serializable {
 			findObjetivoByIdProjeto();
 			openDialog("PF('dlg_cadastro_objetivo').hide();");
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace(); 		
 		}
 	}
 
@@ -2800,7 +2797,7 @@ public class ProjetoBean implements Serializable {
 			findMetasByIdProjeto();
 			openDialog("PF('dlg_cadastro_metas').hide();");
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

@@ -23,7 +23,7 @@ public class DownloadFileHandler {
         FileInputStream in = null;
         try {
             ExternalContext context = facesContext.getExternalContext();
-            System.out.println("Aqui para baixar o " + filename);
+
             HttpServletResponse response = (HttpServletResponse) context.getResponse();
             response.setHeader("Content-Disposition", "attachment;filename=\"" + filename + "\""); 
             response.setContentLength((int) file.length()); 

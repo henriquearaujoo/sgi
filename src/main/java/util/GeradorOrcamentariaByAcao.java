@@ -442,12 +442,7 @@ public class GeradorOrcamentariaByAcao {
 		addNumero(excelSheet, 16, contLinha, totalPrestacaoProjeto);
 		addNumero(excelSheet, 17, contLinha, saldoFinal);
 
-		/*
-		 * System.out.println(saldoOrcado); System.out.println(totalEntrada);
-		 * System.out.println(totalSaida);
-		 * System.out.println(totalAdiantamento);
-		 * System.out.println(totalPrestacao); System.out.println(saldoFinal);
-		 */
+		
 
 		workbook.write();
 		workbook.close();
@@ -877,12 +872,7 @@ public class GeradorOrcamentariaByAcao {
 //		addNumero(excelSheet, 15, contLinha, totalPrestacaoProjeto);
 //		addNumero(excelSheet, 16, contLinha, saldoFinal);
 
-		/*
-		 * System.out.println(saldoOrcado); System.out.println(totalEntrada);
-		 * System.out.println(totalSaida);
-		 * System.out.println(totalAdiantamento);
-		 * System.out.println(totalPrestacao); System.out.println(saldoFinal);
-		 */
+
 
 		workbook.write();
 		workbook.close();
