@@ -150,7 +150,7 @@ public class HomeController implements Serializable {
 		PrimeFaces current = PrimeFaces.current();
 		usuario = sessao.getUsuario();
 		usuarioService.updateSenha(usuario, novaSenha);
-		current.executeScript("PF('trocasenha').hide();");
+		current.executeScript("PF('trocasenha').hide(); stop();");
 	}
 
 	public void cancelarTrocaDeSenha() {
