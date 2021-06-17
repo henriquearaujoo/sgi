@@ -47,16 +47,18 @@
 						<p:outputLabel for="filter-fonte" value="Parceiro:"
 							styleClass="form-label" />
 						<p:autoComplete id="filter-fonte" styleClass="font12-vi"
-							value="#{orcamento_controller.filtro.fontePagadora.nome}"
-							scrollHeight="250"
+							value="#{orcamento_controller.filtro.fontePagadora}" var="fonte"
+							scrollHeight="250" itemLabel="#{fonte.nome}" itemValue="#{fonte}"
+							converter="fontePagadoraConverter"
 							completeMethod="#{orcamento_controller.completeFonte}" />
 					</div>
 
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
 						<p:outputLabel for="filter-title" value="Título:"
 							styleClass="form-label" />
-						<p:autoComplete id="filter-title" styleClass="font12-vi"
-							value="#{orcamento_controller.filtro.nome}" scrollHeight="250"
+						<p:autoComplete id="filter-title" styleClass="font12-vi" 
+							value="#{orcamento_controller.filtro.titulo}"
+							scrollHeight="250"
 							completeMethod="#{orcamento_controller.completeTitulo}" />
 					</div>
 
@@ -86,7 +88,9 @@
 						<p:outputLabel for="filter-tecnic" value="Responsável técnico:"
 							styleClass="form-label" />
 						<p:autoComplete id="filter-tecnic" styleClass="font12-vi"
-							value="#{orcamento_controller.filtro.orcamento.responsavelTecnico}"
+							value="#{orcamento_controller.filtro.responsavelTecnico}" var="responsavelTecnico"
+							itemLabel="#{responsavelTecnico.nome}" itemValue="#{responsavelTecnico}"
+							converter="colaboradorConverter"
 							scrollHeight="250"
 							completeMethod="#{orcamento_controller.completeColaborador}" />
 					</div>
@@ -95,8 +99,10 @@
 						<p:outputLabel for="filter-analist" value="Analista financeiro"
 							styleClass="form-label" />
 						<p:autoComplete id="filter-analist" styleClass="font12-vi"
-							value="#{orcamento_controller.filtro.orcamento.colaborador}"
-							scrollHeight="250"
+							value="#{orcamento_controller.filtro.colaborador}"
+							var="colaborador"
+							scrollHeight="250" itemLabel="#{colaborador.nome}" itemValue="#{colaborador}"
+							converter="colaboradorConverter"
 							completeMethod="#{orcamento_controller.completeColaborador}" />
 					</div>
 
@@ -138,7 +144,7 @@
 
 					<p:column headerText="Responsável técnico"
 						style="text-align:center">
-						<h:outputText value="#{doacao.colaborador.nome}" />
+						<h:outputText value="#{doacao.responsavelTecnico.nome}" />
 					</p:column>
 
 					<p:column headerText="Analista financeiro">

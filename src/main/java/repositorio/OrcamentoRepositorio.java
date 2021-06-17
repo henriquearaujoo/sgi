@@ -771,6 +771,70 @@ public class OrcamentoRepositorio implements Serializable {
 
 		return projetos;
 	}
+	
+	public List<Orcamento> filtrarOrcamentos(Filtro filtro) {
+		StringBuilder jpql = new StringBuilder("from Orcamento o where 1 = 1 ");
+
+		
+		if(filtro.getResponsavelTecnico() != null && filtro.getResponsavelTecnico().getId() != null) {
+			filtro.setResponsavelTecnico(filtro.getResponsavelTecnico());
+			jpql.append("and o.responsavelTecnico.id = :responsavelTecnico ");
+		}
+		
+		if(filtro.getColaborador() != null && filtro.getColaborador().getId() != null) {
+			filtro.setColaborador(filtro.getColaborador());
+			jpql.append("and o.colaborador.id = :colaborador ");
+		}
+		
+		if(filtro.getFontePagadora() != null && filtro.getFontePagadora().getId() != null) {
+			filtro.setFontePagadora(filtro.getFontePagadora());
+			jpql.append("and o.fonte.id = :fonte ");
+		}
+		
+		if(filtro.getTitulo() != null && filtro.getTitulo().length() > 0) {
+			filtro.setTitulo(filtro.getTitulo());
+			jpql.append("and o.titulo = :titulo ");	
+		}
+//		
+		if (filtro.getDataInicio() != null) {
+			if (filtro.getDataFinal() != null) {
+				jpql.append(" and o.dataInicio >= :data_inicio and o.dataFinal <= :data_final ");
+			} else {
+				jpql.append(" and o.dataInicio >= :data_inicio ");
+			}
+		}
+		
+		Query query = this.manager.createQuery(jpql.toString());
+		
+		if(filtro.getResponsavelTecnico() != null && filtro.getResponsavelTecnico().getId() != null) {
+			query.setParameter("responsavelTecnico", filtro.getResponsavelTecnico().getId());
+		}
+		if(filtro.getColaborador() != null && filtro.getColaborador().getId() != null) {
+			query.setParameter("colaborador", filtro.getColaborador().getId());
+		}
+		if(filtro.getFontePagadora() != null && filtro.getFontePagadora().getId() != null) {
+			query.setParameter("fonte", filtro.getFontePagadora().getId());
+		}
+		if(filtro.getTitulo() != null && filtro.getTitulo().length() > 0) {			
+			query.setParameter("titulo", filtro.getTitulo());
+		}
+		if (filtro.getDataInicio() != null) {
+			if (filtro.getDataFinal() != null) {
+				/*
+				 * jpql.append( " and c.dataEmissao between :data_inicio and :data_final");
+				 */
+				query.setParameter("data_inicio", filtro.getDataInicio());
+				query.setParameter("data_final", filtro.getDataFinal());
+			} else {
+				/* jpql.append(" and c.dataEmissao > :data_inicio"); */
+				query.setParameter("data_inicio", filtro.getDataInicio());
+			}
+		}
+		
+		
+		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<Orcamento>();
+		
+	}
 
 	public List<Orcamento> getOrcamentosFilter(Filtro filtro, String args) {
 		// StringBuilder jpql = new StringBuilder( "SELECT NEW Orcamento(o.id, o.titulo)
@@ -834,7 +898,7 @@ public class OrcamentoRepositorio implements Serializable {
 	}
 	
 	public List<Orcamento> completeTitulos(String s){
-		String jpql = "select o.titulo from Orcamento o where lower(o.titulo) like lower(:titulo)";
+		String jpql = "from Orcamento o where lower(o.titulo) like lower(:titulo)";
 		Query query = this.manager.createQuery(jpql);
 		
 		query.setParameter("titulo", "%" + s + "%");
@@ -1223,8 +1287,6 @@ public class OrcamentoRepositorio implements Serializable {
 				+ "inner join projeto p on p.id  = pr.projeto_id \n"
 				+ "inner join rubrica r on ro.rubrica_id = r.id  \n"
 				+ "where 1 = 1 and ((lower(r.nome)  like lower(:nome)) or (lower(p.nome) like lower(:nome)) or (lower(p.codigo)  like lower(:nome))) and  (p.ativo  is true )");
-
-		System.out.println(jpql.toString());
 
 		Query query = this.manager.createNativeQuery(jpql.toString());
 
