@@ -15,6 +15,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
+import org.primefaces.PrimeFaces;
+
 import anotacoes.Transactional;
 import model.*;
 import net.sf.jasperreports.engine.JRDataSource;
@@ -118,6 +120,18 @@ public class ContaBancariaController implements Serializable {
 		carregarRendimentos();
 		carregarAlocacoes();
         carregarDoacoes();*/
+	}
+	
+	public void dialogHelp() {
+		HashMap<String, Object> options = new HashMap<>();
+		options.put("width", "100%");
+		options.put("height", "100%");
+		options.put("contentWidth", "100%");
+		options.put("contentHeight", "100%");
+		options.put("resizable", false);
+		options.put("minimizable",true);
+		options.put("maximizable",true);
+		PrimeFaces.current().dialog().openDynamic("dialog/help/help_contas", options, null);
 	}
 
 	public void carregarTransacoes() {
