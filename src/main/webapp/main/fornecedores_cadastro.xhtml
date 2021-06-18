@@ -9,14 +9,14 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
 	<ui:define name="content">
 		<script type="text/javascript">
-      function start() {
-        PF("statusDialog").show();
-      }
+			function start() {
+				PF("statusDialog").show();
+			}
 
-      function stop() {
-        PF("statusDialog").hide();
-      }
-    </script>
+			function stop() {
+				PF("statusDialog").hide();
+			}
+		</script>
 		<div class="container">
 			<h:form id="formFornecedor" acceptcharset="ISO-8859-1"
 				enctype="multipart/form-data">
@@ -45,9 +45,9 @@
             </p:link>
 						</div>
 					</div>
+					<div id="info-fornececdores" class="ui-g ui-fluid">
 
-					<div class="row">
-						<div class="col-4 form-group">
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="Tipo: " for="tipo" />
 
 							<p:selectOneRadio id="tipo"
@@ -59,7 +59,7 @@
 								<p:ajax update="PanelCadastro formFornecedor" resetValues="true" />
 							</p:selectOneRadio>
 						</div>
-						<div class="col-2 form-group">
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="CNPJ:" for="cnpj"
 								rendered="#{fornecedor_controller.fornecedor.tipo.equals('juridica')}" />
 
@@ -82,22 +82,23 @@
 								rendered="#{fornecedor_controller.fornecedor.tipo.equals('fisica')}"
 								requiredMessage="CPF é obrigatório" styleClass="form-control" />
 						</div>
-						<div class="col-2 form-group">
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="INSC. EST.:" for="insc_est" />
 							<p:inputText id="insc_est"
 								value="#{fornecedor_controller.fornecedor.inscricaoEstadual}"
 								onkeypress="return somenteNumeros(event);" maxlength="10"
 								size="30" />
 						</div>
-						<div class="col-4 form-group">
-							<p:outputLabel value="Complemento:" for="complemento" />
+						<div class="ui-g-3 form-group">
+							<p:outputLabel value="Complemento:" for="complemento"
+								style="width: 100px" />
 							<p:inputText maxlength="85" id="complemento"
 								value="#{fornecedor_controller.fornecedor.complemento}"
 								style="text-transform: uppercase" />
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-4 form-group">
+
+
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="Nome:" for="nome" />
 							<p:inputText id="nome" maxlength="85"
 								value="#{fornecedor_controller.fornecedor.razaoSocial}"
@@ -107,7 +108,7 @@
 								required="#{fornecedor_controller.verificarObrigatoriedade('nome')}"
 								styleClass="form-control" />
 						</div>
-						<div class="col-4 form-group">
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="Nome Fantasia:" for="nome_fantasia" />
 
 							<p:inputText maxlength="85" id="nome_fantasia"
@@ -117,7 +118,7 @@
 								required="#{fornecedor_controller.verificarObrigatoriedade('nome_fantasia')}"
 								styleClass="form-control" />
 						</div>
-						<div class="col-2 form-group">
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="1º TEL/CEL:" for="tel1" />
 							<p:inputMask mask="(99) 99999-9999" id="tel1"
 								required="#{fornecedor_controller.verificarObrigatoriedade('telefone')}"
@@ -125,15 +126,15 @@
 								requiredMessage="TEL/CEL é obrigatório"
 								styleClass="form-control" />
 						</div>
-						<div class="col-2 form-group">
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="2º TEL/CEL:" for="tel2" />
 							<p:inputMask mask="(99) 99999-9999" id="tel2"
 								value="#{fornecedor_controller.fornecedor.telefoneSecundario}"
 								styleClass="form-control" />
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-4 form-group">
+
+
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="Endereço:" for="endereco" />
 							<p:inputText maxlength="120" id="endereco"
 								value="#{fornecedor_controller.fornecedor.endereco}"
@@ -143,7 +144,7 @@
 								styleClass="form-control" />
 						</div>
 
-						<div class="col-1 form-group">
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="Nº:" for="numero" />
 							<p:inputText id="numero"
 								value="#{fornecedor_controller.fornecedor.numero}" size="10"
@@ -152,7 +153,7 @@
 								required="#{fornecedor_controller.verificarObrigatoriedade('numero')}"
 								styleClass="form-control" />
 						</div>
-						<div class="col-2 form-group">
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="CEP:" for="cep" />
 							<p:inputMask mask="99.999-999" id="cep"
 								value="#{fornecedor_controller.fornecedor.cep}"
@@ -161,7 +162,7 @@
 								styleClass="form-control" />
 						</div>
 
-						<div class="col-2 form-group">
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="Bairro:" for="bairro" />
 							<p:inputText maxlength="85" styleClass="form-control" id="bairro"
 								required="#{fornecedor_controller.verificarObrigatoriedade('bairro')}"
@@ -170,15 +171,15 @@
 								style="text-transform: uppercase" />
 						</div>
 
-						<div class="col-3 form-group">
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="Pessoal de contato:" for="contato" />
 							<p:inputText value="#{fornecedor_controller.fornecedor.contato}"
 								id="contato" style="text-transform: uppercase">
 							</p:inputText>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-3 form-group">
+
+
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="Estado:" for="est" />
 							<br />
 							<p:selectOneMenu id="est" filter="true"
@@ -196,7 +197,7 @@
 							</p:selectOneMenu>
 						</div>
 
-						<div class="col-3 form-group">
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="Cidade:" for="cidade2" />
 							<br />
 							<p:selectOneMenu id="cidade2" filter="true"
@@ -211,7 +212,7 @@
 							</p:selectOneMenu>
 						</div>
 
-						<div class="col-3 form-group">
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="Data Nasc.:" for="data_nasc"
 								rendered="#{fornecedor_controller.verificarObrigatoriedade('data_nasc')}" />
 							<p:inputMask id="data_nasc"
@@ -225,7 +226,7 @@
 							</p:inputMask>
 						</div>
 
-						<div class="col-3 form-group">
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="PIS.:" for="pis" />
 							<p:inputMask mask="99999999999" id="pis"
 								value="#{fornecedor_controller.fornecedor.pis}"
@@ -233,37 +234,40 @@
 								required="#{fornecedor_controller.verificarObrigatoriedade('pis')}"
 								requiredMessage="PIS é obrigatório" />
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-3 form-group">
+
+
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="Email Pessoal:" for="email1" />
 							<p:inputText value="#{fornecedor_controller.fornecedor.email}"
 								placeholder="exemplo@fas-amazonas.org" id="email1"
 								onblur="validacaoEmail(this);" />
 						</div>
-						<div class="col-3 form-group">
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="Email Opcional:" for="email2" />
 							<p:inputText id="email2"
 								value="#{fornecedor_controller.fornecedor.emailSecundario}"
 								placeholder="exemplo@fas-amazonas.org"
 								onblur="validacaoEmail(this);" />
 						</div>
-						<div class="col-2 form-group">
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="Ativo:" for="ativo" />
 							<br />
-							<p:inputSwitch id="ativo"
-								value="#{fornecedor_controller.fornecedor.ativo}"
-								offLabel="Inativo" onLabel="Ativo" />
+							<p:selectOneRadio id="ativo" value="#{fornecedor_controller.fornecedor.ativo}">
+								<f:selectItem itemLabel="Sim" itemValue="true" />
+								<f:selectItem itemLabel="Não" itemValue="false" />
+							</p:selectOneRadio>
 						</div>
 
-						<div class="col-4">
+						
+
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="Último fornecimento:"
 								rendered="#{fornecedor_controller.existeFornecimento}" />
 							<div class="row">
-								<div class="col">
+								<div class="ui-g-3 form-group">
 									<h:outputText value="Lançamento:" />
 								</div>
-								<div class="col">
+								<div class="ui-g-3 form-group">
 									<h:outputText value="#{fornecedor_controller.lancamento.id}"
 										style="font-weight:bold" />
 								</div>
@@ -279,9 +283,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-6 form-group">
+
+
+						<div class="ui-g-3 form-group">
 							<p:outputLabel value="Tipo de pagamentos:" for="tipo_pagamento" />
 							<br />
 							<p:selectOneRadio id="tipo_pagamento" required="true"
@@ -292,7 +296,7 @@
 								<f:selectItem itemLabel="Boleto bancário" itemValue="BOLETO" />
 							</p:selectOneRadio>
 						</div>
-						<div class="col-6 form-group">
+						<div class="ui-g-3 form-group">
 							<h:outputLabel value="Categorias de Fornecimento:"
 								for="input_categoria1" />
 							<br />
@@ -306,6 +310,7 @@
 									var="cat" itemValue="#{cat}" itemLabel="#{cat.nome}" />
 							</p:selectOneMenu>
 						</div>
+
 					</div>
 				</p:panel>
 

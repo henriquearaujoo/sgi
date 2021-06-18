@@ -113,36 +113,36 @@
 						value="#{fornecedor_controller.listaFornecedor}" var="bean"
 						paginator="true" widgetVar="filteredFornecedor" rows="10">
 
-						<p:column headerText="Razão Social">
+						<p:column headerText="Razão Social" style="text-align:center;">
 							<p:outputLabel value="#{bean.razaoSocial.toUpperCase()}" />
 						</p:column>
 
-						<p:column headerText="Nome Fantasia">
+						<p:column headerText="Nome Fantasia" style="text-align:center;">
 							<p:outputLabel value="#{bean.nomeFantasia.toUpperCase()}" />
 						</p:column>
 
-						<p:column headerText="CNPJ/CPF" width="10%">
+						<p:column headerText="CNPJ/CPF" style="text-align:center;">
 							<p:outputLabel rendered="#{bean.tipo.equals('juridica')}"
 								value="#{bean.cnpj}" />
 							<p:outputLabel rendered="#{bean.tipo.equals('fisica')}"
 								value="#{bean.cpf}" />
 						</p:column>
 
-						<p:column headerText="Email">
+						<p:column headerText="Email" style="text-align:center;">
 							<p:outputLabel value="#{bean.email}" />
 						</p:column>
 
-						<p:column headerText="Contato" width="10%">
+						<p:column headerText="Contato" style="text-align:center;">
 							<p:outputLabel value="#{bean.telefone}" />
 						</p:column>
 
-						<p:column headerText="Situação" width="8%"
+						<p:column headerText="Situação"
 							style="text-align:center;">
 							<p:outputLabel value="Ativo" rendered="#{bean.ativo}" />
 							<p:outputLabel value="Inativo" rendered="#{!bean.ativo}" />
 						</p:column>
 
-						<p:column headerText="Ação" width="10%">
+						<p:column headerText="Ação" style="text-align:center;">
 							<p:link styleClass="btn btn-primary"
 								outcome="/main/fornecedores_cadastro">
 								<i class="fa fa-fw fa-pencil"></i>
@@ -152,7 +152,8 @@
 							<p:commandLink title="excluir" styleClass="btn btn-danger"
 								action="#{fornecedor_controller.removerFornecedor()}"
 								onclick="start()" onsuccess="stop()" onerror="stop()"
-								update="tabela_fornecedores" ajax="false">
+								update="tabela_fornecedores" ajax="false" style="text-align:center;">
+								
 								<p:confirm
 									message="Você realmente deseja excluir o fornecedor #{bean.razaoSocial.toUpperCase()}?" />
 								<i class="fa fa-fw fa-trash"></i>
