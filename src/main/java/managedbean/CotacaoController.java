@@ -402,7 +402,6 @@ public class CotacaoController implements Serializable {
 
 	public void removerAnexoEmail(int index) throws MessagingException {
 		MimeMultipart mime = (MimeMultipart) email.getPartes();
-		// System.out.println(pathAnexo);
 		listAnexo.remove(index);
 		Integer ii = mapIndiceDeAnexos.get(this.pathAnexo);
 

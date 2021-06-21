@@ -64,7 +64,7 @@ public class AprovacoesRepositorio implements Serializable {
 				lancamentos.add(lancamento);
 			}
 		} catch (Exception e) {
-			System.out.println("deu erro");
+			e.printStackTrace();
 		}
 		
 		

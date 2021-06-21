@@ -69,7 +69,7 @@ public class ColaboradorRepositorio {
 			jpql.append(" and c.gestao = :pGestao");
 		}
 		
-		System.out.println(jpql.toString());
+		
 		Query query = manager.createQuery(jpql.toString());
 		
 		if(filtro.getNomeColaborador() != null && filtro.getNomeColaborador() !=  "") {

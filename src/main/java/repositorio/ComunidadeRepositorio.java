@@ -29,7 +29,6 @@ public class ComunidadeRepositorio implements Serializable {
 		try {
 			this.manager.merge(comunidade);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
 			throw e;
 		}
 	}
@@ -38,7 +37,7 @@ public class ComunidadeRepositorio implements Serializable {
 		try {
 			this.manager.remove(this.manager.find(Comunidade.class, comunidade.getId()));
 		} catch (Exception e) {
-			System.out.println(e.getCause().getMessage());
+			e.printStackTrace();
 		}
 	}
 

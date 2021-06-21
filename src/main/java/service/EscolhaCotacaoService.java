@@ -54,7 +54,7 @@ public class EscolhaCotacaoService implements Serializable {
 			stb.append(email);
 		}
 
-		// System.out.println(stb.toString());
+
 
 		return stb.toString();
 	}

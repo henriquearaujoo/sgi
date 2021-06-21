@@ -305,7 +305,6 @@ public class LiberacaoLancamentoController implements Serializable {
 	}
 
 	public void salvarPagamento() {
-		// System.out.println(pagamento.getDataPagamento());
 		pagamento.setStt(StatusPagamentoLancamento.PROVISIONADO);
 		pagamento.setDataEmissao(new Date());
 		service.salvar(pagamento);
@@ -424,7 +423,6 @@ public class LiberacaoLancamentoController implements Serializable {
 
 	public void handleFileUpload(FileUploadEvent event) throws IOException {
 		// String pathFinal = DiretorioUtil.DIRECTORY_UPLOAD_LINUX;
-		// System.out.println(inputNomeArquivo.getValue());
 		String pathFinal = DiretorioUtil.DIRECTORY_UPLOAD;
 		// arquivo.setConteudo(event.getFile().getContents());
 
@@ -441,7 +439,6 @@ public class LiberacaoLancamentoController implements Serializable {
 		lancamento.setArquivos(new ArrayList<ArquivoLancamento>());
 		
 		if (lancamento instanceof Pedido) {
-			System.out.println();
 			lancamento.setArquivos(service.getArquivoByLancamento(id, ((Pedido) lancamento).getCompra().getId()));
 		}else {
 			lancamento.setArquivos(service.getArquivoByLancamento(id));

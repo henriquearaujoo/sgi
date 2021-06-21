@@ -79,7 +79,7 @@ public class PedidoCadastroController implements Serializable {
 	public void excluirItemTypeB() {
 		//desistência parcial pelo solicitante (Cancelar itens do pedido e da SC), quantidade para cancelamento.
 		for (ItemPedido it : itensPedidosSelected) {
-			System.out.println(it.getDescricaoProduto());
+
 		}
 
 	}

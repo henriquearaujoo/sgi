@@ -219,7 +219,7 @@ public class CompraDetalhadaRepository implements Serializable {
 			jpql.append(")");
 		}
 		
-		System.out.println(jpql.toString());
+		
 		Query query = this.manager.createNativeQuery(jpql.toString());
 
 		if (filtro.getUrgencia()) {
@@ -276,7 +276,7 @@ public class CompraDetalhadaRepository implements Serializable {
 		if (filtro.getNomeFornecedor() != null && !filtro.getNomeFornecedor().equals("")) {
 			query.setParameter("fornecedor", "%" + filtro.getNomeFornecedor() + "%");
 		}
-		System.out.println(jpql.toString());
+		
 		List<Object[]> result = query.getResultList();
 		List<ItemPedido> itens = new ArrayList<>();
 		for (Object[] objects : result) {

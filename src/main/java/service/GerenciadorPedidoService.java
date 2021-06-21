@@ -65,8 +65,6 @@ public class GerenciadorPedidoService implements Serializable{
 			 filtro.setDataFinal(calFinal.getTime()); 
 			 
 			 
-			 System.out.println(filtro.getDataInicio());
-			 System.out.println(filtro.getDataFinal());
 			
 		}else if(filtro.getDataInicio() != null){
 			 Calendar calInicio =  Calendar.getInstance();
@@ -108,10 +106,7 @@ public class GerenciadorPedidoService implements Serializable{
 			 
 			 filtro.setDataInicio(calInicio.getTime()); 
 			 filtro.setDataFinal(calFinal.getTime()); 
-			 
-			 
-			 System.out.println(filtro.getDataInicio());
-			 System.out.println(filtro.getDataFinal());
+
 			
 		}else if(filtro.getDataInicio() != null){
 			 Calendar calInicio =  Calendar.getInstance();

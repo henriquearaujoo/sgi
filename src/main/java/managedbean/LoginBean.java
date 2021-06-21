@@ -108,12 +108,9 @@ public class LoginBean implements Serializable {
 
 			loginService.updateSenhaAutomatica(usuario, senha);
 			
-			//System.out.println("com rec " + senha);
-			
 			prepararEmail(senha);
 			email.setToEmail(toEmail);
 			email.EnviarEmailSimples();
-//			System.out.println("com shar " + toReturn);
 			
 
 			FacesMessage message = new FacesMessage("Um email com uma nova senha foi enviado!");
@@ -124,7 +121,6 @@ public class LoginBean implements Serializable {
 			FacesMessage message = new FacesMessage("Email nao existe");
 			message.setSeverity(FacesMessage.SEVERITY_ERROR);
 			context.addMessage(null, message);
-			System.out.println("derror");
 		}
 	}
 

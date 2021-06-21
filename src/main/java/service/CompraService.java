@@ -334,7 +334,6 @@ public class CompraService implements Serializable {
 			stb.append(email);
 		}
 
-		// System.out.println(stb.toString());
 
 		return stb.toString();
 	}
@@ -587,8 +586,6 @@ public class CompraService implements Serializable {
 			filtro.setDataInicio(calInicio.getTime());
 			filtro.setDataFinal(calFinal.getTime());
 
-			// System.out.println(filtro.getDataInicio());
-			// System.out.println(filtro.getDataFinal());
 
 		} else if (filtro.getDataInicio() != null) {
 			Calendar calInicio = Calendar.getInstance();
@@ -672,8 +669,6 @@ public class CompraService implements Serializable {
 			filtro.setDataInicio(calInicio.getTime());
 			filtro.setDataFinal(calFinal.getTime());
 
-			System.out.println(filtro.getDataInicio());
-			System.out.println(filtro.getDataFinal());
 
 		} else if (filtro.getDataInicio() != null) {
 			Calendar calInicio = Calendar.getInstance();
@@ -713,8 +708,6 @@ public class CompraService implements Serializable {
 			filtro.setDataInicio(calInicio.getTime());
 			filtro.setDataFinal(calFinal.getTime());
 
-			System.out.println(filtro.getDataInicio());
-			System.out.println(filtro.getDataFinal());
 
 		} else if (filtro.getDataInicio() != null) {
 			Calendar calInicio = Calendar.getInstance();

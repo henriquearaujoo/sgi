@@ -23,7 +23,7 @@ public class Test {
 		
 		String senha = hexString.toString();
 		
-		System.out.println(senha);
+		
 		
 		 /* ItemCompra itemCompra = new ItemCompra();
 		  
@@ -40,13 +40,7 @@ public class Test {
 		  desc1 = desc1.add(BigDecimal.valueOf(item.getQuantidade()).multiply(item.getValor()).subtract(itemCompra.getT1()) );
 		
 		
-		  System.out.println(item.getValor());
-		  System.out.println(itemCompra.getP1());
-		  System.out.println(itemCompra.getT1());
-		  System.out.println(total1);
-		  System.out.println(desc1);
 		  
-		  System.out.println("****************");
 		  item.setValorDesconto(BigDecimal.valueOf(8));
 		  item.setValor(BigDecimal.valueOf(10));
 		  item.setQuantidade(Double.valueOf(2));
@@ -54,14 +48,7 @@ public class Test {
 		  itemCompra.setP1(item.getValorDesconto());
 		  itemCompra.setT1(BigDecimal.valueOf(item.getQuantidade()).multiply(item.getValorDesconto()));
 		  total1 = total1.add(itemCompra.getT1());
-		  desc1 = desc1.add(BigDecimal.valueOf(item.getQuantidade()).multiply(item.getValor()).subtract(itemCompra.getT1()) );
-		
-		  System.out.println(item.getValor());
-		  System.out.println(itemCompra.getP1());
-		  System.out.println(itemCompra.getT1());
-		  System.out.println(total1);
-		  System.out.println(desc1);*/
-		  
+		  desc1 = desc1.add(BigDecimal.valueOf(item.getQuantidade()).multiply(item.getValor()).subtract(itemCompra.getT1()) );  
 		
 		  
 		  
@@ -75,12 +62,6 @@ public class Test {
 		int segundo = calendar.get(Calendar.SECOND);
 		int milisegundo = calendar.get(Calendar.MILLISECOND);
 
-		System.out.println("Ano: "+ano);
-		System.out.println("M�s: "+mes);
-		System.out.println("Dia: "+dia);
-		System.out.println("Minuto: "+minuto);
-		System.out.println("Segundo: "+segundo);
-		System.out.println("Milisegundo: "+milisegundo);
 		
 		s.append(String.valueOf(ano).substring(2));
 		s.append(String.valueOf(mes));
@@ -89,7 +70,7 @@ public class Test {
 		s.append(String.valueOf(segundo));
 		s.append(String.valueOf(milisegundo).substring(0, 2));
 		*/
-		//System.out.println(s.toString());
+		
 		
 		
 		

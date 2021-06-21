@@ -19,7 +19,7 @@ public class GerarMergeEmConta {
 
 	public static void main(String[] args){
 		
-		System.out.println("hello world");
+
 		EntityManager manager = JpaUtil.getEntityManager();
 	    EntityTransaction tx = manager.getTransaction();
 	    tx.begin();
@@ -27,7 +27,7 @@ public class GerarMergeEmConta {
 	    
 	    criarFornecedor(manager);
         
-    	System.out.println("Banco populado!!!");
+
         
     	//criarComunidade(manager);
     
@@ -70,11 +70,11 @@ public class GerarMergeEmConta {
 		
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			System.out.println("file error");	
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("outro error");
+
 		}
 	}
 

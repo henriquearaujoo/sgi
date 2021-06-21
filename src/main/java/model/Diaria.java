@@ -249,13 +249,13 @@ public class Diaria extends Lancamento implements LancamentoIterface {
 
 	@Override
 	public void autorizar(Lancamento lancamento) {
-		System.out.println("Email diária");
+		
 
 	}
 
 	@Override
 	public void desautorizar(Lancamento lancamento, String texto) {
-		System.out.println("Desautorizar diária");
+		
 
 	}
 

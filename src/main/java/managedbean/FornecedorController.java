@@ -635,7 +635,7 @@ public class FornecedorController implements Serializable {
 	    fot.write(arquivo.getConteudo());
 	    fot.close();
 	} catch (FileNotFoundException e) {
-	    System.out.println(e.getMessage());
+
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}

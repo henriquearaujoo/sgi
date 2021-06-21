@@ -43,36 +43,30 @@
 //	    tx.begin();
 //		
 //			//criarComunidade(manager);
-//			//System.out.println("Comunidade cadastradas");
 //	        //criarUnidade(manager);
-//	        //System.out.println("UCS criadas");
 //		  /*  criarNucleos(manager);
-//		    System.out.println("N�cleos cadastrados");
 //		    criarEstado(manager);
-//		    System.out.println("Estados cadastrados");
+
 //			criarMunicipio(manager);
-//			System.out.println("Municipios cadastrados");
+
 //			criarSede(manager);
-//			System.out.println("Sedes cadastradas");
+
 //		    criarGestao(manager);
-//		    System.out.println("Gest�es cadastradas");
+
 //			criarUsuario(manager);
-//			System.out.println("Usuarios cadastrados");
+
 //	    	criarFonteDeRecurso(manager);
-//	    	System.out.println("Fontes cadastradas");
+
 //	        criarProduto(manager);
-//	        System.out.println("Produtos cadastrados");
+
 //	        criarConta(manager);
-//	        System.out.println("Contas cadastradas");*/
+
 //	        /*criarFornecedor(manager);
-//	        System.out.println("Fornecedores cadastrados");*/
-//	    	System.out.println("***********************************************");
-//	    	System.out.println("***********************************************");
-//	    	
+ 	
 //		
 //	        //criarColaborador(manager);
 //	        
-//	    	System.out.println("Banco populado!!!");
+
 //	        
 //	    	//criarComunidade(manager);
 //	    
@@ -576,7 +570,7 @@
 //				
 //				manager.persist(produto);
 //				
-//				//System.out.println("Estado: "+estado);
+
 //			}
 //			
 //		} catch (FileNotFoundException e) {
@@ -604,7 +598,7 @@
 //				Estado estado = new Estado();
 //				estado.setNome(nomeEstado);
 //				manager.persist(estado);
-//				//System.out.println("Estado: "+estado);
+
 //			}
 //			
 //		} catch (FileNotFoundException e) {
@@ -633,7 +627,7 @@
 //				String linha[] = br.readLine().split(";");
 //				String cpf = linha[0];
 //				String dataString = linha[1];
-//				System.out.println(dataString);
+
 //				Date dataNascimento = new Date(dataString);
 //				String nome =  linha[2];
 //				String rg = linha[3];
@@ -667,7 +661,7 @@
 //				Integer gestao =  linha[16] != null ? Integer.valueOf(linha[16]) : null;
 //				
 //				Integer localide = linha[17] != null ? Integer.valueOf(linha[17]) : null;
-//				//System.out.println(linha[2]);
+
 //				
 //				Colaborador colaborador = new Colaborador();
 //				colaborador.setCpf(cpf);
@@ -696,8 +690,7 @@
 //				}
 //				
 //				manager.persist(colaborador);
-//				
-//				//System.out.println(cont);
+
 //				
 //				cont++;
 //			}
@@ -724,8 +717,7 @@
 //				String linha[] = br.readLine().split(";");
 //				String ibge = linha[0];
 //				String nomeMunicipio = linha[1];
-//				
-//				//System.out.println(linha[2]);
+
 //				
 //				Estado estado = getEstado(manager, linha[2]);
 //				Municipio municipio = new Municipio();
@@ -734,7 +726,7 @@
 //				municipio.setNome(nomeMunicipio);
 //				municipio.setNumeroIbge(ibge);
 //				manager.persist(municipio);
-//				//System.out.println("Estado: "+estado);
+
 //			}
 //			
 //			
@@ -854,18 +846,18 @@
 //			if(local instanceof Comunidade){
 //				Comunidade comunidade = new Comunidade();
 //				comunidade = (Comunidade) local;
-//				System.out.println("RDS: "+comunidade.getUnidadeConservacao().getMascara()+" - Comunidade: "+comunidade.getMascara());
+
 //			}else if(local instanceof UnidadeConservacao){
 //				UnidadeConservacao unidadeConservacao =  new UnidadeConservacao();
 //				unidadeConservacao = (UnidadeConservacao) local;
-//				System.out.println("RDS: "+unidadeConservacao.getMascara()+" - Comunidade: ");
+
 //				
 //			}
 //		}*/
 //		
 //		for (Localidade local : locais) {
 //			
-//			System.out.println("Comunidade: "+local.getMascara());
+
 //			
 //		}
 //	}
@@ -876,9 +868,9 @@
 //		
 //		for (Acao acao : acoes) {
 //			if(acao.getLocalidade() instanceof UnidadeConservacao){
-//			 System.out.println("Ação: "+acao.getCodigo()+" - RDS: "+((UnidadeConservacao)acao.getLocalidade()).getMascara()+" - Comunidade: ");
+
 //			}else if(acao.getLocalidade() instanceof Comunidade){
-//			 System.out.println("Ação: "+acao.getCodigo()+" - RDS: "+((Comunidade)acao.getLocalidade()).getUnidadeConservacao().getMascara()+" - Comunidade: "+acao.getLocalidade().getMascara());
+
 //			}
 //		}
 //		
@@ -958,12 +950,12 @@
 //				
 //				String linha[] = br.readLine().split(";");
 //				String nomeFornecedor = linha[0] != null ? linha[0] : "";
-//				System.out.println("Nome do Fornecedor " + linha[1]);
+//				
 //				String endereco = linha[1] != null ? linha[1] : "";
-//				System.out.println("Endereco" + linha[2]);
+//				
 //				//Integer cidade = linha[2] != null ? Integer.valueOf(linha[2]) : null;
 //				String nestado = linha[3];
-//				System.out.println("Estado: " + linha[3]);
+//				
 //				String cnpj = linha[4] != null ? linha[4] : "";
 //				String ie = linha[5] != null ? linha[5] : "";
 //				String im = linha[6] != null ? linha[6] : "";
@@ -994,7 +986,7 @@
 //					
 //					Fornecedor fornecedor = new Fornecedor();
 //					fornecedor.setRazaoSocial(nomeFornecedor);
-//					System.out.println("Persistencia:" + fornecedor.getRazaoSocial().toString() );
+//					
 //					fornecedor.setEndereco(endereco);
 //					fornecedor.setEstado(estado);
 //					fornecedor.setCnpj(cnpj);
@@ -1022,11 +1014,11 @@
 //		
 //		} catch (FileNotFoundException e) {
 //			e.printStackTrace();
-//			System.out.println("file error");	
+//			
 //		} catch (IOException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
-//			System.out.println("outro error");
+//			
 //		}
 //	}
 //	
@@ -1062,11 +1054,11 @@
 //		
 //		} catch (FileNotFoundException e) {
 //			e.printStackTrace();
-//			System.out.println("file error");	
+//				
 //		} catch (IOException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
-//			System.out.println("outro error");
+//			
 //		}
 //	}
 //	

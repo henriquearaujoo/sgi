@@ -1260,8 +1260,7 @@ public class CompraController implements Serializable {
 	public String salvarCompra() {
 
 		// for (Municipio municipio : municipiosDeCompraSelected) {
-		// System.out.println(municipio.getNome());
-		// System.out.println(tt);
+
 		// }
 
 		compra.setTipoGestao(buscarTipoGestao());

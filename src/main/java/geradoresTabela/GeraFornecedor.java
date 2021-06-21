@@ -18,7 +18,7 @@ public class GeraFornecedor {
 
 	public static void main(String[] args){
 		
-		System.out.println("hello world");
+		
 		EntityManager manager = JpaUtil.getEntityManager();
 	    EntityTransaction tx = manager.getTransaction();
 	    tx.begin();
@@ -26,7 +26,7 @@ public class GeraFornecedor {
 	    
 	    criarFornecedor(manager);
         
-    	System.out.println("Banco populado!!!");
+    	
         
     	//criarComunidade(manager);
     
@@ -63,12 +63,12 @@ public class GeraFornecedor {
 				
 				String linha[] = br.readLine().split(";");
 				String nomeFornecedor = linha[0] != null ? linha[0] : "";
-				System.out.println("Nome do Fornecedor " + linha[1]);
+				
 				String endereco = linha[1] != null ? linha[1] : "";
-				System.out.println("Endereco" + linha[2]);
+				
 				//Integer cidade = linha[2] != null ? Integer.valueOf(linha[2]) : null;
 				String nestado = linha[3];
-				System.out.println("Estado: " + linha[3]);
+				
 				String cnpj = linha[4] != null ? linha[4] : "";
 				String ie = linha[5] != null ? linha[5] : "";
 				String im = linha[6] != null ? linha[6] : "";
@@ -94,7 +94,7 @@ public class GeraFornecedor {
 					
 					Fornecedor fornecedor = new Fornecedor();
 					fornecedor.setRazaoSocial(nomeFornecedor);
-					System.out.println("Persistencia:" + fornecedor.getRazaoSocial().toString() );
+				
 					fornecedor.setEndereco(endereco);
 					fornecedor.setEstado(estado);
 					fornecedor.setCnpj(cnpj);
@@ -122,11 +122,11 @@ public class GeraFornecedor {
 		
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			System.out.println("file error");	
+				
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("outro error");
+			
 		}
 	}
 

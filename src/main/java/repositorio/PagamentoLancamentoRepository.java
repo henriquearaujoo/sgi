@@ -464,7 +464,7 @@ public class PagamentoLancamentoRepository {
 
 		hql.append(" order by pl.datapagamento asc, l.data_emissao desc");
 		
-		System.out.println(hql.toString());
+		
 
 		Query query = manager.createNativeQuery(hql.toString());
 
@@ -750,7 +750,7 @@ public class PagamentoLancamentoRepository {
 
 		for (Object[] object : result) {
 
-			System.out.println(object[0].toString());
+			
 			lAux = new LancamentoAuxiliar();
 			lAux.setIdAdiantamentoDePrestacao(object[26] != null ? new Long(object[26].toString()) : null);
 			lAux.setStatusAdDePrestacao(object[25] != null ? object[25].toString() : "");
@@ -1097,7 +1097,7 @@ public class PagamentoLancamentoRepository {
 
 		for (Object[] object : result) {
 
-			// System.out.println(object[0].toString());
+
 			lAux = new LancamentoAuxiliar();
 			lAux.setIdAdiantamentoDePrestacao(object[26] != null ? new Long(object[26].toString()) : null);
 			lAux.setStatusAdDePrestacao(object[25] != null ? object[25].toString() : "");
@@ -2418,7 +2418,7 @@ public class PagamentoLancamentoRepository {
 		hql.append(" order by l.data_pagamento desc, l.data_emissao desc");
 
 		Query query = manager.createNativeQuery(hql.toString());
-		System.out.println(hql.toString());
+		
 		//
 		// if (filtro.getProjetoId() != null) {
 		// query.setParameter("projeto", filtro.getProjetoId());
@@ -2600,7 +2600,7 @@ public class PagamentoLancamentoRepository {
 		hql.append(" order by pl.datapagamento desc, l.data_emissao desc");
 
 		Query query = manager.createNativeQuery(hql.toString());
-		System.out.println(hql.toString());
+		
 
 		//
 
@@ -2631,12 +2631,11 @@ public class PagamentoLancamentoRepository {
 
 			lAux = new LancamentoAuxiliar();
 			// lAux.setAcaoId(new Long(object[0].toString()));
-			// System.out.println(object[0].toString());
 
 		
 			lAux.setId(new Long(object[0].toString()));
-			System.out.println(lAux.getId().toString());
-			//System.out.println(lAux.getId());
+			
+			
 			lAux.setDescricao(object[6].toString());
 			lAux.setFonte(object[7].toString());
 			lAux.setNomeProjeto(object[8] != null ? object[8].toString() : "");
@@ -2660,7 +2659,7 @@ public class PagamentoLancamentoRepository {
 			
 			retorno.add(lAux);
 		}
-		System.out.println(hql.toString());
+		
 		return retorno;
 
 	}
@@ -2752,7 +2751,7 @@ public class PagamentoLancamentoRepository {
 		hql.append(" order by pl.datapagamento desc, l.data_emissao desc");
 
 		Query query = manager.createNativeQuery(hql.toString());
-		System.out.println(hql.toString());
+		
 		//
 
 		if (filtro.getProjetoId() != null) {
@@ -2914,7 +2913,7 @@ public class PagamentoLancamentoRepository {
 		hql.append(" order by pl.datapagamento desc, l.data_emissao desc");
 
 		Query query = manager.createNativeQuery(hql.toString());
-		System.out.println(hql.toString());
+		
 
 		if (filtro.getProjetoId() != null) {
 			query.setParameter("projeto", filtro.getProjetoId());
@@ -2964,7 +2963,7 @@ public class PagamentoLancamentoRepository {
 			lAux = new LancamentoAuxiliar();
 			// lAux.setAcaoId(new Long(object[0].toString()));
 			lAux.setId(new Long(object[0].toString()));
-			System.out.println(lAux.getId());
+			
 			lAux.setDescricao(object[6].toString());
 			lAux.setFonte(object[7].toString());
 			lAux.setNomeProjeto(object[8] != null ? object[8].toString() : "");
@@ -2999,7 +2998,7 @@ public class PagamentoLancamentoRepository {
 		StringBuilder hql = new StringBuilder(" select ");
 		preparaHqlPagamentosPEMODE01(filtro, hql);
 		Query query = manager.createNativeQuery(hql.toString());
-		System.out.println(hql.toString());
+		
 		prepararQueryPagamentoPEMODE01(query, filtro);
 		List<PagamentoPE> pagamentos = new ArrayList<>();
 		List<Object[]> result = query.getResultList();

@@ -286,7 +286,6 @@ public class Util implements Serializable{
 			int j = (int) (Math.random() * carct.length);
 			senha += carct[j];
 		}
-		System.out.println("Gerar senha  " + senha);
 		return senha;
 	}
 }

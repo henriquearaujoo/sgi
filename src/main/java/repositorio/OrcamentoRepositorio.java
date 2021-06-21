@@ -1224,7 +1224,7 @@ public class OrcamentoRepositorio implements Serializable {
 				+ "inner join rubrica r on ro.rubrica_id = r.id  \n"
 				+ "where 1 = 1 and ((lower(r.nome)  like lower(:nome)) or (lower(p.nome) like lower(:nome)) or (lower(p.codigo)  like lower(:nome))) and  (p.ativo  is true )");
 
-		System.out.println(jpql.toString());
+		
 
 		Query query = this.manager.createNativeQuery(jpql.toString());
 

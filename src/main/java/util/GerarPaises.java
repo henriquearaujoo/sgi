@@ -50,9 +50,9 @@ public class GerarPaises {
 					
 				String linha[] = br.readLine().split(";");
 				String Pais = linha[0] != null ? linha[0] : "";
-				System.out.println("Pais:" + Pais);
+
 				String municipio = linha[1] != null ? linha[1] : "";
-				System.out.println("Capital:" + municipio);
+
 				
 				Pais pais = new Pais();
 				
@@ -64,11 +64,11 @@ public class GerarPaises {
 			
 		}catch (FileNotFoundException e) {
 			e.printStackTrace();
-			System.out.println("file error");	
+	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("outro error");
+
 		}
 		
 	}
@@ -86,10 +86,10 @@ public class GerarPaises {
 				
 				String linha[] = br.readLine().split(";");
 				String Pais = linha[0] != null ? linha[0] : "";
-				System.out.println("Pais:" + Pais);
+
 				
 				String municipio = linha[1] != null ? linha[1] : "";
-				System.out.println("Capital:" + municipio);
+
 				
 				Pais pais = getPais(manager, linha[0]);
 				
@@ -100,7 +100,6 @@ public class GerarPaises {
 				cidade.setNome(municipio);
 				cidade.setPais(pais);
 				manager.persist(cidade);
-				//System.out.println("Estado: "+estado);
 			}
 			
 			

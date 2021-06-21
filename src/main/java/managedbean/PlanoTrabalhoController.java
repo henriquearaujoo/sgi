@@ -237,7 +237,7 @@ public class PlanoTrabalhoController implements Serializable {
 
 	public void carregarInformacoesPlano() {
 		if (planoDeTrabalho.getUc() != null) {
-			System.out.println(planoDeTrabalho.getUc().getMascara());
+
 		}
 	}
 
@@ -274,7 +274,7 @@ public class PlanoTrabalhoController implements Serializable {
 			criarChart();
 			//createBarModel();
 		} else if (index == 2) {
-			System.out.println("Tab 3");
+
 		}
 
 	}

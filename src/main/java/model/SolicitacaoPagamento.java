@@ -53,12 +53,12 @@ public class SolicitacaoPagamento extends Lancamento implements LancamentoIterfa
 
 	@Override
 	public void autorizar(Lancamento lancamento) {
-		System.out.println("Email pagamento");
+		
 	}
 
 	@Override
 	public void desautorizar(Lancamento lancamento, String texto) {
-		System.out.println("Desautorizar pagamento");
+		
 
 	}
 

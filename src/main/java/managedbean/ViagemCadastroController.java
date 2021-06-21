@@ -1022,7 +1022,7 @@ public class ViagemCadastroController implements Serializable {
 	}
 
 	public void gerarRelatorio() {
-		System.out.println("Gerar");
+
 	}
 
 	public void gerarRelatorioViagem() {
@@ -1358,19 +1358,14 @@ public class ViagemCadastroController implements Serializable {
 		int minuto = calendar.get(Calendar.MINUTE);
 		int segundo = calendar.get(Calendar.SECOND);
 		int milisegundo = calendar.get(Calendar.MILLISECOND);
-		/*
-		 * System.out.println("Ano: "+ano); System.out.println("M�s: "+mes);
-		 * System.out.println("Dia: "+dia); System.out.println("Minuto: " +minuto);
-		 * System.out.println("Segundo: "+segundo);
-		 * System.out.println("Milisegundo: "+milisegundo);
-		 */
+		
 		s.append(String.valueOf(ano).substring(2));
 		s.append(String.valueOf(mes));
 		s.append(String.valueOf(dia));
 		s.append(String.valueOf(minuto));
 		s.append(String.valueOf(segundo));
 		// s.append(String.valueOf(milisegundo).substring(0, 2));
-		// System.out.println(s.toString());
+
 		return s.toString();
 	}
 
@@ -1694,7 +1689,7 @@ public class ViagemCadastroController implements Serializable {
 	}
 
 	public void verificaViagem() {
-		System.out.println(viagem.getId());
+//		
 	}
 
 	public String getTipoGestao() {

@@ -17,13 +17,11 @@ public class CheckAddress {
 			/*Pattern pat = Pattern.compile("((\\\\d)*([a-z])*([A-Z])*([@#$%])*){6,20}");
 			
 			if (!pat.matcher("senha1@").matches()) {
-			 System.out.println("Teste!!!");  
 			}*/
 		
 			BigDecimal a = new BigDecimal("4");
 			BigDecimal b = new BigDecimal("4");
-			
-			System.out.println(a.compareTo(b));
+			;
 			
 	}
 
@@ -39,17 +37,14 @@ public class CheckAddress {
 		calendar.set(Calendar.MILLISECOND, 0);
 		
 		
-		System.out.println(sdf.format(calendar.getTime()));
 		
 		calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 60);
 //		
 //		BigDecimal t1 = new BigDecimal("5");
 //		BigDecimal t2 = new BigDecimal("4");
-//		
-//		System.out.println(t1.compareTo(t2));
+
 		
 		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		System.out.println(calendar.getTime());
 		
 		return 0;
 	}
@@ -64,7 +59,6 @@ public class CheckAddress {
 			httpConn.connect();
 			int x = httpConn.getResponseCode();
 			if (x == 200) {
-				System.out.println("Conectado");
 			}
 
 			return x;
