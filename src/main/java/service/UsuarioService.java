@@ -1,12 +1,15 @@
 package service;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+
+import org.primefaces.PrimeFaces;
 
 import anotacoes.Transactional;
 import model.Colaborador;
@@ -136,6 +139,16 @@ public class UsuarioService implements Serializable {
 
 	public UserProjeto findUsuarioProjeto(Projeto projetoSelecionado, User usuario) {
 		return repositorio.findUsuarioProjeto(projetoSelecionado, usuario);
+	}
+	
+	public void popupUsuario() {
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put("height", "90%");
+		options.put("width", "50%");
+		options.put("contentWidth", "100%");
+		options.put("contentHeight", "100%");
+		options.put("resizable", false);
+		PrimeFaces.current().dialog().openDynamic("home/usuario.xhtml", options, null);
 	}
 
 }
