@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import model.Acao;
+import model.Colaborador;
 import model.Componente;
 import model.ContaBancaria;
 import model.FontePagadora;
@@ -34,15 +35,33 @@ public class Filtro {
 	private PlanoDeTrabalho planoDeTrabalho;
 	private Long id;
 	private Boolean verificVigenciaMenosDias;
-	private Orcamento orcamento = new Orcamento();
+	private Orcamento orcamento;
 	private Boolean ativo;
 	private Gestao superintendencia;
 	private Gestao coordenadoria;
 	private Gestao gerencia;
 	private String statusConta;
 	private String titulo;
-	private FontePagadora fontePagadora = new FontePagadora();
+	private FontePagadora fontePagadora;
+	private Colaborador responsavelTecnico;
+	private Colaborador colaborador;
 	
+	public Colaborador getResponsavelTecnico() {
+		return responsavelTecnico;
+	}
+
+	public void setResponsavelTecnico(Colaborador responsavelTecnico) {
+		this.responsavelTecnico = responsavelTecnico;
+	}
+
+	public Colaborador getColaborador() {
+		return colaborador;
+	}
+
+	public void setColaborador(Colaborador colaborador) {
+		this.colaborador = colaborador;
+	}
+
 	public FontePagadora getFontePagadora() {
 		return fontePagadora;
 	}

@@ -1040,11 +1040,10 @@ public class OrcamentoController implements Serializable {
 	}
 	
 	public void filtroOrcamento() {
-		System.out.println("passou aqui");
-		System.out.println(filtro.getFontePagadora().getNome());
-//		orcamentos = orcamentoService.getOrcamentosFilter(filtro);
+		orcamentos = orcamentoService.filtrarOrcamentos(filtro);
+		limparFiltro();
 	}
-	///////////
+	/////////////////////////////
 
 	public void verificarTabs() {
 	}
@@ -1352,16 +1351,8 @@ public class OrcamentoController implements Serializable {
 	}
 
 	// PARCEIRO/FONTE
-	public List<String> completeFonte(String query) {
-		System.out.println(query);
-		List<FontePagadora> fontesPagadora = compraService.fontesAutoComplete(query);
-		List<String> fontes = new ArrayList<>();
-		
-		for(FontePagadora fontePagadora : fontesPagadora) {
-			fontes.add(fontePagadora.getNome());
-		}
-		
-		return fontes;
+	public List<FontePagadora> completeFonte(String query) {
+		return compraService.fontesAutoComplete(query);
 	}
 	
 	// TITULOS
@@ -1370,18 +1361,8 @@ public class OrcamentoController implements Serializable {
 		return orcamentos;
 	}
 
-	public List<String> completeColaborador(String query) {
-		List<Colaborador> colaboradores = new ArrayList<>();
-		colaboradores = viagemService.buscarColaboradores(query);
-		
-		List<String> colaboradoresString = new ArrayList<>();
-		
-		for(Colaborador c : colaboradores) {
-			colaboradoresString.add(c.getNome());
-		}
-		
-		return colaboradoresString;
-		
+	public List<Colaborador> completeColaborador(String query) {
+		return viagemService.buscarColaboradores(query);
 	}
 
 	public List<Rubrica> completeRubrica(String query) {

@@ -530,6 +530,76 @@ public class OrcamentoRepositorio implements Serializable {
 		Query query = this.manager.createQuery(jpql);
 		return query.getResultList();
 	}
+	
+	/////////////////////////////////// FILTRO V2 //////////////////////////////////
+	
+	public List<Orcamento> filtrarOrcamentos(Filtro filtro) {
+		StringBuilder jpql = new StringBuilder("from Orcamento o where 1 = 1 ");
+
+
+		if(filtro.getResponsavelTecnico() != null && filtro.getResponsavelTecnico().getId() != null) {
+			filtro.setResponsavelTecnico(filtro.getResponsavelTecnico());
+			jpql.append("and o.responsavelTecnico.id = :responsavelTecnico ");
+		}
+
+		if(filtro.getColaborador() != null && filtro.getColaborador().getId() != null) {
+			filtro.setColaborador(filtro.getColaborador());
+			jpql.append("and o.colaborador.id = :colaborador ");
+		}
+
+		if(filtro.getFontePagadora() != null && filtro.getFontePagadora().getId() != null) {
+			filtro.setFontePagadora(filtro.getFontePagadora());
+			jpql.append("and o.fonte.id = :fonte ");
+		}
+
+		if(filtro.getTitulo() != null && filtro.getTitulo().length() > 0) {
+			filtro.setTitulo(filtro.getTitulo());
+			jpql.append("and o.titulo = (:titulo) ");	
+		}
+		
+		if (filtro.getDataInicio() != null || filtro.getDataFinal() != null) {
+			if (filtro.getDataFinal() != null && filtro.getDataInicio() != null) {
+				jpql.append(" and o.dataInicio >= :data_inicio and o.dataFinal <= :data_final ");
+			} else if (filtro.getDataFinal() == null) {
+				jpql.append(" and o.dataInicio >= :data_inicio ");
+			} else {
+				jpql.append(" and o.dataFinal <= :data_final");
+			}
+		}
+		
+		jpql.append(" order by o.dataInicio desc");
+
+		Query query = this.manager.createQuery(jpql.toString());
+
+		if(filtro.getResponsavelTecnico() != null && filtro.getResponsavelTecnico().getId() != null) {
+			query.setParameter("responsavelTecnico", filtro.getResponsavelTecnico().getId());
+		}
+		if(filtro.getColaborador() != null && filtro.getColaborador().getId() != null) {
+			query.setParameter("colaborador", filtro.getColaborador().getId());
+		}
+		if(filtro.getFontePagadora() != null && filtro.getFontePagadora().getId() != null) {
+			query.setParameter("fonte", filtro.getFontePagadora().getId());
+		}
+		if(filtro.getTitulo() != null && filtro.getTitulo().length() > 0) {			
+			query.setParameter("titulo", filtro.getTitulo());
+		}
+		
+		if (filtro.getDataInicio() != null || filtro.getDataFinal() != null) {
+			if (filtro.getDataFinal() != null && filtro.getDataInicio() != null) {
+				query.setParameter("data_inicio", filtro.getDataInicio());
+				query.setParameter("data_final", filtro.getDataFinal());
+			} else if (filtro.getDataFinal() == null) {
+				query.setParameter("data_inicio", filtro.getDataInicio());
+			} else {
+				query.setParameter("data_final", filtro.getDataFinal());
+			}
+		}
+
+		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<Orcamento>();
+
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////
 
 	public List<Projeto> getProjetosRelatorioGeral(Filtro filtro, String args)
 			throws NumberFormatException, ParseException {

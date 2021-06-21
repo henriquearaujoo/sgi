@@ -3,6 +3,8 @@ package service;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -84,7 +86,7 @@ public class OrcamentoService implements Serializable {
 	public List<Orcamento> getOrcamentos(Filtro filtro) {
 		return repositorio.getOrcamentos(filtro);
 	}
-
+	
 	public List<Orcamento> getOrcamentosFilter(Filtro filtro) {
 		String titulo = filtro.getOrcamento().getTitulo();
 		if(titulo != null && titulo.length() > 0) {
@@ -92,6 +94,63 @@ public class OrcamentoService implements Serializable {
 		}
 		return repositorio.getOrcamentosFilter(filtro, "");
 	}
+	
+	/////////////////////////////////// FILTRO V2 ///////////////////////////////////////
+	
+	public List<Orcamento> filtrarOrcamentos(Filtro filtro) {
+
+
+		if (filtro.getDataInicio() != null && filtro.getDataFinal() != null) {
+			if (filtro.getDataInicio().after(filtro.getDataFinal())) {
+				addMessage("", "Data inicio maior que data final", FacesMessage.SEVERITY_ERROR);
+				return new ArrayList<Orcamento>();
+			}
+
+			Calendar calInicio = Calendar.getInstance();
+			calInicio.setTime(filtro.getDataInicio());
+
+			Calendar calFinal = Calendar.getInstance();
+			calFinal.setTime(filtro.getDataFinal());
+
+			calInicio.set(Calendar.HOUR, 0);
+			calInicio.set(Calendar.MINUTE, 0);
+			calInicio.set(Calendar.SECOND, 0);
+			calInicio.set(Calendar.MILLISECOND, 0);
+
+			calFinal.set(Calendar.HOUR, 24);
+			calFinal.set(Calendar.MINUTE, 0);
+			calFinal.set(Calendar.SECOND, 0);
+			calFinal.set(Calendar.MILLISECOND, 0);
+
+			filtro.setDataInicio(calInicio.getTime());
+			filtro.setDataFinal(calFinal.getTime());
+
+		} else if (filtro.getDataInicio() != null) {
+			Calendar calInicio = Calendar.getInstance();
+			calInicio.setTime(filtro.getDataInicio());
+			calInicio.set(Calendar.HOUR, 0);
+			calInicio.set(Calendar.MINUTE, 0);
+			calInicio.set(Calendar.SECOND, 0);
+			calInicio.set(Calendar.MILLISECOND, 0);
+			filtro.setDataInicio(calInicio.getTime());
+		} else if (filtro.getDataFinal() != null){
+			Calendar calFinal = Calendar.getInstance();
+			calFinal.setTime(filtro.getDataFinal());
+			calFinal.set(Calendar.HOUR, 0);
+			calFinal.set(Calendar.MINUTE, 0);
+			calFinal.set(Calendar.SECOND, 0);
+			calFinal.set(Calendar.MILLISECOND, 0);
+			filtro.setDataFinal(calFinal.getTime());
+		}
+
+		return repositorio.filtrarOrcamentos(filtro);
+	}
+	
+	
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////////
+	
 
 	public List<Projeto> getProjetosFilter(Filtro filtro) throws NumberFormatException, ParseException {
 		return repositorio.getProjetosFilter(filtro, "");
