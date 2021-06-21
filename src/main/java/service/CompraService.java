@@ -550,10 +550,7 @@ public class CompraService implements Serializable {
 	}
 
 	public List<FontePagadora> fontesAutoComplete(String fonte) {
-		List<FontePagadora> fontesPagadora = new ArrayList<>();
-		fontesPagadora = fonteRespositorio.getFonteAutoComplete(fonte);
-		
-		return fontesPagadora;
+		return fonteRespositorio.getFonteAutoComplete(fonte);
 	}
 
 	public CompraService(LancamentoRepository repositorio) {
