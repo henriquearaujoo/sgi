@@ -320,6 +320,8 @@ public class ProjetoBean implements Serializable {
 		options.put("contentWidth", "100%");
 		options.put("contentHeight", "100%");
 		options.put("resizable", false);
+		options.put("minimizable",true);
+		options.put("maximizable",true);
 		PrimeFaces.current().dialog().openDynamic("dialog/help/help_projeto", options, null);
 	}
 

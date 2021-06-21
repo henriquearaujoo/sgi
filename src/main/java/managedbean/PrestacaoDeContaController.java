@@ -156,6 +156,18 @@ public class PrestacaoDeContaController implements Serializable {
 			// findAtividadesByProjetoWithSaldo();
 		}
 	}
+	
+	public void dialogHelp() {
+		HashMap<String, Object> options = new HashMap<>();
+		options.put("width", "100%");
+		options.put("height", "100%");
+		options.put("contentWidth", "100%");
+		options.put("contentHeight", "100%");
+		options.put("resizable", false);
+		options.put("minimizable",true);
+		options.put("maximizable",true);
+		PrimeFaces.current().dialog().openDynamic("dialog/help/help_prestacao_de_contas", options, null);
+	}
 
 	public void verificarExigencia() {
 

@@ -20,6 +20,7 @@ import javax.inject.Named;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
+import org.primefaces.PrimeFaces;
 import org.primefaces.component.tabview.TabView;
 
 import model.Acao;
@@ -231,6 +232,18 @@ public class ViagemController implements Serializable {
 			diaria.setValorIntegral(new Double(0));
 
 		}
+	}
+	
+	public void dialogHelp() {
+		HashMap<String, Object> options = new HashMap<>();
+		options.put("width", "100%");
+		options.put("height", "100%");
+		options.put("contentWidth", "100%");
+		options.put("contentHeight", "100%");
+		options.put("resizable", false);
+		options.put("minimizable",true);
+		options.put("maximizable",true);
+		PrimeFaces.current().dialog().openDynamic("dialog/help/help_solicitacao_viagem", options, null);
 	}
 
 	public void atualizaTotalParcial() {

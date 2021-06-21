@@ -304,12 +304,19 @@
 								styleClass="btn btn-dark btn-sm ">
 								<span style="font-family: Arial">Gerar relatório</span>
 							</p:commandLink>
+							
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								action="#{prestacao_conta_controller.dialogHelp()}"
+								onclick="start();" onerror="stop();" onsuccess="stop();"
+								style="color:#fff; margin: 8px 2px;">
+								<span class="fa fa-fw fa-question"></span>
+								<span>#{message['BUTTON_LABEL_HELP']}</span>
+							</p:commandLink>
 
 							<p:commandLink
 								action="#{prestacao_conta_controller.voltarListagem()}"
 								value="Sair" process="@this" styleClass="btn btn-danger btn-sm"
 								style="color:#fff; margin: 2px 2px;" />
-
 
 						</div>
 
