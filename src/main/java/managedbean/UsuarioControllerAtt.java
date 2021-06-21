@@ -2,6 +2,7 @@ package managedbean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -11,6 +12,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
+
+import org.primefaces.PrimeFaces;
 
 import model.Colaborador;
 import model.MenuLateral;
@@ -50,6 +53,17 @@ public class UsuarioControllerAtt implements Serializable {
 	private User usuario;
 
 	private Email email;
+	
+	// pop-up do usuário
+	public void popupUsuario() {
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put("height", "90%");
+		options.put("width", "50%");
+		options.put("contentWidth", "100%");
+		options.put("contentHeight", "100%");
+		options.put("resizable", false);
+		PrimeFaces.current().dialog().openDynamic("home/usuario.xhtml", options, null);
+	}
 
 	// metodo para buscar por string parcial o colaborador
 	public List<Colaborador> completeColaborador(String s) {

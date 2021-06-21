@@ -322,6 +322,12 @@ body .ui-fileupload .ui-fileupload-content {
 	<h:form id="form-layout">
 
 		<ul id="profile-menu" class="profile-menu fadeInDown  js-profile-menu">
+		
+			<li>
+				<p:commandLink action="#{usuario_controller.popupUsuario()}" ignoreAutoUpdate="true">
+					<span>Perfil</span>
+				</p:commandLink>
+			</li>
 			
 
 			<li><p:commandLink action="#{loginBean.logout()}">
