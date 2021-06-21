@@ -109,6 +109,38 @@
 
 
 			</p:tabView>
+			<div class="fixed-btn" id="fixed-btn-id" >
+				<p:panel id="btn-panel-p">
+					<div id="btn-panel-wizard" class="ui-g ui-fluid"
+						style="margin-bottom: 10px">
+						<div class="ui-g-12">
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								onclick="start()"
+								onstart="start();"
+								onsuccess="stop();"
+								onerror="stop()" 
+								style="margin-left:5px"
+								title="Salvar" 
+								update="form-cadastro-projeto "
+								process="@this, form-cadastro-projeto"
+								action="#{projetoBean.salvarMODE01()}">
+								<span style="margin: 3px;">Salvar</span>
+							</p:commandLink>
+							<p:link styleClass="btn btn-danger btn-sm"
+								style="margin-left:5px;color:#fff" title="Cancelar"
+								outcome="/main/projetos">
+								<span class="glyphicon glyphicon-remove"></span>
+								<span style="margin: 3px;">Sair</span>
+							</p:link>
+						</div>
+
+						<div id="actions-button" class="ui-g-12">
+
+							<div class="ui-g-12" style="text-align: right;"></div>
+						</div>
+					</div>
+				</p:panel>
+			</div>
 
 			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
 				<p:commandButton value="Sim" type="button"
@@ -117,9 +149,12 @@
 					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
 			</p:confirmDialog>
 
+
+
 		</h:form>
 
 	</ui:define>
+
 
 	<ui:define name="adicionais">
 
@@ -528,14 +563,13 @@
 
 						<div class="ui-g-4 form-group focused">
 							<p:outputLabel value="Descrição" for="descricao_indicador" />
-							<p:inputText  id="descricao_indicador"
-								 maxlength="255"
+							<p:inputText id="descricao_indicador" maxlength="255"
 								value="#{projetoBean.indicador.descricao}" />
 						</div>
 					</div>
 				</p:panel>
 
-				
+
 			</h:form>
 		</p:dialog>
 

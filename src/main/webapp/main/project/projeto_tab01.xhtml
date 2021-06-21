@@ -156,6 +156,7 @@
 					requiredMessage="Campo obrigatório" />
 
 			</div>
+			
 
 
 
@@ -297,7 +298,7 @@
 
 				<h:panelGroup id="panel_objetivos"
 					rendered="#{projetoBean.projeto.id != null}">
-					<p:fieldset legend="Objetivos Específicos" id="objetivos">
+					<p:fieldset legend="Objetivos Específicos" id="objetivos" style="margin-bottom: 85px;">
 
 						<p:messages showSummary="false" showDetail="true" closable="true" />
 						<p:dataTable value="#{projetoBean.listaObjetivos}"
