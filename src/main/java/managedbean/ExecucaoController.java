@@ -76,6 +76,13 @@ public class ExecucaoController implements Serializable {
 		}
 
 	}
+	
+	public void gerarVisualizacao() {
+		/*
+		 * lancamentos = new ArrayList<LancamentoAuxiliar>(); lancamentos =
+		 * service.getLancamentos(filtro);
+		 */
+	}
 
 	public void carregarFontes() {
 		fontes = service.buscarFontes();

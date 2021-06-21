@@ -115,14 +115,14 @@ body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-selectcheckb
 			</div>
 
 
-			<p:dataTable id="tbl_exec_financeira" rendered="false"
+			<p:dataTable id="tbl_exec_financeira" rendered="true"
 				sortBy="#{lancamento.nomeProjeto}" expandableRowGroups="true"
 				value="#{execucaoController.lancamentos}" var="lancamento">
 
 				<f:facet name="header">
  
  	 			Execução
-       				 <p:commandButton id="toggler" type="button" value="Columns"
+       				 <p:commandButton id="toggler" type="button" value="Columns" rendered="false"
 						style="float:right" icon="ui-icon-calculator" />
 					<p:columnToggler datasource="tbl_exec_financeira" trigger="toggler" />
 				</f:facet>
