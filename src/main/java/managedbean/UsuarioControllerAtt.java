@@ -56,13 +56,7 @@ public class UsuarioControllerAtt implements Serializable {
 	
 	// pop-up do usuário
 	public void popupUsuario() {
-		HashMap<String, Object> options = new HashMap<String, Object>();
-		options.put("height", "90%");
-		options.put("width", "50%");
-		options.put("contentWidth", "100%");
-		options.put("contentHeight", "100%");
-		options.put("resizable", false);
-		PrimeFaces.current().dialog().openDynamic("home/usuario.xhtml", options, null);
+		usuarioService.popupUsuario();
 	}
 
 	// metodo para buscar por string parcial o colaborador
