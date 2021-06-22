@@ -107,7 +107,7 @@ public class LoginBean implements Serializable {
 			gerarNovaSenha();
 
 			loginService.updateSenhaAutomatica(usuario, senha);
-			
+			System.out.println(senha);
 			prepararEmail(senha);
 			email.setToEmail(toEmail);
 			email.EnviarEmailSimples();

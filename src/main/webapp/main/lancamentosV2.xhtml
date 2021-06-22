@@ -35,27 +35,12 @@
 
 		<h:form id="form-lancamento-pagamento">
 			<style type="text/css">
-.table-l span {
-	font-size: 13px !important;
-}
-
-.ui-datalist {
-	margin-bottom: 20px;
-}
-
-.ui-datalist-item {
-	padding: 3px;
-	margin-left: 20px;
-}
-
-.paginated .ui-datalist-data {
-	padding-left: 20px;
-}
-
-body .ui-fileupload .ui-fileupload-content {
-	display: none !important;
-}
-</style>
+			
+			
+			body .ui-fileupload .ui-fileupload-content {
+				display: none !important;
+			}
+			</style>
 
 			<p:messages showDetail="true" closable="true" id="msg_lancamento">
 			  <p:autoUpdate></p:autoUpdate>
@@ -67,7 +52,6 @@ body .ui-fileupload .ui-fileupload-content {
 			</p:breadCrumb>
 
 			<p:panel id="filter-list">
-
 
 				<div class="ui-g ui-fluid">
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
@@ -99,7 +83,7 @@ body .ui-fileupload .ui-fileupload-content {
 							converter="contaConverter" />
 					</div>
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
-						<h:outputText value="Fornecedor:" />
+						<h:outputText value="Recebedor:" />
 						<p:autoComplete value="#{lancamentos_v2.filtro.fornecedor}"
 							completeMethod="#{lancamentos_v2.completeConta}" var="conta"
 							itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
@@ -128,6 +112,7 @@ body .ui-fileupload .ui-fileupload-content {
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
 						<h:outputText value="Status:" />
 						<p:selectOneMenu value="#{lancamentos_v2.filtro.statusPagamento}">
+						    <f:selectItem noSelectionOption="true"/>
 							<f:selectItems value="#{pagamentoLancController.statusPagamento}"
 								var="stt" itemLabel="#{stt.nome}" itemValue="#{stt}" />
 						</p:selectOneMenu>
@@ -196,8 +181,8 @@ body .ui-fileupload .ui-fileupload-content {
 					</div>
 
 					<div class="ui-g-12 table-l">
-						<p:dataTable id="table-lancamentos" reflow="true"
-							rowKey="#{lancamento.idPagamento}"
+						<p:dataTable id="table-lancamentos" reflow="true" 
+							rowKey="#{lancamento.idPagamento}" 
 							selection="#{lancamentos_v2.lancamentosSelected}"
 							value="#{lancamentos_v2.lancamentos}" var="lancamento"
 							paginator="true" rows="10">
@@ -207,13 +192,13 @@ body .ui-fileupload .ui-fileupload-content {
 								style="width:35px;text-align:center" />
 
 							<p:column headerText="Codigo"
-								style="text-align:center;width:40px">
+								style="text-align:center">
 								<h:outputText id="codigo" value="#{lancamento.codigoLancamento}" />
 							</p:column>
 
 
 							<p:column headerText="Pagamento"
-								style="text-align:center;width:75px">
+								style="text-align:center;">
 								<h:outputText id="dt-pagamento"
 									value="#{lancamento.dataPagamento}">
 									<f:convertDateTime pattern="dd/MM/yyyy"
@@ -222,12 +207,17 @@ body .ui-fileupload .ui-fileupload-content {
 							</p:column>
 
 							<p:column headerText="Fonte de recurso"
-								style="text-align:left;width:110px">
+								style="text-align:left">
 								<h:outputText id="id-fonte" value="#{lancamento.fonte}" />
 							</p:column>
+							
+							<p:column headerText="Pagador" style="text-align:left">
+								<h:outputText id="id-pagador"
+									value="#{lancamento.contaPagadorLbl}" />
+							</p:column>
 
-							<p:column headerText="Fornecedor" style="text-align:left">
-								<h:outputText id="id-fornecedor"
+							<p:column headerText="Recebedor" style="text-align:left">
+								<h:outputText id="id-recebedor"
 									value="#{lancamento.contaRecebedorLbl}" />
 							</p:column>
 
@@ -245,20 +235,20 @@ body .ui-fileupload .ui-fileupload-content {
 							</p:column>
 
 							<p:column headerText="Status"
-								style="text-align:center;width:115px">
+								style="text-align:center">
 								<p:outputLabel id="id-status" value="#{lancamento.status}" />
 							</p:column>
 
 
 							<p:column headerText="Valor pago"
-								style="text-align:center;width:75px">
+								style="text-align:center">
 								<h:outputText id="id-value" value="#{lancamento.valorPagoAcao}">
 									<f:convertNumber type="currency" locale="pt_BR" />
 								</h:outputText>
 							</p:column>
 
 							<p:column headerText="Opções"
-								style="text-align:center;width:80px">
+								style="text-align:center">
 
 
 								<p:menuButton value="Opções">

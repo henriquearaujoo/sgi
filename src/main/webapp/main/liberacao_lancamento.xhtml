@@ -38,36 +38,19 @@
 			<f:viewAction action="#{liberacao_lancamento_controller.init()}" />
 		</f:metadata>
 
-		<style type="text/css">
-body .ui-sidebar .ui-sidebar-close {
-	color: #000;
-	border: 0 none;
-	padding: 0;
-	margin-left: .429em;
-	-moz-transition: color .3s;
-	-o-transition: color .3s;
-	-webkit-transition: color .3s;
-	transition: color .3s;
-}
-</style>
-
-
-		<br />
-
 
 		<h:form id="form-lancamento-pagamento">
+
+			<p:messages showDetail="true" closable="true" id="msg_lancamento">
+				<p:autoUpdate></p:autoUpdate>
+			</p:messages>
+
 			<p:breadCrumb>
 				<p:menuitem value="Categories" url="home_new.xhtml" />
 				<p:menuitem value="Lançamentos para validação" />
 			</p:breadCrumb>
 
-
-
 			<p:panel id="filter-list">
-
-
-				<p:messages showSummary="false" showDetail="true" closable="true"
-					showIcon="true" />
 
 				<div class="ui-g ui-fluid">
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
@@ -103,7 +86,6 @@ body .ui-sidebar .ui-sidebar-close {
 							value="#{liberacao_lancamento_controller.filtro.dataFinalEmissao}"
 							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
 
-
 					</div>
 
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
@@ -124,10 +106,21 @@ body .ui-sidebar .ui-sidebar-close {
 
 						</p:autoComplete>
 					</div>
+
+					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+						<h:outputText value="Pagador:" />
+						<p:autoComplete
+							value="#{liberacao_lancamento_controller.filtro.pagador}"
+							completeMethod="#{liberacao_lancamento_controller.completeConta}"
+							var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+							converter="contaConverter" />
+
+					</div>
+
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
-						<h:outputText value="Fornecedor:" />
-						<p:autoComplete placeholder="Fornecedor" size="30"
-							value="#{liberacao_lancamento_controller.filtro.contaFiltro}"
+						<h:outputText value="Recebedor:" />
+						<p:autoComplete
+							value="#{liberacao_lancamento_controller.filtro.fornecedor}"
 							completeMethod="#{liberacao_lancamento_controller.completeConta}"
 							var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
 							converter="contaConverter" />
@@ -138,7 +131,7 @@ body .ui-sidebar .ui-sidebar-close {
 
 						<p:selectOneMenu style="margin: 2px 2px;"
 							value="#{liberacao_lancamento_controller.filtro.statusPagamentoInt}">
-							<f:selectItem itemLabel="Selecione" />
+							<f:selectItem noSelectionOption="true" itemLabel="Selecione" />
 							<f:selectItem itemLabel="Validado" itemValue="0" />
 							<f:selectItem itemLabel="Não Validado" itemValue="1" />
 
@@ -173,6 +166,9 @@ body .ui-sidebar .ui-sidebar-close {
 							update=":form-lancamento-pagamento:table-lancamentos"
 							action="#{liberacao_lancamento_controller.validarLancamentos()}"
 							style="color:#fff; margin: 8px 2px;">
+
+							<p:confirm header="Confirmação" icon="ui-icon-alert"
+								message="Desejar validar os lançamentos selecionados?" />
 							<span class="fa fa-check"></span>
 							<span style="margin: 3px;">Validar</span>
 						</p:commandLink>
@@ -183,10 +179,13 @@ body .ui-sidebar .ui-sidebar-close {
 							update=":form-lancamento-pagamento:table-lancamentos"
 							action="#{liberacao_lancamento_controller.invalidarLancamentos()}"
 							style="color:#fff; margin: 8px 2px;">
+
+							<p:confirm header="Confirmação" icon="ui-icon-alert"
+								message="Desejar estornar os lançamentos selecionados?" />
 							<span class="fa fa-times"></span>
-							<span style="margin: 3px;">Desvalidar</span>
+							<span style="margin: 3px;">Estornar</span>
 						</p:commandLink>
-						
+
 						<p:commandLink styleClass="btn btn-primary btn-sm"
 							action="#{liberacao_lancamento_controller.dialogHelp()}"
 							style="color:#fff; margin: 8px 2px;">

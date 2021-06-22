@@ -2576,8 +2576,12 @@ public class PagamentoLancamentoRepository {
 					" and (select p.id from projeto p where p.id = (select pr.projeto_id from projeto_rubrica pr where id = la.projetorubrica_id)) = :projeto");
 		}
 
-		if (filtro.getIdConta() != null) {
-			hql.append(" and (pl.contarecebedor_id = :contaa or pl.conta_id = :contaa) ");
+		if (filtro.getPagador() != null && filtro.getPagador().getId() != null) {
+			hql.append(" and pl.conta_id = :pagador");
+		}
+		
+		if (filtro.getFornecedor() != null && filtro.getFornecedor().getId() != null) {
+			hql.append(" and pl.contarecebedor_id = :recebedor");
 		}
 
 		if (filtro.getStatusPagamentoInt() != null) {
@@ -2590,7 +2594,7 @@ public class PagamentoLancamentoRepository {
 		}
 
 		if (filtro.getLancamentoID() != null) {
-			hql.append(" and l.id = :lancamento");
+			hql.append(" and (l.id = :lancamento or l.idadiantamento = :lancamento)");
 		}
 
 		if (filtro.getStatusPagamento() != null) {
@@ -2600,16 +2604,18 @@ public class PagamentoLancamentoRepository {
 		hql.append(" order by pl.datapagamento desc, l.data_emissao desc");
 
 		Query query = manager.createNativeQuery(hql.toString());
-		
 
-		//
 
 		if (filtro.getProjetoId() != null) {
 			query.setParameter("projeto", filtro.getProjetoId());
 		}
 
-		if (filtro.getIdConta() != null) {
-			query.setParameter("contaa", filtro.getIdConta());
+		if (filtro.getPagador() != null && filtro.getPagador().getId() != null) {
+			query.setParameter("pagador", filtro.getPagador().getId());
+		}
+		
+		if (filtro.getFornecedor() != null && filtro.getFornecedor().getId() != null) {
+			query.setParameter("recebedor", filtro.getFornecedor().getId());
 		}
 
 		if (filtro.getLancamentoID() != null) {
@@ -2635,7 +2641,6 @@ public class PagamentoLancamentoRepository {
 		
 			lAux.setId(new Long(object[0].toString()));
 			
-			
 			lAux.setDescricao(object[6].toString());
 			lAux.setFonte(object[7].toString());
 			lAux.setNomeProjeto(object[8] != null ? object[8].toString() : "");
@@ -2655,7 +2660,6 @@ public class PagamentoLancamentoRepository {
 			lAux.setIdPagamento(new Long(object[17].toString()));
 			lAux.setStatus(object[18].toString());
 			lAux.setTipov4(object[19] != null ? object[19].toString() : "");
-			
 			
 			retorno.add(lAux);
 		}
@@ -2883,7 +2887,7 @@ public class PagamentoLancamentoRepository {
 		// }
 		// before
 		if (filtro.getFornecedor() != null && filtro.getFornecedor().getId() != null) {
-			hql.append(" and  pl.contarecebedor_id = :fornecedor ");
+			hql.append(" and  pl.contarecebedor_id = :recebedor ");
 		}
 		if (filtro.getPagador() != null && filtro.getPagador().getId() != null) {
 			hql.append(" and pl.conta_id = :pagador ");
@@ -2891,7 +2895,7 @@ public class PagamentoLancamentoRepository {
 		// end
 
 		if (filtro.getLancamentoID() != null) {
-			hql.append(" and (l.id = :lancamento or l.id_lancamento = :lancamento)");
+			hql.append(" and (l.id = :lancamento or l.idadiantamento = :lancamento)");
 		}
 
 		if (filtro.getStatusPagamento() != null) {
@@ -2927,7 +2931,7 @@ public class PagamentoLancamentoRepository {
 		// }
 		// before
 		if (filtro.getFornecedor() != null && filtro.getFornecedor().getId() != null) {
-			query.setParameter("fornecedor", filtro.getFornecedor().getId());
+			query.setParameter("recebedor", filtro.getFornecedor().getId());
 		}
 
 		if (filtro.getPagador() != null && filtro.getPagador().getId() != null) {

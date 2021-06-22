@@ -1027,6 +1027,7 @@ public class LancamentoV2Controller implements Serializable {
 	public void carregarLancamentos() {
 		lancamentos = new ArrayList<>();
 		lancamentos = service.getLancamentosCP(filtro);
+		//System.out.println("Lançamentos");
 		// service.getPagamentosPE(filtro);
 	}
 
