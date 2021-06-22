@@ -189,7 +189,7 @@ public class LancamentoV2Controller implements Serializable {
 	public List<Projeto> getListaProjeto() {
 		return listaProjeto;
 	}
-	
+
 	public void dialogHelp() {
 		HashMap<String, Object> options = new HashMap<>();
 		options.put("width", "100%");
@@ -197,8 +197,8 @@ public class LancamentoV2Controller implements Serializable {
 		options.put("contentWidth", "100%");
 		options.put("contentHeight", "100%");
 		options.put("resizable", false);
-		options.put("minimizable",true);
-		options.put("maximizable",true);
+		options.put("minimizable", true);
+		options.put("maximizable", true);
 		PrimeFaces.current().dialog().openDynamic("dialog/help/help_lancamentoV2", options, null);
 	}
 
@@ -308,8 +308,6 @@ public class LancamentoV2Controller implements Serializable {
 	private @Inject ArquivoLancamento arqAuxiliar;
 	private @Inject Aprouve aprouve;
 
-	
-
 	public TipoArquivo[] getTipos() {
 		return TipoArquivo.values();
 	}
@@ -349,7 +347,7 @@ public class LancamentoV2Controller implements Serializable {
 	}
 
 	private byte[] conteudo;
-	
+
 	public void adicionarArquivo() {
 
 		File file = new File(arquivo.getPath());
@@ -374,12 +372,12 @@ public class LancamentoV2Controller implements Serializable {
 
 		carregarArquivos(lancamento.getId());
 	}
-	
+
 	public void handleFileUpload(FileUploadEvent event) throws IOException {
 		// String pathFinal = DiretorioUtil.DIRECTORY_UPLOAD_LINUX;
 		String pathFinal = DiretorioUtil.DIRECTORY_UPLOAD;
-		//arquivo.setConteudo(event.getFile().getContents());
-		
+		// arquivo.setConteudo(event.getFile().getContents());
+
 		conteudo = event.getFile().getContents();
 		arquivo.setNome(event.getFile().getFileName());
 		arquivo.setPath(pathFinal + lancamento.getId() + "." + event.getFile().getFileName());
@@ -412,16 +410,13 @@ public class LancamentoV2Controller implements Serializable {
 	public void carregarArquivos(Long id) {
 		lancamento = service.getLancamentoById(id);
 		lancamento.setArquivos(new ArrayList<ArquivoLancamento>());
-		
+
 		if (lancamento instanceof Pedido) {
 			lancamento.setArquivos(service.getArquivoByLancamento(id, ((Pedido) lancamento).getCompra().getId()));
-		}else {
+		} else {
 			lancamento.setArquivos(service.getArquivoByLancamento(id));
 		}
-	
-	
-		
-		
+
 	}
 
 	public void imprimirTermo(Long id) {
@@ -558,12 +553,11 @@ public class LancamentoV2Controller implements Serializable {
 		return MakeMenu.getMenuFinanceiro();
 	}
 
-	
 	@Inject
 	private HomeService homeService;
-	
+
 	public void init() throws IOException {
-		
+
 		if (homeService.verificarSolicitacoes(usuarioSessao.getIdColadorador())) {
 			HttpServletResponse resp = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
 					.getResponse();
@@ -571,7 +565,7 @@ public class LancamentoV2Controller implements Serializable {
 					.getRequest();
 			resp.sendRedirect(req.getContextPath() + "/main/autorizacoes.xhtml");
 		}
-		
+
 		limpar();
 		carregarLancamentos();
 		carregarCategoriasFin();
@@ -586,15 +580,14 @@ public class LancamentoV2Controller implements Serializable {
 	public void prepararLancamentoAvulso() {
 		lancamentoAvulso = new LancamentoAvulso();
 	}
-	
-	
+
 	@Inject
 	private AutorizacaoService autService;
-	
+
 	public void imprimirMapa(String idCompra) {
-		autService.imprimirMapaComparativo( new Long(idCompra));
+		autService.imprimirMapaComparativo(new Long(idCompra));
 	}
-	
+
 	public void imprimir(Lancamento lancamento) {
 		service.imprimir(lancamento);
 	}
@@ -766,8 +759,9 @@ public class LancamentoV2Controller implements Serializable {
 
 			pagamentoLancAuxiliar = new PagamentoLancamento();
 			pagamentoLancAuxiliar = service.findPagamentoById(id);
-			//TODO aqui deve ser pego o id do lancamento do lancamento acao
-			lancamentoReembolso = service.getLancamentoById(pagamentoLancAuxiliar.getLancamentoAcao().getLancamento().getId());
+			// TODO aqui deve ser pego o id do lancamento do lancamento acao
+			lancamentoReembolso = service
+					.getLancamentoById(pagamentoLancAuxiliar.getLancamentoAcao().getLancamento().getId());
 
 			conta = pagamentoLancAuxiliar.getConta();
 
@@ -795,12 +789,11 @@ public class LancamentoV2Controller implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
-	
 
 	public Boolean getContaAlterada() {
-		
-		if (pagamentoLancAuxiliar != null && conta != null && conta.getId() != null && pagamentoLancAuxiliar.getConta() != null
+
+		if (pagamentoLancAuxiliar != null && conta != null && conta.getId() != null
+				&& pagamentoLancAuxiliar.getConta() != null
 				&& (pagamentoLancAuxiliar.getConta().getId().longValue() != conta.getId().longValue())) {
 			return true;
 		} else {
@@ -838,8 +831,9 @@ public class LancamentoV2Controller implements Serializable {
 		tarifa.setTipoParcelamento(TipoParcelamento.PARCELA_UNICA);
 		tarifa.setQuantidadeParcela(1);
 		tarifa.setDataDocumentoFiscal(pagamentoLancAuxiliar.getDataPagamento());
-		//TODO pegar o lancamento do lancamento acao
-		tarifa.setDescricao("Tarifa referente ao lançamento: " + pagamentoLancAuxiliar.getLancamentoAcao().getLancamento().getId());
+		// TODO pegar o lancamento do lancamento acao
+		tarifa.setDescricao(
+				"Tarifa referente ao lançamento: " + pagamentoLancAuxiliar.getLancamentoAcao().getLancamento().getId());
 		tarifa.setLancamentosAcoes(new ArrayList<>());
 		tarifa.setVersionLancamento("MODE01");
 		tarifa.setValorTotalComDesconto(service.getTarifa());
@@ -883,74 +877,131 @@ public class LancamentoV2Controller implements Serializable {
 
 	public void efetivarMultiplos() {
 
-		for (LancamentoAuxiliar la : lancamentosSelected) {
-			if (la.getStatus().equals("EFETIVADO")) {
-				continue;
-			}
+		if (lancamentosSelected.isEmpty()) {
+			FacesContext.getCurrentInstance().addMessage("msg_lancamento", new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"", "Selecione pelo menos um lançamento para efetivar!"));
+			return;
 		}
+
+		/*
+		 * for (LancamentoAuxiliar la : lancamentosSelected) { if
+		 * (la.getStatus().equals("EFETIVADO")) { continue; } }
+		 */
 
 		service.efetivarMultiplos(lancamentosSelected);
 		carregarLancamentos();
 		lancamentosSelected = new ArrayList<>();
 	}
-	
-	
-	public void openDialoEstorno(){
+
+	// TODO: Put it on the util package
+	public void executeScript(String script) {
+		PrimeFaces current = PrimeFaces.current();
+		current.executeScript(script);
+	}
+
+	public void openDialoEstorno() {
 		PrimeFaces current = PrimeFaces.current();
 		current.executeScript("PF('dialogEstorno').show()");
 	}
-	public void closeDialoEstorno(){
+
+	public void closeDialoEstorno() {
 		PrimeFaces current = PrimeFaces.current();
 		current.executeScript("PF('dialogEstorno').hide()");
 	}
-	
-	
-	public void estornarLancamentos() {
+
+	public void reverseTransaction() {
 		try {
-			aprouve.setSigla("EST");
-			if(service.verificaAprouveEstorno(aprouve)) {
-				service.estornar(lancamentosSelected);
+			aprouve.setSigla("ADM-II");
+			if (service.verificaAprouveEstorno(aprouve)) {
+				service.reverseTransaction(lancamentosSelected);
 				carregarLancamentos();
 				closeDialoEstorno();
-				FacesContext.getCurrentInstance().addMessage("msg_lancamento",new FacesMessage(FacesMessage.SEVERITY_INFO, "","Lancamento Estornado com Sucesso!"));
-			}else {
-				FacesContext.getCurrentInstance().addMessage("msg_lancamento",new FacesMessage(FacesMessage.SEVERITY_WARN, "","Senha Incorreta!"));
+				FacesContext.getCurrentInstance().addMessage("msg_lancamento",
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "", "A(s) parcela(s) selecionada(s) voltaram ao status de pagamento 'PROVISIONADO'"));
+			} else {
+				FacesContext.getCurrentInstance().addMessage("msg_lancamento",
+						new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Senha Incorreta!"));
 			}
-		}catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage("msg_lancamento",new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro! ",e.getCause().getMessage()));
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage("msg_lancamento",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro! ", e.getCause().getMessage()));
 		}
 	}
-	
-	public void verificaLancamentoEstorno() {
-		if(lancamentosSelected.isEmpty()) {
+
+	public void verifyTransactionToReverse() {
+		if (lancamentosSelected.isEmpty()) {
 			FacesContext.getCurrentInstance().addMessage("msg_lancamento",
-					new FacesMessage(FacesMessage.SEVERITY_WARN, "","Selecione pelo menos um lançamento!"));
+					new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Selecione pelo menos um lançamento!"));
 			return;
 		}
-		for(LancamentoAuxiliar lancamento : lancamentosSelected) {
+		for (LancamentoAuxiliar lancamento : lancamentosSelected) {
 			if (!lancamento.getStatus().equals("EFETIVADO")) {
-				FacesContext.getCurrentInstance().addMessage("msg_lancamento",
-						new FacesMessage(FacesMessage.SEVERITY_WARN, "","Existem um ou mais lançamentos não efetivados desmarque-os e tente novamente!"));
+				FacesContext.getCurrentInstance().addMessage("msg_lancamento", new FacesMessage(
+						FacesMessage.SEVERITY_WARN, "",
+						"Existem um ou mais lançamentos que já estão como 'PROVISIONADOS', desmarque-os e tente novamente!"));
 				return;
 			}
 		}
-		openDialoEstorno();
+		executeScript("PF('dialogEstorno').show()");
+	}
+
+	public void verifyTransactionToCancel() {
+		if (lancamentosSelected.isEmpty()) {
+			FacesContext.getCurrentInstance().addMessage("msg_lancamento",
+					new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Selecione pelo menos um lançamento!"));
+			return;
+		}
+		executeScript("PF('cancel-transaction').show()");
 	}
 	
-
-	public void desprovisionar() {
-		for (LancamentoAuxiliar lancamento : lancamentosSelected) {
-			if (lancamento.getStatus().equals("EFETIVADO")) {
-				FacesContext.getCurrentInstance().addMessage("msg_lancamento",
-						new FacesMessage(FacesMessage.SEVERITY_WARN, "",
-								"Existem um ou mais Lançamentos Efetivados desmarque-os e tente novamente!"));
-				return;
-			}
+	public void verifyTransactionToOpen() {
+		if (lancamentosSelected.isEmpty()) {
+			FacesContext.getCurrentInstance().addMessage("msg_lancamento",
+					new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Selecione pelo menos um lançamento!"));
+			return;
 		}
+		executeScript("PF('open-transaction').show()");
+	}
 
-		service.desprovisionar(lancamentosSelected);
-		carregarLancamentos();
-		lancamentosSelected = new ArrayList<>();
+	public void cancelTransaction() {
+		try {
+			aprouve.setSigla("ADM-II");
+			if (service.verifyAprouve(aprouve)) {
+				service.cancelTransaction(lancamentosSelected);
+				carregarLancamentos();
+				lancamentosSelected = new ArrayList<>();
+				executeScript("PF('cancel-transaction').hide()");
+				FacesContext.getCurrentInstance().addMessage("msg_lancamento",
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "", "O(s) lançamento(s) foram cancelado(s) e excluído(s) da execução financeira."));
+			} else {
+				FacesContext.getCurrentInstance().addMessage("msg_lancamento",
+						new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Senha Incorreta!"));
+			}
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage("msg_lancamento",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro! ", e.getCause().getMessage()));
+		}
+	}
+	
+	
+	public void openTransaction() {
+		try {
+			aprouve.setSigla("ADM-II");
+			if (service.verifyAprouve(aprouve)) {
+				service.openTransaction(lancamentosSelected);
+				carregarLancamentos();
+				lancamentosSelected = new ArrayList<>();
+				executeScript("PF('open-transaction').hide()");
+				FacesContext.getCurrentInstance().addMessage("msg_lancamento",
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "", "O(s) lançamento(s) voltaram ao status de não iniciado."));
+			} else {
+				FacesContext.getCurrentInstance().addMessage("msg_lancamento",
+						new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Senha Incorreta!"));
+			}
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage("msg_lancamento",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro! ", e.getCause().getMessage()));
+		}
 	}
 
 	public void removerLancamento() {
@@ -1027,7 +1078,7 @@ public class LancamentoV2Controller implements Serializable {
 	public void carregarLancamentos() {
 		lancamentos = new ArrayList<>();
 		lancamentos = service.getLancamentosCP(filtro);
-		//System.out.println("Lançamentos");
+		// System.out.println("Lançamentos");
 		// service.getPagamentosPE(filtro);
 	}
 

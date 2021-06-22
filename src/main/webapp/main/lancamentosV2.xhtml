@@ -35,15 +35,13 @@
 
 		<h:form id="form-lancamento-pagamento">
 			<style type="text/css">
-			
-			
-			body .ui-fileupload .ui-fileupload-content {
-				display: none !important;
-			}
-			</style>
+body .ui-fileupload .ui-fileupload-content {
+	display: none !important;
+}
+</style>
 
 			<p:messages showDetail="true" closable="true" id="msg_lancamento">
-			  <p:autoUpdate></p:autoUpdate>
+				<p:autoUpdate></p:autoUpdate>
 			</p:messages>
 
 			<p:breadCrumb>
@@ -112,7 +110,7 @@
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
 						<h:outputText value="Status:" />
 						<p:selectOneMenu value="#{lancamentos_v2.filtro.statusPagamento}">
-						    <f:selectItem noSelectionOption="true"/>
+							<f:selectItem noSelectionOption="true" />
 							<f:selectItems value="#{pagamentoLancController.statusPagamento}"
 								var="stt" itemLabel="#{stt.nome}" itemValue="#{stt}" />
 						</p:selectOneMenu>
@@ -148,22 +146,39 @@
 
 					<div class="ui-g-6" style="text-align: right">
 
-						<p:menuButton value="Ações">
+						<p:menuButton id="menu-actions" menuStyleClass="menu-actions"
+							value="Ações">
 
 							<p:menuitem icon="fa fa-cart-plus" value="Efetivar"
 								onstart="start()" onsuccess="stop()" onerror="stop()"
 								action="#{lancamentos_v2.efetivarMultiplos()}"
-								update=":form-lancamento-pagamento:table-lancamentos" />
+								update=":form-lancamento-pagamento:table-lancamentos">
+
+								<p:confirm header="Confirmação" icon="ui-icon-alert"
+									message="Desejar efetivar os pagamentos selecionados?" />
+
+							</p:menuitem>
 
 							<p:menuitem icon="fa fa-cart-plus" value="Estornar"
 								onstart="start()" onsuccess="stop()" onerror="stop()"
-								action="#{lancamentos_v2.verificaLancamentoEstorno()}"
+								action="#{lancamentos_v2.verifyTransactionToReverse()}"
 								update=":form-lancamento-pagamento:table-lancamentos" />
 
-							<p:menuitem icon="fa fa-cart-plus" value="Desprovisionar"
+							<p:menuitem icon="fa fa-cart-plus" value="Cancelar pagamento"
 								onstart="start()" onsuccess="stop()" onerror="stop()"
-								action="#{lancamentos_v2.desprovisionar()}" rendered="false"
-								update=":form-lancamento-pagamento:table-lancamentos" />
+								action="#{lancamentos_v2.verifyTransactionToCancel()}"
+								rendered="true"
+								update=":form-lancamento-pagamento:table-lancamentos">
+
+							</p:menuitem>
+							
+							<p:menuitem icon="fa fa-cart-plus" value="Reabrir lançamento"
+								onstart="start()" onsuccess="stop()" onerror="stop()"
+								action="#{lancamentos_v2.verifyTransactionToOpen()}"
+								rendered="true"
+								update=":form-lancamento-pagamento:table-lancamentos">
+
+							</p:menuitem>
 
 							<p:menuitem icon="fa fa-cart-plus" value="Alterar data"
 								onstart="start()" onsuccess="stop()" onerror="stop()"
@@ -181,8 +196,8 @@
 					</div>
 
 					<div class="ui-g-12 table-l">
-						<p:dataTable id="table-lancamentos" reflow="true" 
-							rowKey="#{lancamento.idPagamento}" 
+						<p:dataTable id="table-lancamentos" reflow="true"
+							rowKey="#{lancamento.idPagamento}"
 							selection="#{lancamentos_v2.lancamentosSelected}"
 							value="#{lancamentos_v2.lancamentos}" var="lancamento"
 							paginator="true" rows="10">
@@ -191,14 +206,12 @@
 							<p:column selectionMode="multiple"
 								style="width:35px;text-align:center" />
 
-							<p:column headerText="Codigo"
-								style="text-align:center">
+							<p:column headerText="Codigo" style="text-align:center">
 								<h:outputText id="codigo" value="#{lancamento.codigoLancamento}" />
 							</p:column>
 
 
-							<p:column headerText="Pagamento"
-								style="text-align:center;">
+							<p:column headerText="Pagamento" style="text-align:center;">
 								<h:outputText id="dt-pagamento"
 									value="#{lancamento.dataPagamento}">
 									<f:convertDateTime pattern="dd/MM/yyyy"
@@ -206,11 +219,10 @@
 								</h:outputText>
 							</p:column>
 
-							<p:column headerText="Fonte de recurso"
-								style="text-align:left">
+							<p:column headerText="Fonte de recurso" style="text-align:left">
 								<h:outputText id="id-fonte" value="#{lancamento.fonte}" />
 							</p:column>
-							
+
 							<p:column headerText="Pagador" style="text-align:left">
 								<h:outputText id="id-pagador"
 									value="#{lancamento.contaPagadorLbl}" />
@@ -234,21 +246,18 @@
 
 							</p:column>
 
-							<p:column headerText="Status"
-								style="text-align:center">
+							<p:column headerText="Status" style="text-align:center">
 								<p:outputLabel id="id-status" value="#{lancamento.status}" />
 							</p:column>
 
 
-							<p:column headerText="Valor pago"
-								style="text-align:center">
+							<p:column headerText="Valor pago" style="text-align:center">
 								<h:outputText id="id-value" value="#{lancamento.valorPagoAcao}">
 									<f:convertNumber type="currency" locale="pt_BR" />
 								</h:outputText>
 							</p:column>
 
-							<p:column headerText="Opções"
-								style="text-align:center">
+							<p:column headerText="Opções" style="text-align:center">
 
 
 								<p:menuButton value="Opções">
@@ -753,7 +762,7 @@
 						update=":form-lancamento-pagamento" styleClass="btn btn-primary"
 						style="color:#ffffff;width:90px" onclick="start()"
 						oncomplete="stop()" onerror="stop()"
-						action="#{lancamentos_v2.estornarLancamentos()}" value="Enviar" />
+						action="#{lancamentos_v2.reverseTransaction()}" value="Enviar" />
 					<p:spacer width="3px" />
 					<p:commandLink update=":form-lancamento-pagamento" immediate="true"
 						styleClass="btn btn-danger" style="color:#ffffff;width:90px"
@@ -763,6 +772,64 @@
 
 			</h:form>
 		</p:dialog>
+
+		<p:dialog header="Cancelar Transação" widgetVar="cancel-transaction"
+			resizable="false" closable="false" modal="true" showEffect="clip"
+			hideEffect="clip">
+			<h:form id="form-cancel-transaction">
+				<p:messages showDetail="true" closable="true" autoUpdate="true" />
+				<p:panelGrid columns="2" styleClass="ui-noborder">
+					<p:outputLabel for="senha" value="Senha:" />
+					<p:password id="senha" label="senha"
+						value="#{lancamentos_v2.aprouve.senha}" required="true" />
+
+				</p:panelGrid>
+
+				<p:separator />
+				<center>
+					<p:commandLink process="form-cancel-transaction,senha"
+						update=":form-lancamento-pagamento" styleClass="btn btn-primary"
+						style="color:#ffffff;width:90px" onclick="start()"
+						oncomplete="stop()" onerror="stop()"
+						action="#{lancamentos_v2.cancelTransaction()}" value="Enviar" />
+					<p:spacer width="3px" />
+					<p:commandLink update=":form-lancamento-pagamento" immediate="true"
+						styleClass="btn btn-danger" style="color:#ffffff;width:90px"
+						value="Cancelar" onclick="PF('cancel-disbursement').hide()" />
+
+				</center>
+			</h:form>
+		</p:dialog>
+
+		
+		<p:dialog header="Reabrir Transação" widgetVar="open-transaction"
+			resizable="false" closable="false" modal="true" showEffect="clip"
+			hideEffect="clip">
+			<h:form id="form-open-transaction">
+				<p:messages showDetail="true" closable="true" autoUpdate="true" />
+				<p:panelGrid columns="2" styleClass="ui-noborder">
+					<p:outputLabel for="senha" value="Senha:" />
+					<p:password id="senha" label="senha"
+						value="#{lancamentos_v2.aprouve.senha}" required="true" />
+
+				</p:panelGrid>
+
+				<p:separator />
+				<center>
+					<p:commandLink process="form-open-transaction,senha"
+						update=":form-lancamento-pagamento" styleClass="btn btn-primary"
+						style="color:#ffffff;width:90px" onclick="start()"
+						oncomplete="stop()" onerror="stop()"
+						action="#{lancamentos_v2.openTransaction()}" value="Enviar" />
+					<p:spacer width="3px" />
+					<p:commandLink update=":form-lancamento-pagamento" immediate="true"
+						styleClass="btn btn-danger" style="color:#ffffff;width:90px"
+						value="Cancelar" onclick="PF('cancel-disbursement').hide()" />
+
+				</center>
+			</h:form>
+		</p:dialog>
+
 
 
 

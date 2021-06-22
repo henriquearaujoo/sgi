@@ -9,6 +9,10 @@ body .ui-widget:not(.pi), body .ui-widget .ui-widget:not(.pi) {
     
 }
 
+.menu-actions{
+	width: 30%
+}
+
 .body-content{
  width: 95%;
  margin-right: auto;

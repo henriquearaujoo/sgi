@@ -252,6 +252,10 @@ public class PagamentoService implements Serializable {
 		return aprouveRepositorio.verificaAprouveEstorno(aprouve);
 	}
 	
+	public Boolean verifyAprouve(Aprouve aprouve) {
+		return aprouveRepositorio.verifyAprouve(aprouve);
+	}
+	
 	public Lancamento getLancamentoById(Long id) {
 		return lancamentoRepositorio.getLancamentoById(id);
 	}
@@ -658,21 +662,28 @@ public class PagamentoService implements Serializable {
 			repositorio.validarReclassificacao(lancamento.getIdPagamento());
 		}
 	}
-	
+		
 	@Transactional 
-	public void desprovisionar(List<LancamentoAuxiliar> list) {		
+	public void cancelTransaction(List<LancamentoAuxiliar> list) {		
 		for (LancamentoAuxiliar lancamento : list) {
-			
-			repositorio.desprovisionar(lancamento.getId());
+			salvarLog(usuarioSessao.getUsuario(), "Cancelamento do lançamento ID "+lancamento.getId(), lancamento.getStatusCompra().name()  , "CANCELADO");
+			repositorio.updateStatusTransaction(lancamento.getId(), "CANCELADO");
 		}
 	}
 	
-	
 	@Transactional 
-	public void estornar(List<LancamentoAuxiliar> lancamentosSelected) throws Exception {		
+	public void openTransaction(List<LancamentoAuxiliar> list) {		
+		for (LancamentoAuxiliar lancamento : list) {
+			salvarLog(usuarioSessao.getUsuario(), "Abertura  do lançamento ID "+lancamento.getId(), lancamento.getStatusCompra().name()  , "NAO_INICIADO");
+			repositorio.updateStatusTransaction(lancamento.getId(), "N_INCIADO");
+		}
+	}
+		
+	@Transactional 
+	public void reverseTransaction(List<LancamentoAuxiliar> lancamentosSelected) throws Exception {		
 		for (LancamentoAuxiliar lancamento : lancamentosSelected) {
-			repositorio.estornar(lancamento.getIdPagamento());
-			salvarLog(usuarioSessao.getUsuario(), "Estorno do Pagamendo ID "+lancamento.getIdPagamento(), "EFETIVADO", "PROVISIONADO");
+			repositorio.reverse(lancamento.getIdPagamento());
+			salvarLog(usuarioSessao.getUsuario(), "Estorno do Pagamento ID "+lancamento.getIdPagamento(), "EFETIVADO", "PROVISIONADO");
 		}
 		
 	}

@@ -339,9 +339,7 @@ public class PagamentoLancamentoRepository {
 
 		// TODO TROCA DO SINALIZADOR
 		hql.append("CASE  WHEN (pl.tipocontapagador = 'CB') ");
-		
-		
-		
+
 		hql.append(" THEN '-' ELSE '+'  END as sinalizador_22, ");
 
 		hql.append("l.tipolancamento as tipo_lancamento_23,");
@@ -393,25 +391,22 @@ public class PagamentoLancamentoRepository {
 		hql.append(" and l.tipo != 'doacao_efetiva' ");
 		hql.append(" and l.tipo != 'custo_pessoal' ");
 		hql.append(" and l.tipo != 'aplicacao_recurso' ");
-		
+
 //		hql.append(" and (false = ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CA'  ");
 //		hql.append(" and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CF')) ");
-		
+
 		hql.append(" and (false = (pl.tipocontapagador = 'CA' and pl.tipocontarecebedor = 'CF')) ");
-		
+
 //		hql.append(" and (false = ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CF'  ");
 //		hql.append(" and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CF')) ");
-		
+
 		hql.append(" and (false = (pl.tipocontapagador = 'CF' and pl.tipocontarecebedor = 'CF')) ");
-		
+
 //		hql.append(" and (false = ((select cb.tipo from conta_bancaria cb where  cb.id  = pl.conta_id) = 'CB' ");
 //		hql.append(" and (select cb.tipo from conta_bancaria cb where  cb.id  = pl.contarecebedor_id) = 'CB')) ");
-		
+
 		hql.append(" and (false = (pl.tipocontapagador = 'CB' and pl.tipocontarecebedor = 'CB')) ");
-		
-		
-		
-		
+
 		if (!filtro.getTarifado()) {
 			hql.append("and l.tipo != 'tarifa_bancaria' ");
 		}
@@ -421,8 +416,7 @@ public class PagamentoLancamentoRepository {
 		if (filtro.getDataInicio() != null) {
 			hql.append(" and pl.datapagamento >= '" + sdf.format(filtro.getDataInicio()) + "' ");
 		}
-		
-		
+
 		if (filtro.getDataFinal() != null) {
 			hql.append(" and pl.datapagamento <= '" + sdf.format(filtro.getDataFinal()) + "' ");
 
@@ -463,8 +457,6 @@ public class PagamentoLancamentoRepository {
 		}
 
 		hql.append(" order by pl.datapagamento asc, l.data_emissao desc");
-		
-		
 
 		Query query = manager.createNativeQuery(hql.toString());
 
@@ -750,7 +742,6 @@ public class PagamentoLancamentoRepository {
 
 		for (Object[] object : result) {
 
-			
 			lAux = new LancamentoAuxiliar();
 			lAux.setIdAdiantamentoDePrestacao(object[26] != null ? new Long(object[26].toString()) : null);
 			lAux.setStatusAdDePrestacao(object[25] != null ? object[25].toString() : "");
@@ -1096,7 +1087,6 @@ public class PagamentoLancamentoRepository {
 		BigDecimal totalEntrada = BigDecimal.ZERO;
 
 		for (Object[] object : result) {
-
 
 			lAux = new LancamentoAuxiliar();
 			lAux.setIdAdiantamentoDePrestacao(object[26] != null ? new Long(object[26].toString()) : null);
@@ -2095,8 +2085,7 @@ public class PagamentoLancamentoRepository {
 				"and (select ro.orcamento_id from rubrica_orcamento  ro where id = la.rubricaorcamento_id) = :id_doacao ");
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		
-		
+
 		if (filtro.getStatusPagamento() != null) {
 			hql.append(" and pl.stt = :stt_pgto ");
 		}
@@ -2145,7 +2134,7 @@ public class PagamentoLancamentoRepository {
 		Query query = manager.createNativeQuery(hql.toString());
 
 		query.setParameter("id_doacao", filtro.getIdDoacao());
-		
+
 		if (filtro.getStatusPagamento() != null) {
 			query.setParameter("stt_pgto", filtro.getStatusPagamento().name());
 		}
@@ -2418,7 +2407,7 @@ public class PagamentoLancamentoRepository {
 		hql.append(" order by l.data_pagamento desc, l.data_emissao desc");
 
 		Query query = manager.createNativeQuery(hql.toString());
-		
+
 		//
 		// if (filtro.getProjetoId() != null) {
 		// query.setParameter("projeto", filtro.getProjetoId());
@@ -2489,14 +2478,22 @@ public class PagamentoLancamentoRepository {
 		query.setParameter("id", id);
 		query.executeUpdate();
 	}
-	
+
+	public void updateStatusTransaction(Long id, String status) {
+		String hql = "update lancamento set statuscompra = :status where id = :id ";
+		Query query = manager.createNativeQuery(hql);
+		query.setParameter("status", status);
+		query.setParameter("id", id);
+		query.executeUpdate();
+	}
+
 	public void estornarLancamento(Long id) throws Exception {
 		String sql = "update pagamento_lancamento pl set pl.stt = 'PROVISIONADO' where (select la.lancamento_id from lancamento_acao la where la.id = pl.lancamentoacao_id) = :pId";
 		Query query = manager.createNativeQuery(sql);
 		query.setParameter("pId", id);
 		query.executeUpdate();
 	}
-	
+
 	public void removerLancamento(Long id) {
 		manager.remove(manager.find(Lancamento.class, id));
 	}
@@ -2539,7 +2536,7 @@ public class PagamentoLancamentoRepository {
 		hql.append("pl.id as id_pagamento_17,");
 		hql.append("pl.stt as status_provisao_18,");
 		hql.append("l.tipo_v4 as tipo_v4_19");
-		
+
 		hql.append(
 				" from lancamento l join lancamento_acao la on l.id = la.lancamento_id join pagamento_lancamento pl on pl.lancamentoacao_id = la.id \n");
 		hql.append(
@@ -2579,7 +2576,7 @@ public class PagamentoLancamentoRepository {
 		if (filtro.getPagador() != null && filtro.getPagador().getId() != null) {
 			hql.append(" and pl.conta_id = :pagador");
 		}
-		
+
 		if (filtro.getFornecedor() != null && filtro.getFornecedor().getId() != null) {
 			hql.append(" and pl.contarecebedor_id = :recebedor");
 		}
@@ -2605,7 +2602,6 @@ public class PagamentoLancamentoRepository {
 
 		Query query = manager.createNativeQuery(hql.toString());
 
-
 		if (filtro.getProjetoId() != null) {
 			query.setParameter("projeto", filtro.getProjetoId());
 		}
@@ -2613,7 +2609,7 @@ public class PagamentoLancamentoRepository {
 		if (filtro.getPagador() != null && filtro.getPagador().getId() != null) {
 			query.setParameter("pagador", filtro.getPagador().getId());
 		}
-		
+
 		if (filtro.getFornecedor() != null && filtro.getFornecedor().getId() != null) {
 			query.setParameter("recebedor", filtro.getFornecedor().getId());
 		}
@@ -2630,17 +2626,14 @@ public class PagamentoLancamentoRepository {
 		List<Object[]> result = query.getResultList();
 
 		LancamentoAuxiliar lAux = new LancamentoAuxiliar();
-		
-		
 
 		for (Object[] object : result) {
 
 			lAux = new LancamentoAuxiliar();
 			// lAux.setAcaoId(new Long(object[0].toString()));
 
-		
 			lAux.setId(new Long(object[0].toString()));
-			
+
 			lAux.setDescricao(object[6].toString());
 			lAux.setFonte(object[7].toString());
 			lAux.setNomeProjeto(object[8] != null ? object[8].toString() : "");
@@ -2660,10 +2653,10 @@ public class PagamentoLancamentoRepository {
 			lAux.setIdPagamento(new Long(object[17].toString()));
 			lAux.setStatus(object[18].toString());
 			lAux.setTipov4(object[19] != null ? object[19].toString() : "");
-			
+
 			retorno.add(lAux);
 		}
-		
+
 		return retorno;
 
 	}
@@ -2755,7 +2748,7 @@ public class PagamentoLancamentoRepository {
 		hql.append(" order by pl.datapagamento desc, l.data_emissao desc");
 
 		Query query = manager.createNativeQuery(hql.toString());
-		
+
 		//
 
 		if (filtro.getProjetoId() != null) {
@@ -2844,7 +2837,7 @@ public class PagamentoLancamentoRepository {
 		hql.append("l.statuscompra as numero_21, ");
 		hql.append("l.idadiantamento as numero_adiantamento_22, ");
 		hql.append("l.tipo_v4 as tipo_v4_23 ");
-		
+
 		hql.append(
 				" from lancamento l join lancamento_acao la on l.id = la.lancamento_id join pagamento_lancamento pl on pl.lancamentoacao_id = la.id \n");
 		hql.append(
@@ -2917,7 +2910,6 @@ public class PagamentoLancamentoRepository {
 		hql.append(" order by pl.datapagamento desc, l.data_emissao desc");
 
 		Query query = manager.createNativeQuery(hql.toString());
-		
 
 		if (filtro.getProjetoId() != null) {
 			query.setParameter("projeto", filtro.getProjetoId());
@@ -2967,7 +2959,7 @@ public class PagamentoLancamentoRepository {
 			lAux = new LancamentoAuxiliar();
 			// lAux.setAcaoId(new Long(object[0].toString()));
 			lAux.setId(new Long(object[0].toString()));
-			
+
 			lAux.setDescricao(object[6].toString());
 			lAux.setFonte(object[7].toString());
 			lAux.setNomeProjeto(object[8] != null ? object[8].toString() : "");
@@ -2991,7 +2983,7 @@ public class PagamentoLancamentoRepository {
 			lAux.setStatusCompra(object[21] != null ? StatusCompra.valueOf(object[21].toString()) : null);
 			lAux.setIdAdiantamentoDePrestacao(object[22] != null ? Long.valueOf(object[22].toString()) : null);
 			lAux.setTipov4(object[23] != null ? object[23].toString() : "");
-			
+
 			retorno.add(lAux);
 		}
 
@@ -3002,7 +2994,7 @@ public class PagamentoLancamentoRepository {
 		StringBuilder hql = new StringBuilder(" select ");
 		preparaHqlPagamentosPEMODE01(filtro, hql);
 		Query query = manager.createNativeQuery(hql.toString());
-		
+
 		prepararQueryPagamentoPEMODE01(query, filtro);
 		List<PagamentoPE> pagamentos = new ArrayList<>();
 		List<Object[]> result = query.getResultList();
@@ -3075,8 +3067,7 @@ public class PagamentoLancamentoRepository {
 		return query.getResultList().size() > 0 ? (SolicitacaoPagamento) query.getResultList().get(0) : null;
 
 	}
-	
-	
+
 	public SolicitacaoPagamento verificarNotaFiscal(String nf, Long id, Long idConta) {
 		String jpql = "from SolicitacaoPagamento av where lower(av.notaFiscal) = lower(:nota) and av.contaRecebedor.id = :idConta and av.id != :id";
 		Query query = manager.createQuery(jpql);
@@ -3323,32 +3314,39 @@ public class PagamentoLancamentoRepository {
 	public BigDecimal getTarifa() {
 		String jpql = "select c from Configuracao c ";
 		Query query = manager.createQuery(jpql);
-		Configuracao config =  (Configuracao) query.getSingleResult();
-		if(config.getValorTarifaBancaria() == null)
+		Configuracao config = (Configuracao) query.getSingleResult();
+		if (config.getValorTarifaBancaria() == null)
 			return new BigDecimal("0");
 		else
 			return config.getValorTarifaBancaria();
 	}
 
 	public void estornar(Long id) {
-			String hql = "update pagamento_lancamento set stt = 'PROVISIONADO' where id = :id ";
-			Query query = manager.createNativeQuery(hql);
-			query.setParameter("id", id);
-			query.executeUpdate();
-		
+		String hql = "update pagamento_lancamento set stt = 'PROVISIONADO' where id = :id ";
+		Query query = manager.createNativeQuery(hql);
+		query.setParameter("id", id);
+		query.executeUpdate();
+
 	}
 
-	
+	public void reverse(Long id) {
+		String hql = "update pagamento_lancamento set stt = 'PROVISIONADO' where id = :id ";
+		Query query = manager.createNativeQuery(hql);
+		query.setParameter("id", id);
+		query.executeUpdate();
+
+	}
+
 	public Boolean salvarLog(Log log) {
 		try {
 			manager.merge(log);
 			return true;
-		}catch (Exception e) {
+		} catch (Exception e) {
 			return false;
 		}
-		
+
 	}
-	
+
 //	public verificaEntrada(LancamentoAcao lancamentoAcao) {
 //		
 //	}
