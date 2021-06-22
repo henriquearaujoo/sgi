@@ -1041,7 +1041,6 @@ public class OrcamentoController implements Serializable {
 	
 	public void filtroOrcamento() {
 		orcamentos = orcamentoService.filtrarOrcamentos(filtro);
-		limparFiltro();
 	}
 	/////////////////////////////
 
