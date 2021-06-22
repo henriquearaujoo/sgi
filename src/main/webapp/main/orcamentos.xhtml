@@ -56,10 +56,8 @@
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
 						<p:outputLabel for="filter-title" value="Título:"
 							styleClass="form-label" />
-						<p:autoComplete id="filter-title" styleClass="font12-vi" 
-							value="#{orcamento_controller.filtro.titulo}"
-							scrollHeight="250"
-							completeMethod="#{orcamento_controller.completeTitulo}" />
+						<p:inputText id="filter-title"
+							value="#{orcamento_controller.filtro.titulo}" />
 					</div>
 
 
@@ -115,8 +113,6 @@
 							onerror="stop()" oncomplete="stop();"
 							style="color:#fff; margin: 8px 2px;" value="Buscar" />
 
-
-
 					</div>
 
 				</div>
@@ -135,10 +131,14 @@
 					</p:column>
 
 					<p:column headerText="Data inicial" style="text-align:center">
-						<h:outputText value="#{doacao.dataInicio}" />
+						<h:outputText value="#{doacao.dataInicio}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
 					</p:column>
 					<p:column headerText="Data final" style="text-align:center">
-						<h:outputText value="#{doacao.dataFinal}" />
+						<h:outputText value="#{doacao.dataFinal}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
 					</p:column>
 
 					<p:column headerText="Responsável técnico"

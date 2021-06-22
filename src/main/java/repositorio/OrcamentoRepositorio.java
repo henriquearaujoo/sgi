@@ -539,22 +539,22 @@ public class OrcamentoRepositorio implements Serializable {
 
 		if(filtro.getResponsavelTecnico() != null && filtro.getResponsavelTecnico().getId() != null) {
 			filtro.setResponsavelTecnico(filtro.getResponsavelTecnico());
-			jpql.append("and o.responsavelTecnico.id = :responsavelTecnico ");
+			jpql.append("and lower(o.responsavelTecnico.nome) like lower(:responsavelTecnico) ");
 		}
 
 		if(filtro.getColaborador() != null && filtro.getColaborador().getId() != null) {
 			filtro.setColaborador(filtro.getColaborador());
-			jpql.append("and o.colaborador.id = :colaborador ");
+			jpql.append("and lower(o.colaborador.nome) like lower(:colaborador) ");
 		}
 
 		if(filtro.getFontePagadora() != null && filtro.getFontePagadora().getId() != null) {
 			filtro.setFontePagadora(filtro.getFontePagadora());
-			jpql.append("and o.fonte.id = :fonte ");
+			jpql.append("and lower(o.fonte.nome) like lower(:fonte) ");
 		}
 
-		if(filtro.getTitulo() != null && filtro.getTitulo().length() > 0) {
+		if(filtro.getTitulo() != null && !filtro.getTitulo().equals("")) {
 			filtro.setTitulo(filtro.getTitulo());
-			jpql.append("and o.titulo = (:titulo) ");	
+			jpql.append("and lower(o.titulo) like lower(:titulo) ");	
 		}
 		
 		if (filtro.getDataInicio() != null || filtro.getDataFinal() != null) {
@@ -572,16 +572,16 @@ public class OrcamentoRepositorio implements Serializable {
 		Query query = this.manager.createQuery(jpql.toString());
 
 		if(filtro.getResponsavelTecnico() != null && filtro.getResponsavelTecnico().getId() != null) {
-			query.setParameter("responsavelTecnico", filtro.getResponsavelTecnico().getId());
+			query.setParameter("responsavelTecnico", ""+filtro.getResponsavelTecnico().getNome()+"%");
 		}
 		if(filtro.getColaborador() != null && filtro.getColaborador().getId() != null) {
-			query.setParameter("colaborador", filtro.getColaborador().getId());
+			query.setParameter("colaborador", ""+filtro.getColaborador().getNome()+"%");
 		}
 		if(filtro.getFontePagadora() != null && filtro.getFontePagadora().getId() != null) {
-			query.setParameter("fonte", filtro.getFontePagadora().getId());
+			query.setParameter("fonte", ""+filtro.getFontePagadora().getNome()+"%");
 		}
-		if(filtro.getTitulo() != null && filtro.getTitulo().length() > 0) {			
-			query.setParameter("titulo", filtro.getTitulo());
+		if(filtro.getTitulo() != null && !filtro.getTitulo().equals("")) {			
+			query.setParameter("titulo", "%"+filtro.getTitulo()+"%");
 		}
 		
 		if (filtro.getDataInicio() != null || filtro.getDataFinal() != null) {
