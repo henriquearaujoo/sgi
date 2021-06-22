@@ -131,7 +131,7 @@ public class Colaborador extends Person implements Serializable {
 		return cargo_string;
 	}
 
-	public void setCargo(String cargoString) {
+	public void setCargoString(String cargoString) {
 		this.cargo_string = cargoString;
 	}
 
