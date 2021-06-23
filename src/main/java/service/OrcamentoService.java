@@ -20,6 +20,7 @@ import org.apache.commons.digester.plugins.PluginAssertionFailure;
 import anotacoes.Transactional;
 import repositorio.ComposicaoOrcamentoRepositorio;
 import repositorio.ContaRepository;
+import repositorio.LogRepositorio;
 import repositorio.OrcamentoRepositorio;
 import repositorio.PagamentoLancamentoRepository;
 import repositorio.PlanoTrabalhoRepositorio;
@@ -27,6 +28,7 @@ import repositorio.ProjetoRepositorio;
 import repositorio.RubricaRepositorio;
 import repositorio.TransferenciaOverHeadRepositorio;
 import util.Filtro;
+import util.UsuarioSessao;
 
 public class OrcamentoService implements Serializable {
 
@@ -46,6 +48,10 @@ public class OrcamentoService implements Serializable {
 	private @Inject PlanoTrabalhoRepositorio planoRepositorio;
 	private @Inject TransferenciaOverHeadRepositorio overHeadRepositorio;
 	private @Inject ComposicaoOrcamentoRepositorio compOrcamentoRepositorio;
+	private @Inject LogRepositorio logRepositorio;
+	
+	@Inject
+	private UsuarioSessao usuarioSessao;
 
 	public List<PlanoDeTrabalho> getPlanos() {
 		return planoRepositorio.getPlanos();
@@ -176,7 +182,9 @@ public class OrcamentoService implements Serializable {
 
 	@Transactional
 	public RubricaOrcamento salvarRubricaOrcamento(RubricaOrcamento rubricaOrcamento) {
-		return repositorio.salvarRubricaOrcamento(rubricaOrcamento);
+		rubricaOrcamento = repositorio.salvarRubricaOrcamento(rubricaOrcamento);
+		salvarLog(usuarioSessao.getUsuario(), "Edição de linha ID "+rubricaOrcamento.getId(), "EFETIVADO", "PROVISIONADO");		
+		return rubricaOrcamento;
 	}
 
 	@Transactional
@@ -419,6 +427,18 @@ public class OrcamentoService implements Serializable {
 				return false;
 			}
 		}
+		
+	}
+	
+
+	public void salvarLog(User usuario,String descricao,String estadoAnterior,String estadoAtual) {
+		LogLinesBudget log = new LogLinesBudget();
+		log.setDateEdit(new Date());
+		log.setDescricao(descricao);
+		log.setEstadoAnterior(estadoAnterior);
+		log.setEstadoNovo(estadoAtual);
+		log.setUsuario(usuario.getNomeUsuario());
+		logRepositorio.salvarLogLineBudget(log);
 		
 	}
 	
