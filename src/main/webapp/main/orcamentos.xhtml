@@ -25,14 +25,11 @@
 			<span style="padding: 24px">Novo cadastro</span>
 		</p:link>
 
-
-		<h:form id="form_listagem_orcamento">
+		<h:form id="form_listagem_orcamento" acceptcharset="ISO-8859-1">
 
 			<p:messages showSummary="false" showDetail="true" closable="true">
 				<p:autoUpdate></p:autoUpdate>
 			</p:messages>
-
-
 
 			<p:breadCrumb>
 				<p:menuitem value="Categories" url="home_new.xhtml" />
@@ -58,11 +55,11 @@
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
 						<p:outputLabel for="filter-title" value="Título:"
 							styleClass="form-label" />
-						
+
 						<p:autoComplete id="filter-title" styleClass="font12-vi"
 							value="#{orcamento_controller.filtro.titulo}" scrollHeight="250"
 							completeMethod="#{orcamento_controller.completeTitulo}" />
-						
+
 					</div>
 
 
