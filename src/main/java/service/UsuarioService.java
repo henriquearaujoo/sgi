@@ -141,14 +141,16 @@ public class UsuarioService implements Serializable {
 		return repositorio.findUsuarioProjeto(projetoSelecionado, usuario);
 	}
 	
-	public void popupUsuario() {
-		HashMap<String, Object> options = new HashMap<String, Object>();
-		options.put("height", "90%");
-		options.put("width", "50%");
-		options.put("contentWidth", "100%");
-		options.put("contentHeight", "100%");
-		options.put("resizable", false);
-		PrimeFaces.current().dialog().openDynamic("home/usuario.xhtml", options, null);
-	}
+//	public void popupUsuario() {
+//		HashMap<String, Object> options = new HashMap<String, Object>();
+//		options.put("height", "98%");
+//		options.put("width", "35%");
+//		options.put("contentWidth", "100%");
+//		options.put("contentHeight", "100%");
+//		options.put("resizable", false);
+//		options.put("draggable", true);
+//		options.put("showEffect", "clip");
+//		PrimeFaces.current().dialog().openDynamic("home/usuario.xhtml", options, null);
+//	}
 
 }

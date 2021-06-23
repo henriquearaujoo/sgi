@@ -55,9 +55,9 @@ public class UsuarioControllerAtt implements Serializable {
 	private Email email;
 	
 	// pop-up do usuário
-	public void popupUsuario() {
-		usuarioService.popupUsuario();
-	}
+//	public void popupUsuario() {
+//		usuarioService.popupUsuario();
+//	}
 
 	// metodo para buscar por string parcial o colaborador
 	public List<Colaborador> completeColaborador(String s) {

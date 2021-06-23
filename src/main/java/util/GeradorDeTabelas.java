@@ -588,7 +588,7 @@ public class GeradorDeTabelas {
 				colaborador.setDataDeNascimento(dataNascimento);
 				colaborador.setNome(nome);
 				colaborador.setRg(rg);
-				colaborador.setCargo(cargo);
+				//colaborador.setCargo(cargo);
 				colaborador.setControlaPonto(controlePonto);
 				colaborador.setCtpsSerieUf(ctps);
 				colaborador.setEnsinoFundamentalMedio(ensinoFundamental);

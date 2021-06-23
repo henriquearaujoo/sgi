@@ -311,22 +311,49 @@ body .ui-fileupload .ui-fileupload-content {
 	<script type="text/javascript" src="../resources/js/tabs.js"></script>
 	<script type="text/javascript" src="../resources/js/mascaras.js"></script>
 
-
-
+	<style>
+body .ui-dialog .ui-dialog-content {
+	background-color: #32be8f;
+	border: 1px solid #32be8f;
+	padding: 0;
+}
+</style>
 
 </h:head>
 
 <h:body>
+	<script type="text/javascript">
+		function start() {
+			PF('statusDialog').show();
+		}
+
+		function stop() {
+			PF('statusDialog').hide();
+		}
+
+		function setarWidthHeight(id) {
+			var htmlTag = document.getElementById(id);
+			htmlTag.style.height = Math.floor(window.innerHeight * 0.98) + "px";
+			htmlTag.style.width = Math.floor(window.innerWidth * 0.98) + "px";
+
+		}
+	</script>
 
 
 	<h:form id="form-layout">
 
+		<p:dialog id="perfil_dialog" header="" widgetVar="dialog_perfil"
+			hideEffect="clip" closeOnEscape="true" showEffect="clip" width="30%"
+			draggable="false">
+			<ui:include src="/main/home/usuario.xhtml"></ui:include>
+		</p:dialog>
+
+
 		<ul id="profile-menu" class="profile-menu fadeInDown  js-profile-menu">
 
 
-
-			<li><p:commandLink action="#{usuario_controller.popupUsuario()}"
-					ignoreAutoUpdate="true">
+			<li><p:commandLink onclick="PF('dialog_perfil').show(); "
+					onsuccess="stop();" onerror="stop();">
 					<span>Perfil</span>
 				</p:commandLink></li>
 
