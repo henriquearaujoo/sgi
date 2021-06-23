@@ -56,7 +56,7 @@
 
 			<div style="margin-bottom: 50px;">
 
-				<p:tabView id="tab_cadastro" binding="#{projetoBean.tabviewProjeto}"
+				<p:tabView id="tab_projeto" binding="#{projetoBean.tabviewProjeto}"
 					scrollable="true">
 
 					<p:ajax event="tabChange"
@@ -70,8 +70,7 @@
 						<ui:include src="/main/project/info_gerais.xhtml" />
 					</p:tab>
 
-					<p:tab id="enquad" title="Enquadramento"
-						rendered="#{projetoBean.projeto.id != null}">
+					<p:tab id="enquad" title="Enquadramento">
 						<ui:include src="/main/project/enquadramento.xhtml" />
 					</p:tab>
 
@@ -100,8 +99,8 @@
 						<ui:include src="/main/projeto_tab08.xhtml" />
 					</p:tab>
 
-					<p:tab id="graf_projeto" title="Gráficos"
-						rendered="#{projetoBean.projeto.id != null}">
+					<p:tab id="graf_projeto" title="Gráficos" 
+						rendered="false">
 						<ui:include src="/main/project/projeto_tab10.xhtml" />
 					</p:tab>
 
@@ -137,7 +136,8 @@
 								action="#{projetoBean.salvarMODE01()}" oncomplete="stop()"
 								style="color:#fff; margin: 2px;" onstart="start();"
 								update=":form-cadastro-projeto"
-								onsuccess="stop();" onerror="stop();" process=":form-cadastro-projeto:tab_cadastro:panel-info-geral, :form-cadastro-projeto:tab_cadastro:panel-enquadramento"> 
+								process="@this,:form-cadastro-projeto:tab_projeto:panel-info-geral, :form-cadastro-projeto:tab_projeto:panel-enquadramento"
+								onsuccess="stop();" onerror="stop();"> 
 								<span class="glyphicon glyphicon-floppy-disk"></span>
 								<span style="margin: 3px;">Salvar</span>
 							</p:commandLink>
@@ -365,7 +365,7 @@
 					style="width: 100%; margin: 0px 1px 16px 2px;">
 					<p:commandLink styleClass="btn btn-primary btn-sm"
 						action="#{projetoBean.salvarAtividade()}"
-						update=":form-cadastro-projeto:tab_cadastro, :form-cadastro-atividade:msg-frontal-atividade"
+						update=":form-cadastro-atividade:msg-frontal-atividade"
 						style="color:#fff; padding:8px 16px;margin: 2px 2px;"
 						value="Salvar" />
 
@@ -478,11 +478,10 @@
 					<p:commandLink styleClass="btn btn-primary btn-sm"
 						action="#{projetoBean.salvarMetas()}" onclick="start()"
 						onsuccess="stop()" onerror="stop()" process="form-cadastro-metas"
-						update=":form-cadastro-projeto:tab_cadastro"
 						style="color:#fff; margin: 2px 2px;" value="Salvar" />
 
 				</div>
-
+				
 				<p:panel id="panel-form-nova-metas">
 					<div class="ui-g ui-fluid">
 						<div class="ui-g-3 form-group focused">

@@ -57,7 +57,7 @@
 					<p:commandLink styleClass="btn btn-success btn-sm"
 						style="margin-left:10px;color:white; height: 30px; margin-top: 12px"
 						title="Salvar" process="panel-relacao-orcamento"
-						update="panel-relacao-orcamento,tab_cadastro"
+						update="panel-relacao-orcamento"
 						action="#{projetoBean.salvarOrcamentoProjeto()}">
 						<span class="glyphicon glyphicon-plus"></span>
 						<span style="margin: 3px;">Incluir</span>
@@ -111,7 +111,7 @@
 							<span class="glyphicon glyphicon-edit"></span>
 						</p:commandLink>
 
-						<p:commandLink update="table-relacao,tab_cadastro"
+						<p:commandLink update="table-relacao"
 							disabled="#{relacao.status == 'Aprovado'}"
 							style="margin-left:5px;font-size:12px;color:#fff"
 							styleClass="btn btn-danger btn-xs" process="@this"
@@ -252,7 +252,7 @@
 
 							<p:column style="width:80px">
 
-								<p:commandLink update="tab_cadastro:panel-relacao-rubrica"
+								<p:commandLink 
 									process="@this"
 									action="#{projetoBean.preparaEdicaoRubricaProjeto()}"
 									styleClass="btn btn-default btn-xs ">
@@ -263,7 +263,6 @@
 
 								<p:commandLink style="color:#FFF;margin-left:5px"
 									styleClass="btn btn-danger btn-xs " process="@this"
-									update="tab_cadastro:panel_saldo_orcamento table-relacao-rubrica"
 									action="#{projetoBean.removerProjetoRubrica()}">
 									<span class="glyphicon glyphicon-remove-circle"></span>
 									<f:setPropertyActionListener value="#{projetoRubrica}"

@@ -535,7 +535,7 @@ public class ProjetoBean implements Serializable {
 		projeto = new Projeto();
 		projeto = projetos.size() > 0 ? projetos.get(0) : new Projeto();
 		// carregarComponentes();
-		popularTreeTable();
+		//popularTreeTable();
 		// createChart();
 	}
 
@@ -543,8 +543,8 @@ public class ProjetoBean implements Serializable {
 		// createMultiAxisModel();
 		carregarDetalhes();
 
-		if (projeto != null && projeto.getId() != null)
-			createChartExecucao();
+		//if (projeto != null && projeto.getId() != null)
+			//createChartExecucao();
 
 	}
 
@@ -747,11 +747,11 @@ public class ProjetoBean implements Serializable {
 			c2.set(Calendar.DAY_OF_MONTH, 31);
 			projeto.setDataFinal(c2.getTime());
 		}
-		carregarComponentes();
-		carregarSubComponentes();
+		//carregarComponentes();
+		//carregarSubComponentes();
 		// carregarRelacaoDeOrcamentos();
 		findObjetivoByIdProjeto();
-		fetchPlanes();
+		//fetchPlanes();
 		carregarCadeias();
 		carregarSubProgramas();
 		// carregarQualifs();

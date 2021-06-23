@@ -120,10 +120,8 @@ td.jqplot-table-legend {
 				</p:panelGrid>
 			</f:facet>
 
-			<p:ajax event="rowEdit" listener="#{projetoBean.onRowEdit}"
-				update="tab_cadastro:msg_grant tab_cadastro:tabela_atividade_planejado" />
-			<p:ajax event="rowEditCancel" listener="#{projetoBean.onRowCancel}"
-				update="tab_cadastro:msg_grant" />
+			<p:ajax event="rowEdit" listener="#{projetoBean.onRowEdit}"/>
+			<p:ajax event="rowEditCancel" listener="#{projetoBean.onRowCancel}"/>
 
 
 			<p:column style="width:25px" exportable="false">
@@ -429,11 +427,10 @@ td.jqplot-table-legend {
 			</f:facet>
 
 
-			<p:ajax event="rowEdit" listener="#{projetoBean.onRowEditExec}"
-				update="tab_cadastro:msg_grant  tab_cadastro:tabela_atividade_executado" />
+			<p:ajax event="rowEdit" listener="#{projetoBean.onRowEditExec}"/>
 			<p:ajax event="rowEditCancel"
 				listener="#{projetoBean.onRowCancelExec}"
-				update="tab_cadastro:msg_grant" />
+				 />
 
 			<p:column style="width:25px" exportable="false">
 				<p:rowEditor />
@@ -747,9 +744,9 @@ td.jqplot-table-legend {
 			</f:facet>
 
 			<p:ajax event="rowEdit" listener="#{projetoBean.onRowEdit}"
-				update="tab_cadastro:msg_grant" />
+				 />
 			<p:ajax event="rowEditCancel" listener="#{projetoBean.onRowCancel}"
-				update="tab_cadastro:msg_grant" />
+				 />
 
 
 			<p:column style="width:25px" exportable="false">
