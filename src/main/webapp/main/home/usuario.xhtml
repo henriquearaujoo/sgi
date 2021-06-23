@@ -20,11 +20,12 @@ body {
 
 .container {
 	background-color: #32be8f;
-	padding: 20px;
+	padding: 0;
+	/*padding: 20px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	min-height: 100vh;
+	min-height: 100vh;*/
 }
 
 .about-container {
@@ -33,11 +34,12 @@ body {
 
 .card {
 	position: relative;
-	width: 400px;
+	/*width: 400px;*/
 	background-color: #fff;
 	border-radius: 5px;
 	box-shadow: 0 5px 15px 1px rgba(0, 0, 0, 0.1);
 	overflow: hidden;
+	border: 1px solid #32be8f;
 }
 
 .card:before {
@@ -132,7 +134,7 @@ body {
 	width: 110px;
 	height: 110px;
 	border-radius: 50%;
-	background: url("../../resources/image/admin.jpg") no-repeat center/cover;
+	background: url("../resources/image/admin.jpg") no-repeat center/cover;
 	border: 4px solid #f77900;
 	margin-bottom: 2px;
 	overflow: hidden;
@@ -179,7 +181,7 @@ body {
 
 .content {
 	display: flex;
-	padding: 1.7rem 2.5rem 2.6rem 2.5rem;
+	padding: 1.7rem 2.5rem 1rem 2.5rem;
 }
 
 .right {
@@ -433,55 +435,71 @@ body {
 		border-radius: 14.6px;
 		font-size: 0.6rem;
 	}
+	body .ui-panel .ui-panel-content {
+		border: 1px solid #32be8f !important;
+		background-color: #32be8f !important;
+	}
 	
+	body .ui-dialog .ui-dialog-content {
+		padding: 0;
+	}
 }
 </style>
-	<div class="modal">
-		<img src="img/profile.jpg" alt="oi" />
-		<div class="close"></div>
-	</div>
+	
+		<div class="modal">
+			<img src="img/profile.jpg" alt="oi" />
+			<div class="close"></div>
+		</div>
 
-	<div class="container">
-		<div class="card">
-			<div class="header">
-				<div class="hamburger-menu">
-					<div class="center"></div>
-				</div>
-				<a href="#" class="mail"> <i class="far fa-envelope"></i>
-				</a>
-				<div class="main">
-					<div class="image">
-						<div class="hover">
-							<i class="fas fa-camera fa-2x"></i>
+		<div class="container">
+			<div class="card">
+				<div class="header">
+					<div class="main">
+						<div class="image">
+							<div class="hover">
+								<i class="fas fa-camera fa-2x"></i>
+							</div>
 						</div>
+						<h3 class="name">
+							<h:outputText value="#{sessaoBean.usuario.colaborador.nome}" />
+						</h3>
+						<h3 class="sub-name">
+							<h:outputText value="@#{sessaoBean.usuario.nomeUsuario}" />
+						</h3>
+						<h3 class="sub-name">
+							<h:outputText value="#{sessaoBean.usuario.perfil.descricao}" />
+						</h3>
 					</div>
-					<h3 class="name"><h:outputText value="#{sessaoBean.usuario.colaborador.nome}" /> </h3>
-					<h3 class="sub-name">@<h:outputText value="#{sessaoBean.usuario.nomeUsuario}" /></h3>
-					<h3 class="sub-name"><h:outputText value="#{sessaoBean.usuario.perfil.descricao}" /></h3>
 				</div>
-			</div>
 
-			<div class="content">
-				<div class="left">
-					<div class="about-container">
-						<h3 class="title">Email</h3>
-						<p class="text"><h:outputText value="#{sessaoBean.usuario.email}" /></p>
-					</div>
-					<div class="about-container">
-						<h3 class="title">Cargo</h3>
-						<p class="text"><h:outputText value="#{sessaoBean.usuario.colaborador.cargoString}" /></p>
-					</div>
+				<div class="content">
+					<div class="left">
+						<div class="about-container">
+							<h3 class="title">Email</h3>
+							<p class="text">
+								<h:outputText value="#{sessaoBean.usuario.email}" />
+							</p>
+						</div>
+						<div class="about-container">
+							<h3 class="title">Cargo</h3>
+							<p class="text">
+								<h:outputText
+									value="#{sessaoBean.usuario.colaborador.cargoString}" />
+							</p>
+						</div>
 
-					<div class="about-container">
-						<h3 class="title">Coordenadoria</h3>
-						<p class="text"><h:outputText value="#{sessaoBean.usuario.colaborador.gestao.nome}" /></p>
+						<div class="about-container">
+							<h3 class="title">Coordenadoria</h3>
+							<p class="text">
+								<h:outputText
+									value="#{sessaoBean.usuario.colaborador.gestao.nome}" />
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<script src="app.js"></script>
 
-
+	
 
 </ui:fragment>
