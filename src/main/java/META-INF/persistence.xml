@@ -12,10 +12,10 @@
 			<property name="hibernate.show_sql" value="false"/>
 			<property name="hibernate.format_sql" value="false"/>
 			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-			<property name="javax.persistence.jdbc.user" value="caio"/>
+			<property name="javax.persistence.jdbc.user" value="postgres"/>
+			<property name="javax.persistence.jdbc.password" value="123456"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/fas_beta"/>
 
-			<property name="javax.persistence.jdbc.password" value="caio16532"/>
-			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/fas"/>
  
 		</properties>
 	</persistence-unit>
