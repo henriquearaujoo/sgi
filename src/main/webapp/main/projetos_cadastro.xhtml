@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -55,70 +54,114 @@
 			</p:breadCrumb>
 
 
+			<div style="margin-bottom: 50px;">
 
-			<p:tabView id="tab_cadastro" binding="#{projetoBean.tabviewProjeto}" scrollable="true">
+				<p:tabView id="tab_cadastro" binding="#{projetoBean.tabviewProjeto}"
+					scrollable="true">
 
-				<p:ajax event="tabChange"
-					listener="#{projetoBean.definirTabProjeto()}" onstart="start();"
-					onsuccess="stop();" onerror="stop();"
-					update="form-cadastro-projeto" />
-
-
-
-				<p:tab id="cadastro_projeto" title="Informações gerais">
-					<ui:include src="/main/project/info_gerais.xhtml" />
-				</p:tab>
-				
-				<p:tab id="enquad" title="Enquadramento">
-					<ui:include src="/main/project/enquadramento.xhtml" />
-				</p:tab>
-
-				<p:tab id="objetivos" title="Objetivos">
-					<ui:include src="/main/project/objetivos.xhtml" />
-				</p:tab>
-
-				<p:tab id="cadastro_objetivos" title="Indicadores/Métricas"
-					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/project/projeto_tab09.xhtml" />
-				</p:tab>
-
-				<p:tab id="categoria_projeto" title="Atividades"
-					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/project/projeto_tab07.xhtml" />
-				</p:tab>
-
-				<p:tab id="cadastro_rubrica" title="Orçamento"
-					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/project/projeto_tab02.xhtml" />
-				</p:tab>
-
-				<p:tab id="planejamento_projeto" title="Cronograma"
-					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/projeto_tab08.xhtml" />
-				</p:tab>
-
-				<p:tab id="graf_projeto" title="Gráficos"
-					rendered="#{projetoBean.projeto.id != null}">
-					<ui:include src="/main/project/projeto_tab10.xhtml" />
-				</p:tab>
-
-				<p:tab id="painelIndicadores"
-					rendered="#{projetoBean.projeto.id != null}"
-					title="Painel de Indicadores">
-					<ui:include src="/main/projeto_tab11.xhtml" />
-				</p:tab>
-
-				<p:tab rendered="false" id="atividade_projeto"
-					title="Linhas dos projetos">
-					<ui:include src="/main/project/projeto_tab05.xhtml" />
-				</p:tab>
-
-				<p:tab rendered="false" id="extrato_projeto" title="Extrato">
-					<ui:include src="/main/project/projeto_tab04.xhtml" />
-				</p:tab>
+					<p:ajax event="tabChange"
+						listener="#{projetoBean.definirTabProjeto()}" onstart="start();"
+						onsuccess="stop();" onerror="stop();"
+						update="form-cadastro-projeto" />
 
 
-			</p:tabView>
+
+					<p:tab id="cadastro_projeto" title="Informações gerais">
+						<ui:include src="/main/project/info_gerais.xhtml" />
+					</p:tab>
+
+					<p:tab id="enquad" title="Enquadramento"
+						rendered="#{projetoBean.projeto.id != null}">
+						<ui:include src="/main/project/enquadramento.xhtml" />
+					</p:tab>
+
+					<p:tab id="objetivos" title="Objetivos"
+						rendered="#{projetoBean.projeto.id != null}">
+						<ui:include src="/main/project/objetivos.xhtml" />
+					</p:tab>
+
+					<p:tab id="cadastro_objetivos" title="Indicadores/Métricas"
+						rendered="#{projetoBean.projeto.id != null}">
+						<ui:include src="/main/project/projeto_tab09.xhtml" />
+					</p:tab>
+
+					<p:tab id="categoria_projeto" title="Atividades"
+						rendered="#{projetoBean.projeto.id != null}">
+						<ui:include src="/main/project/projeto_tab07.xhtml" />
+					</p:tab>
+
+					<p:tab id="cadastro_rubrica" title="Orçamento"
+						rendered="#{projetoBean.projeto.id != null}">
+						<ui:include src="/main/project/projeto_tab02.xhtml" />
+					</p:tab>
+
+					<p:tab id="planejamento_projeto" title="Cronograma"
+						rendered="#{projetoBean.projeto.id != null}">
+						<ui:include src="/main/projeto_tab08.xhtml" />
+					</p:tab>
+
+					<p:tab id="graf_projeto" title="Gráficos"
+						rendered="#{projetoBean.projeto.id != null}">
+						<ui:include src="/main/project/projeto_tab10.xhtml" />
+					</p:tab>
+
+					<p:tab id="painelIndicadores"
+						rendered="#{projetoBean.projeto.id != null}"
+						title="Painel de Indicadores">
+						<ui:include src="/main/projeto_tab11.xhtml" />
+					</p:tab>
+
+					<p:tab rendered="false" id="atividade_projeto"
+						title="Linhas dos projetos">
+						<ui:include src="/main/project/projeto_tab05.xhtml" />
+					</p:tab>
+
+					<p:tab rendered="false" id="extrato_projeto" title="Extrato">
+						<ui:include src="/main/project/projeto_tab04.xhtml" />
+					</p:tab>
+
+
+				</p:tabView>
+
+			</div>
+
+			<div class="fixed-btn">
+
+				<p:panel id="btn-panel">
+					<div id="btn-panel-wizard" class="ui-g ui-fluid"
+						style="margin-bottom: 10px">
+
+						<div class="ui-g-12">
+												
+							<p:commandLink styleClass="btn btn-success btn-sm "
+								action="#{projetoBean.salvarMODE01()}" oncomplete="stop()"
+								style="color:#fff; margin: 2px;" onstart="start();"
+								update=":form-cadastro-projeto"
+								onsuccess="stop();" onerror="stop();" process=":form-cadastro-projeto:tab_cadastro:panel-info-geral, :form-cadastro-projeto:tab_cadastro:panel-enquadramento"> 
+								<span class="glyphicon glyphicon-floppy-disk"></span>
+								<span style="margin: 3px;">Salvar</span>
+							</p:commandLink>
+							
+							<p:commandLink style="color:#FFF;margin-left:5px"
+								value="Aprovar Projeto" styleClass="btn btn-primary btn-sm"
+								oncomplete="PF('dlgAprovacaoProjeto').show()" process="@this"
+								rendered="#{projetoBean.podeAprovar(null)}">
+								<span class="glyphicon glyphicon-ok"></span>
+								<span style="margin: 3px;">Aprovar Projeto</span>
+							</p:commandLink>
+							
+							<p:link styleClass="btn btn-danger btn-sm"
+								style="margin-left:5px;color:#fff" title="Cancelar"
+								outcome="/main/projetos">
+								<span class="glyphicon glyphicon-remove"></span>
+								<span style="margin: 3px;">Sair</span>
+							</p:link>
+						</div>
+
+					</div>
+
+				</p:panel>
+			</div>
 
 			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
 				<p:commandButton value="Sim" type="button"
@@ -538,14 +581,13 @@
 
 						<div class="ui-g-4 form-group focused">
 							<p:outputLabel value="Descrição" for="descricao_indicador" />
-							<p:inputText  id="descricao_indicador"
-								 maxlength="255"
+							<p:inputText id="descricao_indicador" maxlength="255"
 								value="#{projetoBean.indicador.descricao}" />
 						</div>
 					</div>
 				</p:panel>
 
-				
+
 			</h:form>
 		</p:dialog>
 

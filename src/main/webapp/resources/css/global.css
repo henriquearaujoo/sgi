@@ -9,6 +9,19 @@ body .ui-widget:not(.pi), body .ui-widget .ui-widget:not(.pi) {
     
 }
 
+div[id="info-geral"], div[id="enquadramento"] {
+	margin: 30px 24px 0px 24px; 
+}
+
+div[id="enquadramento"] > * {
+	padding: 20px; 
+}
+
+div[id="info-geral"] > * {
+	padding: 20px; 
+}
+
+
 .menu-actions{
 	width: 30%
 }
