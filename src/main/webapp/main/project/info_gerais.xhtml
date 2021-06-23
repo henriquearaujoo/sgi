@@ -1,0 +1,169 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<p:panel id="panel-info-geral">
+		<div id="div_acoes" class="botao_central" align="left"
+			style="width: 100%; background-color:; margin: 0px 1px 16px 2px;">
+
+			<p:commandLink styleClass="btn btn-success btn-sm "
+				action="#{projetoBean.salvarMODE01()}"
+				update=":form-cadastro-projeto" process="panel-info-geral"
+				style="color:#fff; margin: 2px;" onstart="start();"
+				onsuccess="stop();" onerror="stop();">
+				<span class="glyphicon glyphicon-floppy-disk"></span>
+				<span style="margin: 3px;">Salvar</span>
+			</p:commandLink>
+
+			<p:commandLink style="color:#FFF;margin-left:5px"
+				value="Aprovar Projeto" styleClass="btn btn-primary btn-sm"
+				oncomplete="PF('dlgAprovacaoProjeto').show()" process="@this"
+				rendered="#{projetoBean.podeAprovar(null)}">
+				<span class="glyphicon glyphicon-ok"></span>
+				<span style="margin: 3px;">Aprovar Projeto</span>
+			</p:commandLink>
+
+
+			<p:link styleClass="btn btn-danger btn-sm " outcome="/main/projetos"
+				style="color:#fff; margin: 2px 2px 2px 2px;">
+				<span class="glyphicon glyphicon-chevron-left"></span>
+				<span style="margin: 3px;">Sair</span>
+			</p:link>
+
+
+		</div>
+		<div id="info-geral" class="ui-g ui-fluid">
+			<div class="ui-g-4 form-group">
+				<p:outputLabel for="input-code" value="Código"
+					styleClass="form-label" style="width: 100%" />
+
+				<p:inputText id="input-code" value="#{projetoBean.projeto.codigo}"
+					required="true" requiredMessage="Campo 'Código' obrigatório" />
+			</div>
+
+			<div class="ui-g-3 form-group">
+				<p:outputLabel for="project_name" value="Titúlo"
+					style="width: 100px" styleClass="form-label" />
+
+				<p:inputText id="project_name" value="#{projetoBean.projeto.nome}"
+					required="true" requiredMessage="Campo 'Título' obrigatório" />
+
+			</div>
+
+			<div class="ui-g-3 form-group">
+				<p:outputLabel for="responsible" value="Responsável"
+					styleClass="form-label" />
+				<p:inputText id="responsible"
+					value="#{projetoBean.projeto.responsavel}" styleClass="font11-vi"
+					required="true" requiredMessage="Campo 'Responsável' obrigatório" />
+			</div>
+
+			<div class="ui-g-2 form-group">
+				<p:outputLabel value="Status:" />
+				<p:selectOneRadio value="#{projetoBean.projeto.ativo}">
+					<f:selectItem itemLabel="Sim" itemValue="true" />
+					<f:selectItem itemLabel="Não" itemValue="false" />
+				</p:selectOneRadio>
+
+
+			</div>
+
+
+
+
+
+			<div class="ui-g-3 form-group">
+				<p:outputLabel for="gestao_input" value="Gestão" style="width: 100%"
+					styleClass="form-label" />
+				<p:autoComplete id="gestao_input" styleClass="font11-vi"
+					panelStyle="width:180px" requiredMessage="Campo obrigatório"
+					rendered="true" required="true"
+					value="#{projetoBean.projeto.gestao}"
+					completeMethod="#{projetoBean.completeGestao}" var="gestao"
+					itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+					converter="gestaoConverterVI" minQueryLength="3"
+					forceSelection="true" />
+			</div>
+
+			<div class="ui-g-3 form-group">
+				<p:outputLabel for="initial_date" value="Data de início:"
+					styleClass="form-label" />
+				<p:calendar id="initial_date" navigator="true" pattern="dd/MM/yyyy"
+					value="#{projetoBean.projeto.dataInicio}" required="true"
+					requiredMessage="Campo obrigatório" />
+			</div>
+
+			<div class="ui-g-3 form-group">
+				<p:outputLabel for="final_date" value="Data final:"
+					styleClass="form-label" />
+				<p:calendar id="final_date" navigator="true" pattern="dd/MM/yyyy"
+					value="#{projetoBean.projeto.dataFinal}" required="true"
+					requiredMessage="Campo obrigatório" />
+			</div>
+
+			<p:outputLabel value="Quantidade:" rendered="false" />
+			<p:inputText value="#{projetoBean.projeto.quantidade}"
+				styleClass="font11-vi" rendered="false" />
+
+			<div class="ui-g-4 form-group">
+				<p:outputLabel for="project_value" value="Orçamento:"
+					styleClass="form-label" />
+				<p:inputText id="project_value"
+					disabled="#{projetoBean.usuarioSessao.usuario.perfil.id != 1}"
+					value="#{projetoBean.projeto.valor}"
+					onkeydown="mascaraMoeda(this,moeda)" required="true"
+					requiredMessage="Campo obrigatório">
+					<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+						locale="pt_BR" />
+				</p:inputText>
+
+			</div>
+
+			<h:panelGroup rendered="false">
+				<p:outputLabel value="Estrutura:  " />
+				<p:spacer width="3px" />
+				<p:selectBooleanCheckbox value="#{projetoBean.projeto.estrutura}" />
+			</h:panelGroup>
+
+			<h:panelGroup rendered="false">
+				<p:outputLabel value="Tarifado:  " />
+				<p:spacer width="3px" />
+				<p:selectBooleanCheckbox value="#{projetoBean.projeto.tarifado}" />
+			</h:panelGroup>
+
+			<div class="ui-g-3 form-group">
+				<p:outputLabel for="project_type" value="Tipo:"
+					styleClass="form-label" style="width: 100%" />
+				<p:selectOneMenu id="project_type" style="width:250px"
+					value="#{projetoBean.projeto.tipoProjeto}" required="true"
+					requiredMessage="Campo obrigatório">
+					<f:selectItem noSelectionOption="true" />
+					<f:selectItems value="#{projetoBean.TiposProjeto()}" var="tipo"
+						itemLabel="#{tipo.nome}" itemValue="#{tipo}" />
+				</p:selectOneMenu>
+
+			</div>
+
+			<div class="ui-g-4 form-group">
+				<p:outputLabel for="project_objective" value="Objetivo Geral:"
+					styleClass="form-label" style="width:100%" />
+				<p:inputText id="project_objective"
+					value="#{projetoBean.projeto.objetivo}" required="true"
+					requiredMessage="Campo obrigatório" />
+
+			</div>
+			
+
+
+
+
+
+		</div>
+	</p:panel>
+
+
+</ui:fragment>

@@ -1,0 +1,122 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<p:panel id="panel-enquadramento">
+
+		<div id="enquad" class="ui-g ui-fluid">
+				<p:panelGrid>
+					<div id="componenet-panel" class="ui-g ui-fluid">
+						<div class="ui-g-4 form-group">
+							<p:outputLabel for="componente" value="Componente"
+								styleClass="form-label" style="width: 100%" />
+
+							<p:selectOneMenu id="componente" required="true"
+								style="width: 100%" requiredMessage="Campo obrigatório"
+								value="#{projetoBean.projeto.componente}"
+								converter="componenteConverter">
+								<p:ajax listener="#{projetoBean.carregarSubComponentes()}"
+									process="@this" update="sub_componente" />
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.componentesClass}"
+									var="componente" itemLabel="#{componente.nome}"
+									itemValue="#{componente}" />
+							</p:selectOneMenu>
+						</div>
+
+						<div class="ui-g-4 form-group">
+							<p:outputLabel for="cadeia_proj" value="Cadeia"
+								style="width: 100%" styleClass="form-label" />
+
+							<p:selectOneMenu id="cadeia_proj" filter="true"
+								style="width: 100%" value="#{projetoBean.projeto.cadeia}"
+								converter="cadeiaConverter" filterMatchMode="startsWith">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.cadeias}" var="cad"
+									itemLabel="#{cad.nome}" itemValue="#{cad}">
+								</f:selectItems>
+							</p:selectOneMenu>
+						</div>
+
+
+						<div class="ui-g-3 form-group">
+							<p:outputLabel for="sub_componente" value="SubComponente"
+								style="width: 100vh" styleClass="form-label" />
+
+							<p:selectOneMenu id="sub_componente" required="true"
+								style="width: 100%" requiredMessage="Campo obrigatório"
+								value="#{projetoBean.projeto.subComponente}"
+								converter="subcomponenteConverter">
+								<f:selectItems value="#{projetoBean.subComponentes}"
+									var="subcomponente" itemLabel="#{subcomponente.nome}"
+									itemValue="#{subcomponente}" />
+							</p:selectOneMenu>
+						</div>
+
+
+						<div class="ui-g-3 form-group">
+							<p:outputLabel for="resp_eder" value="ED/RR" style="width: 100%"
+								styleClass="form-label" />
+
+							<p:selectOneMenu id="resp_eder" panelStyle="width:180px"
+								style="width: 100%" value="#{projetoBean.projeto.repasse}">
+								<f:selectItem itemLabel="Selecione um" noSelectionOption="true" />
+								<f:selectItem itemLabel="ED" itemValue="ED" />
+								<f:selectItem itemLabel="RR" itemValue="RR" />
+							</p:selectOneMenu>
+						</div>
+
+
+
+						<div class="ui-g-3 form-group">
+							<p:outputLabel for="pt" value="Plano de trabalho:"
+								style="width: 100%" styleClass="form-label" />
+
+							<p:selectOneMenu id="pt"
+								value="#{projetoBean.projeto.planoDeTrabalho}"
+								style="width: 100%">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.planos}" var="plano"
+									itemLabel="#{plano.titulo}" itemValue="#{plano}" />
+							</p:selectOneMenu>
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<p:outputLabel for="programa_projeto" value="Programa:"
+								style="width: 100%" styleClass="form-label" />
+
+							<p:selectOneMenu id="programa_projeto" style="width: 100%"
+								value="#{projetoBean.projeto.programa}">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.programas}" var="programa"
+									itemLabel="#{programa.nome}" itemValue="#{programa}" />
+							</p:selectOneMenu>
+						</div>
+
+						<div class="ui-g-3 form-group">
+							<p:outputLabel for="sub_programa" value="SubPrograma:"
+								style="width: 100%" styleClass="form-label" />
+
+							<p:selectOneMenu id="sub_programa" filter="true"
+								style="width: 100%" value="#{projetoBean.projeto.subPrograma}"
+								converter="converterSubPrograma" filterMatchMode="startsWith">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{projetoBean.subsProgramas}"
+									var="subProg" itemLabel="#{subProg.nome}"
+									itemValue="#{subProg}">
+								</f:selectItems>
+							</p:selectOneMenu>
+						</div>
+
+					</div>
+
+				</p:panelGrid>
+		</div>
+	</p:panel>
+
+
+</ui:fragment>

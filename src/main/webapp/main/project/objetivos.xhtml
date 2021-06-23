@@ -1,0 +1,74 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<p:panel id="panel-objetivos">
+
+		<div id="objetivos" class="ui-g ui-fluid">
+				<p:messages showSummary="false" showDetail="true" closable="true" />
+				<p:dataTable value="#{projetoBean.listaObjetivos}"
+					rowStyleClass="#{objetivo.concluido? 'highlight' : null}"
+					id="tabela_objetivo" emptyMessage="Sem Registros" var="objetivo">
+					<f:facet name="header">
+
+						<div align="center">
+							<p:outputLabel value="Lista de Objetivos Específicos"
+								style="font-size: 15px;" />
+						</div>
+						<div class="botao_central" align="left"
+							style="width: 100%; margin: 0px 1px 10px 2px;">
+
+							<p:commandLink id="add_objetivo"
+								styleClass="btn btn-primary btn-sm"
+								style="color:white;margin:2px 2px"
+								action="#{projetoBean.openDialogObjetivo()}" process="@this"
+								onclick="setarWidthHeight('form-cadastro-objetivo');start();"
+								oncomplete="PF('dlg_cadastro_objetivo').show();stop()"
+								title="Adicionar Objetivo">
+								<span class="glyphicon glyphicon-plus"></span>
+								<span style="margin: 3px;">Novo</span>
+							</p:commandLink>
+
+						</div>
+
+					</f:facet>
+					<p:column headerText="Nome" style="text-align:center" width="20%">
+						<p:outputLabel value="#{objetivo.nome}" />
+					</p:column>
+
+					<p:column headerText="Descrição" width="70%">
+						<p:outputLabel value="#{objetivo.descricao}" />
+					</p:column>
+
+					<p:column headerText="Opções" style="width:120px;text-align:center">
+						<p:commandLink action="#{projetoBean.editarObjetivo()}"
+							styleClass="btn btn-primary btn-sm" process="@this"
+							onclick="setarWidthHeight('form-cadastro-objetivo');start()"
+							oncomplete="PF('dlg_cadastro_objetivo').show();stop()"
+							update="form-cadastro-objetivo:gridi">
+							<span class="pi pi-pencil"></span>
+							<f:setPropertyActionListener value="#{objetivo}"
+								target="#{projetoBean.objetivo}" />
+						</p:commandLink>
+
+						<p:commandLink update="@form,tabela_objetivo"
+							style="margin-left:5px;font-size:12px;color:#fff"
+							styleClass="btn btn-danger btn-xs " process="@this"
+							title="Excluir" action="#{projetoBean.removeObjetivo(objetivo)}">
+							<span class="pi pi-times-circle"></span>
+							<p:confirm header="Confirmar exclusão do objetivo"
+								icon="ui-icon-alert"
+								message="Excluir Objetivo. Deseja continuar?" />
+
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+		</div>
+	</p:panel>
+
+
+</ui:fragment>
