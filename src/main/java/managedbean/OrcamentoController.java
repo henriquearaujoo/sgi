@@ -86,7 +86,7 @@ public class OrcamentoController implements Serializable {
 	private @Inject GestaoRepositorio gestaoRepositorio;
 	private @Inject CalculatorRubricaRepositorio calculatorRubricaRepositorio;
 	private @Inject OrcamentoService orcamentoService;
-	
+
 	private Projeto projetoDespesa;
 
 	private List<SubComponente> subComponentes = new ArrayList<>();
@@ -131,9 +131,9 @@ public class OrcamentoController implements Serializable {
 	private TransferenciaOverHead overhead;
 
 	private Boolean preCadastro;
-	
+
 	private Boolean continueCadastro = false;
-	
+
 	public void init() {
 		carregarOrcamentos();
 
@@ -153,9 +153,9 @@ public class OrcamentoController implements Serializable {
 		carregarContas();
 		carregarSaldoEmCaixa();
 		// createPieModel();
-		//createHorizontalBarModel();
-		//createBarChartS();
-		//createStackedBarModel();
+		// createHorizontalBarModel();
+		// createBarChartS();
+		// createStackedBarModel();
 		createStackedGroupBarModel();
 		// carregarRubricasProjetoDespesa();
 
@@ -172,8 +172,7 @@ public class OrcamentoController implements Serializable {
 			preCadastro = false;
 		else
 			preCadastro = true;
-		
-		
+
 		PrimeFaces.current().executeScript("setarFocused('info-geral')");
 	}
 
@@ -213,7 +212,7 @@ public class OrcamentoController implements Serializable {
 	public TipoParcelamento[] tiposParcelas() {
 		return TipoParcelamento.values();
 	}
-	
+
 	public void dialogHelp() {
 		HashMap<String, Object> options = new HashMap<>();
 		options.put("width", "100%");
@@ -221,8 +220,8 @@ public class OrcamentoController implements Serializable {
 		options.put("contentWidth", "100%");
 		options.put("contentHeight", "100%");
 		options.put("resizable", false);
-		options.put("minimizable",true);
-		options.put("maximizable",true);
+		options.put("minimizable", true);
+		options.put("maximizable", true);
 		PrimeFaces.current().dialog().openDynamic("dialog/help/help_orcamento", options, null);
 	}
 
@@ -424,7 +423,7 @@ public class OrcamentoController implements Serializable {
 		int minuto = calendar.get(Calendar.MINUTE);
 		int segundo = calendar.get(Calendar.SECOND);
 		int milisegundo = calendar.get(Calendar.MILLISECOND);
-		
+
 		s.append(String.valueOf(ano).substring(2));
 		s.append(String.valueOf(mes));
 		s.append(String.valueOf(dia));
@@ -449,27 +448,25 @@ public class OrcamentoController implements Serializable {
 		pieModel.setShadow(false);
 	}
 
-	
-	
 	private HorizontalBarChartModel hbarModel;
 	private BarChartModel stackedBarModel;
-	
-	public void createBarChartS(){
+
+	public void createBarChartS() {
 		hbarModel = new HorizontalBarChartModel();
 		ChartJsView cjs = new ChartJsView();
 		hbarModel = cjs.initBar();
-		
+
 	}
-	
-	public void createStackedBarModel(){
+
+	public void createStackedBarModel() {
 		stackedBarModel = new BarChartModel();
 		ChartJsView cjs = new ChartJsView();
 		stackedBarModel = cjs.createStackedBarModel();
 	}
-	
+
 	private BarChartModel stackedGroupBarModel;
-	
-	public void createStackedGroupBarModel(){
+
+	public void createStackedGroupBarModel() {
 		stackedGroupBarModel = new BarChartModel();
 		ChartJsView cjs = new ChartJsView();
 		stackedGroupBarModel = cjs.createStackedGroupBarModelValuesBudget(orcamento);
@@ -602,9 +599,7 @@ public class OrcamentoController implements Serializable {
 
 	// @Transactional
 	public void salvarRubricaOrcamento() {
-		
-		
-		
+
 		if (rubricaOrcamento.getValor() != null) {
 			if (rubricaOrcamento.getValor().compareTo(diferenca) > 0) {
 				messageSalvamento(
@@ -614,8 +609,6 @@ public class OrcamentoController implements Serializable {
 				return;
 			}
 
-			
-
 			rubricaOrcamento.setOrcamento(orcamento);
 			rubricaOrcamento.setComponente(componente);
 			rubricaOrcamento.setSubComponente(subComponente);
@@ -623,21 +616,19 @@ public class OrcamentoController implements Serializable {
 			if (rubricaOrcamento.getValor() == null) {
 				rubricaOrcamento.setValor(BigDecimal.ZERO);
 			}
-			
+
 			orcService.salvarRubricaOrcamento(rubricaOrcamento);
-			//rubricaOrcamento = new RubricaOrcamento();
+			// rubricaOrcamento = new RubricaOrcamento();
 			limparVar();
 			carregarRubrica();
 			calculaValor();
-			
-			
+
 			if (!continueCadastro) {
 				executeScript("PF('dlg-nova-linha').hide()", "");
 			}
-			
-			addMessage("", "Linha orçamentária salva com sucesso!",FacesMessage.SEVERITY_INFO);
-			
-			
+
+			addMessage("", "Linha orçamentária salva com sucesso!", FacesMessage.SEVERITY_INFO);
+
 			// carregarOrcamentos();
 		} else {
 			messageSalvamento("Campo Valor é Obrigatorio!");
@@ -740,26 +731,21 @@ public class OrcamentoController implements Serializable {
 		filtro.setDataInicio(DataUtil.getDataInicio(new Date()));
 		filtro.setDataFinal(DataUtil.getDataFinal(new Date()));
 	}
-	
+
 	public void limparVar() {
 		rubricaOrcamento = new RubricaOrcamento();
 		componente = new ComponenteClass();
 		subComponente = new SubComponente();
 	}
-	
-	
-	
-	
-	//Edição de linha orçamentária na nova versão 
-	
+
+	// Edição de linha orçamentária na nova versão
+
 	public void editLine(Long id) {
 		limparVar();
 		rubricaOrcamento = orcService.findByIdRubricaOrcamento(id);
-		componente =  rubricaOrcamento.getComponente();
+		componente = rubricaOrcamento.getComponente();
 		subComponente = rubricaOrcamento.getSubComponente();
 	}
-	
-	
 
 	// public void salvarRubricaOrcamentoService(){
 	// salvarRubricaOrcamento();
@@ -919,34 +905,32 @@ public class OrcamentoController implements Serializable {
 	private BigDecimal valorOrcadoOverhead = BigDecimal.ZERO;//
 	private BigDecimal valorPagoOverhead = BigDecimal.ZERO;//
 	private BigDecimal valorDisponivelOverhead = BigDecimal.ZERO;
-	
-	
-	
-	private BigDecimal valorOrcadoOverheadIndireto = BigDecimal.ZERO;// Valor vem do total de alocação de rendimento para doação
+
+	private BigDecimal valorOrcadoOverheadIndireto = BigDecimal.ZERO;// Valor vem do total de alocação de rendimento
+																		// para doação
 	private BigDecimal valorPagoOverheadIndireto = BigDecimal.ZERO;//
 	private BigDecimal valorDisponivelOverheadIndireto = BigDecimal.ZERO;
-		
+
 	public void carregarValoresOverhead() {
 		TransferenciaOverHead transf = new TransferenciaOverHead();
 		transf.setDoacaoPagadora(orcamento);
 		valorPagoOverhead = orcService.getTotalTransferenciaOverheadPagos(transf);
-		valorOrcadoOverhead = orcamento.getValorOverheadAPagar() != null ? transf.getDoacaoPagadora().getValorOverheadAPagar()
+		valorOrcadoOverhead = orcamento.getValorOverheadAPagar() != null
+				? transf.getDoacaoPagadora().getValorOverheadAPagar()
 				: BigDecimal.ZERO;
-		
-		
+
 		valorDisponivelOverhead = valorOrcadoOverhead.subtract(valorPagoOverhead);
 	}
-	
+
 	public void carregarValoresOverheadIndireto() {
 		TransferenciaOverHead transf = new TransferenciaOverHead();
 		transf.setDoacaoPagadora(orcamento);
-		
+
 		valorOrcadoOverheadIndireto = orcService.getValorRendimento(orcamento.getId());
 		valorPagoOverheadIndireto = orcService.getTotalTransferenciaOverheadIndiretoPagos(transf);
-		
-		
+
 		valorDisponivelOverheadIndireto = valorOrcadoOverheadIndireto.subtract(valorPagoOverheadIndireto);
-		
+
 	}
 
 	public void calculaValor() {
@@ -971,16 +955,12 @@ public class OrcamentoController implements Serializable {
 		porcentagem = (vlDistribuido / vlOrcamento) * 100;
 
 	}
-	
-	
-	//TODO: Refatorar para uma classe util 
+
+	// TODO: Refatorar para uma classe util
 	public void executeScript(String script, String modo) {
-		
-		
-		
+
 		PrimeFaces.current().executeScript(script);
-		
-		
+
 	}
 
 	private TabView tabviewOrcamento;
@@ -989,13 +969,13 @@ public class OrcamentoController implements Serializable {
 		int index = 0;
 		if (tabviewOrcamento != null) {
 			index = tabviewOrcamento.getActiveIndex();
-			
+
 		}
-		
+
 		if (index == 0) {
 			executeScript("setarFocused('info-geral')", "focus");
 		} else if (index == 1) {
-			
+
 			executeScript("setarFocused('info-permissoes-input-text')", "focus");
 		} else if (index == 2) {
 			carregarRubrica();
@@ -1018,7 +998,7 @@ public class OrcamentoController implements Serializable {
 		} else if (index == 7) {
 			carregarPainelOrcamento();
 			// createPieModel();
-			//createHorizontalBarModel();
+			// createHorizontalBarModel();
 		}
 	}
 
@@ -1027,7 +1007,7 @@ public class OrcamentoController implements Serializable {
 		carregarValoresOverhead();
 		carregarValoresOverheadIndireto();
 	}
-	
+
 	public void filtrarRubricas() {
 		if (componente.getId() != null) {
 			filtro.setComponenteClass(componente.getId());
@@ -1039,14 +1019,15 @@ public class OrcamentoController implements Serializable {
 
 		carregarRubrica();
 	}
-	
+
 	public void limparFiltro() {
 		filtro = new Filtro();
 	}
-	
+
 	public void filtroOrcamento() {
 		orcamentos = orcamentoService.filtrarOrcamentos(filtro);
-		limparFiltro();	
+
+		limparFiltro();
 	}
 
 	public void verificarTabs() {
@@ -1089,7 +1070,7 @@ public class OrcamentoController implements Serializable {
 	public void carregarValorRendimentoAlocado() {
 		orcamento.setValorRendimentoExec(orcService.getValorRendimento(orcamento.getId()));
 	}
-	
+
 	public void carregarPainelOrcamentoRequisito() {
 		orcamento.setValorOverheadExec(orcService.getValorOverheadPago(orcamento.getId()));
 		carregarSaldoEmCaixa();
@@ -1172,7 +1153,7 @@ public class OrcamentoController implements Serializable {
 			orcamento = orcService.salvar(orcamento);
 			messageSalvamento("Orçamento salvo");
 			carregarPainelOrcamento();
-			//createHorizontalBarModel();
+			// createHorizontalBarModel();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1354,27 +1335,18 @@ public class OrcamentoController implements Serializable {
 		this.orcamentos = orcamentos;
 	}
 
-	// PARCEIRO/FONTE
-
 	public List<FontePagadora> completeFonte(String query) {
-
 		List<FontePagadora> fontesPagadora = compraService.fontesAutoComplete(query);
-		
 		return fontesPagadora;
 	}
-	
-	// TITULOS
+
 	public List<String> completeTitulo(String query) {
-		List<String> orcamentos = orcamentoService.getOrcamentoTitulosAutoComplete(query); 
+		List<String> orcamentos = orcamentoService.getOrcamentoTitulosAutoComplete(query);
 		return orcamentos;
 	}
 
 	public List<Colaborador> completeColaborador(String query) {
-		List<Colaborador> colaboradores = new ArrayList<>();
-		colaboradores = viagemService.buscarColaboradores(query);
-		
-		return colaboradores;
-		
+		return viagemService.buscarColaboradores(query);
 	}
 
 	public List<Rubrica> completeRubrica(String query) {

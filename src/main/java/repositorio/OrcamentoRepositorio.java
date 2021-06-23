@@ -233,7 +233,7 @@ public class OrcamentoRepositorio implements Serializable {
 		return doacao;
 	}
 
-	public BaixaAplicacao atualizarBaixa(BaixaAplicacao baixaAplicacao){
+	public BaixaAplicacao atualizarBaixa(BaixaAplicacao baixaAplicacao) {
 		baixaAplicacao = this.manager.merge(baixaAplicacao);
 		return baixaAplicacao;
 	}
@@ -257,11 +257,9 @@ public class OrcamentoRepositorio implements Serializable {
 		this.manager.merge(log);
 
 		if (baixaAplicacao.getId() != null)
-			this.manager.createNativeQuery(" delete \n" +
-					"from pagamento_lancamento \n" +
-					"where id in (select pl.id from pagamento_lancamento pl\n" +
-					"join lancamento_acao la on la.id = pl.lancamentoacao_id\n" +
-					"where la.lancamento_id = :id)")
+			this.manager.createNativeQuery(" delete \n" + "from pagamento_lancamento \n"
+					+ "where id in (select pl.id from pagamento_lancamento pl\n"
+					+ "join lancamento_acao la on la.id = pl.lancamentoacao_id\n" + "where la.lancamento_id = :id)")
 					.setParameter("id", baixaAplicacao.getId()).executeUpdate();
 
 		for (LancamentoAcao lc : baixaAplicacao.getLancamentosAcoes()) {
@@ -319,7 +317,7 @@ public class OrcamentoRepositorio implements Serializable {
 		return baixaAplicacao;
 	}
 
-	public AplicacaoRecurso atualizarAplicacao(AplicacaoRecurso aplicacao){
+	public AplicacaoRecurso atualizarAplicacao(AplicacaoRecurso aplicacao) {
 		aplicacao = this.manager.merge(aplicacao);
 
 		return aplicacao;
@@ -344,11 +342,9 @@ public class OrcamentoRepositorio implements Serializable {
 		this.manager.merge(log);
 
 		if (aplicacao.getId() != null)
-			this.manager.createNativeQuery(" delete \n" +
-					"from pagamento_lancamento \n" +
-					"where id in (select pl.id from pagamento_lancamento pl\n" +
-					"join lancamento_acao la on la.id = pl.lancamentoacao_id\n" +
-					"where la.lancamento_id = :id)")
+			this.manager.createNativeQuery(" delete \n" + "from pagamento_lancamento \n"
+					+ "where id in (select pl.id from pagamento_lancamento pl\n"
+					+ "join lancamento_acao la on la.id = pl.lancamentoacao_id\n" + "where la.lancamento_id = :id)")
 					.setParameter("id", aplicacao.getId()).executeUpdate();
 
 		for (LancamentoAcao lc : aplicacao.getLancamentosAcoes()) {
@@ -530,6 +526,75 @@ public class OrcamentoRepositorio implements Serializable {
 		Query query = this.manager.createQuery(jpql);
 		return query.getResultList();
 	}
+
+	/////////////////////////////////// FILTRO V2 //////////////////////////////////
+
+	public List<Orcamento> filtrarOrcamentos(Filtro filtro) {
+		StringBuilder jpql = new StringBuilder("from Orcamento o where 1 = 1 ");
+
+		if (filtro.getResponsavelTecnico() != null && filtro.getResponsavelTecnico().getId() != null) {
+			filtro.setResponsavelTecnico(filtro.getResponsavelTecnico());
+			jpql.append("and lower(o.responsavelTecnico.nome) like lower(:responsavelTecnico) ");
+		}
+
+		if (filtro.getColaborador() != null && filtro.getColaborador().getId() != null) {
+			filtro.setColaborador(filtro.getColaborador());
+			jpql.append("and lower(o.colaborador.nome) like lower(:colaborador) ");
+		}
+
+		if (filtro.getFontePagadora() != null && filtro.getFontePagadora().getId() != null) {
+			filtro.setFontePagadora(filtro.getFontePagadora());
+			jpql.append("and lower(o.fonte.nome) like lower(:fonte) ");
+		}
+
+		if (filtro.getTitulo() != null && !filtro.getTitulo().equals("")) {
+			filtro.setTitulo(filtro.getTitulo());
+			jpql.append("and lower(o.titulo) like lower(:titulo) ");
+		}
+
+		if (filtro.getDataInicio() != null || filtro.getDataFinal() != null) {
+			if (filtro.getDataFinal() != null && filtro.getDataInicio() != null) {
+				jpql.append(" and o.dataInicio >= :data_inicio and o.dataFinal <= :data_final ");
+			} else if (filtro.getDataFinal() == null) {
+				jpql.append(" and o.dataInicio >= :data_inicio ");
+			} else {
+				jpql.append(" and o.dataFinal <= :data_final");
+			}
+		}
+
+		jpql.append(" order by o.dataInicio desc");
+
+		Query query = this.manager.createQuery(jpql.toString());
+
+		if (filtro.getResponsavelTecnico() != null && filtro.getResponsavelTecnico().getId() != null) {
+			query.setParameter("responsavelTecnico", "" + filtro.getResponsavelTecnico().getNome() + "%");
+		}
+		if (filtro.getColaborador() != null && filtro.getColaborador().getId() != null) {
+			query.setParameter("colaborador", "" + filtro.getColaborador().getNome() + "%");
+		}
+		if (filtro.getFontePagadora() != null && filtro.getFontePagadora().getId() != null) {
+			query.setParameter("fonte", "" + filtro.getFontePagadora().getNome() + "%");
+		}
+		if (filtro.getTitulo() != null && !filtro.getTitulo().equals("")) {
+			query.setParameter("titulo", "%" + filtro.getTitulo() + "%");
+		}
+
+		if (filtro.getDataInicio() != null || filtro.getDataFinal() != null) {
+			if (filtro.getDataFinal() != null && filtro.getDataInicio() != null) {
+				query.setParameter("data_inicio", filtro.getDataInicio());
+				query.setParameter("data_final", filtro.getDataFinal());
+			} else if (filtro.getDataFinal() == null) {
+				query.setParameter("data_inicio", filtro.getDataInicio());
+			} else {
+				query.setParameter("data_final", filtro.getDataFinal());
+			}
+		}
+
+		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<Orcamento>();
+
+	}
+
+	////////////////////////////////////////////////////////////////////////////////
 
 	public List<Projeto> getProjetosRelatorioGeral(Filtro filtro, String args)
 			throws NumberFormatException, ParseException {
@@ -771,70 +836,59 @@ public class OrcamentoRepositorio implements Serializable {
 
 		return projetos;
 	}
-	
-	public List<Orcamento> filtrarOrcamentos(Filtro filtro) {
-		StringBuilder jpql = new StringBuilder("from Orcamento o where 1 = 1 ");
 
-		
-		if(filtro.getResponsavelTecnico() != null && filtro.getResponsavelTecnico().getId() != null) {
-			filtro.setResponsavelTecnico(filtro.getResponsavelTecnico());
-			jpql.append("and o.responsavelTecnico.id = :responsavelTecnico ");
-		}
-		
-		if(filtro.getColaborador() != null && filtro.getColaborador().getId() != null) {
-			filtro.setColaborador(filtro.getColaborador());
-			jpql.append("and o.colaborador.id = :colaborador ");
-		}
-		
-		if(filtro.getFontePagadora() != null && filtro.getFontePagadora().getId() != null) {
-			filtro.setFontePagadora(filtro.getFontePagadora());
-			jpql.append("and o.fonte.id = :fonte ");
-		}
-		
-		if(filtro.getTitulo() != null && filtro.getTitulo().length() > 0) {
-			filtro.setTitulo(filtro.getTitulo());
-			jpql.append("and o.titulo = :titulo ");	
-		}
-//		
-		if (filtro.getDataInicio() != null) {
-			if (filtro.getDataFinal() != null) {
-				jpql.append(" and o.dataInicio >= :data_inicio and o.dataFinal <= :data_final ");
-			} else {
-				jpql.append(" and o.dataInicio >= :data_inicio ");
-			}
-		}
-		
-		Query query = this.manager.createQuery(jpql.toString());
-		
-		if(filtro.getResponsavelTecnico() != null && filtro.getResponsavelTecnico().getId() != null) {
-			query.setParameter("responsavelTecnico", filtro.getResponsavelTecnico().getId());
-		}
-		if(filtro.getColaborador() != null && filtro.getColaborador().getId() != null) {
-			query.setParameter("colaborador", filtro.getColaborador().getId());
-		}
-		if(filtro.getFontePagadora() != null && filtro.getFontePagadora().getId() != null) {
-			query.setParameter("fonte", filtro.getFontePagadora().getId());
-		}
-		if(filtro.getTitulo() != null && filtro.getTitulo().length() > 0) {			
-			query.setParameter("titulo", filtro.getTitulo());
-		}
-		if (filtro.getDataInicio() != null) {
-			if (filtro.getDataFinal() != null) {
-				/*
-				 * jpql.append( " and c.dataEmissao between :data_inicio and :data_final");
-				 */
-				query.setParameter("data_inicio", filtro.getDataInicio());
-				query.setParameter("data_final", filtro.getDataFinal());
-			} else {
-				/* jpql.append(" and c.dataEmissao > :data_inicio"); */
-				query.setParameter("data_inicio", filtro.getDataInicio());
-			}
-		}
-		
-		
-		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<Orcamento>();
-		
-	}
+	/*
+	 * public List<Orcamento> filtrarOrcamentos(Filtro filtro) { StringBuilder jpql
+	 * = new StringBuilder("from Orcamento o where 1 = 1 ");
+	 * 
+	 * 
+	 * if(filtro.getResponsavelTecnico() != null &&
+	 * filtro.getResponsavelTecnico().getId() != null) {
+	 * filtro.setResponsavelTecnico(filtro.getResponsavelTecnico());
+	 * jpql.append("and o.responsavelTecnico.id = :responsavelTecnico "); }
+	 * 
+	 * if(filtro.getColaborador() != null && filtro.getColaborador().getId() !=
+	 * null) { filtro.setColaborador(filtro.getColaborador());
+	 * jpql.append("and o.colaborador.id = :colaborador "); }
+	 * 
+	 * if(filtro.getFontePagadora() != null && filtro.getFontePagadora().getId() !=
+	 * null) { filtro.setFontePagadora(filtro.getFontePagadora());
+	 * jpql.append("and o.fonte.id = :fonte "); }
+	 * 
+	 * if(filtro.getTitulo() != null && filtro.getTitulo().length() > 0) {
+	 * filtro.setTitulo(filtro.getTitulo()); jpql.append("and o.titulo = :titulo ");
+	 * } // if (filtro.getDataInicio() != null) { if (filtro.getDataFinal() != null)
+	 * { jpql.
+	 * append(" and o.dataInicio >= :data_inicio and o.dataFinal <= :data_final ");
+	 * } else { jpql.append(" and o.dataInicio >= :data_inicio "); } }
+	 * 
+	 * Query query = this.manager.createQuery(jpql.toString());
+	 * 
+	 * if(filtro.getResponsavelTecnico() != null &&
+	 * filtro.getResponsavelTecnico().getId() != null) {
+	 * query.setParameter("responsavelTecnico",
+	 * filtro.getResponsavelTecnico().getId()); } if(filtro.getColaborador() != null
+	 * && filtro.getColaborador().getId() != null) {
+	 * query.setParameter("colaborador", filtro.getColaborador().getId()); }
+	 * if(filtro.getFontePagadora() != null && filtro.getFontePagadora().getId() !=
+	 * null) { query.setParameter("fonte", filtro.getFontePagadora().getId()); }
+	 * if(filtro.getTitulo() != null && filtro.getTitulo().length() > 0) {
+	 * query.setParameter("titulo", filtro.getTitulo()); } if
+	 * (filtro.getDataInicio() != null) { if (filtro.getDataFinal() != null) {
+	 * 
+	 * jpql.append( " and c.dataEmissao between :data_inicio and :data_final");
+	 * 
+	 * query.setParameter("data_inicio", filtro.getDataInicio());
+	 * query.setParameter("data_final", filtro.getDataFinal()); } else {
+	 * jpql.append(" and c.dataEmissao > :data_inicio");
+	 * query.setParameter("data_inicio", filtro.getDataInicio()); } }
+	 * 
+	 * 
+	 * return query.getResultList().size() > 0 ? query.getResultList() : (List) new
+	 * ArrayList<Orcamento>();
+	 * 
+	 * }
+	 */
 
 	public List<Orcamento> getOrcamentosFilter(Filtro filtro, String args) {
 		// StringBuilder jpql = new StringBuilder( "SELECT NEW Orcamento(o.id, o.titulo)
@@ -849,7 +903,7 @@ public class OrcamentoRepositorio implements Serializable {
 		if (filtro.getFontes() != null && filtro.getFontes().length > 0) {
 			jpql.append(" and o.fonte_id in (:fontes) ");
 		}
-		
+
 		if (filtro.getTitulo() != null && filtro.getTitulo().length() > 0) {
 			jpql.append(" and o.titulo in (:titulo)");
 		}
@@ -866,8 +920,8 @@ public class OrcamentoRepositorio implements Serializable {
 
 			query.setParameter("acoes", list);
 		}
-		
-		if(filtro.getTitulo() != null && filtro.getTitulo().length() > 0) {
+
+		if (filtro.getTitulo() != null && filtro.getTitulo().length() > 0) {
 			List<Integer> list = new ArrayList<>();
 			Integer[] mList = filtro.getFontes();
 
@@ -896,11 +950,11 @@ public class OrcamentoRepositorio implements Serializable {
 
 		return orcamentos;
 	}
-	
-	public List<Orcamento> completeTitulos(String s){
+
+	public List<Orcamento> completeTitulos(String s) {
 		String jpql = "from Orcamento o where lower(o.titulo) like lower(:titulo)";
 		Query query = this.manager.createQuery(jpql);
-		
+
 		query.setParameter("titulo", "%" + s + "%");
 		return query.getResultList();
 	}
@@ -1287,7 +1341,6 @@ public class OrcamentoRepositorio implements Serializable {
 				+ "inner join projeto p on p.id  = pr.projeto_id \n"
 				+ "inner join rubrica r on ro.rubrica_id = r.id  \n"
 				+ "where 1 = 1 and ((lower(r.nome)  like lower(:nome)) or (lower(p.nome) like lower(:nome)) or (lower(p.codigo)  like lower(:nome))) and  (p.ativo  is true )");
-
 
 		Query query = this.manager.createNativeQuery(jpql.toString());
 

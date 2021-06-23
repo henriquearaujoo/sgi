@@ -87,9 +87,13 @@ public class OrcamentoService implements Serializable {
 		return repositorio.getOrcamentos(filtro);
 	}
 
+
+	
+	/////////////////////////////////// FILTRO V2 ///////////////////////////////////////
+	
 	public List<Orcamento> filtrarOrcamentos(Filtro filtro) {
-		
-		
+
+
 		if (filtro.getDataInicio() != null && filtro.getDataFinal() != null) {
 			if (filtro.getDataInicio().after(filtro.getDataFinal())) {
 				addMessage("", "Data inicio maior que data final", FacesMessage.SEVERITY_ERROR);
@@ -115,9 +119,6 @@ public class OrcamentoService implements Serializable {
 			filtro.setDataInicio(calInicio.getTime());
 			filtro.setDataFinal(calFinal.getTime());
 
-			// System.out.println(filtro.getDataInicio());
-			// System.out.println(filtro.getDataFinal());
-
 		} else if (filtro.getDataInicio() != null) {
 			Calendar calInicio = Calendar.getInstance();
 			calInicio.setTime(filtro.getDataInicio());
@@ -126,10 +127,24 @@ public class OrcamentoService implements Serializable {
 			calInicio.set(Calendar.SECOND, 0);
 			calInicio.set(Calendar.MILLISECOND, 0);
 			filtro.setDataInicio(calInicio.getTime());
+		} else if (filtro.getDataFinal() != null){
+			Calendar calFinal = Calendar.getInstance();
+			calFinal.setTime(filtro.getDataFinal());
+			calFinal.set(Calendar.HOUR, 0);
+			calFinal.set(Calendar.MINUTE, 0);
+			calFinal.set(Calendar.SECOND, 0);
+			calFinal.set(Calendar.MILLISECOND, 0);
+			filtro.setDataFinal(calFinal.getTime());
 		}
-		
+
 		return repositorio.filtrarOrcamentos(filtro);
 	}
+	
+	
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////////
+	
 
 	public List<Projeto> getProjetosFilter(Filtro filtro) throws NumberFormatException, ParseException {
 		return repositorio.getProjetosFilter(filtro, "");
