@@ -24,7 +24,8 @@
 				<p:commandLink styleClass="btn btn-primary btn-sm"
 					onclick="setarWidthHeight('form-detalhe-values');start()"
 					onerror="stop()" style="margin-left:5px" title="Divisão"
-					process="@this" oncomplete="PF('dlg-detalhe-values').show();stop()">
+					process="@this" oncomplete="PF('dlg-detalhe-values').show();stop()"
+					rendered="false">
 					<i class="pi pi-check"></i>
 					<span style="margin: 3px;">Divisão de orçamento</span>
 				</p:commandLink>
