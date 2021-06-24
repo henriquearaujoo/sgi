@@ -2,6 +2,7 @@ package managedbean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -226,7 +227,21 @@ public class OrcamentoController implements Serializable {
 		options.put("maximizable", true);
 		PrimeFaces.current().dialog().openDynamic("dialog/help/help_orcamento", options, null);
 	}
-
+	
+	////////////////////// BARRA DE PROGRESSO ///////////////////////////
+	
+	public BigDecimal valorAtual() {
+		return orcamentoService.getTotalValues(orcamento); 
+	}
+	
+	public BigDecimal donationTotal() {
+		
+		BigDecimal total = orcamento.getValor();
+		
+		return total.subtract(valorAtual());
+	}
+	////////////////////////////////////////////////////////////////////
+	
 	public void editarLancamentoEfetivo() {
 		doacaoEfetiva = service.findDoacaoEfetivaById(lancamentoAuxiliar.getId());
 	}

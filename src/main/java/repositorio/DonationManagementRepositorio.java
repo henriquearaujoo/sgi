@@ -22,6 +22,7 @@ import model.Componente;
 import model.DonationManagement;
 import model.GrupoDeInvestimento;
 import model.MetaPlano;
+import model.Orcamento;
 import model.Projeto;
 import util.Filtro;
 
@@ -39,6 +40,18 @@ public class DonationManagementRepositorio {
 
 	public void save(DonationManagement donationManagement) {
 		this.manager.merge(donationManagement);
+	}
+	
+	public List<BigDecimal> selectValueCurrent(Orcamento orcamento) {
+		String jpql = "select dm.valor from DonationManagement dm where 1 = 1 and dm.donation.id = :orcamento_id";
+		
+		Query query = this.manager.createQuery(jpql);
+		query.setParameter("orcamento_id", orcamento.getId());
+		 
+		List<BigDecimal> values = query.getResultList();
+		
+		return values;
+		
 	}
 
 }

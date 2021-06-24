@@ -357,8 +357,11 @@
 
 						<div class="ui-g-12">
 							<div style="display: flex; flex-direction: column;">
-								<label for="file">Valor distribuido: #{orcamento_controller.orcamento.valor} </label>
-								<progress id="file" value="50000" max="#{orcamento_controller.orcamento.valor}" style="width: auto"> 32% </progress>
+								<label for="file">Valor distribuido:
+									#{orcamento_controller.donationTotal()} </label>
+								<progress id="file" value="#{orcamento_controller.valorAtual()}"
+									max="#{orcamento_controller.orcamento.valor}"
+									style="width: auto"> </progress>
 							</div>
 						</div>
 

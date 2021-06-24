@@ -109,6 +109,23 @@ public class OrcamentoService implements Serializable {
 	public List<Orcamento> getOrcamentos(Filtro filtro) {
 		return repositorio.getOrcamentos(filtro);
 	}
+	
+	/////////////////////////////////////////////////////////////
+	
+	public BigDecimal getTotalValues(Orcamento orcamento) {
+		List<BigDecimal> valores = donationRepositorio.selectValueCurrent(orcamento);
+		BigDecimal valorTotal = new BigDecimal(0);
+		BigDecimal z = new BigDecimal(0);
+		
+		for(BigDecimal valor : valores) {
+			valorTotal = valorTotal.add(valor);
+		}
+		
+		return valorTotal;
+		
+		
+		
+	}
 
 	/////////////////////////////////// FILTRO V2
 	/////////////////////////////////// ///////////////////////////////////////
