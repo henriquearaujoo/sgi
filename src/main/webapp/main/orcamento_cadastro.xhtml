@@ -338,8 +338,7 @@
 							<p:commandLink styleClass="btn btn-primary btn-sm"
 								style="margin-left:5px" title="Salvar" onclick="start()"
 								onerror="stop()" oncomplete="stop()"
-								update="panel-donation-management"
-								process="@form"
+								update="panel-donation-management" process="@form"
 								action="#{orcamento_controller.saveDonationManagement()}">
 								<i class="pi pi-check"></i>
 								<span style="margin: 3px;">Salvar</span>
@@ -347,6 +346,19 @@
 						</div>
 					</div>
 				</p:panel>
+
+
+				<p:panel id="info-division-donation"
+					style="margin-left: 35px; margin-top:45px">
+					<div class="ui-g ui-fluid">
+
+						<div class="ui-g-12">
+							<p:progressBar value="50" style="height:7px" displayOnly="true" />
+						</div>
+						
+					</div>
+				</p:panel>
+
 			</h:form>
 		</p:dialog>
 
