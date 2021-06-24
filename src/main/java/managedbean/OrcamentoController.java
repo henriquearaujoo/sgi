@@ -235,10 +235,8 @@ public class OrcamentoController implements Serializable {
 	}
 	
 	public BigDecimal donationTotal() {
-		
 		BigDecimal total = orcamento.getValor();
-		
-		return total.subtract(valorAtual());
+		return total.subtract(valorAtual());					
 	}
 	////////////////////////////////////////////////////////////////////
 	
@@ -630,8 +628,17 @@ public class OrcamentoController implements Serializable {
 	// @Transactional
 	
 	public void saveDonationManagement() {
-		orcService.saveDonationManagement(donationManagement, orcamento);
-		messageSalvamento("Salvo com sucesso", FacesMessage.SEVERITY_INFO);
+		BigDecimal valor = donationManagement.getValor();
+		BigDecimal validator = new BigDecimal(0);
+		
+		if(valor.compareTo(donationTotal()) == -1 || valor.compareTo(donationTotal()) == 0) {
+			orcService.saveDonationManagement(donationManagement, orcamento);
+			messageSalvamento("Salvo com sucesso", FacesMessage.SEVERITY_INFO);			
+		} else if(donationTotal().compareTo(validator) == 0 && valor.compareTo(validator) == 0) {
+			messageSalvamento("Insira um valor válido para ser distribuido", FacesMessage.SEVERITY_ERROR);
+		} else {			
+			messageSalvamento("O valor distribuido é maior que o valor doado", FacesMessage.SEVERITY_ERROR);
+		}
 	}
 	
 	public void salvarRubricaOrcamento() {
