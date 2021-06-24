@@ -339,9 +339,10 @@
 						</div>
 						<div class="ui-g-3 form-group focused">
 							<p:commandLink styleClass="btn btn-primary btn-sm"
-								style="margin-left:5px" title="Salvar" onclick="start()"
-								onerror="stop()" oncomplete="stop()"
-								update="panel-donation-management" process="@form"
+								style="margin-left:5px" title="Salvar" onclick="start();"
+								onerror="stop()"
+								oncomplete="stop();"
+								update="panel-donation-management, info-division-donation" process="@form"
 								action="#{orcamento_controller.saveDonationManagement()}">
 								<i class="pi pi-check"></i>
 								<span style="margin: 3px;">Salvar</span>
@@ -356,12 +357,13 @@
 					<div class="ui-g ui-fluid">
 
 						<div class="ui-g-12">
-							<div style="display: flex; flex-direction: column;">
+							<div class="d-flex flex-column">
 								<label for="file">Valor distribuido: R$
-									#{orcamento_controller.donationTotal()} </label>
+									#{orcamento_controller.donationTotal()}</label>
+								<span class="d-flex justify-content-center">#{orcamento_controller.percentBar()}%</span>
 								<progress id="file" value="#{orcamento_controller.valorAtual()}"
 									max="#{orcamento_controller.orcamento.valor}"
-									style="width: auto"> </progress>
+									style="width: auto"> #{orcamento_controller.percentBar()}% </progress>
 							</div>
 						</div>
 

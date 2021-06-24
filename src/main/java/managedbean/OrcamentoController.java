@@ -238,6 +238,11 @@ public class OrcamentoController implements Serializable {
 		BigDecimal total = orcamento.getValor();
 		return total.subtract(valorAtual());					
 	}
+	
+	public double percentBar() {
+		BigDecimal fator = new BigDecimal(100);
+		return valorAtual().multiply(fator).divide(orcamento.getValor(), 2).doubleValue();
+	}
 	////////////////////////////////////////////////////////////////////
 	
 	public void editarLancamentoEfetivo() {
@@ -637,7 +642,7 @@ public class OrcamentoController implements Serializable {
 		} else if(donationTotal().compareTo(validator) == 0 && valor.compareTo(validator) == 0) {
 			messageSalvamento("Insira um valor válido para ser distribuido", FacesMessage.SEVERITY_ERROR);
 		} else {			
-			messageSalvamento("O valor distribuido é maior que o valor doado", FacesMessage.SEVERITY_ERROR);
+			messageSalvamento("O valor atribuido é inválido", FacesMessage.SEVERITY_ERROR);
 		}
 	}
 	
