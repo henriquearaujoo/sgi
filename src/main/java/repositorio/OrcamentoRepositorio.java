@@ -566,14 +566,13 @@ public class OrcamentoRepositorio implements Serializable {
 
 		Query query = this.manager.createQuery(jpql.toString());
 
-
-		if(filtro.getResponsavelTecnico() != null && filtro.getResponsavelTecnico().getId() != null) {
+		if (filtro.getResponsavelTecnico() != null && filtro.getResponsavelTecnico().getId() != null) {
 			query.setParameter("responsavelTecnico", filtro.getResponsavelTecnico().getId());
 		}
-		if(filtro.getColaborador() != null && filtro.getColaborador().getId() != null) {
+		if (filtro.getColaborador() != null && filtro.getColaborador().getId() != null) {
 			query.setParameter("colaborador", filtro.getColaborador().getId());
 		}
-		if(filtro.getFontePagadora() != null && filtro.getFontePagadora().getId() != null) {
+		if (filtro.getFontePagadora() != null && filtro.getFontePagadora().getId() != null) {
 			query.setParameter("fonte", filtro.getFontePagadora().getId());
 		}
 		if (filtro.getTitulo() != null && !filtro.getTitulo().equals("")) {
@@ -980,6 +979,25 @@ public class OrcamentoRepositorio implements Serializable {
 		Query query = this.manager.createQuery(jpql);
 		query.setParameter("id", idProjeto);
 		return query.getResultList();
+	}
+
+	public List<Orcamento> loadDonations(Long idManagement) {
+		String jpql = "select o.titulo, o.id, sum(dm.value) from \n" + "orcamento o \n"
+				+ "join donation_management dm on \n" + "dm.donation_id = o.id group by o.titulo, o.id";
+		Query query = this.manager.createNativeQuery(jpql);
+		// query.setParameter("id", idManagement);
+
+		List<Object[]> result = query.getResultList();
+		List<Orcamento> donations = new ArrayList<Orcamento>();
+		Orcamento donation;
+		for (Object[] object : result) {
+			donation = new Orcamento(Util.getNullValue(object[1].toString(), new Long(0)),
+					Util.getNullValue(object[0].toString(), ""));
+
+			donations.add(donation);
+		}
+
+		return donations;
 	}
 
 	public List<Rubrica> getRubricaAutoComplete(String txt) {

@@ -1,16 +1,8 @@
 package enums;
 
-import auxiliar.ParcelaBimestral;
-import auxiliar.ParcelaMensal;
-import auxiliar.ParcelaQuinzenal;
-import auxiliar.ParcelaSemanal;
-import auxiliar.ParcelaSemestral;
-import auxiliar.ParcelaTrimestral;
-import auxiliar.ParcelaUnica;
 import enums.classes.InfoGeralDonation;
 import enums.classes.PermissionsDonation;
 import enums.interfaces.ConfigTab;
-import operator.Parcela;
 
 public enum ConfigTabDonation {
 

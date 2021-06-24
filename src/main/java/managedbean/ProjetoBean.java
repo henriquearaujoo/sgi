@@ -128,6 +128,7 @@ public class ProjetoBean implements Serializable {
 	@Inject
 	private CalculatorRubricaRepositorio calculatorRubricaRepositorio;
 	private @Inject OrcamentoService orcService;
+	private @Inject Orcamento donation;
 
 	private Object object = new Object();
 
@@ -312,7 +313,7 @@ public class ProjetoBean implements Serializable {
 		}
 
 	}
-	
+
 	public void dialogHelp() {
 		HashMap<String, Object> options = new HashMap<>();
 		options.put("width", "100%");
@@ -320,8 +321,8 @@ public class ProjetoBean implements Serializable {
 		options.put("contentWidth", "100%");
 		options.put("contentHeight", "100%");
 		options.put("resizable", false);
-		options.put("minimizable",true);
-		options.put("maximizable",true);
+		options.put("minimizable", true);
+		options.put("maximizable", true);
 		PrimeFaces.current().dialog().openDynamic("dialog/help/help_projeto", options, null);
 	}
 
@@ -535,7 +536,7 @@ public class ProjetoBean implements Serializable {
 		projeto = new Projeto();
 		projeto = projetos.size() > 0 ? projetos.get(0) : new Projeto();
 		// carregarComponentes();
-		//popularTreeTable();
+		// popularTreeTable();
 		// createChart();
 	}
 
@@ -543,8 +544,8 @@ public class ProjetoBean implements Serializable {
 		// createMultiAxisModel();
 		carregarDetalhes();
 
-		//if (projeto != null && projeto.getId() != null)
-			//createChartExecucao();
+		// if (projeto != null && projeto.getId() != null)
+		// createChartExecucao();
 
 	}
 
@@ -617,22 +618,18 @@ public class ProjetoBean implements Serializable {
 
 	public void carregasRubricasOrcadas() {
 		listaDeRubricasOrcadas = new ArrayList<>();
-
-		for (OrcamentoProjeto orcamentoProjeto : relacaoDeOrcamentos) {
-			// if
-			// (orcamentoProjeto.getOrcamento().getFonte().getId().longValue()
-			// == new Long(3).longValue()) {
-
-			// }
-
-			// filtro.setComponenteClass(projeto.getComponente().getId());
-			// filtro.setSubComponente(projeto.getSubComponente().getId());
-			listaDeRubricasOrcadas
-					.addAll(gestaoProjeto.getRubricasDeOrcamento(orcamentoProjeto.getOrcamento().getId(), filtro));
-			filtro = new Filtro();
-		}
+		if(donation != null && donation.getId() != null)
+		listaDeRubricasOrcadas.addAll(gestaoProjeto.getRubricasDeOrcamento(donation.getId(), filtro));
+		filtro = new Filtro();
 		// listaDeRubricasOrcadas =
 		// gestaoProjeto.getRubricasDeOrcamento(idOrcamento, filtro)
+	}
+
+	private List<Orcamento> listOfDonation;
+
+	public void loadDonations() {
+		listOfDonation = new ArrayList<Orcamento>();
+		listOfDonation = gestaoProjeto.loadDonations(projeto.getId());
 	}
 
 	public void carregarRubricasDeProjeto() {
@@ -656,21 +653,19 @@ public class ProjetoBean implements Serializable {
 	}
 
 	public void salvarProjetoRubrica() {
+			
+		/*
+		 * if (projetoRubrica.getValor().compareTo(diferenca) > 0) { messageSalvamento(
+		 * "Valor ultrapassa teto do projeto, valor dentro do projeto: " +
+		 * buscarValorTotal(diferenca)); carregarRubricasDeProjeto(); calculaValor();
+		 * return; }
+		 */
 
-		if (projetoRubrica.getValor().compareTo(diferenca) > 0) {
-			messageSalvamento(
-					"Valor ultrapassa teto do projeto, valor dentro do projeto: " + buscarValorTotal(diferenca));
-			carregarRubricasDeProjeto();
-			calculaValor();
-			return;
-		}
-
-		if (calculaValorRubrica(projetoRubrica.getValor())) {
-			messageSalvamento("Rubrica sem saldo suficiente.");
-			carregarRubricasDeProjeto();
-			calculaValor();
-			return;
-		}
+		/*
+		 * if (calculaValorRubrica(projetoRubrica.getValor())) {
+		 * messageSalvamento("Rubrica sem saldo suficiente.");
+		 * carregarRubricasDeProjeto(); //calculaValor(); return; }
+		 */
 
 		BigDecimal despesas = BigDecimal.ZERO;
 		BigDecimal receitas = BigDecimal.ZERO;
@@ -747,11 +742,11 @@ public class ProjetoBean implements Serializable {
 			c2.set(Calendar.DAY_OF_MONTH, 31);
 			projeto.setDataFinal(c2.getTime());
 		}
-		//carregarComponentes();
-		//carregarSubComponentes();
+		// carregarComponentes();
+		// carregarSubComponentes();
 		// carregarRelacaoDeOrcamentos();
 		findObjetivoByIdProjeto();
-		//fetchPlanes();
+		// fetchPlanes();
 		carregarCadeias();
 		carregarSubProgramas();
 		// carregarQualifs();
@@ -1837,9 +1832,6 @@ public class ProjetoBean implements Serializable {
 		if (tabviewProjeto != null)
 			index = tabviewProjeto.getActiveIndex();
 
-		if (tabviewProjeto != null)
-			index = tabviewProjeto.getActiveIndex();
-
 		if (index == 0) {
 
 		} else if (index == 1) {
@@ -1850,10 +1842,11 @@ public class ProjetoBean implements Serializable {
 			carregarAtividades();
 
 		} else if (index == 3) {
-			carregarRelacaoDeOrcamentos();
-			carregasRubricasOrcadas();
+			// carregarRelacaoDeOrcamentos();
+			loadDonations();
+			// carregasRubricasOrcadas();
 			carregarRubricasDeProjeto();
-			calculaValor();
+			// calculaValor();
 
 			// createMultiAxisModel();
 			// createChartExecucao();
@@ -2749,7 +2742,7 @@ public class ProjetoBean implements Serializable {
 	public void editarObjetivo() {
 		objetivo = objetivoService.getId(objetivo.getId());
 		listaMetasPorObjetivo = metasService.findMetasByObjetivo(objetivo);
-		
+
 	}
 
 	public void openDialogMetas() {
@@ -2787,7 +2780,7 @@ public class ProjetoBean implements Serializable {
 			findObjetivoByIdProjeto();
 			openDialog("PF('dlg_cadastro_objetivo').hide();");
 		} catch (Exception e) {
-			e.printStackTrace(); 		
+			e.printStackTrace();
 		}
 	}
 
@@ -3201,7 +3194,7 @@ public class ProjetoBean implements Serializable {
 		if (indicador == null)
 			indicador = new Indicador();
 		PrimeFaces current = PrimeFaces.current();
-		
+
 	}
 
 	private void findIndicadoresByProjeto() {
@@ -3286,6 +3279,22 @@ public class ProjetoBean implements Serializable {
 
 	public void setOrcamentos(List<Orcamento> orcamentos) {
 		this.orcamentos = orcamentos;
+	}
+
+	public List<Orcamento> getListOfDonation() {
+		return listOfDonation;
+	}
+
+	public void setListOfDonation(List<Orcamento> listOfDonation) {
+		this.listOfDonation = listOfDonation;
+	}
+
+	public Orcamento getDonation() {
+		return donation;
+	}
+
+	public void setDonation(Orcamento donation) {
+		this.donation = donation;
 	}
 
 	/*

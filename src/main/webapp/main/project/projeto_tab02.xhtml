@@ -7,292 +7,149 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 	<div style="padding: 2px 2px">
+		<p:growl id="growl" showDetail="true" sticky="true" />
 
-		<p:fieldset legend="Recursos do projeto">
+		<p:panel id="panel-relacao-orcamento">
 
-			<p:panel id="panel-relacao-orcamento">
-				<div id="div_acoes" class="botao_central" align="left"
-					style="width: 100%; background-color:; margin: 0px 1px 10px 2px;">
+
+			<div class="ui-g ui-fluid">
+
+
+				<div class="ui-g-3 form-group">
+
+					<p:outputLabel value="Doação" for="donation" />
+					<p:selectOneMenu id="donation" style="width:100%"
+						value="#{projetoBean.donation}" filter="true"
+						filterMatchMode="contains" converter="orcamentoConverter">
+						<f:selectItem noSelectionOption="true"/>
+						<f:selectItems value="#{projetoBean.listOfDonation}"
+							var="donation" itemLabel="#{donation.titulo}"
+							itemValue="#{donation}" />
+
+						<p:ajax event="change" update="rubrica"
+							listener="#{projetoBean.carregasRubricasOrcadas()}" />
+
+					</p:selectOneMenu>
 				</div>
 
-				<div id="orcamento" class="ui-g ui-fluid">
-					<div class="ui-g-3 form-group">
-						<p:outputLabel for="doacao" value="Doação"
-							styleClass="form-label" style="width: 100%" />
+				<div class="ui-g-3 form-group">
 
-						<p:autoComplete id="doacao" placeholder="Doação"
-							 style="width: 100%"
-							requiredMessage="Campo obrigatório"
-							value="#{projetoBean.orcamentoProjeto.orcamento}"
-							completeMethod="#{projetoBean.completeOrcamento}" var="orcamento"
-							itemLabel="#{orcamento.titulo}" itemValue="#{orcamento}"
-							forceSelection="true" />
-					</div>
+					<p:outputLabel value="Categoria" for="rubrica" />
+					<p:selectOneMenu id="rubrica" style="width:100%"
+						value="#{projetoBean.projetoRubrica.rubricaOrcamento}" var="rb"
+						converter="rubricaOrcamentoConverter" filter="true"
+						filterMatchMode="contains">
+						<f:selectItems value="#{projetoBean.listaDeRubricasOrcadas}"
+							var="rubrica" itemLabel="#{rubrica.rubrica.nome}"
+							itemValue="#{rubrica}" />
 
-					<div class="ui-g-3 form-group">
-						<p:outputLabel for="valor_liberado" value="Valor:"
-							styleClass="form-label" style="width: 100%" />
+						<p:column>
+							<h:outputText value="#{rb.orcamento.titulo}" />
+						</p:column>
 
-						<p:inputText id="valor_liberado" style="width: 100%"
-							value="#{projetoBean.orcamentoProjeto.valor}"
-							onkeydown="mascaraMoeda(this,moeda)" required="true"
-							requiredMessage="Campo obrigatório">
-							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
-								locale="pt_BR" />
-						</p:inputText>
-					</div>
+						<p:column>
+							<h:outputText value="#{rb.componente.nome}" />
+						</p:column>
 
-					<div class="ui-g-3 form-group">
-						<p:outputLabel for="tipo" value="tipo" styleClass="form-label"
-							style="width: 100%" />
+						<p:column>
+							<h:outputText value="#{rb.subComponente.nome}" />
+						</p:column>
 
-						<p:selectOneMenu id="tipo"
-							value="#{projetoBean.orcamentoProjeto.tipo}" required="true">
-							<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
-							<f:selectItem itemLabel="Suplementação" itemValue="Suplementação" />
-							<f:selectItem itemLabel="Convencional" itemValue="Convencional" />
-						</p:selectOneMenu>
-					</div>
+						<p:column>
+							<h:outputText value="#{rb.rubrica.nome}" />
+						</p:column>
 
+					</p:selectOneMenu>
+
+				</div>
+
+				<div class="ui-g-3 form-group">
+					<p:outputLabel value="Valor" for="valor_liberado_rubrica" />
+					<p:inputText id="valor_liberado_rubrica"
+						value="#{projetoBean.projetoRubrica.valor}"
+						onkeydown="mascaraMoeda(this,moeda)" required="true"
+						requiredMessage="Campo obrigatório">
+						<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+							locale="pt_BR" />
+					</p:inputText>
+				</div>
+
+				<div class="ui-g-3 form-group">
 					<p:commandLink styleClass="btn btn-success btn-sm"
-						style="margin-left:10px;color:white; height: 30px; margin-top: 12px"
-						title="Salvar" process="panel-relacao-orcamento"
-						update="panel-relacao-orcamento"
-						action="#{projetoBean.salvarOrcamentoProjeto()}">
+						style="margin-left:5px" title="Salvar"
+						action="#{projetoBean.salvarProjetoRubrica()}">
 						<span class="glyphicon glyphicon-plus"></span>
 						<span style="margin: 3px;">Incluir</span>
 					</p:commandLink>
 				</div>
-				<p:separator />
-				<p:dataTable id="table-relacao"
-					emptyMessage="Nenhum Registro Encontrado!"
-					value="#{projetoBean.relacaoDeOrcamentos}" var="relacao">
-					<p:column headerText="Doação" style="text-align: center;">
-						<h:outputText value="#{relacao.orcamento.titulo}" />
-					</p:column>
-
-					<p:column headerText="Contrato" style="text-align: center;">
-						<h:outputText value="#{relacao.orcamento.contrato}" />
-					</p:column>
-
-					<p:column headerText="Parceiro" style="text-align: center;">
-						<h:outputText value="#{relacao.orcamento.fonte.nome}" />
-					</p:column>
-					<p:column headerText="Relação" style="text-align: center;">
-						<h:outputLabel value="#{relacao.tipo}" />
-					</p:column>
-					<p:column headerText="Data Cadastro" style="text-align: center;">
-						<h:outputText value="#{relacao.dataInsercao}">
-							<f:convertDateTime pattern="dd/MM/yyyy" />
-						</h:outputText>
-					</p:column>
-
-					<p:column headerText="Status" style="text-align: center;">
-						<p:outputLabel value="#{relacao.status}"
-							rendered="#{relacao.status != null or relacao.status != ''}" />
-						<p:outputLabel value="Em Análise"
-							rendered="#{relacao.status == null or relacao.status == ''}" />
-					</p:column>
-					<p:column headerText="Valor" style="text-align: center;">
-						<h:outputText value="#{relacao.valor}">
-							<f:convertNumber type="currency" locale="pt_BR" />
-						</h:outputText>
-					</p:column>
-
-					<p:column width="30px" headerText="Ação"
-						style="text-align: center;">
 
 
-						<p:commandLink style=";font-size:12px"
-							styleClass="btn btn-default btn-xs" title="Editar"
-							rendered="false" process="@this" onclick="start()"
-							onerror="stop()" onsuccess="stop()"
-							disabled="#{relacao.status == 'Aprovado'}">
-							<span class="glyphicon glyphicon-edit"></span>
-						</p:commandLink>
+				<div class="ui-g-12 form-group">
+					<p:dataTable id="table-relacao-rubrica"
+						value="#{projetoBean.listaDeRubricasProjeto}" var="projetoRubrica">
 
-						<p:commandLink update="table-relacao"
-							disabled="#{relacao.status == 'Aprovado'}"
-							style="margin-left:5px;font-size:12px;color:#fff"
-							styleClass="btn btn-danger btn-xs" process="@this"
-							title="Excluir" action="#{projetoBean.removerRelacaoOrcamento()}">
-							<span class=" glyphicon glyphicon-remove-circle"></span>
-							<f:setPropertyActionListener value="#{relacao}"
-								target="#{projetoBean.orcamentoProjeto}" />
-							<p:confirm header="Confirmar exclusão de relação"
-								icon="ui-icon-alert"
-								message="Excluir relação com doação. Deseja continuar?" />
 
-						</p:commandLink>
-					</p:column>
+						<p:column headerText="Doação" style="width:120px">
+							<h:outputText
+								value="#{projetoRubrica.rubricaOrcamento.orcamento.titulo}" />
+						</p:column>
 
-				</p:dataTable>
-				<p:fieldset id="id-field-rubrica" legend="Linha Orçamentaria"
-					rendered="#{projetoBean.relacaoDeOrcamentos.size() != 0}">
-					<h:panelGroup id="panel-relacao-rubrica">
 
-						<p:panelGrid columns="7">
+						<p:column headerText="Componente" style="width:120px">
+							<h:outputText
+								value="#{projetoRubrica.rubricaOrcamento.componente.nome}" />
+						</p:column>
 
-							<h:panelGrid columns="1">
-								<p:outputLabel value="Categoria:" for="rubrica" />
-								<p:selectOneMenu id="rubrica" styleClass="font11-vi"
-									value="#{projetoBean.projetoRubrica.rubricaOrcamento}" var="rb"
-									converter="rubricaOrcamentoConverter">
-									<f:selectItems value="#{projetoBean.listaDeRubricasOrcadas}"
-										var="rubrica" itemLabel="#{rubrica.rubrica.nome}"
-										itemValue="#{rubrica}" />
+						<p:column headerText="SubComponente">
+							<h:outputText
+								value="#{projetoRubrica.rubricaOrcamento.subComponente.nome}" />
+						</p:column>
 
-									<p:column>
-										<h:outputText value="#{rb.orcamento.titulo}" />
-									</p:column>
+						<p:column headerText="Categoria">
+							<h:outputText
+								value="#{projetoRubrica.rubricaOrcamento.rubrica.nome}" />
+						</p:column>
 
-									<p:column>
-										<h:outputText value="#{rb.componente.nome}" />
-									</p:column>
-
-									<p:column>
-										<h:outputText value="#{rb.subComponente.nome}" />
-									</p:column>
-
-									<p:column>
-										<h:outputText value="#{rb.rubrica.nome}" />
-									</p:column>
-
-								</p:selectOneMenu>
-								<p:message for="rubrica" escape="true" display="text"
-									showSummary="false" showDetail="true" />
-							</h:panelGrid>
-
-							<h:panelGrid columns="1">
-								<p:outputLabel value="Valor:" for="valor_liberado_rubrica" />
-								<p:inputText id="valor_liberado_rubrica"
-									value="#{projetoBean.projetoRubrica.valor}"
-									onkeydown="mascaraMoeda(this,moeda)" required="true"
-									requiredMessage="Campo obrigatório">
-									<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
-										locale="pt_BR" />
-								</p:inputText>
-								<p:message for="valor_liberado_rubrica" escape="true"
-									display="text" showSummary="false" showDetail="true" />
-							</h:panelGrid>
-
-							<h:panelGrid columns="1">
-								<p:outputLabel value=":::" />
-								<h:panelGroup>
-									<p:commandLink styleClass="btn btn-success btn-sm"
-										style="margin-left:5px" title="Salvar"
-										process="panel-relacao-rubrica"
-										update="panel-relacao-rubrica panel_saldo_orcamento"
-										action="#{projetoBean.salvarProjetoRubrica()}">
-										<span class="glyphicon glyphicon-plus"></span>
-										<span style="margin: 3px;">Incluir</span>
-									</p:commandLink>
-
-								</h:panelGroup>
-								<p:outputLabel value=":::" />
-							</h:panelGrid>
-
-						</p:panelGrid>
-
-						<p:separator />
-
-						<p:panel id="panel_saldo_orcamento">
-							<span style="margin-left: 4px">Distribuído:</span>
-							<h:outputText style="margin-left:2px"
-								value="#{projetoBean.valorDistribuido}">
+						<p:column width="120" headerText="Valor" style="text-align:right">
+							<h:outputText value="#{projetoRubrica.valor}">
 								<f:convertNumber type="currency" maxFractionDigits="2"
 									currencySymbol="R$" />
 							</h:outputText>
+						</p:column>
 
-							<span style="margin-left: 4px">/</span>
-							<span style="margin-left: 4px">Diferença:</span>
-							<h:outputText style="margin-left:2px"
-								value="#{projetoBean.diferenca}">
-								<f:convertNumber type="currency" maxFractionDigits="2"
-									currencySymbol="R$" />
-							</h:outputText>
+						<p:column style="width:80px">
 
-						</p:panel>
+							<p:commandLink process="@this"
+								action="#{projetoBean.preparaEdicaoRubricaProjeto()}"
+								styleClass="btn btn-default btn-xs ">
+								<span class="glyphicon glyphicon-edit"></span>
+								<f:setPropertyActionListener value="#{projetoRubrica}"
+									target="#{projetoBean.projetoRubrica}" />
+							</p:commandLink>
 
-						<p:separator />
+							<p:commandLink style="color:#FFF;margin-left:5px"
+								styleClass="btn btn-danger btn-xs " process="@this"
+								action="#{projetoBean.removerProjetoRubrica()}">
+								<span class="glyphicon glyphicon-remove-circle"></span>
+								<f:setPropertyActionListener value="#{projetoRubrica}"
+									target="#{projetoBean.projetoRubrica}" />
+							</p:commandLink>
+						</p:column>
 
+						<p:columnGroup type="footer">
+							<p:row>
+								<p:column colspan="4" footerText="Subtotal: "
+									style="text-align:right" />
+								<p:column style="text-align:right"
+									footerText="#{projetoBean.buscarValorTotal()}" />
+								<p:column></p:column>
+							</p:row>
 
-						<p:dataTable id="table-relacao-rubrica"
-							value="#{projetoBean.listaDeRubricasProjeto}"
-							var="projetoRubrica">
+						</p:columnGroup>
+					</p:dataTable>
+				</div>
+			</div>
+		</p:panel>
 
-
-							<p:column headerText="Doação" style="width:120px">
-								<h:outputText
-									value="#{projetoRubrica.rubricaOrcamento.orcamento.titulo}" />
-							</p:column>
-
-
-							<p:column headerText="Componente" style="width:120px">
-								<h:outputText
-									value="#{projetoRubrica.rubricaOrcamento.componente.nome}" />
-							</p:column>
-
-							<p:column headerText="SubComponente">
-								<h:outputText
-									value="#{projetoRubrica.rubricaOrcamento.subComponente.nome}" />
-							</p:column>
-
-							<p:column headerText="Categoria">
-								<h:outputText
-									value="#{projetoRubrica.rubricaOrcamento.rubrica.nome}" />
-							</p:column>
-
-							<p:column width="120" headerText="Valor" style="text-align:right">
-								<h:outputText value="#{projetoRubrica.valor}">
-									<f:convertNumber type="currency" maxFractionDigits="2"
-										currencySymbol="R$" />
-								</h:outputText>
-							</p:column>
-
-							<p:column style="width:80px">
-
-								<p:commandLink 
-									process="@this"
-									action="#{projetoBean.preparaEdicaoRubricaProjeto()}"
-									styleClass="btn btn-default btn-xs ">
-									<span class="glyphicon glyphicon-edit"></span>
-									<f:setPropertyActionListener value="#{projetoRubrica}"
-										target="#{projetoBean.projetoRubrica}" />
-								</p:commandLink>
-
-								<p:commandLink style="color:#FFF;margin-left:5px"
-									styleClass="btn btn-danger btn-xs " process="@this"
-									action="#{projetoBean.removerProjetoRubrica()}">
-									<span class="glyphicon glyphicon-remove-circle"></span>
-									<f:setPropertyActionListener value="#{projetoRubrica}"
-										target="#{projetoBean.projetoRubrica}" />
-								</p:commandLink>
-							</p:column>
-
-							<p:columnGroup type="footer">
-								<p:row>
-									<p:column colspan="4" footerText="Subtotal: "
-										style="text-align:right" />
-									<p:column style="text-align:right"
-										footerText="#{projetoBean.buscarValorTotal()}" />
-									<p:column></p:column>
-								</p:row>
-
-							</p:columnGroup>
-
-						</p:dataTable>
-
-					</h:panelGroup>
-
-				</p:fieldset>
-
-			</p:panel>
-
-		</p:fieldset>
 	</div>
-
-
-
-
 </ui:fragment>

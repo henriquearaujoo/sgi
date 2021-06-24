@@ -310,6 +310,10 @@ public class ProjetoService implements Serializable {
 	public List<OrcamentoProjeto> getRelacaoDeOrcamentos(Long idProjeto) {
 		return orcamentoRepositorio.getRelacaoDeOrcamentos(idProjeto);
 	}
+	
+	public List<Orcamento> loadDonations(Long idManagement) {
+		return orcamentoRepositorio.loadDonations(idManagement);
+	}
 
 	public List<Produto> getProdutos(String s) {
 		return produtoRepositorio.getProduto(s);
