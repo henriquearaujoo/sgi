@@ -18,8 +18,10 @@ import model.*;
 import org.apache.commons.digester.plugins.PluginAssertionFailure;
 
 import anotacoes.Transactional;
+import repositorio.ColaboradorRepositorio;
 import repositorio.ComposicaoOrcamentoRepositorio;
 import repositorio.ContaRepository;
+import repositorio.DonationManagementRepositorio;
 import repositorio.LogRepositorio;
 import repositorio.OrcamentoRepositorio;
 import repositorio.PagamentoLancamentoRepository;
@@ -49,21 +51,36 @@ public class OrcamentoService implements Serializable {
 	private @Inject TransferenciaOverHeadRepositorio overHeadRepositorio;
 	private @Inject ComposicaoOrcamentoRepositorio compOrcamentoRepositorio;
 	private @Inject LogRepositorio logRepositorio;
-	
+	private @Inject ColaboradorRepositorio colaboradorRepositorio;
+	private @Inject DonationManagementRepositorio donationRepositorio;
+
 	@Inject
 	private UsuarioSessao usuarioSessao;
 
 	public List<PlanoDeTrabalho> getPlanos() {
 		return planoRepositorio.getPlanos();
 	}
-	
-	
+
+	public List<Gestao> findGestao() {
+		return colaboradorRepositorio.findGestao();
+	}
+
 	public RubricaOrcamento findByIdRubricaOrcamento(Long id) {
 		return repositorio.findByIdRubricaOrcamento(id);
 	}
-	
+
 	public List<ContaBancaria> getContasCorrente() {
 		return contaRepository.getContasCorrente(new Filtro());
+	}
+
+	@Transactional
+	public void saveDonationManagement(DonationManagement donationManagement, Orcamento orcamento) {
+		donationManagement.setDonation(orcamento);
+		if (donationManagement.getId() != null)
+			donationManagement.setDateCreated(new Date());
+		donationManagement.setDateEdited(new Date());
+		donationManagement.setActive(true);
+		donationRepositorio.save(donationManagement);
 	}
 
 	@Transactional
@@ -93,12 +110,10 @@ public class OrcamentoService implements Serializable {
 		return repositorio.getOrcamentos(filtro);
 	}
 
+	/////////////////////////////////// FILTRO V2
+	/////////////////////////////////// ///////////////////////////////////////
 
-	
-	/////////////////////////////////// FILTRO V2 ///////////////////////////////////////
-	
 	public List<Orcamento> filtrarOrcamentos(Filtro filtro) {
-
 
 		if (filtro.getDataInicio() != null && filtro.getDataFinal() != null) {
 			if (filtro.getDataInicio().after(filtro.getDataFinal())) {
@@ -133,7 +148,7 @@ public class OrcamentoService implements Serializable {
 			calInicio.set(Calendar.SECOND, 0);
 			calInicio.set(Calendar.MILLISECOND, 0);
 			filtro.setDataInicio(calInicio.getTime());
-		} else if (filtro.getDataFinal() != null){
+		} else if (filtro.getDataFinal() != null) {
 			Calendar calFinal = Calendar.getInstance();
 			calFinal.setTime(filtro.getDataFinal());
 			calFinal.set(Calendar.HOUR, 0);
@@ -145,17 +160,13 @@ public class OrcamentoService implements Serializable {
 
 		return repositorio.filtrarOrcamentos(filtro);
 	}
-	
-	
-	
-	
+
 	/////////////////////////////////////////////////////////////////////////////////////
-	
 
 	public List<Projeto> getProjetosFilter(Filtro filtro) throws NumberFormatException, ParseException {
 		return repositorio.getProjetosFilter(filtro, "");
 	}
-	
+
 	public List<Orcamento> getOrcamentosFilter(Filtro filtro) {
 		return repositorio.getOrcamentosFilter(filtro, "");
 	}
@@ -183,7 +194,8 @@ public class OrcamentoService implements Serializable {
 	@Transactional
 	public RubricaOrcamento salvarRubricaOrcamento(RubricaOrcamento rubricaOrcamento) {
 		rubricaOrcamento = repositorio.salvarRubricaOrcamento(rubricaOrcamento);
-		salvarLog(usuarioSessao.getUsuario(), "Edição de linha ID "+rubricaOrcamento.getId(), "EFETIVADO", "PROVISIONADO");		
+		salvarLog(usuarioSessao.getUsuario(), "Edição de linha ID " + rubricaOrcamento.getId(), "EFETIVADO",
+				"PROVISIONADO");
 		return rubricaOrcamento;
 	}
 
@@ -286,7 +298,7 @@ public class OrcamentoService implements Serializable {
 	}
 
 	@Transactional
-	public BaixaAplicacao atualizarBaixa(BaixaAplicacao baixaAplicacao){
+	public BaixaAplicacao atualizarBaixa(BaixaAplicacao baixaAplicacao) {
 		return repositorio.atualizarBaixa(baixaAplicacao);
 	}
 
@@ -307,7 +319,7 @@ public class OrcamentoService implements Serializable {
 	}
 
 	@Transactional
-	public AplicacaoRecurso atualizarAplicacao(AplicacaoRecurso aplicacao){
+	public AplicacaoRecurso atualizarAplicacao(AplicacaoRecurso aplicacao) {
 		return repositorio.atualizarAplicacao(aplicacao);
 	}
 
@@ -365,12 +377,12 @@ public class OrcamentoService implements Serializable {
 	public List<Projeto> getProjetoAutoCompleteMODE01(String s) {
 		return projetoRepositorio.getProjetoAutocompleteMODE01(s);
 	}
-	
+
 	public List<String> getOrcamentoTitulosAutoComplete(String query) {
-		List<Orcamento> titulos = new ArrayList<>(); 
+		List<Orcamento> titulos = new ArrayList<>();
 		titulos = repositorio.completeTitulos(query);
 		List<String> titulosString = new ArrayList<>();
-		for(Orcamento titulo: titulos) {
+		for (Orcamento titulo : titulos) {
 			titulosString.add(titulo.getTitulo());
 		}
 		return titulosString;
@@ -397,41 +409,38 @@ public class OrcamentoService implements Serializable {
 		return repositorio.getHistoricoAditivoOrcamento(id);
 	}
 
-	
 	public Boolean verificarSaldoOverHead(TransferenciaOverHead transf) {
-		
+
 		if (transf.getTipo() == 0) {
 			BigDecimal valorPagoOverhead = getTotalTransferenciaOverheadPagos(transf);
 			BigDecimal valorOrcadoOverhead = transf.getDoacaoPagadora().getValorOverheadAPagar() != null
 					? transf.getDoacaoPagadora().getValorOverheadAPagar()
 					: BigDecimal.ZERO;
-					
-					
+
 			BigDecimal valorDisponivel = valorOrcadoOverhead.subtract(valorPagoOverhead);
 			if (valorDisponivel.compareTo(transf.getValor()) >= 0) {
 				return true;
-			}else {
-				
+			} else {
+
 				return false;
 			}
 		} else {
 			BigDecimal valorPagoOverhead = getTotalTransferenciaOverheadIndiretoPagos(transf);
 			BigDecimal valorOrcadoOverhead = getValorRendimento(transf.getDoacaoPagadora().getId());
-					
+
 			BigDecimal valorDisponivel = valorOrcadoOverhead.subtract(valorPagoOverhead);
-			
+
 			if (valorDisponivel.compareTo(transf.getValor()) >= 0) {
 				return true;
-			}else {
-				
+			} else {
+
 				return false;
 			}
 		}
-		
-	}
-	
 
-	public void salvarLog(User usuario,String descricao,String estadoAnterior,String estadoAtual) {
+	}
+
+	public void salvarLog(User usuario, String descricao, String estadoAnterior, String estadoAtual) {
 		LogLinesBudget log = new LogLinesBudget();
 		log.setDateEdit(new Date());
 		log.setDescricao(descricao);
@@ -439,10 +448,9 @@ public class OrcamentoService implements Serializable {
 		log.setEstadoNovo(estadoAtual);
 		log.setUsuario(usuario.getNomeUsuario());
 		logRepositorio.salvarLogLineBudget(log);
-		
+
 	}
-	
-	
+
 	@Transactional
 	public TransferenciaOverHead salvarTransferenciaOverHead(TransferenciaOverHead transf) {
 		return this.overHeadRepositorio.salvarTransferenciaOverHead(transf);
@@ -468,7 +476,7 @@ public class OrcamentoService implements Serializable {
 	public BigDecimal getValorOverhead(Long orcamento) {
 		return compOrcamentoRepositorio.getValorOverheadByOrcamento(orcamento);
 	}
-	
+
 	public BigDecimal getValorOverheadPago(Long orcamento) {
 		return compOrcamentoRepositorio.getValorOverheadPagoByOrcamento(orcamento);
 	}

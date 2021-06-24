@@ -20,6 +20,16 @@
 					<i class="pi pi-check"></i>
 					<span style="margin: 3px;">Incluir nova linha</span>
 				</p:commandLink>
+				
+				<p:commandLink styleClass="btn btn-primary btn-sm"
+					onclick="setarWidthHeight('form-donation-management');start()"
+					onerror="stop()" style="margin-left:5px" title="Divisão de orçamento"
+					update="panel-donation-management" process="@this"
+					action="#{orcamento_controller.clearDonationManagement()}"
+					oncomplete="PF('dlg-donation-management').show();stop()">
+					<i class="pi pi-check"></i>
+					<span style="margin: 3px;">Divisão de orçamento</span>
+				</p:commandLink>
 
 				<p:commandLink styleClass="btn btn-primary btn-sm"
 					onclick="setarWidthHeight('form-detalhe-values');start()"

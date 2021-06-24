@@ -55,7 +55,7 @@
 					<!-- 						<ui:include src="/WEB-INF/orcamento_pre_cadastro.xhtml" /> -->
 					<!-- 					</p:tab> -->
 
-					<p:tab id="cad_rubricas" 
+					<p:tab id="cad_rubricas"
 						rendered="#{orcamento_controller.orcamento.id != null and !orcamento_controller.preCadastro}"
 						title="Orçamento">
 						<ui:include src="/main/doacao/requisitos_doacao.xhtml" />
@@ -292,13 +292,74 @@
 		</p:dialog>
 
 
+		<p:dialog widgetVar="dlg-donation-management" modal="true"
+			width="100%" height="100%" closable="true" closeOnEscape="true"
+			showHeader="true" header="Divisão de orçamentos entre gestões"
+			showEffect="clip" hideEffect="clip">
+			<h:form id="form-donation-management" prependId="false"
+				style="margem">
+				<p:panel id="panel-donation-management"
+					style="margin-left: 35px; margin-top:45px">
+					<div class="ui-g ui-fluid"
+						style="margin-top: 15px; margin-left: 35px">
+						<div class="ui-g-12">
+							<p:messages showSummary="false" showDetail="true" closable="true"
+								escape="true">
+								<p:autoUpdate></p:autoUpdate>
+							</p:messages>
+						</div>
+
+						<div class="ui-g-12 form-group focused">
+							<p:outputLabel value="Gestão:" for="gestao" />
+							<p:selectOneMenu id="gestao" filter="true"
+								filterMatchMode="contains" style="width:100%"
+								value="#{orcamento_controller.donationManagement.management}"
+								converter="gestaoConverter" required="true">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{orcamento_controller.listaGestao()}"
+									var="action" itemLabel="#{action.nome}" itemValue="#{action}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="ui-g-12 form-group focused">
+							<p:outputLabel value="Descrição:" for="description" />
+							<p:inputText id="description"
+								value="#{orcamento_controller.donationManagement.description}">
+							</p:inputText>
+						</div>
+						<div class="ui-g-12 form-group focused">
+							<p:inputText id="input-value-donation" style="text-align: center"
+								value="#{orcamento_controller.donationManagement.valor}"
+								onkeydown="mascaraMoeda(this,moeda)">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="pt_BR" />
+							</p:inputText>
+						</div>
+						<div class="ui-g-12 form-group focused">
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								style="margin-left:5px" title="Salvar" onclick="start()"
+								onerror="stop()" oncomplete="stop()"
+								update="panel-donation-management"
+								process="@form"
+								action="#{orcamento_controller.saveDonationManagement()}">
+								<i class="pi pi-check"></i>
+								<span style="margin: 3px;">Salvar</span>
+							</p:commandLink>
+						</div>
+					</div>
+				</p:panel>
+			</h:form>
+		</p:dialog>
+
+
 		<p:dialog widgetVar="dlg-nova-linha" modal="true" width="100%"
 			height="100%" closable="true" closeOnEscape="true" showHeader="true"
 			header="Inclusão de linha orçamentária" showEffect="clip"
 			hideEffect="clip">
 			<h:form id="form-nova-linha" prependId="false" style="margem">
-				<p:panel id="panel-form-nova-linha" style="margin-left: 35px; margin-top:45px">
-					<div class="ui-g ui-fluid" style="margin-top: 15px; margin-left: 35px">
+				<p:panel id="panel-form-nova-linha"
+					style="margin-left: 35px; margin-top:45px">
+					<div class="ui-g ui-fluid"
+						style="margin-top: 15px; margin-left: 35px">
 
 						<div class="ui-g-12">
 							<p:messages showSummary="false" showDetail="true" closable="true"

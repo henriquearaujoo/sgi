@@ -31,6 +31,7 @@ import model.ComponenteClass;
 import model.ContaBancaria;
 import model.DespesaReceita;
 import model.DoacaoEfetiva;
+import model.DonationManagement;
 import model.FontePagadora;
 import model.Gestao;
 import model.HistoricoAditivoOrcamento;
@@ -86,6 +87,7 @@ public class OrcamentoController implements Serializable {
 	private @Inject GestaoRepositorio gestaoRepositorio;
 	private @Inject CalculatorRubricaRepositorio calculatorRubricaRepositorio;
 	private @Inject OrcamentoService orcamentoService;
+	private @Inject DonationManagement donationManagement;
 
 	private Projeto projetoDespesa;
 
@@ -580,6 +582,19 @@ public class OrcamentoController implements Serializable {
 		FacesContext.getCurrentInstance().addMessage(null, message);
 		;
 	}
+	
+	public void messageSalvamento(String txt, FacesMessage.Severity severity) {
+
+		// StringBuilder msg = new StringBuilder("Projeto salvo com sucesso");
+		FacesMessage message = new FacesMessage(severity, "Aviso", txt);
+
+		FacesContext.getCurrentInstance().addMessage(null, message);
+		;
+	}
+	
+	public List<Gestao> listaGestao() {
+		return orcService.findGestao();
+	}
 
 	private @Inject OrcamentoService orcService;
 	private BigDecimal valorDistribuido;
@@ -598,12 +613,18 @@ public class OrcamentoController implements Serializable {
 	}
 
 	// @Transactional
+	
+	public void saveDonationManagement() {
+		orcService.saveDonationManagement(donationManagement, orcamento);
+		messageSalvamento("Salvo com sucesso", FacesMessage.SEVERITY_INFO);
+	}
+	
 	public void salvarRubricaOrcamento() {
 
 		if (rubricaOrcamento.getValor() != null) {
 			if (rubricaOrcamento.getValor().compareTo(diferenca) > 0) {
 				messageSalvamento(
-						"Valor ultrapassa o teto do projeto, valor dentro do projeto: " + buscarValorTotal(diferenca));
+						"Valor ultrapassa o teto do projeto, valor dentro do projeto: " + buscarValorTotal(diferenca), FacesMessage.SEVERITY_ERROR);
 				carregarRubrica();
 				calculaValor();
 				return;
@@ -737,6 +758,11 @@ public class OrcamentoController implements Serializable {
 		componente = new ComponenteClass();
 		subComponente = new SubComponente();
 	}
+	
+	public void clearDonationManagement() {
+		donationManagement = new DonationManagement();
+	}
+
 
 	// Edição de linha orçamentária na nova versão
 
@@ -1807,6 +1833,14 @@ public class OrcamentoController implements Serializable {
 
 	public void setStackedGroupBarModel(BarChartModel stackedGroupBarModel) {
 		this.stackedGroupBarModel = stackedGroupBarModel;
+	}
+
+	public DonationManagement getDonationManagement() {
+		return donationManagement;
+	}
+
+	public void setDonationManagement(DonationManagement donationManagement) {
+		this.donationManagement = donationManagement;
 	}
 
 }
