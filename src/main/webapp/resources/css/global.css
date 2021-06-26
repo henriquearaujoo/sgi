@@ -39,10 +39,10 @@ body, html {
 }
 
 /* CAROUSEL  */
-/*
-.carousel_help .ui-carousel .ui-widget .ui-widget-content .ui-corner-all .ui-hidden-container {
+
+/*.carousel_help .ui-carousel .ui-widget .ui-widget-content .ui-corner-all .ui-hidden-container {
 	width: auto !important;
-}
+}*/
 
 .carousel_help.ui-carousel .ui-carousel-header {
 	border: 1px solid #32be8f !important;
@@ -54,14 +54,11 @@ body, html {
 .carousel_help.ui-carousel .ui-carousel-button.ui-carousel-next-button,
 .carousel_help.ui-carousel .ui-carousel-button.ui-carousel-prev-button {
 	color: var(--yellow);
-}
+}*/
 
 .carousel_help.ui-carousel .ui-carousel-viewport {
 	height: 86vh !important;
 	overflow-y: scroll;
-	padding: 2.5vh !important;
-	display: flex !important;
-	flex-direction: column !important;
 }
 
 .carousel_help {
@@ -69,22 +66,23 @@ body, html {
 }
 
 .carousel_help.ui-carousel .ui-carousel-viewport .ui-carousel-item {
-	width: 100vw !important;
+	width: 96.6vw !important;
 	padding: 10px !important;
-	margin: 2.5vh !important;
+	margin: 0.5vw !important;
 	
-}*/
+}
 
 .carousel_help.ui-carousel .ui-carousel-viewport::-webkit-scrollbar-track {
 	background-color: #b4c0b3;
 }
 
 .carousel_help.ui-carousel .ui-carousel-viewport::-webkit-scrollbar {
-    width: 6px;
+    width: 0.4vw;
     background: black;
 }
 .carousel_help.ui-carousel .ui-carousel-viewport::-webkit-scrollbar-thumb {
     background: #32be8f;
+    border-radius: 10px;
 }
 
 
