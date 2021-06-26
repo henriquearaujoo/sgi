@@ -17,7 +17,8 @@ body, html {
 
 .help.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon .ui-icon-closethick,
 .help.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon .ui-icon-extlink,
-.help.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon {
+.help.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon,
+.help.ui-dialog .ui-dialog-titlebar .ui-dialog-title {
     text-shadow: 0 0 2px black;
 }
 
