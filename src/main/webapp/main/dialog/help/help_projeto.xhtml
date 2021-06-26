@@ -6,40 +6,12 @@
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:jsf="http://xmlns.jcp.org/jsf">
 
-	<h:head>
-
-		<style>
-body .ui-carousel .ui-carousel-header {
-	background-color: #30383c;
-	color: #fff;
-	padding: .571em 1em .571em 1em;
-	border: 1px solid #000;
-	margin: 0;
-	font-weight: 400;
-	-moz-border-radius-bottomleft: 0;
-	-webkit-border-bottom-left-radius: 0;
-	border-bottom-left-radius: 0;
-	-moz-border-radius-bottomright: 0;
-	-webkit-border-bottom-right-radius: 0;
-	border-bottom-right-radius: 0;
-}
-
-img {
-	border: 1px solid black;
-}
-</style>
-		<h:outputStylesheet library="bootstrap-4.3.1-dist"
-			name="css/bootstrap.css" />
-		<h:outputScript library="bootstrap-4.3.1-dist" name="js/bootstrap.js" />
-		<h:outputScript library="primefaces" name="jquery/jquery.js" />
-	</h:head>
+	
 	<h:form id="id-help">
 
-		<p:panel>
-
-			<p:carousel responsive="true" numVisible="1" effect="easeInStrong"
-				headerText="Tutorial"
-				styleClass="d-flex flex-column justify-content-center">
+		<p:panel id="main-panel-help" styleClass="main_panel_help">
+			<p:carousel numVisible="1" effect="easeInStrong"
+				headerText="Tutorial" styleClass="carousel_help" responsive="true">
 				<p:tab>
 
 					<p:graphicImage styleClass="img-fluid"
