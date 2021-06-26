@@ -10,7 +10,7 @@
 
 
 	<ui:define name="content">
-
+		
 		<f:metadata>
 			<f:viewAction action="#{compraController.init()}" />
 		</f:metadata>
@@ -169,10 +169,9 @@
 								<span class="fa fa-fw fa-plus"></span>
 								<span style="margin: 3px;">#{message['BUTTON_LABEL_NEW']}</span>
 							</p:link>
-							
-							<p:commandLink styleClass="btn btn-primary btn-sm"
-								action="#{compraController.dialogHelp()}"
-								onclick="start();" onerror="stop();" onsuccess="stop();"
+							<p:commandLink styleClass="btn btn-primary btn-sm" update="dialog_help"
+								oncomplete="PF('dialog_help').show();" onerror="stop();" onsuccess="stop();"
+								onclick="start();"
 								style="color:#fff; margin: 8px 2px;">
 								<span class="fa fa-fw fa-question"></span>
 								<span>#{message['BUTTON_LABEL_HELP']}</span>
@@ -405,7 +404,8 @@
 					<p:commandButton value="No" type="button"
 						styleClass="ui-confirmdialog-no" icon="pi pi-times" />
 				</p:confirmDialog>
-
+				
+				
 
 			</h:form>
 
@@ -416,7 +416,13 @@
 	</ui:define>
 
 	<ui:define name="adicionais">
-
+	
+		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help" 
+			showEffect="clip" hideEffect="drop" draggable="false" maximizable="true" minimizable="true" 
+			resizable="true" blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()" >
+				<ui:include src="dialog/help/help_compra_new.xhtml" />
+		</p:dialog>
+	
 		<p:dialog header="Pedidos" widgetVar="dlg_pedido" modal="true"
 			showEffect="clip" hideEffect="clip" closable="true"
 			closeOnEscape="true">

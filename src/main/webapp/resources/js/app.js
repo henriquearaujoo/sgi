@@ -14,6 +14,32 @@ function setarWidthHeight(id) {
 	
 }
 
+function minMaxWindow() {
+	
+}
+
+
+function blockedScroll() {
+	var ht = document.querySelector('html')
+	ht.style.position = 'fixed'
+	
+	var dialog = document.getElementById('dialog_help');
+	var titleDialog = dialog.firstElementChild
+	var btnMin = titleDialog.lastElementChild
+	btnMin.addEventListener('click', () => {
+		if (ht.style.position === 'fixed') {
+			unlockedScroll()	
+		} else {
+			ht.style.position = 'fixed'
+		}
+	})
+}
+
+
+function unlockedScroll() {
+	var ht = document.querySelector('html')
+	ht.style.position = null
+}
 
 PrimeFaces.locales ['pt'] = {
 	    closeText: 'Fechar',
