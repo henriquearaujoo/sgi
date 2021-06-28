@@ -305,12 +305,12 @@
 								<span style="font-family: Arial">Gerar relatório</span>
 							</p:commandLink>
 							
-							<p:commandLink styleClass="btn btn-primary btn-sm"
-								action="#{prestacao_conta_controller.dialogHelp()}"
-								onclick="start();" onerror="stop();" onsuccess="stop();"
+							<p:commandLink styleClass="btn btn-primary btn-sm" update="dialog_help"
+								oncomplete="PF('dialog_help').show();" onerror="stop();" onsuccess="stop();"
+								onclick="start();"
 								style="color:#fff; margin: 8px 2px;">
 								<span class="fa fa-fw fa-question"></span>
-								<span>#{message['BUTTON_LABEL_HELP']}</span>
+								<span>Ajuda</span>
 							</p:commandLink>
 
 							<p:commandLink
@@ -354,6 +354,12 @@
 
 			<ui:include src="/main/dialog/prestacaodecontas/recurso.xhtml" />
 
+		</p:dialog>
+		
+		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help" header="Ajuda"
+			showEffect="clip" hideEffect="drop" draggable="false" maximizable="true" minimizable="true" 
+			resizable="true" blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()" >
+				<ui:include src="dialog/help/help_prestacao_de_contas.xhtml" />
 		</p:dialog>
 
 		<p:dialog header="Devolução de recurso" showHeader="false"
