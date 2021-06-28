@@ -1,0 +1,126 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+	
+	
+	<h:form id="id-help">
+
+		<p:panel id="main-panel-help" styleClass="main_panel_help">
+			<p:carousel numVisible="1" effect="easeInStrong"
+				headerText="Tutorial" styleClass="carousel_help" responsive="true">
+				<p:tab>
+
+					<p:graphicImage styleClass="img-fluid"
+						name="image/tutorials/projeto_2.png" />
+
+
+					<div class="table-responsive py-2">
+						<table class="table table-bordered">
+							<thead class="thead-light">
+								<tr>
+									<th scope="col">Campos</th>
+									<th scope="col">Funcionalidade</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td scope="row"><b>Lançamento</b></td>
+									<td>Código gerado pelo sistema de sua SP após a finalizar
+										a criação de uma nova SP.</td>
+								</tr>
+								<tr>
+									<td scope="row"><b>Nº Documento Fiscal</b></td>
+									<td>Responsável da SP</td>
+								</tr>
+								<tr>
+									<td scope="row"><b>Pagamento início</b></td>
+									<td>Data de início da SP</td>
+								</tr>
+								<tr>
+									<td scope="row"><b>Pagamento fim</b></td>
+									<td>Data final da SP</td>
+								</tr>
+								<tr>
+									<td scope="row"><b>Pagador</b></td>
+									<td>Informada de onde sairá o recurso para a SP</td>
+								</tr>
+								<tr>
+									<td scope="row"><b>Fornecedor</b></td>
+									<td>Local destinado da SP</td>
+								</tr>
+								<tr>
+									<td scope="row"><b>Projeto</b></td>
+									<td>Quem prestou o serviço ou forneceu o material para a
+										demanda</td>
+								</tr>
+								<tr>
+									<td scope="row"><b>Status</b></td>
+									<td>Situação do lançamento (Provisionado ou Efetivado)</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+				</p:tab>
+				<p:tab>
+					<p:graphicImage styleClass="img-fluid"
+						name="image/tutorials/projeto.png" />
+
+
+					<div class="table-responsive py-2">
+						<table class="table table-bordered">
+							<thead class="thead-light">
+								<tr>
+									<th scope="col">Botões</th>
+									<th scope="col">Descrição</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td scope="row">
+										<div class="btn btn-primary btn-sm">
+											<span class="fa fa-fw fa-search"></span> <span
+												style="margin: 3px;">Buscar</span>
+										</div>
+									</td>
+									<td>Filtra uma busca referente aos campos preenchidos</td>
+								</tr>
+								<tr>
+									<td scope="row">
+										<div class="btn btn-danger btn-sm">
+											<span class="fa fa-fw fa-trash-o"></span> <span
+												style="margin: 3px;">Limpar</span>
+										</div>
+									</td>
+									<td>Limpa os campos</td>
+								</tr>
+								<tr>
+									<td scope="row">
+										<div class="btn btn-primary btn-sm">
+											<span class="fa fa-fw fa-question"></span> <span>Ajuda</span>
+										</div>
+									</td>
+									<td>Tutorial para ajudar a entender página</td>
+								</tr>
+								<tr>
+									<td scope="row">
+										<div class="btn btn-primary btn-sm">
+											<span class="fa fa-angle-down"></span> <span class="mx-2">Ações</span>
+										</div>
+									</td>
+									<td>Mais opções para os itens</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</p:tab>
+			</p:carousel>
+
+		</p:panel>
+	</h:form>
+
+</ui:fragment>
