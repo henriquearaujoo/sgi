@@ -32,13 +32,6 @@ body, html {
 	overflow: inherit;
 }
 
-
-.help.ui-dialog .ui-dialog-titlebar {
-	background-color: #32be8f;
-	border: 1px solid #32be8f;
-	border-bottom: none;
-}
-
 /* CAROUSEL  */
 
 /*.carousel_help .ui-carousel .ui-widget .ui-widget-content .ui-corner-all .ui-hidden-container {
@@ -46,7 +39,7 @@ body, html {
 }*/
 
 .carousel_help.ui-carousel .ui-carousel-header {
-	border: 1px solid #32be8f !important;
+	border: 1px solid #000 !important;
 }
 
 /*
@@ -82,7 +75,7 @@ body, html {
     background: black;
 }
 .carousel_help.ui-carousel .ui-carousel-viewport::-webkit-scrollbar-thumb {
-    background: #32be8f;
+    background: #888a85;
     border-radius: 10px;
 }
 
