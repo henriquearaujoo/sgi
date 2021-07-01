@@ -66,6 +66,80 @@ body .ui-breadcrumb {
 	border: 0px !important
 }
 
+/* /////////// PADRRÃO DIALOG HELPERS ////////////////// */
+
+.help {
+	width: 100% !important;
+	height: 100% !important;
+}
+
+.help.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon .ui-icon-closethick,
+.help.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon .ui-icon-extlink,
+.help.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon,
+.help.ui-dialog .ui-dialog-titlebar .ui-dialog-title {
+    text-shadow: 0 0 2px black;
+}
+
+.main_panel_help.ui-panel .ui-panel-content {
+	background-color: #f9f4f4;
+}
+
+.help.ui-dialog .ui-dialog-content {
+	padding: 0;
+	width: 100%;
+	overflow: inherit;
+}
+
+/* CAROUSEL  */
+
+/*.carousel_help .ui-carousel .ui-widget .ui-widget-content .ui-corner-all .ui-hidden-container {
+	width: auto !important;
+}*/
+
+.carousel_help.ui-carousel .ui-carousel-header {
+	border: 1px solid #000 !important;
+}
+
+/*
+.carousel_help.ui-carousel .ui-carousel-page-links .ui-carousel-page-link.ui-icon-radio-on, 
+.carousel_help.ui-carousel .ui-carousel-page-links .ui-carousel-page-link.ui-icon-radio-off,
+.carousel_help.ui-carousel .ui-carousel-button.ui-carousel-next-button,
+.carousel_help.ui-carousel .ui-carousel-button.ui-carousel-prev-button {
+	color: var(--yellow);
+}*/
+
+.carousel_help.ui-carousel .ui-carousel-viewport {
+	height: 86vh !important;
+	overflow-y: scroll;
+}
+
+.carousel_help {
+	width: 100% !important;
+}
+
+.carousel_help.ui-carousel .ui-carousel-viewport .ui-carousel-item {
+	width: 96.6vw !important;
+	padding: 10px !important;
+	margin: 0.5vw !important;
+	
+}
+
+.carousel_help.ui-carousel .ui-carousel-viewport::-webkit-scrollbar-track {
+	background-color: #b4c0b3;
+}
+
+.carousel_help.ui-carousel .ui-carousel-viewport::-webkit-scrollbar {
+    width: 0.4vw;
+    background: black;
+}
+.carousel_help.ui-carousel .ui-carousel-viewport::-webkit-scrollbar-thumb {
+    background: #888a85;
+    border-radius: 10px;
+}
+
+
+/*///////////////////////////////////////////*/
+
 .tab-menu-item-vi {
 	padding-top: 5px;
 }

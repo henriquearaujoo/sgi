@@ -165,6 +165,14 @@
 								<span style="margin: 3px;">Historico</span>
 
 							</p:commandLink>
+							
+							<p:commandLink styleClass="btn btn-primary btn-sm" update="dialog_help"
+								oncomplete="PF('dialog_help').show();" onerror="stop();" onsuccess="stop();"
+								onclick="start();" process="@this"
+								style="color:#fff; margin: 8px 2px;">
+								<span class="fa fa-fw fa-question"></span>
+								<span>Ajuda</span>
+							</p:commandLink>
 						</div>
 
 						<div id="actions-button" class="ui-g-12" style="display: none">
@@ -182,6 +190,12 @@
 	</ui:define>
 
 	<ui:define name="adicionais">
+	
+		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help" header="Ajuda"
+			showEffect="clip" hideEffect="drop" draggable="false" maximizable="true" minimizable="true" 
+			resizable="true" blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()" >
+				<ui:include src="dialog/help/help_orcamento_cadastro.xhtml" />
+		</p:dialog>
 
 		<script type="text/javascript">
 			function setarWidthHeight(id) {

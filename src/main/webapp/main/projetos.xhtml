@@ -138,8 +138,9 @@
 							<span>#{message['BUTTON_LABEL_PERMISSIONS_PROJECT']}</span>
 						</p:commandLink>
 
-						<p:commandLink styleClass="btn btn-primary btn-sm"
-							action="#{projetoBean.dialogHelp()}"
+						<p:commandLink styleClass="btn btn-primary btn-sm" update="dialog_help"
+							oncomplete="PF('dialog_help').show();" onerror="stop();" onsuccess="stop();"
+							onclick="start();"
 							style="color:#fff; margin: 8px 2px;">
 							<span class="fa fa-fw fa-question"></span>
 							<span>Ajuda</span>
@@ -225,6 +226,12 @@
 	</ui:define>
 
 	<ui:define name="adicionais">
+		
+		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help" header="Ajuda"
+			showEffect="clip" hideEffect="drop" draggable="false" maximizable="true" minimizable="true" 
+			resizable="true" blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()" >
+				<ui:include src="dialog/help/help_projeto.xhtml" />
+		</p:dialog>
 
 		<p:dialog header="#{message['DETAILS']}" widgetVar="dialog_detail"
 			hideEffect="clip" closeOnEscape="true" showEffect="clip" width="100%"

@@ -15,6 +15,33 @@ function setarWidthHeight(id) {
 }
 
 
+function blockedScroll() {
+	var ht = document.querySelector('html')
+	ht.style.position = 'fixed'
+	
+	var dialog = document.getElementById('dialog_help')
+	var titleDialog = dialog.firstElementChild
+	var btnMiddle = titleDialog.children[2]
+	var btnLast = titleDialog.lastElementChild
+	btnLast.addEventListener('click', () => {
+		if (ht.style.position === 'fixed') {
+			unlockedScroll()	
+		} else {
+			ht.style.position = 'fixed'
+		}
+	})
+	btnMiddle.addEventListener('click', () => {
+		if (!ht.style.position) {
+			ht.style.position = 'fixed'	
+		}
+	})
+}
+
+function unlockedScroll() {
+	var ht = document.querySelector('html')
+	ht.style.position = null
+}
+
 PrimeFaces.locales ['pt'] = {
 	    closeText: 'Fechar',
 	    prevText: 'Anterior',
