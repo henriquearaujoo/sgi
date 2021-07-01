@@ -364,15 +364,18 @@ body .ui-dialog .ui-dialog-content {
 
 		<header class="aw-topbar">
 
-			<div class="input-menu-search js-menu fadeInDown form-wrapper">
+			<div class="input-menu-search is-open-input-menu-search js-menu fadeInDown form-wrapper">
 				<div id="form-group">
 					<p:inputText id="menu-find" style="color:#fff; background:#30383c"
 						placeholder="Procurar" onkeyup="findMenu(this.value);" />
 				</div>
 			</div>
-			<a href="#" id="link-bar" class="aw-toggle  js-toggle"> <i
-				id="bar" style="font-size: 18px;" class="fa  fa-bars"> </i>
-			</a> <a href="#" class="profile-menu-button js-menu-toggle"> <img
+			
+			<a href="#" id="link-bar" class="aw-toggle  js-toggle option-menu"> <i
+				id="bar" style="font-size: 18px;" class="fa fa-close ui-icon-close-i"> </i>
+			</a> 
+			
+			<a href="#" class="profile-menu-button js-menu-toggle"> <img
 				src="../resources/image/#{loginBean.nome}.jpg" />
 			</a>
 
@@ -399,7 +402,7 @@ body .ui-dialog .ui-dialog-content {
 	</h:form>
 
 
-	<aside class="aw-sidebar  js-sidebar is-toggled">
+	<aside class="aw-sidebar  js-sidebar">
 		<!-- <ui:include src="Menu.xhtml" />  -->
 		<nav class="aw-menu">
 			<div
@@ -411,7 +414,7 @@ body .ui-dialog .ui-dialog-content {
 
 	</aside>
 
-	<section class="aw-content  js-content form-wrapper">
+	<section class="aw-content  js-content form-wrapper is-toggled">
 		<div style="padding-top: 10px; position: relative;">
 			<ui:insert name="content" />
 		</div>

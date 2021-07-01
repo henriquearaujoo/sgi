@@ -58,7 +58,7 @@
 	top: 67px;
 	bottom: 0;
 	left: 0;
-	width: 240px; /* Define a largura do menu lateral */
+	width: 280px; /* Define a largura do menu lateral */
 	margin-left: -211px;
 	z-index: 1001;
 	transition: margin-left 0.8s;
@@ -103,7 +103,7 @@
 	}
 	
 	.aw-content.is-toggled {
-		margin-left: 230px;	
-		/* Aumenta ou diminuir tamanho do conteúdo principal */
+		margin-left: 280px;	
+		/* Aumenta ou diminuir tamanho do conteï¿½do principal */
 	}
 }

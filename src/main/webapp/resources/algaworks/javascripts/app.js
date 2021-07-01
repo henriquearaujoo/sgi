@@ -1,5 +1,6 @@
 $(function() {
 		$('.js-toggle').bind('click', function(event) {
+		
 		$('.js-sidebar, .js-content').toggleClass('is-toggled');
 		$('.js-toggle').toggleClass('option-menu');
 		$('.js-menu').toggleClass('is-open-input-menu-search');

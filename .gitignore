@@ -1,3 +1,5 @@
+/persistence.xml
+
 .classpath
 .metadata/
 .project
@@ -7,4 +9,3 @@
 target/
 src/test
 .vscode
-src/main/java/META-INF/
