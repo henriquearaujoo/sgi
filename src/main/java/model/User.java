@@ -43,7 +43,7 @@ public class User implements Serializable {
 	@Column
 	private Boolean checked;
 	@ManyToOne
-	private Gestao coordenadoria;
+	private Gestao gestao;
 	@ManyToOne
 	private Colaborador colaborador;
 	@Enumerated(EnumType.STRING)
@@ -54,6 +54,14 @@ public class User implements Serializable {
 
 	@Column
 	private Boolean senhaAuto;
+
+	public Gestao getGestao() {
+		return gestao;
+	}
+
+	public void setGestao(Gestao gestao) {
+		this.gestao = gestao;
+	}
 
 	@Transient
 	private String nomeColaborador;
@@ -146,14 +154,6 @@ public class User implements Serializable {
 
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
-	}
-
-	public Gestao getCoordenadoria() {
-		return coordenadoria;
-	}
-
-	public void setCoordenadoria(Gestao coordenadoria) {
-		this.coordenadoria = coordenadoria;
 	}
 
 	public Colaborador getColaborador() {

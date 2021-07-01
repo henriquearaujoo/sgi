@@ -188,9 +188,9 @@
 							<p:outputLabel value="Cargo:" for="cargo" />
 							<br />
 							<p:selectOneMenu id="cargo" filter="true"
-								filterMatchMode="startsWith" style="width:100%"
+								filterMatchMode="contains" style="width:100%"
 								value="#{colaboradorController.colaborador.cargo}"
-								converter="#{cargoConverter}" required="true">
+								converter="#{cargoConverter}" required="false">
 								<f:selectItem noSelectionOption="true" />
 								<f:selectItems value="#{colaboradorController.listaCargo()}"
 									var="action" itemLabel="#{action.nome}" itemValue="#{action}" />

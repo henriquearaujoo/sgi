@@ -2,6 +2,7 @@ package managedbean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -215,6 +216,7 @@ public class OrcamentoController implements Serializable {
 		return TipoParcelamento.values();
 	}
 
+
 	
 //	public void dialogHelp() {
 //		HashMap<String, Object> options = new HashMap<>();
@@ -228,6 +230,24 @@ public class OrcamentoController implements Serializable {
 //		PrimeFaces.current().dialog().openDynamic("dialog/help/help_orcamento", options, null);
 //	}
 
+	
+	////////////////////// BARRA DE PROGRESSO ///////////////////////////
+	
+	public BigDecimal valorAtual() {
+		return orcamentoService.getTotalValues(orcamento); 
+	}
+	
+	public BigDecimal donationTotal() {
+		BigDecimal total = orcamento.getValor();
+		return total.subtract(valorAtual());					
+	}
+	
+	public double percentBar() {
+		BigDecimal fator = new BigDecimal(100);
+		return valorAtual().multiply(fator).divide(orcamento.getValor(), 2).doubleValue();
+	}
+
+	
 
 	public void editarLancamentoEfetivo() {
 		doacaoEfetiva = service.findDoacaoEfetivaById(lancamentoAuxiliar.getId());
@@ -617,8 +637,17 @@ public class OrcamentoController implements Serializable {
 	// @Transactional
 	
 	public void saveDonationManagement() {
-		orcService.saveDonationManagement(donationManagement, orcamento);
-		messageSalvamento("Salvo com sucesso", FacesMessage.SEVERITY_INFO);
+		BigDecimal valor = donationManagement.getValor();
+		BigDecimal validator = new BigDecimal(0);
+		
+		if(valor.compareTo(donationTotal()) == -1 || valor.compareTo(donationTotal()) == 0) {
+			orcService.saveDonationManagement(donationManagement, orcamento);
+			messageSalvamento("Salvo com sucesso", FacesMessage.SEVERITY_INFO);			
+		} else if(donationTotal().compareTo(validator) == 0 && valor.compareTo(validator) == 0) {
+			messageSalvamento("Insira um valor válido para ser distribuido", FacesMessage.SEVERITY_ERROR);
+		} else {			
+			messageSalvamento("O valor atribuido é inválido", FacesMessage.SEVERITY_ERROR);
+		}
 	}
 	
 	public void salvarRubricaOrcamento() {

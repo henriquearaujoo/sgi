@@ -200,9 +200,11 @@
 		<script type="text/javascript">
 			function setarWidthHeight(id) {
 				var htmlTag = document.getElementById(id);
-				htmlTag.style.height = Math.floor(window.innerHeight*0.98)+"px";	
-				htmlTag.style.width = Math.floor(window.innerWidth*0.98)+"px";	
-				
+				htmlTag.style.height = Math.floor(window.innerHeight * 0.98)
+						+ "px";
+				htmlTag.style.width = Math.floor(window.innerWidth * 0.98)
+						+ "px";
+
 			}
 		</script>
 
@@ -309,7 +311,7 @@
 		<p:dialog widgetVar="dlg-donation-management" modal="true"
 			width="100%" height="100%" closable="true" closeOnEscape="true"
 			showHeader="true" header="Divisão de orçamentos entre gestões"
-			showEffect="clip" hideEffect="clip">
+			showEffect="clip" hideEffect="clip" draggable="false">
 			<h:form id="form-donation-management" prependId="false"
 				style="margem">
 				<p:panel id="panel-donation-management"
@@ -323,7 +325,7 @@
 							</p:messages>
 						</div>
 
-						<div class="ui-g-12 form-group focused">
+						<div class="ui-g-3 form-group focused">
 							<p:outputLabel value="Gestão:" for="gestao" />
 							<p:selectOneMenu id="gestao" filter="true"
 								filterMatchMode="contains" style="width:100%"
@@ -334,13 +336,14 @@
 									var="action" itemLabel="#{action.nome}" itemValue="#{action}" />
 							</p:selectOneMenu>
 						</div>
-						<div class="ui-g-12 form-group focused">
+						<div class="ui-g-9 form-group focused">
 							<p:outputLabel value="Descrição:" for="description" />
 							<p:inputText id="description"
 								value="#{orcamento_controller.donationManagement.description}">
 							</p:inputText>
 						</div>
-						<div class="ui-g-12 form-group focused">
+						<div class="ui-g-3 form-group focused">
+							<p:outputLabel value="Valor:" for="input-value-donation" />
 							<p:inputText id="input-value-donation" style="text-align: center"
 								value="#{orcamento_controller.donationManagement.valor}"
 								onkeydown="mascaraMoeda(this,moeda)">
@@ -348,11 +351,12 @@
 									locale="pt_BR" />
 							</p:inputText>
 						</div>
-						<div class="ui-g-12 form-group focused">
+						<div class="ui-g-3 form-group focused">
 							<p:commandLink styleClass="btn btn-primary btn-sm"
-								style="margin-left:5px" title="Salvar" onclick="start()"
-								onerror="stop()" oncomplete="stop()"
-								update="panel-donation-management" process="@form"
+								style="margin-left:5px" title="Salvar" onclick="start();"
+								onerror="stop()"
+								oncomplete="stop();"
+								update="panel-donation-management, info-division-donation" process="@form"
 								action="#{orcamento_controller.saveDonationManagement()}">
 								<i class="pi pi-check"></i>
 								<span style="margin: 3px;">Salvar</span>
@@ -367,9 +371,16 @@
 					<div class="ui-g ui-fluid">
 
 						<div class="ui-g-12">
-							<p:progressBar value="50" style="height:7px" displayOnly="true" />
+							<div class="d-flex flex-column">
+								<label for="file">Valor distribuido: R$
+									#{orcamento_controller.donationTotal()}</label>
+								<span class="d-flex justify-content-center">#{orcamento_controller.percentBar()}%</span>
+								<progress id="file" value="#{orcamento_controller.valorAtual()}"
+									max="#{orcamento_controller.orcamento.valor}"
+									style="width: auto"> #{orcamento_controller.percentBar()}% </progress>
+							</div>
 						</div>
-						
+
 					</div>
 				</p:panel>
 

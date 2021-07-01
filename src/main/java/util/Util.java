@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import model.Coordenadoria;
+import model.Gestao;
 import model.Lancamento;
 import model.UnidadeConservacao;
 import service.CompraService;

@@ -16,9 +16,11 @@ import javax.mail.internet.AddressException;
 import org.primefaces.PrimeFaces;
 
 import model.Colaborador;
+import model.Gestao;
 import model.MenuLateral;
 import model.Perfil;
 import model.User;
+import service.ServiceUtil;
 import service.SolicitacaoViagemService;
 import service.UsuarioService;
 
@@ -44,6 +46,9 @@ public class UsuarioControllerAtt implements Serializable {
 
 	@Inject
 	private UsuarioSessao usuarioSessao;
+	
+	@Inject
+	private ServiceUtil serviceUtil;
 
 	private List<User> listaFiltroUsuarios;
 
@@ -58,6 +63,19 @@ public class UsuarioControllerAtt implements Serializable {
 //	public void popupUsuario() {
 //		usuarioService.popupUsuario();
 //	}
+	
+	public void setFields() {
+		usuario.setEmail(usuario.getColaborador().getEmail());
+		usuario.setGestao(usuario.getColaborador().getGestao());
+	}
+	
+	public List<Gestao> getListGestao() {
+		return serviceUtil.findGestao();
+	}
+	
+	public List<Colaborador> completeListColaborador(String s) {
+		return serviceUtil.findColaborador(s);
+	}
 
 	// metodo para buscar por string parcial o colaborador
 	public List<Colaborador> completeColaborador(String s) {
@@ -140,16 +158,16 @@ public class UsuarioControllerAtt implements Serializable {
 				this.usuario.setAtivo(true);
 
 				// Enviar email para o usuário informando a nova senha para acesso.
-				this.email = new Email();
-				this.email.setFromEmail("comprasgi@fas-amazonas.org");
-				this.email.setSubject("Dados para acesso ao SGI");
-				this.email.setSenhaEmail("FAS123fas");
-				this.email.setContent("Olá, " + this.usuario.getColaborador().getNome()
-						+ "! Seja bem-vindo(a) ao SGI.\n\nSeu usuário é: " + this.usuario.getNomeUsuario()
-						+ ".\nA senha para acessar o sistema é: " + novaSenha + ".\n\nAtenciosamente,\n\nPGT-FAS");
-
-				this.email.setToEmail(this.usuario.getEmail());
-				this.email.EnviarEmailSimples();
+//				this.email = new Email();
+//				this.email.setFromEmail("comprasgi@fas-amazonas.org");
+//				this.email.setSubject("Dados para acesso ao SGI");
+//				this.email.setSenhaEmail("FAS123fas");
+//				this.email.setContent("Olá, " + this.usuario.getColaborador().getNome()
+//						+ "! Seja bem-vindo(a) ao SGI.\n\nSeu usuário é: " + this.usuario.getNomeUsuario()
+//						+ ".\nA senha para acessar o sistema é: " + novaSenha + ".\n\nAtenciosamente,\n\nPGT-FAS");
+//
+//				this.email.setToEmail(this.usuario.getEmail());
+//				this.email.EnviarEmailSimples();
 			}
 
 			// Se não for usuário novo, basta salvar os dados vindos do formulário

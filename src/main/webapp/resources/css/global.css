@@ -21,6 +21,13 @@ div[id="info-geral"] > * {
 	padding: 20px; 
 }
 
+/*/////////////*/
+
+.gestao_dialog {
+	width: 100% !important;
+	height: 100% !important;
+}
+
 
 .menu-actions{
 	width: 30%
