@@ -1,4 +1,4 @@
-/persistence.xml
+src/main/java/META-INF/persistence.xml
 
 .classpath
 .metadata/
