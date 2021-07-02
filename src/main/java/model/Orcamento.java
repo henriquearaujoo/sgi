@@ -175,7 +175,7 @@ public class Orcamento implements Serializable{
 
 
 	public BigDecimal getValor() {
-		return valor;
+		return valor != null ? valor : BigDecimal.ZERO;
 	}
 
 

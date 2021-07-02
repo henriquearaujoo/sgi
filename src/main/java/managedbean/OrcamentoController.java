@@ -100,6 +100,7 @@ public class OrcamentoController implements Serializable {
 	private List<ProjetoRubrica> listaProjetoRubricas = new ArrayList<ProjetoRubrica>();
 	private List<PrestacaoOrcamento> listaPrestacoesOrcamento = new ArrayList<>();
 	private List<ProjetoRubrica> listaDeRubricasProjeto = new ArrayList<>();
+	private List<DonationManagement> listDonationManagement = new ArrayList<>();
 
 	private List<TransferenciaOverHead> listaOverHead = new ArrayList<>();
 	private List<TransferenciaOverHead> listaOverHeadIndireto = new ArrayList<>();
@@ -233,21 +234,59 @@ public class OrcamentoController implements Serializable {
 	
 	////////////////////// BARRA DE PROGRESSO ///////////////////////////
 	
-	public BigDecimal valorAtual() {
-		return orcamentoService.getTotalValues(orcamento); 
-	}
+	private BigDecimal valorAtual = BigDecimal.ZERO;
 	
-	public BigDecimal donationTotal() {
-		BigDecimal total = orcamento.getValor();
-		return total.subtract(valorAtual());					
-	}
+	private BigDecimal donationTotal = BigDecimal.ZERO;
 	
-	public double percentBar() {
-		BigDecimal fator = new BigDecimal(100);
-		return valorAtual().multiply(fator).divide(orcamento.getValor(), 2).doubleValue();
+	private double percentBar = 0;
+	
+	public BigDecimal getValorAtual() {
+		return valorAtual;
 	}
 
+	public void setValorAtual(BigDecimal valorAtual) {
+		this.valorAtual = valorAtual;
+	}
+
+	public BigDecimal getDonationTotal() {
+		return donationTotal;
+	}
+
+	public void setDonationTotal(BigDecimal donationTotal) {
+		this.donationTotal = donationTotal;
+	}
+
+	public double getPercentBar() {
+		return percentBar;
+	}
+
+	public void setPercentBar(double percentBar) {
+		this.percentBar = percentBar;
+	}
+
+	public void calculateCurrentValue() {
+		valorAtual = orcamento.getId() != null ? orcamentoService.getTotalValues(orcamento) : BigDecimal.ZERO;
+	}
 	
+	public void calculateTotalDonation() {
+		BigDecimal total = orcamento.getValor();
+		donationTotal = total.subtract(valorAtual);
+	}
+	
+	public void calculatePercentByDistributed() {
+		BigDecimal fator = new BigDecimal(100);
+		percentBar = valorAtual.multiply(fator).divide(orcamento.getValor(), 2).doubleValue();
+	}
+
+	public void fetchValuesToProgressBar() {
+		calculateCurrentValue();
+		calculateTotalDonation();
+		calculatePercentByDistributed();
+	}
+	
+	public void fetchValuesListDonationManagement() {
+		listDonationManagement = orcamentoService.selectDonationManagement();
+	}
 
 	public void editarLancamentoEfetivo() {
 		doacaoEfetiva = service.findDoacaoEfetivaById(lancamentoAuxiliar.getId());
@@ -640,13 +679,15 @@ public class OrcamentoController implements Serializable {
 		BigDecimal valor = donationManagement.getValor();
 		BigDecimal validator = new BigDecimal(0);
 		
-		if(valor.compareTo(donationTotal()) == -1 || valor.compareTo(donationTotal()) == 0) {
+		if(valor.compareTo(donationTotal) == -1 || valor.compareTo(donationTotal) == 0) {
 			orcService.saveDonationManagement(donationManagement, orcamento);
+			fetchValuesToProgressBar();
+			fetchValuesListDonationManagement();
 			messageSalvamento("Salvo com sucesso", FacesMessage.SEVERITY_INFO);			
-		} else if(donationTotal().compareTo(validator) == 0 && valor.compareTo(validator) == 0) {
+		} else if(donationTotal.compareTo(validator) == 0 && valor.compareTo(validator) == 0) {
 			messageSalvamento("Insira um valor válido para ser distribuido", FacesMessage.SEVERITY_ERROR);
 		} else {			
-			messageSalvamento("O valor atribuido é inválido", FacesMessage.SEVERITY_ERROR);
+			messageSalvamento("O valor ultrapassa o limite disponível", FacesMessage.SEVERITY_ERROR);
 		}
 	}
 	
@@ -792,6 +833,8 @@ public class OrcamentoController implements Serializable {
 	
 	public void clearDonationManagement() {
 		donationManagement = new DonationManagement();
+		fetchValuesToProgressBar();
+		fetchValuesListDonationManagement();
 	}
 
 
@@ -1872,6 +1915,14 @@ public class OrcamentoController implements Serializable {
 
 	public void setDonationManagement(DonationManagement donationManagement) {
 		this.donationManagement = donationManagement;
+	}
+
+	public List<DonationManagement> getListDonationManagement() {
+		return listDonationManagement;
+	}
+
+	public void setListDonationManagement(List<DonationManagement> listDonationManagement) {
+		this.listDonationManagement = listDonationManagement;
 	}
 
 }

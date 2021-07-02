@@ -82,6 +82,10 @@ public class OrcamentoService implements Serializable {
 		donationManagement.setActive(true);
 		donationRepositorio.save(donationManagement);
 	}
+	
+	public List<DonationManagement> selectDonationManagement() {
+		return donationRepositorio.selectDonationManagement();
+	}
 
 	@Transactional
 	public Boolean removerDoacao(Orcamento orcamento) {

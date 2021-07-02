@@ -53,5 +53,13 @@ public class DonationManagementRepositorio {
 		return values;
 		
 	}
+	
+	public List<DonationManagement> selectDonationManagement() {
+		String jpql = "from DonationManagement dm";
+		
+		Query query = this.manager.createQuery(jpql);
+		
+		return query.getResultList();
+	}
 
 }
