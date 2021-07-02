@@ -13,17 +13,19 @@
 
 		<h:form id="content_gestao">
 
-			<p:messages id="msg" showSummary="true" 
-				style="margin-top:10px" showDetail="false" closable="true"
-				showIcon="true" />
+			<p:messages id="msg" showSummary="true" style="margin-top:10px"
+				showDetail="false" closable="true" showIcon="true" />
 
 			<p:panel header="Gestões" toggleable="true">
 
 				<h:panelGroup>
 
 					<p:commandLink styleClass="btn btn-success btn-sm m-2"
-						style="color:#fff;" update="form_cadastro_gestao" onclick="start();"
-						onerror="stop();" 
+						style="color: #fff;
+    position: absolute;
+    width: 112px;
+    right: 9vh;"
+						update="form_cadastro_gestao" onclick="start();" onerror="stop();"
 						oncomplete="stop(); PF('cadastro_gestao').show()">
 						<span class="fa fa-plus"></span>
 						<span style="font-family: Arial; font-size: 12px">Novo</span>
@@ -46,20 +48,20 @@
 					<p:column headerText="Aprovador">
 						<h:outputText value="#{bean.colaborador.nome}" />
 					</p:column>
-					
+
 					<p:column headerText="Aprovador Substituto ">
 						<h:outputText value="#{bean.aprovadorSubistituto.nome}" />
 					</p:column>
-					
+
 					<p:column headerText="Opções" styleClass="text-center">
 						<p:menuButton value="Opções">
-	
+
 							<p:menuitem update="form_cadastro_gestao"
 								action="#{gestaoController.editar(bean)}"
 								oncomplete="PF('cadastro_gestao').show()"
 								value="#{message['ACTION_EDIT']}">
 							</p:menuitem>
-							
+
 							<p:menuitem update="form_cadastro_gestao"
 								action="#{gestaoController.editar(bean)}"
 								oncomplete="PF('cadastro_gestao').show()"
@@ -75,10 +77,11 @@
 
 	<ui:define name="adicionais">
 		<p:dialog header="Cadastro/Edição" widgetVar="cadastro_gestao"
-			styleClass="gestao_dialog" closable="true" showEffect="clip" hideEffect="clip">
+			styleClass="gestao_dialog" closable="true" showEffect="clip"
+			hideEffect="clip">
 
 			<ui:include src="/main/dialog/gestao/dialog_gestao.xhtml"></ui:include>
-			
+
 		</p:dialog>
 
 		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"

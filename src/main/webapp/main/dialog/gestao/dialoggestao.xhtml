@@ -1,0 +1,83 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<h:form id="form_cadastro_gestao" prependId="false" style="margem">
+				<p:messages id="message_gestao"  showIcon="true"
+					showSummary="false" />
+				<p:panelGrid id="panel_cadastro" columns="2" styleClass="ui-fluid">
+
+					<h:outputText value="Gestão" />
+					<p:inputText value="#{gestaoController.gestao.nome}"
+						style="width:400px" />
+
+					<h:outputText value="Sigla" />
+					<p:inputText value="#{gestaoController.gestao.sigla}"
+						style="width:400px" />
+
+
+					<h:outputText value="Tipo" for="tipo" />
+					<p:selectOneMenu id="tipo" filter="true"
+						filterMatchMode="startsWith"
+						value="#{gestaoController.gestao.type}" required="true"
+						requiredMessage="Campo 'colaborador' obrigatório">
+						<f:selectItem itemLabel="Superintêndencia" itemValue="sup" />
+						<f:selectItem itemLabel="Coordenadoria" itemValue="coord" />
+						<f:selectItem itemLabel="Regional" itemValue="reg" />
+
+					</p:selectOneMenu>
+
+
+
+					<h:outputText value="Aprovador" for="colaborador" />
+					<p:selectOneMenu id="colaborador" filter="true"
+						filterMatchMode="startsWith"
+						value="#{gestaoController.gestao.colaborador}"
+						converter="colaboradorConverter" required="true"
+						requiredMessage="Campo 'colaborador' obrigatório">
+						<f:selectItems value="#{gestaoController.carregarColaborador()}"
+							var="action" itemLabel="#{action.nome}" itemValue="#{action}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Ausente: "/>
+					<p:selectBooleanButton id="ausente"
+						value="#{gestaoController.gestao.ausente}" onLabel="Sim"
+						offLabel="Não" style="width:60px">
+						
+					</p:selectBooleanButton>
+
+
+					<h:outputLabel value="Aprovador Substituto"
+						id="aprovadorsubs" />
+					<p:selectOneMenu id="aprovadorsubs1" filter="true"
+						filterMatchMode="startsWith"
+						value="#{gestaoController.gestao.aprovadorSubistituto}"
+						converter="colaboradorConverter" required="true"
+						requiredMessage="Campo 'colaborador' obrigatório">
+						<f:selectItems value="#{gestaoController.carregarColaborador()}"
+							var="subs" itemLabel="#{subs.nome}" itemValue="#{subs}" />
+					</p:selectOneMenu>
+
+				</p:panelGrid>
+				<p:separator style="margin-bottom:4px;margin-top:4px;"></p:separator>
+
+				<p:commandLink style="color:#FFF" value="Salvar"
+					styleClass="btn btn-primary" action="#{gestaoController.salvar()}"
+					update="form_cadastro_gestao :content_gestao"
+					oncomplete="PF('cadastro_gestao').hide()">
+
+				</p:commandLink>
+
+				<p:commandLink style="color:#FFF;margin-left:4px" value="Fechar"
+					styleClass="btn btn-danger"
+					oncomplete="PF('cadastro_gestao').hide()">
+				</p:commandLink>
+
+			</h:form>
+
+</ui:fragment>
