@@ -73,9 +73,14 @@ body .ui-breadcrumb {
 	border: 0px !important
 }
 
-/* /////////// PADRRÃO DIALOG HELPERS ////////////////// */
+/* /////////// PADRRÃO DIALOG ////////////////// */
 
 .help {
+	width: 100% !important;
+	height: 100% !important;
+}
+
+.gestao_dialog {
 	width: 100% !important;
 	height: 100% !important;
 }
@@ -91,8 +96,16 @@ body .ui-breadcrumb {
 	background-color: #f9f4f4;
 }
 
-.help.ui-dialog .ui-dialog-content {
+.help.ui-dialog .ui-dialog-content{
 	padding: 0;
+	height: 100%;
+	width: 100%;
+	overflow: inherit;
+}
+
+.gestao_dialog.ui-dialog .ui-dialog-content{
+	padding: 0;
+	height: 100%;
 	width: 100%;
 	overflow: inherit;
 }
