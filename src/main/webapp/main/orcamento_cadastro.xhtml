@@ -309,15 +309,16 @@
 
 
 		<p:dialog widgetVar="dlg-donation-management" modal="true"
-			width="100%" height="100%" closable="true" closeOnEscape="true"
-			showHeader="true" header="Divisão de orçamentos entre gestões"
+			closable="true" closeOnEscape="true" styleClass="orcamento_divisao_dialog"
+			showHeader="true" header="Divisão de orçamentos entre gestões" resizable="true" 
+			blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()"
 			showEffect="clip" hideEffect="clip" draggable="false">
 			<h:form id="form-donation-management" prependId="false"
 				style="margem">
 				<p:panel id="panel-donation-management"
 					style="margin-left: 35px; margin-top:28px">
 					<div class="ui-g ui-fluid"
-						style="margin-top: 15px; margin-left: 35px">
+						style="margin-left: 35px; margin-bottom: 5vh;">
 						<div class="ui-g-12">
 							<p:messages showSummary="false" showDetail="true" closable="true"
 								escape="true">
@@ -373,7 +374,7 @@
 							</div>
 						</div>
 						<div class="ui-g-12">
-							<p:dataTable id="register-donation" paginator="true" style="color: white"
+							<p:dataTable id="register-donation" style="color: white"
 								value="#{orcamento_controller.listDonationManagement}" var="donation" >
 							
 								<p:column headerText="Gestão" style="text-align:center">
@@ -381,8 +382,10 @@
 								</p:column>
 							
 								<p:column headerText="Valor" style="text-align:center">
-									<p:chart type="bar" model="#{orcamento_controller.model}" />
+									<h:outputText value="#{donation.valor}" />
+									<p:chart type="bar" styleClass="graph_donation" model="#{orcamento_controller.model}" />
 								</p:column>
+								
 							
 							</p:dataTable>
 						</div>
@@ -391,7 +394,6 @@
 
 			</h:form>
 		</p:dialog>
-
 
 		<p:dialog widgetVar="dlg-nova-linha" modal="true" width="100%"
 			height="100%" closable="true" closeOnEscape="true" showHeader="true"

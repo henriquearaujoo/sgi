@@ -213,14 +213,13 @@ public class OrcamentoController implements Serializable {
         girls.set("2008", 120);
         model.addSeries(boys);
         model.addSeries(girls);
-        model.setTitle("Bar Chart");
         model.setLegendPosition("ne");
         Axis xAxis = model.getAxis(AxisType.X);
         xAxis.setLabel("Gender");
         Axis yAxis = model.getAxis(AxisType.Y);
-        yAxis.setLabel("Births");
+        yAxis.setLabel("Total Doação");
         yAxis.setMin(0);
-        yAxis.setMax(200);
+        yAxis.setMax(300);
 	}
 
 	@Inject
