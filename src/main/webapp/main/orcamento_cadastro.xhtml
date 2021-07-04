@@ -382,11 +382,10 @@
 								</p:column>
 							
 								<p:column headerText="Valor" style="text-align:center">
-									<h:outputText value="#{donation.valor}" />
-									<p:chart type="bar" styleClass="graph_donation" model="#{orcamento_controller.model}" />
+									<h:outputText value="R$#{donation.valor}" />
+									<p:barChart style="height: 100%;" 
+										styleClass="graph_donation" model="#{donation.model}" />
 								</p:column>
-								
-							
 							</p:dataTable>
 						</div>
 					</div>

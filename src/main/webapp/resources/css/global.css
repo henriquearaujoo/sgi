@@ -21,19 +21,21 @@ div[id="info-geral"] > * {
 	padding: 20px; 
 }
 
-.graph_donation > .jqplot-table-legend {
-	width: 8vw;
+.graph_donation {
+	font-size: 15px !important;
 }
 
-.graph_donation > td.jqplot-table-legend {
-	width: 10vw !important;
+.graph_donation > .jqplot-table-legend {
+	width: 12vw;
 }
 
 .graph_donation > table.jqplot-table-legend {
-    margin-top: 12px !important;
-    margin-bottom: 12px !important;
-    margin-left: 12px !important;
-    margin-right: 12px !important;
+	margin: 0 !important;
+	
+}
+
+.graph_donation > table.jqplot-table-legend > tr > td.jqplot-table-legend:first-child {
+	width: 18px !important;
 }
 
 .graph_donation > table.jqplot-table-legend 
@@ -41,14 +43,12 @@ div[id="info-geral"] > * {
 	width: 1.12vw;
 }
 
-/*.graph_donation > table.jqplot-table-legend 
+.graph_donation > table.jqplot-table-legend 
 	> tr > td.jqplot-table-legend {
-	padding: 0 25px 0 25px;
-}*/
-
-.graph_donation > table.jqplot-table-legend {
-	margin: 0 !important;
+	padding: 0 !important;
 }
+
+
 
 .menu-actions{
 	width: 30%

@@ -13,6 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import org.primefaces.model.charts.bar.BarChartModel;
 		
 
 @Entity
@@ -45,7 +48,19 @@ public class DonationManagement implements Serializable{
 	private Boolean active;
 	@Column(name = "value", precision = 10, scale = 2, nullable = false)
 	private BigDecimal valor = BigDecimal.ZERO;
-		
+	
+	// Modelo do gráfico para cada valor distribuido
+	@Transient
+	private BarChartModel model;
+
+	public BarChartModel getModel() {
+		return model;
+	}
+
+	public void setModel(BarChartModel model) {
+		this.model = model;
+	}
+
 	public DonationManagement(){}
 	
 	@Override

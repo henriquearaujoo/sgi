@@ -13,19 +13,30 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
+import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.primefaces.PrimeFaces;
+import org.primefaces.component.barchart.BarChart;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.PieChartModel;
+import org.primefaces.model.charts.ChartData;
+import org.primefaces.model.charts.axes.cartesian.CartesianScales;
+import org.primefaces.model.charts.axes.cartesian.linear.CartesianLinearAxes;
+import org.primefaces.model.charts.axes.cartesian.linear.CartesianLinearTicks;
+import org.primefaces.model.charts.bar.BarChartDataSet;
 import org.primefaces.model.charts.bar.BarChartModel;
+import org.primefaces.model.charts.bar.BarChartOptions;
 import org.primefaces.model.charts.hbar.HorizontalBarChartModel;
+import org.primefaces.model.charts.optionconfig.title.Title;
+import org.primefaces.model.charts.pie.PieChartDataSet;
 
 import model.AlocacaoRendimento;
 import model.AplicacaoRecurso;
@@ -182,44 +193,59 @@ public class OrcamentoController implements Serializable {
 
 		PrimeFaces.current().executeScript("setarFocused('info-geral')");
 		
-		chartModelBar();
 	}
-	
-	private org.primefaces.model.chart.BarChartModel model;
-	
-	public org.primefaces.model.chart.BarChartModel getModel() {
+
+	// cria o gráfico de acordo com a doação
+	public BarChartModel chartModelBar(DonationManagement donation) {
+		BarChartModel model = donation.getModel();
+		model = new BarChartModel();
+		ChartData data = new ChartData();
+		
+		BarChartDataSet barDataSet = new BarChartDataSet();
+		barDataSet.setLabel("Projetado");
+		barDataSet.setBackgroundColor("rgba(255, 99, 132, 0.2)");
+		barDataSet.setBorderColor("rgb(255, 99, 132)");
+		barDataSet.setBorderWidth(1);
+		List<Number> values = new ArrayList<>();
+		values.add(10000);
+		barDataSet.setData(values);
+		
+		BarChartDataSet barDataSet2 = new BarChartDataSet();
+		barDataSet2.setLabel("Desembolsado");
+		barDataSet2.setBackgroundColor("rgba(255, 159, 64, 0.2)");
+		barDataSet2.setBorderColor("rgb(255, 159, 64)");
+		barDataSet2.setBorderWidth(1);
+		List<Number> values2 = new ArrayList<>();
+		values2.add(85);
+		barDataSet2.setData(values2);
+		
+		data.addChartDataSet(barDataSet);
+		data.addChartDataSet(barDataSet2);
+		
+		List<String> labels = new ArrayList<>();
+		labels.add("Valores");
+		data.setLabels(labels);
+		model.setData(data);
+		
+		//Options
+		BarChartOptions options = new BarChartOptions();
+		CartesianScales cScales = new CartesianScales();
+		CartesianLinearAxes linearAxes = new CartesianLinearAxes();
+		CartesianLinearTicks ticks = new CartesianLinearTicks();
+		ticks.setBeginAtZero(true);
+		ticks.setMax(donation.getValor().intValue());
+		ticks.setMin(0);
+		linearAxes.setTicks(ticks);
+		cScales.addYAxesData(linearAxes);
+		options.setScales(cScales);
+		
+		Title title = new Title();
+		title.setDisplay(true);
+		title.setText("Gráfico");
+		//options.setTitle(title);
+		
+		model.setOptions(options);
 		return model;
-	}
-
-	public void setModel(org.primefaces.model.chart.BarChartModel model) {
-		this.model = model;
-	}
-
-	public void chartModelBar() {
-		model = new org.primefaces.model.chart.BarChartModel();
-        ChartSeries boys = new ChartSeries();
-        boys.setLabel("Boys");
-        boys.set("2004", 120);
-        boys.set("2005", 100);
-        boys.set("2006", 44);
-        boys.set("2007", 150);
-        boys.set("2008", 25);
-        ChartSeries girls = new ChartSeries();
-        girls.setLabel("Girls");
-        girls.set("2004", 52);
-        girls.set("2005", 60);
-        girls.set("2006", 110);
-        girls.set("2007", 135);
-        girls.set("2008", 120);
-        model.addSeries(boys);
-        model.addSeries(girls);
-        model.setLegendPosition("ne");
-        Axis xAxis = model.getAxis(AxisType.X);
-        xAxis.setLabel("Gender");
-        Axis yAxis = model.getAxis(AxisType.Y);
-        yAxis.setLabel("Total Doação");
-        yAxis.setMin(0);
-        yAxis.setMax(300);
 	}
 
 	@Inject
@@ -327,7 +353,12 @@ public class OrcamentoController implements Serializable {
 	}
 	
 	public void fetchValuesListDonationManagement() {
-		listDonationManagement = orcamentoService.selectDonationManagement();
+		List<DonationManagement> list = orcamentoService.selectDonationManagement();
+		// percorre a lista dos valores que foram doados e faz a associação deles para gerar o gráfico
+		for(DonationManagement mod : list) {
+			mod.setModel(chartModelBar(mod));
+		}
+		listDonationManagement = list;
 	}
 
 	public void editarLancamentoEfetivo() {
