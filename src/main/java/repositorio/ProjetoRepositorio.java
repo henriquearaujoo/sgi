@@ -640,11 +640,11 @@ public class ProjetoRepositorio implements Serializable {
 	public List<Projeto> getAllProject(Filtro filtro, User user) {
 
 		StringBuilder jpql = new StringBuilder(
-				"SELECT NEW Projeto(p.id,p.codigo,p.nome, p.valor,p.quantidadeAtividade) FROM UserProjeto as up RIGHT JOIN up.projeto as p ");
+				"SELECT NEW Projeto(p.id, p.codigo, p.nome, p.dataInicio, p.dataFinal, p.valor) FROM UserProjeto as up RIGHT JOIN up.projeto as p ");
 		jpql.append(" where 1 = 1 and versionProjeto = 'mode01' ");
-
-		if (user != null) {
-			jpql.append("and (up.user.id = :user ");
+		
+		if (user != null && user.getPerfil().getId().intValue() != 1) {
+			jpql.append(" and (up.user.id = :user ");
 			jpql.append(" or p.gestao.colaborador.id = :coll)");
 		}
 
@@ -652,7 +652,7 @@ public class ProjetoRepositorio implements Serializable {
 
 		Query query = this.manager.createQuery(jpql.toString());
 
-		if (user != null) {
+		if (user != null && user.getPerfil().getId().intValue() != 1) {
 			query.setParameter("user", user.getId());
 			query.setParameter("coll", user.getColaborador().getId());
 		}
@@ -779,10 +779,18 @@ public class ProjetoRepositorio implements Serializable {
 			jpql.append(" and lower(p.nome) like '%" + filtro.getNome().toLowerCase().trim() + "%'");
 		}
 
-		if (filtro.getDataInicio() != null && filtro.getDataFinal() != null) {
+		
+		////// VERIFICAR FILTRO DE DATAS
+		if (filtro.getDataInicio() != null || filtro.getDataFinal() != null) {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			jpql.append("and p.datainicio >= '" + sdf.format(filtro.getDataInicio()) + "' and p.datafinal <= '"
-					+ sdf.format(filtro.getDataFinal()) + "' ");
+			if (filtro.getDataFinal() != null && filtro.getDataInicio() != null) {
+				jpql.append(" and p.datainicio >= '" + sdf.format(filtro.getDataInicio()) + "' and p.datafinal <= '"
+							+ sdf.format(filtro.getDataFinal()) + "' ");			
+			} else if (filtro.getDataFinal() == null) {
+				jpql.append(" and p.datainicio >= '" + sdf.format(filtro.getDataInicio()));
+			} else {
+				jpql.append("' and p.datafinal <= '"+ sdf.format(filtro.getDataFinal()) + "' ");
+			}
 		}
 
 		if (filtro.getPlanoDeTrabalho() != null) {

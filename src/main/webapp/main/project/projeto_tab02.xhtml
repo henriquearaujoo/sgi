@@ -78,7 +78,7 @@
 					<p:commandLink styleClass="btn btn-success btn-sm"
 						style="margin-left:5px" title="Salvar"
 						action="#{projetoBean.salvarProjetoRubrica()}">
-						<span class="glyphicon glyphicon-plus"></span>
+						<span class="fa fa-plus"></span>
 						<span style="margin: 3px;">Incluir</span>
 					</p:commandLink>
 				</div>
@@ -110,30 +110,29 @@
 								value="#{projetoRubrica.rubricaOrcamento.rubrica.nome}" />
 						</p:column>
 
-						<p:column width="120" headerText="Valor" style="text-align:right">
+						<p:column width="120" headerText="Valor">
 							<h:outputText value="#{projetoRubrica.valor}">
 								<f:convertNumber type="currency" maxFractionDigits="2"
 									currencySymbol="R$" />
 							</h:outputText>
 						</p:column>
 
-						<p:column style="width:80px">
+						<p:column headerText="#" style="text-align: center;">
+									<p:commandLink process="@this"
+										action="#{projetoBean.preparaEdicaoRubricaProjeto()}"
+										styleClass="btn btn-warning">
+										<span class="fa fa-edit"></span>
+										<f:setPropertyActionListener value="#{projetoRubrica}"
+											target="#{projetoBean.projetoRubrica}" />
+									</p:commandLink>
 
-							<p:commandLink process="@this"
-								action="#{projetoBean.preparaEdicaoRubricaProjeto()}"
-								styleClass="btn btn-default btn-xs ">
-								<span class="glyphicon glyphicon-edit"></span>
-								<f:setPropertyActionListener value="#{projetoRubrica}"
-									target="#{projetoBean.projetoRubrica}" />
-							</p:commandLink>
-
-							<p:commandLink style="color:#FFF;margin-left:5px"
-								styleClass="btn btn-danger btn-xs " process="@this"
-								action="#{projetoBean.removerProjetoRubrica()}">
-								<span class="glyphicon glyphicon-remove-circle"></span>
-								<f:setPropertyActionListener value="#{projetoRubrica}"
-									target="#{projetoBean.projetoRubrica}" />
-							</p:commandLink>
+									<p:commandLink style="color:#FFF"
+										styleClass="btn btn-danger" process="@this"
+										action="#{projetoBean.removerProjetoRubrica()}">
+										<span class="fa fa-fw fa-trash-o"></span>
+										<f:setPropertyActionListener value="#{projetoRubrica}"
+											target="#{projetoBean.projetoRubrica}" />
+									</p:commandLink>
 						</p:column>
 
 						<p:columnGroup type="footer">

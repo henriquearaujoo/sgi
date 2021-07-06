@@ -101,6 +101,11 @@ body .ui-breadcrumb {
 	height: 100% !important;
 }
 
+.dialog {
+	width: 100% !important;
+	height: 100% !important;
+}
+
 .gestao_dialog {
 	width: 100% !important;
 	height: 100% !important;

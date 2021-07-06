@@ -62,7 +62,17 @@
 			</p:breadCrumb>
 
 			<p:panel>
+
 				<div class="ui-g ui-fluid" style="margin-top: 8px">
+					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+						<p:outputLabel for="cod_projeto" value="#{message['FILTER_CODE']}"
+							styleClass="form-label" />
+						<p:autoComplete id="cod_projeto" maxResults="10"
+							converter="projetoConverter"
+							value="#{projetoBean.filtro.projeto}"
+							completeMethod="#{projetoBean.completeProjeto}" var="pro"
+							itemLabel="#{pro.codigo}" itemValue="#{pro}" />
+					</div>
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
 						<p:outputLabel for="gestao"
 							value="#{message['FILTER_MANAGEMENT']}" styleClass="form-label" />
@@ -71,32 +81,37 @@
 							completeMethod="#{projetoBean.findGestaoAutoComplete}" var="ges"
 							itemLabel="#{ges.nome}" itemValue="#{ges}" effect="blind" />
 					</div>
+					
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-						<p:outputLabel for="donation"
-							value="#{message['FILTER_DONATION']}" styleClass="form-label" />
-						<p:selectOneMenu id="donation"
-							value="#{projetoBean.filtro.orcamento}" filter="true"
-							autoWidth="false" filterMatchMode="contains"
-							converter="orcamentoConverter">
-							<f:selectItem noSelectionOption="true" />
-							<f:selectItems value="#{projetoBean.orcamentos}" var="orcamento"
-								itemLabel="#{orcamento.titulo}" itemValue="#{orcamento}" />
-						</p:selectOneMenu>
-					</div>
-					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-						<p:outputLabel for="cod_projeto" value="#{message['FILTER_CODE']}"
+
+						<p:outputLabel for="filter-dt-inicio" value="Data incial:"
 							styleClass="form-label" />
-						<p:inputText id="cod_projeto" value="#{projetoBean.filtro.codigo}" />
+						<p:calendar id="filter-dt-inicio"
+							value="#{orcamento_controller.filtro.dataInicio}"
+							navigator="true" pattern="dd/MM/yyyy" />
+
 					</div>
+
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+
+						<p:outputLabel for="filter-dt-final" value="Data final:"
+							styleClass="form-label" />
+						<p:calendar id="filter-dt-final"
+							value="#{orcamento_controller.filtro.dataFinal}" navigator="true"
+							pattern="dd/MM/yyyy" />
+
+					</div>
+					
+					<div class="ui-g-12 ui-md-6 ui-lg-12 form-group">
 						<p:outputLabel for="projeto" value="#{message['FILTER_PROJECT']}"
 							styleClass="form-label" />
-						<p:autoComplete id="projeto" queryDelay="300" minQueryLength="3"
+						<p:autoComplete id="projeto" maxResults="10"
 							converter="projetoConverter"
 							value="#{projetoBean.filtro.projeto}"
 							completeMethod="#{projetoBean.completeProjeto}" var="pro"
 							itemLabel="#{pro.nome}" itemValue="#{pro}" effect="blind" />
 					</div>
+					
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group"
 						style="display: none;">
 						<p:outputLabel value="#{message['FILTER_PLANE']}" />
@@ -111,7 +126,7 @@
 					<div class="ui-g-12" style="text-align: right;">
 						<p:commandLink styleClass="btn btn-primary btn-sm"
 							action="#{projetoBean.colorirProjeto()}" onclick="start()"
-							onsuccess="stop()" onerror="stop()"
+							onsuccess="stop()" onerror="stop()" update="@form"
 							style="color:#fff; margin: 8px 2px;">
 							<span class="fa fa-fw fa-search"></span>
 							<span>#{message['BUTTON_LABEL_SEARCH']}</span>
@@ -138,9 +153,9 @@
 							<span>#{message['BUTTON_LABEL_PERMISSIONS_PROJECT']}</span>
 						</p:commandLink>
 
-						<p:commandLink styleClass="btn btn-primary btn-sm" update="dialog_help"
-							oncomplete="PF('dialog_help').show();" onerror="stop();" onsuccess="stop();"
-							onclick="start();"
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							update="dialog_help" oncomplete="PF('dialog_help').show();"
+							onerror="stop();" onsuccess="stop();" onclick="start();"
 							style="color:#fff; margin: 8px 2px;">
 							<span class="fa fa-fw fa-question"></span>
 							<span>Ajuda</span>
@@ -148,68 +163,79 @@
 
 					</div>
 					<div class="ui-g-12">
-						<table class="table table-sm table-hover">
-							<thead class="thead-dark">
-								<tr>
-									<th scope="col">#</th>
-									<th scope="col">Código</th>
-									<th scope="col">Título</th>
-									<th scope="col">Status</th>
-									<th scope="col">Orçado</th>
-									<th scope="col" style="text-align: center">#</th>
-								</tr>
-							</thead>
-							<tbody>
-								<ui:repeat value="#{projetoBean.projetos}" var="projeto">
-									<tr>
-										<td><p:selectBooleanCheckbox style="cursor: pointer">
-												<p:ajax listener="#{projetoBean.addList(projeto)}" />
-											</p:selectBooleanCheckbox></td>
-										<td><h:outputText value="#{projeto.codigo}" /></td>
-										<td><h:outputText value="#{projeto.nome}" /></td>
-										<td><h:outputText
-												value="#{projeto.statusAprovacao.descricao}" /></td>
-										<td><h:outputText value="#{projeto.valor}">
-												<f:convertNumber type="currency" maxFractionDigits="2"
-													currencySymbol="R$" />
-											</h:outputText></td>
-										<td><p:menuButton value="Opções">
-												<p:menuitem value="#{message['ACTION_EDIT']}"
-													outcome="/main/projetos_cadastro" onstart="start()"
-													oncomplete="stop()" onerror="stop()">
-													<f:param name="project" value="#{projeto.id}" />
-												</p:menuitem>
+						<p:dataTable value="#{projetoBean.projetos}" id="table-projetos" var="projeto"
+							paginator="true" rows="10">
 
-												<p:menuitem value="#{message['DETAILS']}"
-													onclick="setarWidthHeight('id-detail')"
-													update="main-panel-detail"
-													action="#{projetoBean.openDialogDetalhes(projeto)}">
-												</p:menuitem>
+							<p:column headerText="#" style="text-align: center;">
+								<p:selectBooleanCheckbox style="cursor: pointer;">
+									<p:ajax listener="#{projetoBean.addList(projeto)}" />
+								</p:selectBooleanCheckbox>
+							</p:column>
 
-												<p:menuitem action="#{projetoBean.remover()}"
-													rendered="false" process="@this"
-													value="#{message['ACTION_REMOVE']}">
-													<p:confirm header="#{message['ACTION_REMOVE']}"
-														message="#{message['MESSAGE_REMOVE_PROJECT']}" />
-													<f:setPropertyActionListener value="#{projeto}"
-														target="#{projetoBean.projeto}" />
-												</p:menuitem>
-												<p:menuitem onclick="start()" rendered="false"
-													oncomplete="stop();PF('dialogUsuariosLiberados').show()"
-													onerror="stop()" update="form_dialogUsuariosLiberados"
-													value="#{message['USER_PERMISSIONS_PROJECT']}"
-													action="#{projetoBean.findUsuariosComAcesso(projeto)}">
-												</p:menuitem>
-												<p:menuitem onclick="start()" oncomplete="stop()"
-													onerror="stop()" rendered="false"
-													value="#{message['ACTION_APROV_PROJECT']}">
-												</p:menuitem>
+							<p:column headerText="Código" style="text-align: center;">
+								<h:outputText value="#{projeto.codigo}" />
+							</p:column>
 
-											</p:menuButton></td>
-									</tr>
-								</ui:repeat>
-							</tbody>
-						</table>
+							<p:column headerText="Projeto" style="text-align: center;">
+								<h:outputText value="#{projeto.nome}" />
+							</p:column>
+
+							<p:column headerText="Data Início" style="text-align: center;">
+								<h:outputText value="#{projeto.dataInicio}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />								
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Data Final" style="text-align: center;">
+								<h:outputText value="#{projeto.dataFinal}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Orçado" style="text-align: center;">
+								<h:outputText value="#{projeto.valor}">
+									<f:convertNumber type="currency" maxFractionDigits="2"
+										currencySymbol="R$" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="#" style="text-align: center;">
+								<p:menuButton value="Opções">
+									<p:menuitem value="#{message['ACTION_EDIT']}"
+										outcome="/main/projetos_cadastro" onstart="start()"
+										oncomplete="stop()" onerror="stop()">
+										<f:param name="project" value="#{projeto.id}" />
+									</p:menuitem>
+
+									<p:menuitem value="#{message['DETAILS']}"
+										update="form-detalhes-projeto"
+										oncomplete="PF('dlg_detalhes_projeto').show();"
+										onerror="stop();" onsuccess="stop();" onclick="start();"
+										action="#{projetoBean.openDialogDetalhes(projeto)}">
+									</p:menuitem>
+
+									<p:menuitem action="#{projetoBean.remover()}" rendered="true"
+										process="@this" value="#{message['ACTION_REMOVE']}">
+										<p:confirm header="#{message['ACTION_REMOVE']}"
+											message="#{message['MESSAGE_REMOVE_PROJECT']}" />
+										<f:setPropertyActionListener value="#{projeto}"
+											target="#{projetoBean.projeto}" />
+									</p:menuitem>
+									<p:menuitem onclick="start()" rendered="false"
+										oncomplete="stop();PF('dialogUsuariosLiberados').show()"
+										onerror="stop()" update="form_dialogUsuariosLiberados"
+										value="#{message['USER_PERMISSIONS_PROJECT']}"
+										action="#{projetoBean.findUsuariosComAcesso(projeto)}">
+									</p:menuitem>
+									<p:menuitem onclick="start()" oncomplete="stop()"
+										onerror="stop()" rendered="false"
+										value="#{message['ACTION_APROV_PROJECT']}">
+									</p:menuitem>
+
+								</p:menuButton>
+							</p:column>
+
+						</p:dataTable>
 					</div>
 				</div>
 			</p:panel>
@@ -226,11 +252,12 @@
 	</ui:define>
 
 	<ui:define name="adicionais">
-		
-		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help" header="Ajuda"
-			showEffect="clip" hideEffect="drop" draggable="false" maximizable="true" minimizable="true" 
-			resizable="true" blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()" >
-				<ui:include src="dialog/help/help_projeto.xhtml" />
+
+		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help"
+			header="Ajuda" showEffect="clip" hideEffect="drop" draggable="false"
+			maximizable="true" minimizable="true" resizable="true"
+			blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()">
+			<ui:include src="dialog/help/help_projeto.xhtml" />
 		</p:dialog>
 
 		<p:dialog header="#{message['DETAILS']}" widgetVar="dialog_detail"
@@ -324,9 +351,10 @@
 				name="logofas.png" />
 		</p:dialog>
 
-		<p:dialog header="Detalhes do Projeto"
-			widgetVar="dlg_detalhes_projeto" resizable="false" modal="true"
-			showEffect="clip" hideEffect="clip" width="40%">
+		<p:dialog header="Detalhes do Projeto" styleClass="help"
+			widgetVar="dlg_detalhes_projeto" resizable="false" showEffect="clip"
+			hideEffect="clip" blockScroll="true" onHide="unlockedScroll()"
+			onShow="blockedScroll()">
 			<h:form id="form-detalhes-projeto">
 				<p:messages id="msg-detelhes-projeto" showSummary="false"
 					showDetail="true" closable="true" />
@@ -359,8 +387,10 @@
 				<p:panel header="Dados de Execução">
 					<center>
 						<p:outputLabel value="Execução Financeira" />
+						<br /> <span style="text-align: center;">#{projetoBean.porcentagemExecutado.intValue()}%</span>
 					</center>
 					<p:progressBar id="financeiro"
+						style="border: 1px solid black !important;"
 						value="#{projetoBean.porcentagemExecutado.intValue()}"
 						labelTemplate="#{projetoBean.porcentagemExecutado.intValue()}%"
 						displayOnly="true" />
@@ -372,6 +402,7 @@
 						<p:outputLabel value="Execução Física" />
 					</center>
 					<p:progressBar id="fisico"
+						style="border: 1px solid black !important;"
 						value="#{projetoBean.execucaoFisica.intValue()}"
 						labelTemplate="#{projetoBean.execucaoFisica.intValue()}%"
 						displayOnly="true" />
