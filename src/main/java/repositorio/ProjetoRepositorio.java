@@ -779,18 +779,10 @@ public class ProjetoRepositorio implements Serializable {
 			jpql.append(" and lower(p.nome) like '%" + filtro.getNome().toLowerCase().trim() + "%'");
 		}
 
-		
-		////// VERIFICAR FILTRO DE DATAS
-		if (filtro.getDataInicio() != null || filtro.getDataFinal() != null) {
+		if (filtro.getDataInicio() != null && filtro.getDataFinal() != null) {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			if (filtro.getDataFinal() != null && filtro.getDataInicio() != null) {
-				jpql.append(" and p.datainicio >= '" + sdf.format(filtro.getDataInicio()) + "' and p.datafinal <= '"
-							+ sdf.format(filtro.getDataFinal()) + "' ");			
-			} else if (filtro.getDataFinal() == null) {
-				jpql.append(" and p.datainicio >= '" + sdf.format(filtro.getDataInicio()));
-			} else {
-				jpql.append("' and p.datafinal <= '"+ sdf.format(filtro.getDataFinal()) + "' ");
-			}
+			jpql.append("and p.datainicio >= '" + sdf.format(filtro.getDataInicio()) + "' and p.datafinal <= '"
+					+ sdf.format(filtro.getDataFinal()) + "' ");
 		}
 
 		if (filtro.getPlanoDeTrabalho() != null) {
@@ -866,7 +858,69 @@ public class ProjetoRepositorio implements Serializable {
 
 		return projetos;
 	}
+	
+	////// filtro //////
+	public List<Projeto> projectFilterByUser(Filtro filtro, User usuario) {
+		StringBuilder jpql = new StringBuilder(
+				"SELECT NEW Projeto(p.id, p.codigo, p.nome, p.dataInicio, p.dataFinal, p.valor) FROM UserProjeto as up RIGHT JOIN up.projeto as p ");
+		jpql.append(" where 1 = 1 and versionProjeto = 'mode01' ");
+		
+		if (usuario != null && usuario.getPerfil().getId().intValue() != 1) {
+			jpql.append(" and (up.user.id = :user ");
+			jpql.append(" or p.gestao.colaborador.id = :coll)");
+		}
+		
+		if(filtro.getNovoProjeto() != null) {
+			jpql.append(" and p.id = :projeto_id");
+		}
+		
+		if(filtro.getGestao() != null) {
+			jpql.append(" and p.gestao.id = :gestao_id");
+		}
+		
+		if (filtro.getDataInicio() != null || filtro.getDataFinal() != null) {
+			if (filtro.getDataFinal() != null && filtro.getDataInicio() != null) {
+				jpql.append(" and p.dataInicio >= :data_inicio and p.dataFinal <= :data_final ");
+			} else if (filtro.getDataFinal() == null) {
+				jpql.append(" and p.dataInicio >= :data_inicio ");
+			} else {
+				jpql.append(" and p.dataFinal <= :data_final");
+			}
+		}
 
+		jpql.append(" group by p.id, p.nome order by p.nome");
+
+		Query query = this.manager.createQuery(jpql.toString());
+
+		if (usuario != null && usuario.getPerfil().getId().intValue() != 1) {
+			query.setParameter("user", usuario.getId());
+			query.setParameter("coll", usuario.getColaborador().getId());
+		}
+		
+		if(filtro.getNovoProjeto() != null) {
+			query.setParameter("projeto_id", filtro.getNovoProjeto().getId());
+		}
+		
+		if(filtro.getGestao() != null) {
+			query.setParameter("gestao_id", filtro.getGestao().getId());
+		}
+		
+		if (filtro.getDataInicio() != null || filtro.getDataFinal() != null) {
+			if (filtro.getDataFinal() != null && filtro.getDataInicio() != null) {
+				query.setParameter("data_inicio", filtro.getDataInicio());
+				query.setParameter("data_final", filtro.getDataFinal());
+			} else if (filtro.getDataFinal() == null) {
+				query.setParameter("data_inicio", filtro.getDataInicio());
+			} else {
+				query.setParameter("data_final", filtro.getDataFinal());
+			}
+		}
+
+		return query.getResultList().size() > 0 ? query.getResultList() : new ArrayList<Projeto>();
+	}
+
+	////////////////
+	
 	public List<Projeto> getProjetosFiltroPorUsuarioMODE01(Filtro filtro, User usuario) {
 		// StringBuilder jpql = new StringBuilder("select p.id p.nome from
 		// projeto p join usuario_projeto up on p.id = up.projeto_id ");
@@ -1180,6 +1234,15 @@ public class ProjetoRepositorio implements Serializable {
 	public List<Projeto> getProjetoAutocompleteMODE01(String s) {
 		StringBuilder jpql = new StringBuilder(
 				"SELECT NEW Projeto(p.id, p.nome, p.codigo) from Projeto p where (lower(p.nome) like lower(:nome) or lower(p.codigo) like lower(:nome))  and versionProjeto = :version");
+		Query query = manager.createQuery(jpql.toString());
+		query.setParameter("nome", "%" + s + "%");
+		query.setParameter("version", "mode01");
+		return query.getResultList().size() > 0 ? query.getResultList() : new ArrayList<>();
+	}
+	
+	public List<Projeto> getProjetoAutocompleteV2(String s) {
+		StringBuilder jpql = new StringBuilder(
+				"select new Projeto(p.id, p.nome, p.codigo) from Projeto p where (lower(p.codigo) like lower(:nome))  and versionProjeto = :version");
 		Query query = manager.createQuery(jpql.toString());
 		query.setParameter("nome", "%" + s + "%");
 		query.setParameter("version", "mode01");

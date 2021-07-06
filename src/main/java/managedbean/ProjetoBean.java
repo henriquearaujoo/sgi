@@ -900,6 +900,10 @@ public class ProjetoBean implements Serializable {
 	public List<Projeto> completeProjeto(String query) {
 		return gestaoProjeto.getProjetosAutoCompleteMode01(query);
 	}
+	
+	public List<Projeto> completeProjetoV2(String query) {
+		return gestaoProjeto.getProjetosAutoCompleteV2(query);
+	}
 
 	public List<Gestao> completeGestao(String query) {
 		return gestaoProjeto.getGestaoAutoComplete(query);
@@ -3234,43 +3238,53 @@ public class ProjetoBean implements Serializable {
 
 		projetos = gestaoProjeto.getProjetosFiltroPorUsuarioWidthColor(filtro, usuarioSessao.getUsuario());
 
-//		for (Projeto at : projetos) {
-//			if (((at.getTotalPercentualFinanceiro().isNaN() ? 0 : at.getTotalPercentualFinanceiro())
-//					- (at.getTotalPercentualFisico().isNaN() ? 0 : at.getTotalPercentualFisico()) < 21)
-//					&& ((at.getTotalPercentualFinanceiro().isNaN() ? 0 : at.getTotalPercentualFinanceiro())
-//							- (at.getTotalPercentualFisico().isNaN() ? 0 : at.getTotalPercentualFisico()) > 0)) {
-//				at.setCor("highlight_yellow");
-//			} else if (((at.getTotalPercentualFinanceiro().isNaN() ? 0 : at.getTotalPercentualFinanceiro())
-//					- (at.getTotalPercentualFisico().isNaN() ? 0 : at.getTotalPercentualFisico()) > 20)
-//					&& ((at.getTotalPercentualFinanceiro().isNaN() ? 0 : at.getTotalPercentualFinanceiro())
-//							- (at.getTotalPercentualFisico().isNaN() ? 0 : at.getTotalPercentualFisico()) < 51)) {
-//				at.setCor("highlight_orange");
-//			} else if ((at.getTotalPercentualFinanceiro().isNaN() ? 0 : at.getTotalPercentualFinanceiro())
-//					- (at.getTotalPercentualFisico().isNaN() ? 0 : at.getTotalPercentualFisico()) > 50) {
-//				at.setCor("highlight_red");
-//			}
-// 
-//
-//		}
-		carregarComponentes();
+		for (Projeto at : projetos) {
+			if (((at.getTotalPercentualFinanceiro().isNaN() ? 0 : at.getTotalPercentualFinanceiro())
+					- (at.getTotalPercentualFisico().isNaN() ? 0 : at.getTotalPercentualFisico()) < 21)
+					&& ((at.getTotalPercentualFinanceiro().isNaN() ? 0 : at.getTotalPercentualFinanceiro())
+							- (at.getTotalPercentualFisico().isNaN() ? 0 : at.getTotalPercentualFisico()) > 0)) {
+				at.setCor("highlight_yellow");
+			} else if (((at.getTotalPercentualFinanceiro().isNaN() ? 0 : at.getTotalPercentualFinanceiro())
+					- (at.getTotalPercentualFisico().isNaN() ? 0 : at.getTotalPercentualFisico()) > 20)
+					&& ((at.getTotalPercentualFinanceiro().isNaN() ? 0 : at.getTotalPercentualFinanceiro())
+							- (at.getTotalPercentualFisico().isNaN() ? 0 : at.getTotalPercentualFisico()) < 51)) {
+				at.setCor("highlight_orange");
+			} else if ((at.getTotalPercentualFinanceiro().isNaN() ? 0 : at.getTotalPercentualFinanceiro())
+					- (at.getTotalPercentualFisico().isNaN() ? 0 : at.getTotalPercentualFisico()) > 50) {
+				at.setCor("highlight_red");
+			}
+ 
+			carregarComponentes();
+
+		}
+	}
+	
+	public void projectFilterByUser() {
+		projetos = projetoService.projectFilterByUser(filtro, usuarioSessao.getUsuario());
+//		limparFiltro();
+	}
+	
+	public void limparFiltro() {
+		filtro = new Filtro();
 	}
 
 	public void limpaFiltroProjeto() {
-		filtro.setProjeto(new Projeto());
-		filtro.setGestao(null);
-		filtro.setCodigo(null);
-		filtro.setTitulo(null);
-		filtro.setOrcamento(null);
-		filtro.setPlanoDeTrabalho(null);
-		filtro.setAtivo(null);
-		filtro.setDataInicio(null);
-		filtro.setDataFinal(null);
+//		filtro.setNovoProjeto(new Projeto());
+//		filtro.setGestao(null);
+//		filtro.setCodigo(null);
+//		filtro.setTitulo(null);
+//		filtro.setOrcamento(null);
+//		filtro.setPlanoDeTrabalho(null);
+//		filtro.setAtivo(null);
+//		filtro.setDataInicio(null);
+//		filtro.setDataFinal(null);
+		limparFiltro();
 	}
 
 	public List<Gestao> findGestaoAutoComplete(String query) {
-		if (query.isEmpty())
-			return new ArrayList<Gestao>();
-		else
+//		if (query.isEmpty())
+//			return new ArrayList<Gestao>();
+//		else
 			return projetoService.getGestaoAutoComplete(query);
 	}
 

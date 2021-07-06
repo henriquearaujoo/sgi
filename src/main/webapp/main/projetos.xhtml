@@ -64,16 +64,16 @@
 			<p:panel>
 
 				<div class="ui-g ui-fluid" style="margin-top: 8px">
-					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group focused">
 						<p:outputLabel for="cod_projeto" value="#{message['FILTER_CODE']}"
 							styleClass="form-label" />
 						<p:autoComplete id="cod_projeto" maxResults="10"
 							converter="projetoConverter"
-							value="#{projetoBean.filtro.projeto}"
+							value="#{projetoBean.filtro.novoProjeto}"
 							completeMethod="#{projetoBean.completeProjeto}" var="pro"
 							itemLabel="#{pro.codigo}" itemValue="#{pro}" />
 					</div>
-					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group focused">
 						<p:outputLabel for="gestao"
 							value="#{message['FILTER_MANAGEMENT']}" styleClass="form-label" />
 						<p:autoComplete id="gestao" queryDelay="300" minQueryLength="3"
@@ -82,32 +82,32 @@
 							itemLabel="#{ges.nome}" itemValue="#{ges}" effect="blind" />
 					</div>
 					
-					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group focused">
 
 						<p:outputLabel for="filter-dt-inicio" value="Data incial:"
 							styleClass="form-label" />
 						<p:calendar id="filter-dt-inicio"
-							value="#{orcamento_controller.filtro.dataInicio}"
+							value="#{projetoBean.filtro.dataInicio}"
 							navigator="true" pattern="dd/MM/yyyy" />
 
 					</div>
 
-					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group focused">
 
 						<p:outputLabel for="filter-dt-final" value="Data final:"
 							styleClass="form-label" />
 						<p:calendar id="filter-dt-final"
-							value="#{orcamento_controller.filtro.dataFinal}" navigator="true"
+							value="#{projetoBean.filtro.dataFinal}" navigator="true"
 							pattern="dd/MM/yyyy" />
 
 					</div>
 					
-					<div class="ui-g-12 ui-md-6 ui-lg-12 form-group">
+					<div class="ui-g-12 ui-md-6 ui-lg-12 form-group focused">
 						<p:outputLabel for="projeto" value="#{message['FILTER_PROJECT']}"
 							styleClass="form-label" />
 						<p:autoComplete id="projeto" maxResults="10"
 							converter="projetoConverter"
-							value="#{projetoBean.filtro.projeto}"
+							value="#{projetoBean.filtro.novoProjeto}"
 							completeMethod="#{projetoBean.completeProjeto}" var="pro"
 							itemLabel="#{pro.nome}" itemValue="#{pro}" effect="blind" />
 					</div>
@@ -124,8 +124,8 @@
 					</div>
 
 					<div class="ui-g-12" style="text-align: right;">
-						<p:commandLink styleClass="btn btn-primary btn-sm"
-							action="#{projetoBean.colorirProjeto()}" onclick="start()"
+						<p:commandLink styleClass="btn btn-primary btn-sm" oncomplete="stop()"
+							action="#{projetoBean.projectFilterByUser()}" onclick="start()"
 							onsuccess="stop()" onerror="stop()" update="@form"
 							style="color:#fff; margin: 8px 2px;">
 							<span class="fa fa-fw fa-search"></span>
