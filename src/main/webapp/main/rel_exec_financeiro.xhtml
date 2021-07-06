@@ -25,180 +25,285 @@
 		</script>
 
 
-		<h:form id="form_rel_contas" prependId="false">
-			<style type="text/css">
-body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-selectcheckboxmenu-filter-container .ui-inputfield
-	{
-	padding: .429em;
-	width: 100%;
-	text-indent: 2.429em;
-}
-</style>
+		<h:form id="form-pedido-detalhado">
 
-
-			<p:messages showIcon="false" showSummary="false" showDetail="true"
-				closable="true" />
-
+			<p:messages id="msg-list" showSummary="false" style="margin-top:10px"
+				showDetail="true" closable="true" showIcon="true" />
 			<p:breadCrumb>
-				<p:menuitem value="home" url="home_new.xhtml" />
-				<p:menuitem value="Relatórios" url="relatorios_fin.xhtml" />
-				<p:menuitem value="Relatório de execução de projetos" />
+				<p:menuitem value="Categories" url="home_new.xhtml" />
+				<p:menuitem value="Relatórios" url="home_new.xhtml" />
+				<p:menuitem value="Compras detalhadas" />
 			</p:breadCrumb>
 
+			<p:panel id="toggleable_pedido" header="Filtro" toggleable="true"
+				closable="false" toggleSpeed="500" closeSpeed="500"
+				widgetVar="panel" style="margin-bottom:20px">
 
-			<div id="info-geral" class="ui-g ui-fluid"
-				style="width: 70%; margin-left: auto; margin-right: auto">
+				<div class="ui-g ui-fluid" style="margin-top: 8px">
+
+					<div class="ui-g-3 form-group">
+						<p:outputLabel for="codigo" value="Código" styleClass="form-label" />
+						<p:inputText id="codigo"
+							value="#{compraDetalhadaController.filtro.codigo}" />
+					</div>
+
+					<div class="ui-g-3 form-group">
+						<p:outputLabel for="nome" value="Solicitante"
+							styleClass="form-label" />
+						<p:inputText id="nome"
+							value="#{compraDetalhadaController.filtro.nome}" />
+					</div>
+
+					<div class="ui-g-3 form-group">
+						<p:outputLabel for="dt_inicio" value="Data Emissão Compra ínicio"
+							styleClass="form-label" />
+						<p:calendar id="dt_inicio"
+							value="#{compraDetalhadaController.filtro.dataInicio}"
+							navigator="true" pattern="dd/MM/yyyy" />
+					</div>
+
+					<div class="ui-g-3 form-group">
+						<p:outputLabel for="dt_final" value="Data Emissão Compra final"
+							styleClass="form-label" />
+						<p:calendar id="dt_final"
+							value="#{compraDetalhadaController.filtro.dataFinal}"
+							navigator="true" pattern="dd/MM/yyyy" />
+					</div>
+
+					<div class="ui-g-3 form-group">
+						<p:outputLabel for="dt_pedido_inicio"
+							value="Data Emissão Pedido ínicio" styleClass="form-label" />
+
+						<p:calendar id="dt_pedido_inicio"
+							value="#{compraDetalhadaController.filtro.dataPedidoInicial}"
+							navigator="true" pattern="dd/MM/yyyy" />
+
+					</div>
+
+					<div class="ui-g-3 form-group">
+						<p:outputLabel for="dt_pedido_final"
+							value="Data Emissão Pedido final" styleClass="form-label" />
+						<p:calendar id="dt_pedido_final"
+							value="#{compraDetalhadaController.filtro.dataPedidoFinal}"
+							navigator="true" pattern="dd/MM/yyyy" />
+
+					</div>
+
+					<div class="ui-g-3 form-group">
+						<p:outputLabel for="stt_compra" value="Status"
+							styleClass="form-label" style="width: 100%"/>
+						<p:selectOneMenu id="stt_compra"
+							value="#{compraDetalhadaController.filtro.statusCompra}">
+							<f:selectItem noSelectionOption="true" itemLabel="Selecione" />
+							<f:selectItems
+								value="#{compraDetalhadaController.listaStatusCompras()}"
+								var="stt" itemLabel="#{stt.nome}" itemValue="#{stt}" />
+						</p:selectOneMenu>
+					</div>
+
+					<div class="ui-g-3 form-group">
+						<p:outputLabel for="produto" value="Produto"
+							styleClass="form-label" style="width: 100%"/>
+
+						<p:inputText id="produto"
+							value="#{compraDetalhadaController.filtro.descricaoProduto}"
+							placeholder="Nome do Produto" />
+					</div>
+
+					<div class="ui-g-3 form-group">
+
+						<p:outputLabel style="width: 100%" value="Fornecedor" styleClass="form-label" />
+						<p:inputText
+							value="#{compraDetalhadaController.filtro.nomeFornecedor}"
+							placeholder="Nome do Fornecedor" style="margin-left:5px" />
+					</div>
+
+					<div class="ui-g-3 form-group">
+
+						<p:outputLabel value="Urgência:" styleClass="form-label"
+							style="margin-left:30px;" />
+
+						<p:selectBooleanCheckbox
+							value="#{compraDetalhadaController.filtro.urgencia}"
+							label="Urgência" />
+
+					</div>
+
+					<div class="ui-g-12">
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							action="#{compraDetalhadaController.filtrarItens()}"
+							onclick="start()" onsuccess="stop()" onerror="stop()"
+							update="pedido-itens-detalhe"
+							style="color:#fff; margin: 8px 2px;">
+							<span style="font-family: Arial">Procurar</span>
+						</p:commandLink>
+
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							action="#{compraDetalhadaController.limparFiltro()}"
+							process="@this" update="form-pedido-detalhado"
+							style="color:#fff; margin: 8px 2px;">
+							<span style="font-family: Arial"> Limpar filtro</span>
+
+						</p:commandLink>
+					</div>
+
+					<div class="ui-g-12">
+
+						<p:dataTable paginator="true" rows="10" tableStyle="width:auto"
+							emptyMessage="Não há solicitações cadastradas"
+							id="pedido-itens-detalhe" style="he"
+							value="#{compraDetalhadaController.itensPedidos}" var="item"
+							paginatorPosition="top"
+							paginatorTemplate="{Exporters}  {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15,20,25,50,100">
 
 
-				<div class="ui-g-6 form-group">
-					<p:outputLabel value="Data início (pgto)" />
-					<p:calendar styleClass="font12-vi" required="true"
-						requiredMessage="Data início é obrigatório"
-						value="#{execucaoController.filtro.dataInicio}"
-						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+							<f:facet name="{Exporters}">
+
+								<h:commandLink style="margin:3px">
+									<p:graphicImage library="image" name="excel.png" width="30" />
+									<p:dataExporter type="xls" target="pedido-itens-detalhe"
+										fileName="Itens de compras" />
+								</h:commandLink>
+							</f:facet>
+
+							<p:column headerText="SC">
+								<h:outputText value="#{item.idSC}" />
+							</p:column>
+
+							<p:column headerText="Pedido">
+								<h:outputText value="#{item.idPedido}" />
+							</p:column>
+
+							<p:column headerText="Emissão SC">
+								<h:outputText value="#{item.dataEmissaoSC}" />
+							</p:column>
+
+							<p:column headerText="Aprovação SC">
+								<h:outputText value="#{item.dataAprovacao}" />
+							</p:column>
+
+							<p:column headerText="Conclusão SC">
+								<h:outputText value="#{item.dataConclusaoSC}" />
+							</p:column>
+
+							<p:column headerText="Emissão Pedido">
+								<h:outputText value="#{item.dataEmissaoPedido}" />
+							</p:column>
+
+							<p:column headerText="Status">
+								<h:outputText value="#{item.statusCompra}" />
+							</p:column>
+
+							<p:column headerText="Gestão">
+								<h:outputText value="#{item.nomeGestao}" />
+							</p:column>
+
+							<p:column headerText="Destino">
+								<h:outputText value="#{item.nomeDestino}" />
+							</p:column>
+
+							<p:column headerText="Nota Fiscal">
+								<h:outputLabel value="#{item.notaFiscal}" />
+							</p:column>
+
+							<p:column headerText="Produto">
+								<h:outputText value="#{item.descricaoProduto}" />
+							</p:column>
+
+							<p:column headerText="Descrição Complementar">
+								<h:outputText value="#{item.descricaoProdutoComplementar}" />
+							</p:column>
+
+							<p:column headerText="Data Pagamento">
+								<h:outputLabel value="#{item.dataPagamento}">
+									<f:convertDateTime pattern="dd/MM/YYYY" />
+								</h:outputLabel>
+							</p:column>
+
+							<p:column headerText="Tipo">
+								<h:outputText value="#{item.tipo}" />
+							</p:column>
+
+							<p:column headerText="Categoria">
+								<h:outputText value="#{item.categoria}" />
+							</p:column>
+
+							<p:column headerText="Fornecedor">
+								<h:outputText value="#{item.nomeFornecedor}" />
+							</p:column>
+
+							<p:column headerText="Fonte">
+								<h:outputText value="#{item.fonte}" />
+							</p:column>
+
+							<p:column headerText="Doação">
+								<h:outputText value="#{item.orcamento}" />
+							</p:column>
+
+							<p:column headerText="Projeto">
+								<h:outputText value="#{item.projeto}" />
+							</p:column>
+
+							<p:column headerText="Componente">
+								<h:outputText value="#{item.componente}" />
+							</p:column>
+
+							<p:column headerText="Sub Componente">
+								<h:outputText value="#{item.subComponente}" />
+							</p:column>
+
+							<p:column headerText="Rubrica">
+								<h:outputText value="#{item.rubrica}" />
+							</p:column>
+
+							<p:column headerText="Und. medida">
+								<h:outputText value="#{item.unidade}" />
+							</p:column>
+
+							<p:column headerText="Qtd.">
+								<h:outputText
+									value="#{item.quantidade.toString().replace('.', ',')}" />
+							</p:column>
+
+							<p:column headerText="Valor unitário">
+								<h:outputText value="#{item.valorUnitarioComDesconto}">
+									<f:convertNumber type="currency" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Valor total Item">
+								<h:outputText value="#{item.valorTotal}">
+									<f:convertNumber type="currency" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Valor total do pedido">
+								<h:outputText value="#{item.valorTotalPedido}">
+									<f:convertNumber type="currency" maxFractionDigits="2"
+										currencySymbol="R$" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Urgência">
+								<h:outputText value="Sim" rendered="#{item.bootUrgencia}" />
+							</p:column>
+
+							<p:column headerText="Solicitante">
+								<h:outputText value="#{item.nomeSolicitante}" />
+							</p:column>
+
+							<p:column headerText="Comprador">
+								<h:outputText value="#{item.nomeComprador}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</div>
+
 				</div>
 
-				<div class="ui-g-6 form-group">
-
-					<p:outputLabel value="Data fim (pgto)" />
-					<p:calendar styleClass="font12-vi" required="true"
-						requiredMessage="Data fim é obrigatório"
-						value="#{execucaoController.filtro.dataFinal}"
-						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
-				</div>
-
-				<div class="ui-g-6 form-group">
-
-					<p:outputLabel value="Fonte" />
-					<p:selectCheckboxMenu id="fonte"
-						value="#{execucaoController.filtro.fontes}" label="Fonte/Parceiro"
-						filter="true" filterMatchMode="contains">
-						<f:selectItems value="#{execucaoController.fontes}" var="fonte"
-							itemLabel="#{fonte.nome}" itemValue="#{fonte.id}" />
-
-						<p:ajax update="projeto" onstart="start()" oncomplete="stop()"
-							onerror="stop()"
-							listener="#{execucaoController.carregarProjetos()}" />
-
-
-					</p:selectCheckboxMenu>
-
-				</div>
-
-				<div class="ui-g-6 form-group">
-					<p:outputLabel value="Projeto" />
-					<p:selectCheckboxMenu id="projeto" panelStyle="width:350px"
-						value="#{execucaoController.filtro.projetos}" label="Projetos"
-						filter="true" filterMatchMode="contains">
-						<f:selectItems value="#{execucaoController.projetos}"
-							var="projeto" itemLabel="#{projeto.nome}"
-							itemValue="#{projeto.id}">
-
-						</f:selectItems>
-					</p:selectCheckboxMenu>
-
-				</div>
-
-
-				<div class="ui-g-12 form-group" style="text-align: center;">
-					<p:commandLink styleClass="btn btn-primary btn-sm"
-						onstart="start()" onsuccess="stop()" onerror="stop()" ajax="false"
-						action="#{execucaoController.gerarOrcamentoExecutado()}"
-						style="color:#fff; margin: 8px 2px;">
-						<span style="width: 40px; font-family: Arial">Gerar
-							relatório</span>
-					</p:commandLink>
-
-				</div>
-
-
-			</div>
-
-
-			<p:dataTable id="tbl_exec_financeira" rendered="true"
-				sortBy="#{lancamento.nomeProjeto}" expandableRowGroups="true"
-				value="#{execucaoController.lancamentos}" var="lancamento">
-
-				<f:facet name="header">
- 
- 	 			Execução
-       				 <p:commandButton id="toggler" type="button" value="Columns" rendered="false"
-						style="float:right" icon="ui-icon-calculator" />
-					<p:columnToggler datasource="tbl_exec_financeira" trigger="toggler" />
-				</f:facet>
-
-				<p:headerRow>
-					<p:column colspan="8">
-						<h:outputText style="padding:8px;font-size:11px"
-							value="#{lancamento.nomeProjeto}" />
-					</p:column>
-				</p:headerRow>
-
-
-				<p:column headerText="Dt. de Pagamento">
-					<h:outputText value="#{lancamento.dataPagamento}">
-						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
-					</h:outputText>
-				</p:column>
-
-				<p:column headerText="Dt. de Emissão">
-					<h:outputText value="#{lancamento.dataEmissao}">
-						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
-					</h:outputText>
-				</p:column>
-
-				<p:column headerText="Nº de documento">
-					<h:outputText value="#{lancamento.numeroDocumento}" />
-				</p:column>
-
-				<p:column headerText="Nº de lançamento">
-					<h:outputText value="#{lancamento.id}" />
-				</p:column>
-
-				<p:column headerText="Nota fiscal">
-					<h:outputText value="#{lancamento.notaFiscal}" />
-				</p:column>
-
-				<p:column headerText="Pagador" style="width:15%">
-					<h:outputText value="#{lancamento.contaPagadorLbl}" />
-				</p:column>
-
-				<p:column headerText="Recebedor" style="width:15%">
-					<h:outputText value="#{lancamento.contaRecebedorLbl}" />
-				</p:column>
-
-				<p:column headerText="Descrição" style="width:15%">
-					<h:outputText value="#{lancamento.descricao}" />
-				</p:column>
-
-				<p:column headerText="Projeto">
-					<h:outputText value="#{lancamento.nomeProjeto}" />
-				</p:column>
-				<p:column headerText="Fonte">
-					<h:outputText value="#{lancamento.fonte}" />
-				</p:column>
-
-				<p:column headerText="Status" style="text-align:center">
-					<h:outputText value="P"
-						rendered="#{lancamento.status.equals('PROVISIONADO')}" />
-					<h:outputText value="E"
-						rendered="#{lancamento.status.equals('EFETIVADO')}" />
-				</p:column>
-
-				<p:column headerText="Entrada">
-					<h:outputText value="#{lancamento.entrada}">
-						<f:convertNumber type="currency" maxFractionDigits="2"
-							currencySymbol="R$" />
-					</h:outputText>
-				</p:column>
-
-				<p:column headerText="Saída">
-					<h:outputText value="#{lancamento.saida}">
-						<f:convertNumber type="currency" maxFractionDigits="2"
-							currencySymbol="R$" />
-					</h:outputText>
-				</p:column>
-			</p:dataTable>
+			</p:panel>
 
 			<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
 				showHeader="false" draggable="false" closable="false"
