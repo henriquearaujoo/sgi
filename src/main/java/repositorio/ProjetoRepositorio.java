@@ -870,7 +870,7 @@ public class ProjetoRepositorio implements Serializable {
 			jpql.append(" or p.gestao.colaborador.id = :coll)");
 		}
 		
-		if(filtro.getNovoProjeto() != null) {
+		if(filtro.getNovoProjeto() != null || filtro.getProjetoId() != null) {
 			jpql.append(" and p.id = :projeto_id");
 		}
 		
@@ -897,8 +897,9 @@ public class ProjetoRepositorio implements Serializable {
 			query.setParameter("coll", usuario.getColaborador().getId());
 		}
 		
-		if(filtro.getNovoProjeto() != null) {
-			query.setParameter("projeto_id", filtro.getNovoProjeto().getId());
+		if(filtro.getNovoProjeto() != null || filtro.getProjetoId() != null) {
+			Long id = filtro.getNovoProjeto() != null ? filtro.getNovoProjeto().getId() : filtro.getProjetoId(); 
+			query.setParameter("projeto_id", id );
 		}
 		
 		if(filtro.getGestao() != null) {

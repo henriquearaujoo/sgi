@@ -69,7 +69,7 @@
 							styleClass="form-label" />
 						<p:autoComplete id="cod_projeto" maxResults="10"
 							converter="projetoConverter"
-							value="#{projetoBean.filtro.novoProjeto}"
+							value="#{projetoBean.filtro.projeto}"
 							completeMethod="#{projetoBean.completeProjeto}" var="pro"
 							itemLabel="#{pro.codigo}" itemValue="#{pro}" />
 					</div>
@@ -107,7 +107,7 @@
 							styleClass="form-label" />
 						<p:autoComplete id="projeto" maxResults="10"
 							converter="projetoConverter"
-							value="#{projetoBean.filtro.novoProjeto}"
+							value="#{projetoBean.filtro.projeto}"
 							completeMethod="#{projetoBean.completeProjeto}" var="pro"
 							itemLabel="#{pro.nome}" itemValue="#{pro}" effect="blind" />
 					</div>
