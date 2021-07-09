@@ -202,16 +202,16 @@ public class OrcamentoController implements Serializable {
 		ChartData data = new ChartData();
 		
 		BarChartDataSet barDataSet = new BarChartDataSet();
-		barDataSet.setLabel("Projetado");
+		barDataSet.setLabel("Distribuído");
 		barDataSet.setBackgroundColor("rgba(255, 99, 132, 0.2)");
 		barDataSet.setBorderColor("rgb(255, 99, 132)");
 		barDataSet.setBorderWidth(1);
 		List<Number> values = new ArrayList<>();
-		values.add(10000);
+		values.add(donation.getValor().intValue());
 		barDataSet.setData(values);
 		
 		BarChartDataSet barDataSet2 = new BarChartDataSet();
-		barDataSet2.setLabel("Desembolsado");
+		barDataSet2.setLabel("Projetado");
 		barDataSet2.setBackgroundColor("rgba(255, 159, 64, 0.2)");
 		barDataSet2.setBorderColor("rgb(255, 159, 64)");
 		barDataSet2.setBorderWidth(1);
@@ -219,8 +219,19 @@ public class OrcamentoController implements Serializable {
 		values2.add(85);
 		barDataSet2.setData(values2);
 		
+		
+		BarChartDataSet barDataSet3 = new BarChartDataSet();
+		barDataSet3.setLabel("Desembolsado");
+		barDataSet3.setBackgroundColor("rgba(255, 159, 64, 0.2)");
+		barDataSet3.setBorderColor("rgb(255, 159, 64)");
+		barDataSet3.setBorderWidth(1);
+		List<Number> values3 = new ArrayList<>();
+		values3.add(85);
+		barDataSet3.setData(values3);
+		
 		data.addChartDataSet(barDataSet);
 		data.addChartDataSet(barDataSet2);
+		data.addChartDataSet(barDataSet3);
 		
 		List<String> labels = new ArrayList<>();
 		labels.add("Valores");
@@ -233,7 +244,7 @@ public class OrcamentoController implements Serializable {
 		CartesianLinearAxes linearAxes = new CartesianLinearAxes();
 		CartesianLinearTicks ticks = new CartesianLinearTicks();
 		ticks.setBeginAtZero(true);
-		ticks.setMax(donation.getValor().intValue());
+		ticks.setMax(orcamento.getValor().intValue());
 		ticks.setMin(0);
 		linearAxes.setTicks(ticks);
 		cScales.addYAxesData(linearAxes);
@@ -352,8 +363,10 @@ public class OrcamentoController implements Serializable {
 		calculatePercentByDistributed();
 	}
 	
+	
+	//TODO: 
 	public void fetchValuesListDonationManagement() {
-		List<DonationManagement> list = orcamentoService.selectDonationManagement();
+		List<DonationManagement> list = orcamentoService.selectDonationManagement(orcamento.getId());
 		// percorre a lista dos valores que foram doados e faz a associação deles para gerar o gráfico
 		for(DonationManagement mod : list) {
 			mod.setModel(chartModelBar(mod));

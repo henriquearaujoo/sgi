@@ -81,8 +81,8 @@ public class OrcamentoService implements Serializable {
 		donationRepositorio.save(donationManagement);
 	}
 	
-	public List<DonationManagement> selectDonationManagement() {
-		return donationRepositorio.selectDonationManagement();
+	public List<DonationManagement> selectDonationManagement(Long id) {
+		return donationRepositorio.selectDonationManagement(id);
 	}
 
 	@Transactional

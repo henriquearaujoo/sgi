@@ -24,6 +24,7 @@ import model.GrupoDeInvestimento;
 import model.MetaPlano;
 import model.Orcamento;
 import model.Projeto;
+import model.TransferenciaOverHead;
 import util.Filtro;
 
 public class DonationManagementRepositorio {
@@ -54,12 +55,22 @@ public class DonationManagementRepositorio {
 		
 	}
 	
-	public List<DonationManagement> selectDonationManagement() {
-		String jpql = "from DonationManagement dm";
-		
+	public List<DonationManagement> selectDonationManagement(Long id) {
+		String jpql = "from DonationManagement dm where dm.donation.id = :id";
 		Query query = this.manager.createQuery(jpql);
-		
+		query.setParameter("id", id);
 		return query.getResultList();
+	}
+	
+	public String getSumSqlByDonation() {
+		return "(select\n"
+				+ "sum(pr.valor)\n"
+				+ "from fonte_pagadora fp\n"
+				+ "join orcamento o on fp.id = o.fonte_id\n"
+				+ "join rubrica_orcamento ro on ro.orcamento_id  = o.id\n"
+				+ "join projeto_rubrica pr on pr.rubricaorcamento_id = ro.id\n"
+				+ "join projeto p on p.id = pr.projeto_id\n"
+				+ "where o.id = :id) as total_project ";
 	}
 
 }
