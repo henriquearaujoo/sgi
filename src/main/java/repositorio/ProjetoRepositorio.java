@@ -870,7 +870,7 @@ public class ProjetoRepositorio implements Serializable {
 			jpql.append(" or p.gestao.colaborador.id = :coll)");
 		}
 		
-		if(filtro.getNovoProjeto() != null || filtro.getProjetoId() != null) {
+		if(filtro.getProjeto() != null || filtro.getProjetoId() != null) {
 			jpql.append(" and p.id = :projeto_id");
 		}
 		
@@ -897,8 +897,8 @@ public class ProjetoRepositorio implements Serializable {
 			query.setParameter("coll", usuario.getColaborador().getId());
 		}
 		
-		if(filtro.getNovoProjeto() != null || filtro.getProjetoId() != null) {
-			Long id = filtro.getNovoProjeto() != null ? filtro.getNovoProjeto().getId() : filtro.getProjetoId(); 
+		if(filtro.getProjeto() != null || filtro.getProjetoId() != null) {
+			Long id = filtro.getProjeto() != null ? filtro.getProjeto().getId() : filtro.getProjetoId(); 
 			query.setParameter("projeto_id", id );
 		}
 		
@@ -1241,12 +1241,16 @@ public class ProjetoRepositorio implements Serializable {
 		return query.getResultList().size() > 0 ? query.getResultList() : new ArrayList<>();
 	}
 	
-	public List<Projeto> getProjetoAutocompleteV2(String s) {
+	public List<Projeto> getProjetoAutocompleteByUserV2(String s, User user) {
 		StringBuilder jpql = new StringBuilder(
-				"select new Projeto(p.id, p.nome, p.codigo) from Projeto p where (lower(p.codigo) like lower(:nome))  and versionProjeto = :version");
+				"select new Projeto(p.id, p.nome, p.codigo) from UserProjeto up right join up.projeto as p ");
+		
+		jpql.append("where (lower(p.nome) like lower(:nome) or lower(p.codigo) like lower(:nome))  and versionProjeto = :version ");
+		jpql.append(" and up.user.id = :user_id)");
 		Query query = manager.createQuery(jpql.toString());
 		query.setParameter("nome", "%" + s + "%");
 		query.setParameter("version", "mode01");
+		query.setParameter("user_id", user.getId());
 		return query.getResultList().size() > 0 ? query.getResultList() : new ArrayList<>();
 	}
 

@@ -68,10 +68,10 @@
 						<p:outputLabel for="cod_projeto" value="#{message['FILTER_CODE']}"
 							styleClass="form-label" />
 						<p:autoComplete id="cod_projeto" maxResults="10"
-							converter="projetoConverter"
+							converter="projetoConverterV2"
 							value="#{projetoBean.filtro.projeto}"
-							completeMethod="#{projetoBean.completeProjeto}" var="pro"
-							itemLabel="#{pro.codigo}" itemValue="#{pro}" />
+							completeMethod="#{projetoBean.completeProjetoByUserV2}" var="pro"
+							itemLabel="#{pro.codigo}" itemValue="#{pro}" effect="blind" />
 					</div>
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group focused">
 						<p:outputLabel for="gestao"
@@ -106,9 +106,9 @@
 						<p:outputLabel for="projeto" value="#{message['FILTER_PROJECT']}"
 							styleClass="form-label" />
 						<p:autoComplete id="projeto" maxResults="10"
-							converter="projetoConverter"
+							converter="projetoConverterV2"
 							value="#{projetoBean.filtro.projeto}"
-							completeMethod="#{projetoBean.completeProjeto}" var="pro"
+							completeMethod="#{projetoBean.completeProjetoByUserV2}" var="pro"
 							itemLabel="#{pro.nome}" itemValue="#{pro}" effect="blind" />
 					</div>
 					

@@ -70,6 +70,7 @@ import model.Municipio;
 import model.Objetivo;
 import model.Orcamento;
 import model.OrcamentoProjeto;
+import model.Perfil;
 import model.PlanoDeTrabalho;
 import model.Produto;
 import model.Programa;
@@ -901,9 +902,15 @@ public class ProjetoBean implements Serializable {
 		return gestaoProjeto.getProjetosAutoCompleteMode01(query);
 	}
 	
-	public List<Projeto> completeProjetoV2(String query) {
-		return gestaoProjeto.getProjetosAutoCompleteV2(query);
+	public List<Projeto> completeProjetoByUserV2(String query) {
+		Perfil currentUserPerfil = usuarioSessao.getUsuario().getPerfil();
+		if(currentUserPerfil.getId() == 1 || currentUserPerfil.getId() == 5) {
+			return completeProjeto(query);
+		} else {
+			return gestaoProjeto.getProjetosAutoCompleteByUserV2(query, usuarioSessao.getUsuario());
+		}
 	}
+	
 
 	public List<Gestao> completeGestao(String query) {
 		return gestaoProjeto.getGestaoAutoComplete(query);
@@ -3279,6 +3286,7 @@ public class ProjetoBean implements Serializable {
 //		filtro.setDataInicio(null);
 //		filtro.setDataFinal(null);
 		limparFiltro();
+		fetchProjects();
 	}
 
 	public List<Gestao> findGestaoAutoComplete(String query) {

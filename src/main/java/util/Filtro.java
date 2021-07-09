@@ -304,16 +304,6 @@ public class Filtro {
 	private Acao acao = new Acao();
 
 	private Projeto projeto = new Projeto();
-	
-	private Projeto novoProjeto;
-	
-	public Projeto getNovoProjeto() {
-		return novoProjeto;
-	}
-
-	public void setNovoProjeto(Projeto novoProjeto) {
-		this.novoProjeto = novoProjeto;
-	}
 
 	private Long idReembolso;
 

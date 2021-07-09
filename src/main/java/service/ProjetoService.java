@@ -614,8 +614,8 @@ public class ProjetoService implements Serializable {
 		return repositorio.getProjetoAutocompleteMODE01(query);
 	}
 	
-	public List<Projeto> getProjetosAutoCompleteV2(String query) {
-		return repositorio.getProjetoAutocompleteV2(query);
+	public List<Projeto> getProjetosAutoCompleteByUserV2(String query, User user) {
+		return repositorio.getProjetoAutocompleteByUserV2(query, user);
 	}
 	
 	///// FILTRO V2 ////
