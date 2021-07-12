@@ -6,6 +6,8 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
+import org.jasypt.util.text.BasicTextEncryptor;
+
 import anotacoes.Transactional;
 import model.Cargo;
 import model.Colaborador;
@@ -14,6 +16,7 @@ import model.Gestao;
 import model.Localidade;
 import repositorio.ColaboradorRepositorio;
 import repositorio.GestaoRepositorio;
+import util.Criptografia;
 import util.Filtro;
 
 public class ColaboradorService implements Serializable{
@@ -26,11 +29,19 @@ public class ColaboradorService implements Serializable{
 	@Inject
 	ColaboradorRepositorio colaboradorRepositorio;
 	
+	Criptografia cripto = new Criptografia();
+	
 	@Inject
 	private GestaoRepositorio gestaoRepositorio;
 	
 	public List<Colaborador> findAll(){
 		return colaboradorRepositorio.findAll();
+	}
+	
+	@Transactional
+	public void encryptedData() {
+		List<Colaborador> colaboradores = colaboradorRepositorio.findAll();
+		colaboradorRepositorio.salvarColaboradores(cripto.colaboradorEncrypt(colaboradores));
 	}
 	
 	public List<Colaborador> findByFiltro(Filtro filtro){
@@ -61,12 +72,11 @@ public class ColaboradorService implements Serializable{
 	
 	@Transactional
 	public Boolean salvar(Colaborador colaborador){
+		colaborador = cripto.encrypt(colaborador);
 		colaboradorRepositorio.salvar(colaborador);
 		return true;
 		
 	}
-	
-	
 
 	public Colaborador findColaboradorById(Long colaborador) {
 		return colaboradorRepositorio.findColaboradorById(colaborador);

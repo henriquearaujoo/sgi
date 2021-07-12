@@ -40,6 +40,12 @@ public class ColaboradorRepositorio {
 		this.manager.merge(colaborador);
 	}
 	
+	public void salvarColaboradores(List<Colaborador> colaboradores) {
+		for(Colaborador colaborador: colaboradores) {			
+			this.manager.merge(colaborador);
+		}
+	}
+	
 	public Colaborador getColaboradorById(Long id){
 		return manager.find(Colaborador.class, id);
 	}
@@ -49,7 +55,7 @@ public class ColaboradorRepositorio {
 	}
 
 	public List<Colaborador> findAll(){
-		StringBuilder jpql = new StringBuilder("from Colaborador a");
+		StringBuilder jpql = new StringBuilder("from Colaborador a order by a.id desc");
 		Query query = manager.createQuery(jpql.toString());
 		return query.getResultList();
 	}

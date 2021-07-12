@@ -31,6 +31,7 @@ import model.MenuLateral;
 import service.ColaboradorService;
 import service.EnderecoService;
 import util.Arquivo;
+import util.Criptografia;
 import util.DataUtil;
 import util.Filtro;
 import util.UsuarioSessao;
@@ -61,11 +62,11 @@ public class ColaboradorController implements Serializable {
 	private MenuLateral menu = new MenuLateral();
 	private Filtro filtro = new Filtro();
 	private List<Colaborador> listaColaborador;
-	
+	private Criptografia cripto = new Criptografia();
 	
 	public void init() {
 		if(idInitColaborador != null)
-			this.colaborador = colaboradorService.findColaboradorById(idInitColaborador);
+			this.colaborador = cripto.decrypt(colaboradorService.findColaboradorById(idInitColaborador));
 	}
 	
 	public void filtrar() {
@@ -74,9 +75,13 @@ public class ColaboradorController implements Serializable {
 	}
 	
 	public void initListagem() {
-		this.listaColaborador = colaboradorService.findAll();
+		encryptedData();
+		this.listaColaborador = cripto.colaboradorDecrypt(colaboradorService.findAll());
 	}
 	
+	public void encryptedData() {
+		colaboradorService.encryptedData();
+	}
 	
 	public List<Colaborador> getListaColaborador() {
 		return listaColaborador;
