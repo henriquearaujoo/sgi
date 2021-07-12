@@ -640,11 +640,11 @@ public class ProjetoRepositorio implements Serializable {
 	public List<Projeto> getAllProject(Filtro filtro, User user) {
 
 		StringBuilder jpql = new StringBuilder(
-				"SELECT NEW Projeto(p.id,p.codigo,p.nome, p.valor,p.quantidadeAtividade) FROM UserProjeto as up RIGHT JOIN up.projeto as p ");
+				"SELECT NEW Projeto(p.id, p.codigo, p.nome, p.dataInicio, p.dataFinal, p.valor) FROM UserProjeto as up RIGHT JOIN up.projeto as p ");
 		jpql.append(" where 1 = 1 and versionProjeto = 'mode01' ");
-
-		if (user != null) {
-			jpql.append("and (up.user.id = :user ");
+		
+		if (user != null && user.getPerfil().getId().intValue() != 1) {
+			jpql.append(" and (up.user.id = :user ");
 			jpql.append(" or p.gestao.colaborador.id = :coll)");
 		}
 
@@ -652,7 +652,7 @@ public class ProjetoRepositorio implements Serializable {
 
 		Query query = this.manager.createQuery(jpql.toString());
 
-		if (user != null) {
+		if (user != null && user.getPerfil().getId().intValue() != 1) {
 			query.setParameter("user", user.getId());
 			query.setParameter("coll", user.getColaborador().getId());
 		}
@@ -858,7 +858,70 @@ public class ProjetoRepositorio implements Serializable {
 
 		return projetos;
 	}
+	
+	////// filtro //////
+	public List<Projeto> projectFilterByUser(Filtro filtro, User usuario) {
+		StringBuilder jpql = new StringBuilder(
+				"SELECT NEW Projeto(p.id, p.codigo, p.nome, p.dataInicio, p.dataFinal, p.valor) FROM UserProjeto as up RIGHT JOIN up.projeto as p ");
+		jpql.append(" where 1 = 1 and versionProjeto = 'mode01' ");
+		
+		if (usuario != null && usuario.getPerfil().getId().intValue() != 1) {
+			jpql.append(" and (up.user.id = :user ");
+			jpql.append(" or p.gestao.colaborador.id = :coll)");
+		}
+		
+		if(filtro.getProjeto() != null || filtro.getProjetoId() != null) {
+			jpql.append(" and p.id = :projeto_id");
+		}
+		
+		if(filtro.getGestao() != null) {
+			jpql.append(" and p.gestao.id = :gestao_id");
+		}
+		
+		if (filtro.getDataInicio() != null || filtro.getDataFinal() != null) {
+			if (filtro.getDataFinal() != null && filtro.getDataInicio() != null) {
+				jpql.append(" and p.dataInicio >= :data_inicio and p.dataFinal <= :data_final ");
+			} else if (filtro.getDataFinal() == null) {
+				jpql.append(" and p.dataInicio >= :data_inicio ");
+			} else {
+				jpql.append(" and p.dataFinal <= :data_final");
+			}
+		}
 
+		jpql.append(" group by p.id, p.nome order by p.nome");
+
+		Query query = this.manager.createQuery(jpql.toString());
+
+		if (usuario != null && usuario.getPerfil().getId().intValue() != 1) {
+			query.setParameter("user", usuario.getId());
+			query.setParameter("coll", usuario.getColaborador().getId());
+		}
+		
+		if(filtro.getProjeto() != null || filtro.getProjetoId() != null) {
+			Long id = filtro.getProjeto() != null ? filtro.getProjeto().getId() : filtro.getProjetoId(); 
+			query.setParameter("projeto_id", id );
+		}
+		
+		if(filtro.getGestao() != null) {
+			query.setParameter("gestao_id", filtro.getGestao().getId());
+		}
+		
+		if (filtro.getDataInicio() != null || filtro.getDataFinal() != null) {
+			if (filtro.getDataFinal() != null && filtro.getDataInicio() != null) {
+				query.setParameter("data_inicio", filtro.getDataInicio());
+				query.setParameter("data_final", filtro.getDataFinal());
+			} else if (filtro.getDataFinal() == null) {
+				query.setParameter("data_inicio", filtro.getDataInicio());
+			} else {
+				query.setParameter("data_final", filtro.getDataFinal());
+			}
+		}
+
+		return query.getResultList().size() > 0 ? query.getResultList() : new ArrayList<Projeto>();
+	}
+
+	////////////////
+	
 	public List<Projeto> getProjetosFiltroPorUsuarioMODE01(Filtro filtro, User usuario) {
 		// StringBuilder jpql = new StringBuilder("select p.id p.nome from
 		// projeto p join usuario_projeto up on p.id = up.projeto_id ");
@@ -1175,6 +1238,19 @@ public class ProjetoRepositorio implements Serializable {
 		Query query = manager.createQuery(jpql.toString());
 		query.setParameter("nome", "%" + s + "%");
 		query.setParameter("version", "mode01");
+		return query.getResultList().size() > 0 ? query.getResultList() : new ArrayList<>();
+	}
+	
+	public List<Projeto> getProjetoAutocompleteByUserV2(String s, User user) {
+		StringBuilder jpql = new StringBuilder(
+				"select new Projeto(p.id, p.nome, p.codigo) from UserProjeto up right join up.projeto as p ");
+		
+		jpql.append("where (lower(p.nome) like lower(:nome) or lower(p.codigo) like lower(:nome))  and versionProjeto = :version ");
+		jpql.append(" and up.user.id = :user_id)");
+		Query query = manager.createQuery(jpql.toString());
+		query.setParameter("nome", "%" + s + "%");
+		query.setParameter("version", "mode01");
+		query.setParameter("user_id", user.getId());
 		return query.getResultList().size() > 0 ? query.getResultList() : new ArrayList<>();
 	}
 

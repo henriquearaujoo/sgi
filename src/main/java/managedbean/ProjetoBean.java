@@ -70,6 +70,7 @@ import model.Municipio;
 import model.Objetivo;
 import model.Orcamento;
 import model.OrcamentoProjeto;
+import model.Perfil;
 import model.PlanoDeTrabalho;
 import model.Produto;
 import model.Programa;
@@ -363,7 +364,7 @@ public class ProjetoBean implements Serializable {
 			execucaoFisica = Double.parseDouble(
 					(auxEx.divide(auxTotal, 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100))).toString());
 
-		openDialog("PF('dialog_detail').show();");
+//		openDialog("PF('dialog_detail').show();");
 	}
 
 	public void openDialog(String nomeDialog) {
@@ -545,7 +546,7 @@ public class ProjetoBean implements Serializable {
 	public void initCadastro() {
 		// createMultiAxisModel();
 		carregarDetalhes();
-
+		carregarRubricasDeProjeto();
 		// if (projeto != null && projeto.getId() != null)
 		// createChartExecucao();
 
@@ -555,12 +556,11 @@ public class ProjetoBean implements Serializable {
 		try {
 			filtro = new Filtro();
 			filtro.setAtivo(true);
-			filtro.setDataInicio(DataUtil.getDataInicio(new Date()));
-			filtro.setDataFinal(DataUtil.getDataFinal(new Date()));
+//			filtro.setDataInicio(DataUtil.getDataInicio(new Date()));
+//			filtro.setDataFinal(DataUtil.getDataFinal(new Date()));
 			fetchProjects();
 			fetchPlanes();
 			fetchDonations();
-
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -901,6 +901,16 @@ public class ProjetoBean implements Serializable {
 	public List<Projeto> completeProjeto(String query) {
 		return gestaoProjeto.getProjetosAutoCompleteMode01(query);
 	}
+	
+	public List<Projeto> completeProjetoByUserV2(String query) {
+		Perfil currentUserPerfil = usuarioSessao.getUsuario().getPerfil();
+		if(currentUserPerfil.getId() == 1 || currentUserPerfil.getId() == 5) {
+			return completeProjeto(query);
+		} else {
+			return gestaoProjeto.getProjetosAutoCompleteByUserV2(query, usuarioSessao.getUsuario());
+		}
+	}
+	
 
 	public List<Gestao> completeGestao(String query) {
 		return gestaoProjeto.getGestaoAutoComplete(query);
@@ -3250,28 +3260,39 @@ public class ProjetoBean implements Serializable {
 					- (at.getTotalPercentualFisico().isNaN() ? 0 : at.getTotalPercentualFisico()) > 50) {
 				at.setCor("highlight_red");
 			}
-
+ 
 			carregarComponentes();
 
 		}
 	}
+	
+	public void projectFilterByUser() {
+		projetos = projetoService.projectFilterByUser(filtro, usuarioSessao.getUsuario());
+//		limparFiltro();
+	}
+	
+	public void limparFiltro() {
+		filtro = new Filtro();
+	}
 
 	public void limpaFiltroProjeto() {
-		filtro.setProjeto(new Projeto());
-		filtro.setGestao(null);
-		filtro.setCodigo(null);
-		filtro.setTitulo(null);
-		filtro.setOrcamento(null);
-		filtro.setPlanoDeTrabalho(null);
-		filtro.setAtivo(null);
-		filtro.setDataInicio(null);
-		filtro.setDataFinal(null);
+//		filtro.setNovoProjeto(new Projeto());
+//		filtro.setGestao(null);
+//		filtro.setCodigo(null);
+//		filtro.setTitulo(null);
+//		filtro.setOrcamento(null);
+//		filtro.setPlanoDeTrabalho(null);
+//		filtro.setAtivo(null);
+//		filtro.setDataInicio(null);
+//		filtro.setDataFinal(null);
+		limparFiltro();
+		fetchProjects();
 	}
 
 	public List<Gestao> findGestaoAutoComplete(String query) {
-		if (query.isEmpty())
-			return new ArrayList<Gestao>();
-		else
+//		if (query.isEmpty())
+//			return new ArrayList<Gestao>();
+//		else
 			return projetoService.getGestaoAutoComplete(query);
 	}
 

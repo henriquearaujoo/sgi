@@ -474,10 +474,13 @@
 
 				<div class="botao_central" align="left"
 					style="width: 100%; margin: 0px 1px 10px 2px;">
-					<p:commandLink styleClass="btn btn-primary btn-sm"
+					<p:commandLink styleClass="btn btn-success btn-sm"
 						action="#{projetoBean.salvarMetas()}" onclick="start()"
 						onsuccess="stop()" onerror="stop()" process="form-cadastro-metas"
-						style="color:#fff; margin: 2px 2px;" value="Salvar" />
+						style="color:#fff; margin: 2px 2px;">
+						<i class="fa fa-check" aria-hidden="true"></i>
+						<span>Salvar</span>
+					</p:commandLink>
 
 				</div>
 
@@ -543,11 +546,14 @@
 
 				<div class="botao_central" align="left"
 					style="width: 100%; margin: 0px 1px 10px 2px;">
-					<p:commandLink styleClass="btn btn-primary btn-sm"
+					<p:commandLink styleClass="btn btn-success btn-sm"
 						onclick="start()" onsuccess="stop()" onerror="stop()"
 						action="#{projetoBean.salvarIndicador()}"
 						process="form-cadastro-indicador"
-						style="color:#fff; margin: 2px 2px;" value="Salvar" />
+						style="color:#fff; margin: 2px 2px;">
+						<i class="fa fa-check" aria-hidden="true"></i>
+						<span>Salvar</span>
+					</p:commandLink>
 				</div>
 
 				<p:panel id="gridi-indi">

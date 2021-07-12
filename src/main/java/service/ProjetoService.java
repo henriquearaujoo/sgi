@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -564,7 +565,7 @@ public class ProjetoService implements Serializable {
 
 		}
 	}
-
+	
 	public List<Acao> getTodasAcoes() {
 		return acaoRepositorio.getTodasAcoes();
 	}
@@ -612,6 +613,18 @@ public class ProjetoService implements Serializable {
 	public List<Projeto> getProjetosAutoCompleteMode01(String query) {
 		return repositorio.getProjetoAutocompleteMODE01(query);
 	}
+	
+	public List<Projeto> getProjetosAutoCompleteByUserV2(String query, User user) {
+		return repositorio.getProjetoAutocompleteByUserV2(query, user);
+	}
+	
+	///// FILTRO V2 ////
+	
+	public List<Projeto> projectFilterByUser(Filtro filtro, User user)	{
+		return repositorio.projectFilterByUser(filtro, user);
+	}
+	
+	//////
 
 	public List<CategoriaDespesaClass> getCategoriaAutoComplete(String query) {
 		return repositorio.getCategoriaAutocomplete(query);

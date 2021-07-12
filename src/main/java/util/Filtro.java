@@ -304,7 +304,7 @@ public class Filtro {
 	private Acao acao = new Acao();
 
 	private Projeto projeto = new Projeto();
-	
+
 	private Long idReembolso;
 
 	private String conta;
