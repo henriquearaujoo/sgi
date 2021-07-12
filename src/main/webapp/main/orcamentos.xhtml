@@ -139,12 +139,12 @@
 						<h:outputText value="#{doacao.titulo}" />
 					</p:column>
 
-					<p:column headerText="Data inicial" style="text-align:center">
+					<p:column headerText="Data inicial" style="text-align:center" sortBy="#{doacao.dataInicio}">
 						<h:outputText value="#{doacao.dataInicio}">
 							<f:convertDateTime pattern="dd/MM/yyyy" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Data final" style="text-align:center">
+					<p:column headerText="Data final" style="text-align:center" sortBy="#{doacao.dataFinal}">
 						<h:outputText value="#{doacao.dataFinal}">
 							<f:convertDateTime pattern="dd/MM/yyyy" />
 						</h:outputText>
@@ -162,7 +162,7 @@
 
 
 
-					<p:column headerText="Valor" style="width:160px;text-align:center">
+					<p:column headerText="Valor" style="width:160px;text-align:center" sortBy="#{doacao.valor}">
 						<h:outputText value="#{doacao.valor}" style="float:right">
 							<f:convertNumber type="currency" locale="pt_BR" />
 						</h:outputText>

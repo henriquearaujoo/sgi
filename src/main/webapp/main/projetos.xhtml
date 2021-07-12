@@ -180,19 +180,19 @@
 								<h:outputText value="#{projeto.nome}" />
 							</p:column>
 
-							<p:column headerText="Data Início" style="text-align: center;">
+							<p:column headerText="Data Início" style="text-align: center;" sortBy="#{projeto.dataInicio}">
 								<h:outputText value="#{projeto.dataInicio}">
 									<f:convertDateTime pattern="dd/MM/yyyy" />								
 								</h:outputText>
 							</p:column>
 
-							<p:column headerText="Data Final" style="text-align: center;">
+							<p:column headerText="Data Final" style="text-align: center;" sortBy="#{projeto.dataFinal}">
 								<h:outputText value="#{projeto.dataFinal}">
 									<f:convertDateTime pattern="dd/MM/yyyy" />
 								</h:outputText>
 							</p:column>
 
-							<p:column headerText="Orçado" style="text-align: center;">
+							<p:column headerText="Orçado" style="text-align: center;" sortBy="#{projeto.valor}">
 								<h:outputText value="#{projeto.valor}">
 									<f:convertNumber type="currency" maxFractionDigits="2"
 										currencySymbol="R$" />
