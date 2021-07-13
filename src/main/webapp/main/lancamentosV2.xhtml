@@ -212,7 +212,7 @@ body .ui-fileupload .ui-fileupload-content {
 							</p:column>
 
 
-							<p:column headerText="Pagamento" style="text-align:center;">
+							<p:column headerText="Pagamento" style="text-align:center;" sortBy="#{lancamento.dataPagamento}">
 								<h:outputText id="dt-pagamento"
 									value="#{lancamento.dataPagamento}">
 									<f:convertDateTime pattern="dd/MM/yyyy"
@@ -224,7 +224,7 @@ body .ui-fileupload .ui-fileupload-content {
 								<h:outputText id="id-fonte" value="#{lancamento.fonte}" />
 							</p:column>
 
-							<p:column headerText="Pagador" style="text-align:left">
+							<p:column headerText="Pagador" style="text-align:left" sortBy="#{lancamento.contaPagadorLbl}">
 								<h:outputText id="id-pagador"
 									value="#{lancamento.contaPagadorLbl}" />
 							</p:column>
@@ -252,7 +252,7 @@ body .ui-fileupload .ui-fileupload-content {
 							</p:column>
 
 
-							<p:column headerText="Valor pago" style="text-align:center">
+							<p:column headerText="Valor pago" style="text-align:center" sortBy="#{lancamento.valorPagoAcao}">
 								<h:outputText id="id-value" value="#{lancamento.valorPagoAcao}">
 									<f:convertNumber type="currency" locale="pt_BR" />
 								</h:outputText>
@@ -312,7 +312,7 @@ body .ui-fileupload .ui-fileupload-content {
 										action="#{lancamentos_v2.prepararDetalhamento(lancamento.id)}" />
 
 
-									<p:menuitem icon="fa fa-print" value="Imprimir"
+									<p:menuitem icon="fa fa-print" value="Visualizar PDF"
 										rendered="#{!lancamento.tipov4.equals('AR') and !lancamento.tipov4.equals('BA') and 
 								!lancamento.tipov4.equals('CP') and !lancamento.tipov4.equals('DE') and !lancamento.tipov4.equals('TF')
 								and !lancamento.tipov4.equals('LA') and !lancamento.tipov4.equals('SD')}"
@@ -320,7 +320,7 @@ body .ui-fileupload .ui-fileupload-content {
 										process="@this" ajax="false" target="_blank"
 										action="#{lancamentos_v2.imprimir(lancamento)}" />
 
-									<p:menuitem icon="fa fa-print" value="Mapa comparativo"
+									<p:menuitem icon="fa fa-print" value="Visualizar mapa comparativo"
 										rendered="#{lancamento.tipov4.equals('PC')}" onstart="start()"
 										onsuccess="stop()" onerror="stop()" process="@this"
 										ajax="false" target="_blank"

@@ -49,10 +49,7 @@
 				<p:menuitem value="Categories" url="home_new.xhtml" />
 				<p:menuitem value="Lançamentos para validação" />
 			</p:breadCrumb>
-<<<<<<< HEAD
-=======
-			
->>>>>>> origin/fs/help-links-included
+
 
 			<p:panel id="filter-list">
 
@@ -217,20 +214,20 @@
 						<h:outputText value="#{lancamento.codigoLancamento}" />
 					</p:column>
 
-					<p:column headerText="Emissão" style="text-align:center">
+					<p:column headerText="Emissão" style="text-align:center" sortBy="#{lancamento.dataEmissao}">
 						<h:outputText value="#{lancamento.dataEmissao}">
 							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
 						</h:outputText>
 					</p:column>
 
 
-					<p:column headerText="Pagamento" style="text-align:center">
+					<p:column headerText="Pagamento" style="text-align:center" sortBy="#{lancamento.dataPagamento}">
 						<h:outputText value="#{lancamento.dataPagamento}">
 							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="Pagador" style="text-align:center">
+					<p:column headerText="Pagador" style="text-align:center" sortBy="#{lancamento.contaPagadorLbl}">
 						<h:outputText value="#{lancamento.contaPagadorLbl}" />
 					</p:column>
 
@@ -263,7 +260,7 @@
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="Valor pago" style="text-align:center">
+					<p:column headerText="Valor pago" style="text-align:center" sortBy="#{lancamento.valorPagoAcao}">
 						<h:outputText value="#{lancamento.valorPagoAcao}">
 							<f:convertNumber type="currency" locale="pt_BR" />
 						</h:outputText>
@@ -289,7 +286,7 @@
 								action="#{liberacao_lancamento_controller.carregarArquivos(lancamento.codigoLancamento)}" />
 
 
-							<p:menuitem icon="fa fa-print" value="Imprimir"
+							<p:menuitem icon="fa fa-print" value="Visualizar PDF"
 								rendered="#{!lancamento.tipov4.equals('AR') and !lancamento.tipov4.equals('BA') and 
 								!lancamento.tipov4.equals('CP') and !lancamento.tipov4.equals('DE') and !lancamento.tipov4.equals('TF')
 								and !lancamento.tipov4.equals('LA') and !lancamento.tipov4.equals('SD')}"
@@ -297,7 +294,7 @@
 								process="@this" ajax="false" target="_blank"
 								action="#{liberacao_lancamento_controller.imprimir(lancamento)}" />
 
-							<p:menuitem icon="fa fa-print" value="Mapa comparativo"
+							<p:menuitem icon="fa fa-print" value="Visuzalizar mapa comparativo"
 								rendered="#{lancamento.tipov4.equals('PC')}" onstart="start()"
 								onsuccess="stop()" onerror="stop()" process="@this" ajax="false"
 								target="_blank"

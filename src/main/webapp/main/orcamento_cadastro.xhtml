@@ -80,19 +80,19 @@
 					</p:tab>
 
 					<p:tab id="prestacao_contas"
-						rendered="#{orcamento_controller.orcamento.id != null}"
+						rendered="#{message['SHOW_PC_DONATION']}"
 						title="Prestação de contas">
 						<ui:include src="/main/doacao/prestacoes.xhtml" />
 					</p:tab>
 
 					<p:tab id="overhead"
-						rendered="#{orcamento_controller.orcamento.id != null}"
+						rendered="#{message['SHOW_OVERHEAD_DONATION']}"
 						title="Overhead">
 						<ui:include src="/WEB-INF/orcamento_tab06.xhtml" />
 					</p:tab>
 
-					<p:tab id="comp_orcamento"
-						rendered="#{orcamento_controller.orcamento.id != null}"
+					<p:tab id="comp_orcamento" 
+						rendered="#{message['SHOW_COMPOSITION_DONATION']}"
 						title="Composição de orçamento">
 						<ui:include src="/WEB-INF/orcamento_tab08.xhtml" />
 					</p:tab>

@@ -7,11 +7,11 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 
-	<p:panel id="panel-info-geral" style="margin: 24px" styleClass="noborder">
+	<p:panel id="panel-info-geral" style="margin: 24px; border: 0px !important">
 
 		<div id="info-geral" class="ui-g ui-fluid">
 
-			<div class="ui-g-4 form-group">
+			<div class="ui-g-4 form-group focused">
 				<p:outputLabel for="input-fonte" value="Parceiro/Fonte/Doação:"
 					styleClass="form-label" />
 				<p:autoComplete id="input-fonte"
@@ -22,7 +22,7 @@
 					forceSelection="true" />
 			</div>
 
-			<div class="ui-g-4 form-group">
+			<div class="ui-g-4 form-group focused">
 				<p:outputLabel for="input-titulo" value="Título/Identificação"
 					style="width:100px" styleClass="form-label" />
 
@@ -30,7 +30,7 @@
 					value="#{orcamento_controller.orcamento.titulo}" />
 			</div>
 
-			<div class="ui-g-4 form-group">
+			<div class="ui-g-4 form-group focused">
 				<p:outputLabel for="input-contrato" value="Contrato"
 					styleClass="form-label" />
 				<p:inputText id="input-contrato"
@@ -38,7 +38,7 @@
 			</div>
 
 
-			<div class="ui-g-4 form-group">
+			<div class="ui-g-4 form-group focused">
 				<p:outputLabel for="input-conta" value="Conta"
 					styleClass="form-label" />
 				<p:selectOneMenu id="input-conta" converter="contaConverter"
@@ -50,7 +50,7 @@
 				</p:selectOneMenu>
 			</div>
 
-			<div class="ui-g-4 form-group">
+			<div class="ui-g-4 form-group focused">
 				<p:outputLabel for="input-tipo-orcamento" value="Tipo de controle"
 					styleClass="form-label" />
 				<p:selectOneMenu id="input-tipo-orcamento"
@@ -63,7 +63,7 @@
 				</p:selectOneMenu>
 			</div>
 
-			<div class="ui-g-4 form-group">
+			<div class="ui-g-4 form-group focused">
 				<p:outputLabel for="input-tipo-doacao" value="Tipo da Doação"
 					styleClass="form-label" />
 				<p:selectOneMenu id="input-tipo-doacao"
@@ -77,7 +77,7 @@
 			</div>
 
 
-			<div class="ui-g-3 form-group">
+			<div class="ui-g-3 form-group focused">
 
 				<p:outputLabel for="input-dt-inicio" value="Data início"
 					styleClass="form-label" />
@@ -86,17 +86,17 @@
 					navigator="true" pattern="dd/MM/yyyy" />
 			</div>
 
-			<div class="ui-g-3 form-group">
+			<div class="ui-g-3 form-group focused">
 				<p:outputLabel for="input-dt-final" value="Data final"
 					styleClass="form-label" />
 
-				<p:calendar id="input-dt-final" placeholder="Data final"
+				<p:calendar id="input-dt-final"
 					value="#{orcamento_controller.orcamento.dataFinal}"
 					navigator="true" pattern="dd/MM/yyyy" />
 			</div>
 
 
-			<div class="ui-g-6 form-group">
+			<div class="ui-g-6 form-group focused">
 				<p:outputLabel for="input-resp-tec" value="Responsável Técnico"
 					styleClass="form-label" />
 				<p:autoComplete id="input-resp-tec" rendered="true"
@@ -107,7 +107,7 @@
 					minQueryLength="2" forceSelection="true" />
 			</div>
 
-			<div class="ui-g-6 form-group">
+			<div class="ui-g-6 form-group focused">
 				<p:outputLabel for="input-colaborador" value="Analista Financeiro"
 					styleClass="form-label" />
 				<p:autoComplete id="input-colaborador"
@@ -120,7 +120,7 @@
 					minQueryLength="2" forceSelection="true" />
 			</div>
 
-			<div class="ui-g-3 form-group">
+			<div class="ui-g-3 form-group focused">
 				<p:outputLabel for="input-vl-orcado" value="Valor orçado"
 					styleClass="form-label" />
 				<p:inputText id="input-vl-orcado" style="text-align: center"
@@ -130,7 +130,7 @@
 						locale="pt_BR" />
 				</p:inputText>
 			</div>
-			<div class="ui-g-3 form-group">
+			<div class="ui-g-3 form-group focused">
 				<p:outputLabel for="input-vl-orcado-overhead" value="Valor Overhead"
 					styleClass="form-label" />
 				<p:inputText id="input-vl-orcado-overhead" style="text-align: center"
