@@ -48,8 +48,6 @@ div[id="info-geral"] > * {
 	padding: 0 !important;
 }
 
-
-
 .menu-actions{
 	width: 30%
 }
@@ -91,8 +89,65 @@ body .ui-breadcrumb {
 
 
 .no-border{
-	border: 0px !important
+	border: 0px !important;
+	border-bottom: 1px solid black !important;
 }
+
+/*//////// FONTE CHECKBOXMENU //////////////*/
+
+.default-style-form-filter {
+	margin-top: 10px !important;
+}
+
+.default-style-form-filter.ui-panel .ui-panel-content {
+	border: none;
+}
+
+.default-style-form-filter .ui-inputfield {
+	border: none;
+	position: relative !important;
+  	padding: 12px 0px 5px 0 !important;
+  	width: 100% !important;
+  	outline: 0 !important;
+  	border: 0 !important;
+  	box-shadow: 0 1px 0 0 #333333d4 !important;
+  	transition: box-shadow 150ms ease-out !important;
+  	border-radius: 0px;
+}
+
+.default-style-form-filter .ui-selectcheckboxmenu {
+    border: 1px solid #a6a6a6;
+    position: relative;
+    border: 0 !important;
+    outline: 0 !important;
+    -moz-transition: border-color .3s;
+    -o-transition: border-color .3s;
+    -webkit-transition: border-color .3s;
+    transition: border-color .3s;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.default-style-form-filter .ui-selectonemenu-panel .ui-selectonemenu-filter-container .ui-selectonemenu-filter.ui-inputfield {
+
+    text-indent: 2.429em !important;
+}
+
+.default-style-form-filter .ui-inputfield:focus  {
+	box-shadow: 0 2px 0 0 green !important;
+	border-radius: 0px;
+}
+
+.default-style-form-filter .ui-selectonemenu {
+	border-width: 0;
+	padding-bottom: 0px;
+	box-sizing: border-box;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+}
+
 
 /* /////////// PADRRÃO DIALOG ////////////////// */
 

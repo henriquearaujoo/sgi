@@ -24,12 +24,14 @@ import model.Acao;
 import model.Componente;
 import model.ContaBancaria;
 import model.FontePagadora;
+import model.Gestao;
 import model.LancamentoAuxiliar;
 import model.MenuLateral;
 import model.Orcamento;
 import model.PlanoDeTrabalho;
 import model.Projeto;
 import model.TipoRelatorioProjeto;
+import service.CompraService;
 import service.ContaService;
 import service.OrcamentoService;
 import service.ProjetoService;
@@ -70,6 +72,8 @@ public class ExecucaoFinanceiraController implements Serializable {
 	private @Inject ContaService contaService;
 	private @Inject OrcamentoService orcService;
 	private @Inject ProjetoService projetoService;
+	private @Inject CompraService compraService;
+	private @Inject OrcamentoService orcamentoService;
 
 	private Boolean displayColunas = true;
 
@@ -79,6 +83,7 @@ public class ExecucaoFinanceiraController implements Serializable {
 	private List<FontePagadora> fontes = new ArrayList<>();
 	private List<Projeto> projetos = new ArrayList<>();
 	private List<Acao> acoes = new ArrayList<>();
+	private List<Projeto> listProject = new ArrayList<>();
 
 	private StreamedContent file;
 
@@ -132,6 +137,29 @@ public class ExecucaoFinanceiraController implements Serializable {
 //		}
 		
 		
+	}
+	
+	public List<Projeto> completeProjetos(String query) {
+		listProject = new ArrayList<Projeto>();
+		listProject = orcService.getProjetoAutoCompleteMODE01(query);
+		return listProject;
+	}
+	
+	public List<FontePagadora> completeFonte(String query) {
+		List<FontePagadora> fontesPagadora = compraService.fontesAutoComplete(query);
+		return fontesPagadora;
+	}
+	
+	public List<Orcamento> completeDonation(String query) {
+		return orcamentoService.getOrcamentoDonationAutoComplete(query);
+	}
+	
+	public List<Gestao> findGestaoAutoComplete(String query) {
+		return projetoService.getGestaoAutoComplete(query);
+	}
+	
+	public void limparFiltro() {
+		filtro = new Filtro();
 	}
 
 	public void prepararFiltrosParaConferenciaDeLancamentos() {

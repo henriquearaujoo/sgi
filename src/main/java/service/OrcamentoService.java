@@ -405,6 +405,10 @@ public class OrcamentoService implements Serializable {
 		}
 		return titulosString;
 	}
+	
+	public List<Orcamento> getOrcamentoDonationAutoComplete(String query) {
+		return repositorio.completeDonation(query);
+	}
 
 	public List<RubricaOrcamento> getRubricasDeOrcamento(Long idOrcamento, Filtro filtro) {
 		return repositorio.getRubricasDeOrcamento(idOrcamento, filtro);
