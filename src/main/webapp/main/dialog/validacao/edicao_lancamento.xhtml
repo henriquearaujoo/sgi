@@ -7,7 +7,7 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 
-	<h:form id="form-edit-pagamento-tab2">
+	<h:form id="form-edit-pagamento-tab2" styleClass="default-style-form-filter">
 
 		<p:panel id="panel-edit-pgto">
 			<div class="ui-g ui-fluid">
@@ -105,7 +105,7 @@
 				<div class="ui-g-12">
 					<p:outputLabel value="Projetos:"
 						rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}" />
-					<p:selectOneMenu
+					<p:selectOneMenu style="width: 100%;"
 						value="#{liberacao_lancamento_controller.projetoAux}"
 						filter="true" filterMatchMode="contains"
 						rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}">
