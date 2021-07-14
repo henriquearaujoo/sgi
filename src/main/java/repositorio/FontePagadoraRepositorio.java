@@ -43,7 +43,12 @@ public class FontePagadoraRepositorio {
 
 	public void salvar(FontePagadora fontePagadora) {
 		this.manager.merge(fontePagadora);
-		
+	}
+	
+	public Long maxFontes() {
+		StringBuilder jpql = new StringBuilder("SELECT MAX(fp.id) FROM FontePagadora as fp");
+		Query query = manager.createQuery(jpql.toString());
+		return (Long) query.getSingleResult(); 
 	}
 	
 	public List<FontePagadora> findAll(){

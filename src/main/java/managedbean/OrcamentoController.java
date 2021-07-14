@@ -73,6 +73,7 @@ import repositorio.GestaoRepositorio;
 import repositorio.OrcamentoRepositorio;
 import service.CompraService;
 import service.CustoPessoalService;
+import service.FontePagadoraService;
 import service.OrcamentoService;
 import service.ProjetoService;
 import service.SolicitacaoViagemService;
@@ -103,6 +104,7 @@ public class OrcamentoController implements Serializable {
 	private @Inject CalculatorRubricaRepositorio calculatorRubricaRepositorio;
 	private @Inject OrcamentoService orcamentoService;
 	private @Inject DonationManagement donationManagement;
+	private @Inject FontePagadoraService fontePagadoraService;
 
 	private Projeto projetoDespesa;
 
@@ -295,7 +297,16 @@ public class OrcamentoController implements Serializable {
 	public TipoParcelamento[] tiposParcelas() {
 		return TipoParcelamento.values();
 	}
-
+	
+	private @Inject FontePagadora fontePagadora = new FontePagadora();
+	
+	public void salvarFontePagadora() {
+		if(fontePagadora.getNome() == null || fontePagadora.getNome() == "") {
+		} else {
+			fontePagadoraService.salvar(this.fontePagadora);			
+		}
+	}
+	
 
 	
 //	public void dialogHelp() {
@@ -313,6 +324,14 @@ public class OrcamentoController implements Serializable {
 	
 	////////////////////// BARRA DE PROGRESSO ///////////////////////////
 	
+	public FontePagadora getFontePagadora() {
+		return fontePagadora;
+	}
+
+	public void setFontePagadora(FontePagadora fontePagadora) {
+		this.fontePagadora = fontePagadora;
+	}
+
 	private BigDecimal valorAtual = BigDecimal.ZERO;
 	
 	private BigDecimal donationTotal = BigDecimal.ZERO;
