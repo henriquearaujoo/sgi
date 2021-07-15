@@ -15,15 +15,7 @@
 			<f:viewAction action="#{orcamento_controller.init()}" />
 		</f:metadata>
 
-		<p:link styleClass="btn btn-success btn-sm" id="table-doacao"
-			style="position: absolute;
-    margin-right: 3vh;
-    margin-top: 204px;
-    right: 0;"
-			outcome="/main/orcamento_cadastro" title="Adicionar orçamento">
-			<span class="glyphicon glyphicon-plus"></span>
-			<span style="padding: 24px">Novo cadastro</span>
-		</p:link>
+
 
 		<h:form id="form_listagem_orcamento" acceptcharset="ISO-8859-1">
 
@@ -119,14 +111,31 @@
 					</div>
 
 				</div>
-				<p:commandLink styleClass="btn btn-primary btn-sm" update="dialog_help"
-					oncomplete="PF('dialog_help').show();" onerror="stop();" onsuccess="stop();"
-					onclick="start();"
-					style="color:#fff; margin: 8px 2px;">
-					<span class="fa fa-fw fa-question"></span>
-					<span>Ajuda</span>
-				</p:commandLink>
+				<div class="d-flex justify-content-end">
 
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						update="dialog_help" oncomplete="PF('dialog_help').show();"
+						onerror="stop();" onsuccess="stop();" onclick="start();"
+						style="color:#fff; margin: 8px 2px;">
+						<span class="fa fa-fw fa-question"></span>
+						<span>Ajuda</span>
+					</p:commandLink>
+
+					<p:commandLink styleClass="btn btn-warning btn-sm"
+						update="dialog_fonte_pagadora"
+						oncomplete="PF('dialog_fonte_pagadora').show();" onerror="stop();"
+						onsuccess="stop();" onclick="start();"
+						style="color:#fff; margin: 8px 2px;">
+						<span class="fa fa-fw fa-question"></span>
+						<span>Nova Fonte</span>
+					</p:commandLink>
+					<p:link styleClass="btn btn-success btn-sm" id="table-doacao"
+						style="margin: 8px 2px;" outcome="/main/orcamento_cadastro"
+						title="Adicionar orçamento">
+						<span class="fa fa-plus mx-1" aria-hidden="true"></span>
+						<span>Novo cadastro</span>
+					</p:link>
+				</div>
 
 				<p:dataTable id="table_doacao" paginator="true" style="color: white"
 					rows="12" value="#{orcamento_controller.orcamentos}" var="doacao">
@@ -139,12 +148,14 @@
 						<h:outputText value="#{doacao.titulo}" />
 					</p:column>
 
-					<p:column headerText="Data inicial" style="text-align:center" sortBy="#{doacao.dataInicio}">
+					<p:column headerText="Data inicial" style="text-align:center"
+						sortBy="#{doacao.dataInicio}">
 						<h:outputText value="#{doacao.dataInicio}">
 							<f:convertDateTime pattern="dd/MM/yyyy" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Data final" style="text-align:center" sortBy="#{doacao.dataFinal}">
+					<p:column headerText="Data final" style="text-align:center"
+						sortBy="#{doacao.dataFinal}">
 						<h:outputText value="#{doacao.dataFinal}">
 							<f:convertDateTime pattern="dd/MM/yyyy" />
 						</h:outputText>
@@ -162,7 +173,8 @@
 
 
 
-					<p:column headerText="Valor" style="width:160px;text-align:center" sortBy="#{doacao.valor}">
+					<p:column headerText="Valor" style="width:160px;text-align:center"
+						sortBy="#{doacao.valor}">
 						<h:outputText value="#{doacao.valor}" style="float:right">
 							<f:convertNumber type="currency" locale="pt_BR" />
 						</h:outputText>
@@ -194,13 +206,42 @@
 	</ui:define>
 
 	<ui:define name="adicionais">
-		
-		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help" header="Ajuda"
-			showEffect="clip" hideEffect="drop" draggable="false" maximizable="true" minimizable="true" 
-			resizable="true" blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()" >
-				<ui:include src="dialog/help/help_orcamento.xhtml" />
+
+		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help"
+			header="Ajuda" showEffect="clip" hideEffect="drop" draggable="false"
+			maximizable="true" minimizable="true" resizable="true"
+			blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()">
+			<ui:include src="dialog/help/help_orcamento.xhtml" />
 		</p:dialog>
-		
+
+		<p:dialog id="dialog_fonte_pagadora" widgetVar="dialog_fonte_pagadora"
+			showEffect="clip" hideEffect="drop" draggable="true"
+			header="Cadastro/Edição de Fonte Pagadora" maximizable="true"
+			minimizable="true" resizable="true" blockScroll="true"
+			onHide="unlockedScroll()" onShow="blockedScroll()">
+			<h:form id="form-cadastro-fontes">
+				<p:panel styleClass="panel">
+					<div class="ui-g-12">
+						<p:commandLink styleClass="btn btn-success" style="color:#fff"
+							action="#{orcamento_controller.salvarFontePagadora()}" onclick="start()"
+							onsuccess="stop()" onerror="stop()">
+							<span class="fa fas fa-check"></span>
+							<span>Salvar</span>
+						</p:commandLink>
+					</div>
+					<div class="ui-g-12 form-group">
+						<p:outputLabel value="Nome:" for="nome" />
+						<p:inputText id="nome" styleClass="form-control"
+							value="#{orcamento_controller.fontePagadora.nome}"
+							requiredMessage="Preencha o campo Nome!"
+							placeholder="Ex.:Fonte Pagadora S/A" required="true" />
+						<p:message for="nome" />
+					</div>
+
+				</p:panel>
+			</h:form>
+		</p:dialog>
+
 		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
 			showHeader="false" draggable="false" closable="false"
 			resizable="false">

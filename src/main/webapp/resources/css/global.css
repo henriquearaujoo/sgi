@@ -106,6 +106,10 @@ body .ui-breadcrumb {
 	height: 100% !important;
 }
 
+.panel.ui-panel .ui-panel-content {
+	border: none !important;
+}
+
 .gestao_dialog {
 	width: 100% !important;
 	height: 100% !important;
