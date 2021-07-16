@@ -86,12 +86,11 @@
 					</p:tab>
 
 					<p:tab id="overhead"
-						rendered="#{message['SHOW_OVERHEAD_DONATION']}"
-						title="Overhead">
+						rendered="#{message['SHOW_OVERHEAD_DONATION']}" title="Overhead">
 						<ui:include src="/WEB-INF/orcamento_tab06.xhtml" />
 					</p:tab>
 
-					<p:tab id="comp_orcamento" 
+					<p:tab id="comp_orcamento"
 						rendered="#{message['SHOW_COMPOSITION_DONATION']}"
 						title="Composição de orçamento">
 						<ui:include src="/WEB-INF/orcamento_tab08.xhtml" />
@@ -109,28 +108,29 @@
 						style="margin-bottom: 10px">
 
 
-						<div class="ui-g-12">
-							<p:commandLink styleClass="btn btn-primary btn-sm"
+						<div class="ui-g-12 d-flex align-items-center">
+							<p:commandLink styleClass="btn btn-success btn-sm"
 								onclick="start()" onerror="stop()" style="margin-left:5px"
 								title="Salvar" oncomplete="setarFocused('info-geral'); stop()"
 								update="form_tab_orcamento"
 								process="@this,panel-info-geral,panel-info-permissoes"
 								action="#{orcamento_controller.salvar()}">
+								<i class="fa fa-check" aria-hidden="true"></i>
 								<span style="margin: 3px;">Salvar</span>
 							</p:commandLink>
 
 							<p:link styleClass="btn btn-danger btn-sm"
 								style="margin-left:5px;color:#fff" title="Cancelar"
 								outcome="/main/orcamentos">
-								<span class="glyphicon glyphicon-remove"></span>
-								<span style="margin: 3px;">Cancelar</span>
+								<i class="fa fa-sign-out" aria-hidden="true"></i>
+								<span style="margin: 3px;">Sair</span>
 							</p:link>
 
 							<p:commandLink styleClass="btn btn-primary btn-sm"
 								rendered="false" style="margin-left:5px" title="Gerar doação"
 								process="@this" update=":form_gerador_doacao"
 								onclick="PF('dlg_gerar_doacao').show();">
-								<span class="glyphicon glyphicon-usd"></span>
+								<i class="fa fa-usd" aria-hidden="true"></i>
 								<span style="margin: 3px;">Gerar doação</span>
 							</p:commandLink>
 
@@ -155,24 +155,36 @@
 								<span style="margin: 3px;">Baixa aplicação</span>
 							</p:commandLink>
 
-							<p:commandLink styleClass="btn btn-default btn-sm "
-								process="@this" style="margin-left:5px"
-								title="Histórico de aditivos da doação"
-								update=":form_hist_aditivos"
-								onclick="PF('dlg_hist_aditivos').show();"
-								action="#{orcamento_controller.carregarHistoricoAditivos()}">
-								<span class="glyphicon glyphicon-tasks"></span>
-								<span style="margin: 3px;">Historico</span>
-
-							</p:commandLink>
 							
-							<p:commandLink styleClass="btn btn-primary btn-sm" update="dialog_help"
-								oncomplete="PF('dialog_help').show();" onerror="stop();" onsuccess="stop();"
-								onclick="start();" process="@this"
-								style="color:#fff; margin: 8px 2px;">
-								<span class="fa fa-fw fa-question"></span>
-								<span>Ajuda</span>
-							</p:commandLink>
+							<div class="d-flex justify-content-end flex-grow-1">							
+								<p:commandLink styleClass="btn btn-sm"
+									update="dialog_fonte_pagadora" ignoreAutoUpdate="true"
+									oncomplete="PF('dialog_fonte_pagadora').show();"
+									onerror="stop();" onsuccess="stop();" onclick="start();"
+									style="color:#fff; margin: 8px 2px; background: var(--purple);">
+									<span class="fa fa-external-link" aria-hidden="true"></span>
+									<span>Nova Fonte</span>
+								</p:commandLink>
+	
+								<p:commandLink styleClass="btn btn-info btn-sm"
+									update="dialog_help" oncomplete="PF('dialog_help').show();"
+									onerror="stop();" onsuccess="stop();" onclick="start();"
+									process="@this" style="color:#fff; margin: 8px 2px;">
+									<span class="fa fa-fw fa-question"></span>
+									<span>Ajuda</span>
+								</p:commandLink>
+								
+								<p:commandLink styleClass="btn btn-warning btn-sm "
+									process="@this" style="margin: 8px 2px;"
+									title="Histórico de aditivos da doação"
+									update=":form_hist_aditivos"
+									onclick="PF('dlg_hist_aditivos').show();"
+									action="#{orcamento_controller.carregarHistoricoAditivos()}">
+									<i class="fa fa-tasks" aria-hidden="true"></i>
+									<span style="margin: 3px;">Historico</span>
+	
+								</p:commandLink>
+							</div>
 						</div>
 
 						<div id="actions-button" class="ui-g-12" style="display: none">
@@ -190,11 +202,12 @@
 	</ui:define>
 
 	<ui:define name="adicionais">
-	
-		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help" header="Ajuda"
-			showEffect="clip" hideEffect="drop" draggable="false" maximizable="true" minimizable="true" 
-			resizable="true" blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()" >
-				<ui:include src="dialog/help/help_orcamento_cadastro.xhtml" />
+
+		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help"
+			header="Ajuda" showEffect="clip" hideEffect="drop" draggable="false"
+			maximizable="true" minimizable="true" resizable="true"
+			blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()">
+			<ui:include src="dialog/help/help_orcamento_cadastro.xhtml" />
 		</p:dialog>
 
 		<script type="text/javascript">
@@ -207,6 +220,48 @@
 
 			}
 		</script>
+
+		<p:dialog id="dialog_fonte_pagadora" widgetVar="dialog_fonte_pagadora"
+			showEffect="clip" hideEffect="drop" draggable="false"
+			styleClass="fonte_pagadora" header="Cadastro/Edição de Fonte Pagadora"
+			maximizable="true" minimizable="true" resizable="true"
+			blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()">
+			<p:panel styleClass="panel">
+				<h:form id="form-cadastro-fontes" prependId="false">
+					<p:growl id="growl" showDetail="true" sticky="true" globalOnly="true" for="nome" life="20" >
+					</p:growl>  
+					<div class="ui-g-12">
+						<p:commandLink styleClass="btn btn-success" style="color:#fff"
+							action="#{orcamento_controller.salvarFontePagadora()}"
+							update="tabela_fonte"
+							onclick="start()" onsuccess="stop()" onerror="stop()">
+							<span class="fa fas fa-check"></span>
+							<span>Salvar</span>
+						</p:commandLink>
+					</div>
+
+					<div class="ui-g-12 form-group">
+						<p:outputLabel value="Nome:" for="nome" />
+						<p:inputText id="nome" styleClass="form-control"
+							value="#{orcamento_controller.fontePagadora.nome}"
+							placeholder="Ex.:Fonte Pagadora S/A" required="true"/>
+					</div>
+
+					<div class="ui-g-12">
+
+							<p:dataTable id="tabela_fonte" paginator="true" rows="12" style="margin-bottom: 16px;"
+								value="#{orcamento_controller.listFontePagadora}" var="fonte">
+
+								<p:column headerText="Fonte" filterBy="#{fonte.nome}"
+									filterMatchMode="contains">
+									<h:outputText escape="false" value="#{fonte.nome}" />
+								</p:column>
+							</p:dataTable>
+						</div>
+
+				</h:form>
+			</p:panel>
+		</p:dialog>
 
 
 		<p:dialog widgetVar="dlg-detalhe-values" modal="true" width="100%"
@@ -309,8 +364,9 @@
 
 
 		<p:dialog widgetVar="dlg-donation-management" modal="true"
-			closable="true" closeOnEscape="true" styleClass="orcamento_divisao_dialog"
-			showHeader="true" header="Divisão de orçamentos entre gestões" resizable="true" 
+			closable="true" closeOnEscape="true"
+			styleClass="orcamento_divisao_dialog" showHeader="true"
+			header="Divisão de orçamentos entre gestões" resizable="true"
 			blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()"
 			showEffect="clip" hideEffect="clip" draggable="false">
 			<h:form id="form-donation-management" prependId="false"
@@ -355,9 +411,8 @@
 						<div class="ui-g-3 form-group focused">
 							<p:commandLink styleClass="btn btn-primary btn-sm"
 								style="margin-left:5px" title="Salvar" onclick="start();"
-								onerror="stop()"
-								oncomplete="stop();"
-								process="@form" update="panel-donation-management"
+								onerror="stop()" oncomplete="stop();" process="@form"
+								update="panel-donation-management"
 								action="#{orcamento_controller.saveDonationManagement()}">
 								<i class="pi pi-check"></i>
 								<span style="margin: 3px;">Salvar</span>
@@ -366,25 +421,27 @@
 						<div class="ui-g-12">
 							<div class="d-flex flex-column">
 								<label for="file">Valor distribuido: R$
-									#{orcamento_controller.donationTotal}</label>
-								<span class="d-flex justify-content-center">#{orcamento_controller.percentBar}%</span>
+									#{orcamento_controller.donationTotal}</label> <span
+									class="d-flex justify-content-center">#{orcamento_controller.percentBar}%</span>
 								<progress id="file" value="#{orcamento_controller.valorAtual}"
 									max="#{orcamento_controller.orcamento.valor}"
-									style="width: auto"> #{orcamento_controller.percentBar}% </progress>
+									style="width: auto">
+									#{orcamento_controller.percentBar}% </progress>
 							</div>
 						</div>
 						<div class="ui-g-12">
 							<p:dataTable id="register-donation" style="color: white"
-								value="#{orcamento_controller.listDonationManagement}" var="donation" >
-							
+								value="#{orcamento_controller.listDonationManagement}"
+								var="donation">
+
 								<p:column headerText="Gestão" style="text-align:center">
 									<h:outputText value="#{donation.management.nome}" />
 								</p:column>
-							
+
 								<p:column headerText="Valor" style="text-align:center">
 									<h:outputText value="R$#{donation.valor}" />
-									<p:barChart style="height: 100%;" 
-										styleClass="graph_donation" model="#{donation.model}" />
+									<p:barChart style="height: 100%;" styleClass="graph_donation"
+										model="#{donation.model}" />
 								</p:column>
 							</p:dataTable>
 						</div>

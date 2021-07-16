@@ -20,6 +20,7 @@ import repositorio.ColaboradorRepositorio;
 import repositorio.ComposicaoOrcamentoRepositorio;
 import repositorio.ContaRepository;
 import repositorio.DonationManagementRepositorio;
+import repositorio.FontePagadoraRepositorio;
 import repositorio.LogRepositorio;
 import repositorio.OrcamentoRepositorio;
 import repositorio.PagamentoLancamentoRepository;
@@ -126,6 +127,12 @@ public class OrcamentoService implements Serializable {
 		
 		
 		
+	}
+	
+	private @Inject FontePagadoraRepositorio fontePagadoraRepositorio;
+	
+	public List<FontePagadora> filtroFontePagadora(Filtro filtro) {
+		return fontePagadoraRepositorio.filtroFontePagadora(filtro);
 	}
 
 	/////////////////////////////////// FILTRO V2

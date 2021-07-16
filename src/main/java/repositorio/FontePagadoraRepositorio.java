@@ -28,13 +28,21 @@ public class FontePagadoraRepositorio {
 	
 	@Inject	
 	private EntityManager manager;
-
+	
 	public FontePagadoraRepositorio() {
 	}
 
 
 	public FontePagadoraRepositorio(EntityManager manager) {
 		this.manager = manager;
+	}
+	
+	public List<FontePagadora> filtroFontePagadora(Filtro filtro) {
+		StringBuilder jpql = new StringBuilder();
+		jpql.append("from FontePagadora as fp where fp.id = :font_id");
+		Query query = manager.createQuery(jpql.toString());
+		query.setParameter(":font_id", filtro.getFontePagadora().getId());
+		return query.getResultList();
 	}
 
 	public FontePagadora getFontePorId(Long id) {
