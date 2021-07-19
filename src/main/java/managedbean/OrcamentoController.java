@@ -117,6 +117,7 @@ public class OrcamentoController implements Serializable {
 	private List<PrestacaoOrcamento> listaPrestacoesOrcamento = new ArrayList<>();
 	private List<ProjetoRubrica> listaDeRubricasProjeto = new ArrayList<>();
 	private List<DonationManagement> listDonationManagement = new ArrayList<>();
+	private List<FontePagadora> listFontePagadora = new ArrayList<>();
 
 	private List<TransferenciaOverHead> listaOverHead = new ArrayList<>();
 	private List<TransferenciaOverHead> listaOverHeadIndireto = new ArrayList<>();
@@ -166,6 +167,7 @@ public class OrcamentoController implements Serializable {
 	}
 
 	public void initCadastro() {
+		listarFontesPagadora();
 		carregarComponentes();
 		carregarRubrica();
 		carregarProjetosPorDoacao();
@@ -301,13 +303,33 @@ public class OrcamentoController implements Serializable {
 	private @Inject FontePagadora fontePagadora = new FontePagadora();
 	
 	public void salvarFontePagadora() {
-		if(fontePagadora.getNome() == null || fontePagadora.getNome() == "") {
-		} else {
-			fontePagadoraService.salvar(this.fontePagadora);			
+		FacesContext context = FacesContext.getCurrentInstance();
+		boolean check = true;
+		for(FontePagadora f: listFontePagadora) {
+			if(f.getNome() == this.fontePagadora.getNome()) {
+				check = false;
+				break;
+			}
 		}
+		if(check) {			
+			if(this.fontePagadora.getNome() == null || this.fontePagadora.getNome() == "") {
+		         
+		        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Erro ao cadastrar nova fonte.") );
+			} else {
+				fontePagadoraService.salvar(this.fontePagadora);
+				context.addMessage(null, new FacesMessage("Sucesso", "Nova fonte cadastrada.") );
+				PrimeFaces.current().executeScript("PF('dialog_fonte_pagadora').hide()");
+			}
+		} else {
+			fontePagadoraService.salvar(this.fontePagadora);
+			PrimeFaces.current().executeScript("PF('dialog_fonte_pagadora').hide()");
+		}
+
 	}
 	
-
+	public void listarFontesPagadora() {
+		listFontePagadora = fontePagadoraService.findAll();
+	}
 	
 //	public void dialogHelp() {
 //		HashMap<String, Object> options = new HashMap<>();
@@ -1234,6 +1256,10 @@ public class OrcamentoController implements Serializable {
 
 		limparFiltro();
 	}
+	
+	public void filtroFontePagadora() {
+		listFontePagadora = orcamentoService.filtroFontePagadora(filtro);
+	}
 
 	public void verificarTabs() {
 	}
@@ -2028,6 +2054,14 @@ public class OrcamentoController implements Serializable {
 
 	public void setListDonationManagement(List<DonationManagement> listDonationManagement) {
 		this.listDonationManagement = listDonationManagement;
+	}
+
+	public List<FontePagadora> getListFontePagadora() {
+		return listFontePagadora;
+	}
+
+	public void setListFontePagadora(List<FontePagadora> listFontePagadora) {
+		this.listFontePagadora = listFontePagadora;
 	}
 
 }
