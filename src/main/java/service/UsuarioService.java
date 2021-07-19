@@ -74,6 +74,10 @@ public class UsuarioService implements Serializable {
 	public User getUsuario(Long id) {
 		return repositorio.getUsuarioById(id);
 	}
+	
+	public User findUsuarioById(Long id) {
+		return repositorio.getUsuario(id);
+	}
 
 	@Transactional
 	public boolean salvar(User usuario) {

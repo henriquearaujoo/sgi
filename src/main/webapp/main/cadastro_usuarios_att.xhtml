@@ -44,15 +44,76 @@
 				</p:breadCrumb>
 
 				<p:panel header="Usuários" id="panel-content">
+				
+					<div class="ui-g ui-fluid" style="margin-top: 10px">
+
+					<div class="ui-g-6 form-group focused">
+						<p:outputLabel for="filter-fonte" value="Colaborador:"
+							styleClass="form-label" />
+						<p:autoComplete id="filter-fonte" styleClass="font12-vi"
+							value="#{orcamento_controller.filtro.fontePagadora}" var="fonte"
+							scrollHeight="250" itemLabel="#{fonte.nome}" itemValue="#{fonte}"
+							converter="fontePagadoraConverter"
+							completeMethod="#{orcamento_controller.completeFonte}" />
+					</div>
+
+					<div class="ui-g-6 form-group focused">
+						<p:outputLabel for="filter-title" value="Nome de Usuário:"
+							styleClass="form-label" />
+
+						<p:autoComplete id="filter-title" styleClass="font12-vi"
+							value="#{orcamento_controller.filtro.titulo}" scrollHeight="250"
+							completeMethod="#{orcamento_controller.completeTitulo}" />
+
+					</div>
+
+					<div class="ui-g-6 form-group focused">
+						<p:outputLabel for="filter-tecnic" value="Email:"
+							styleClass="form-label" />
+						<p:autoComplete id="filter-tecnic" styleClass="font12-vi"
+							value="#{orcamento_controller.filtro.responsavelTecnico}"
+							var="responsavelTecnico" itemLabel="#{responsavelTecnico.nome}"
+							itemValue="#{responsavelTecnico}"
+							converter="colaboradorConverter" scrollHeight="250"
+							completeMethod="#{orcamento_controller.completeColaborador}" />
+					</div>
+
+					<div class="ui-g-6 form-group focused">
+						<p:outputLabel for="filter-gestao" value="Gestão:"
+							styleClass="form-label" />
+						<p:autoComplete id="filter-gestao" styleClass="font12-vi"
+							value="#{usuario_controller.filtro.gestao}"
+							var="gestao" scrollHeight="250"
+							itemLabel="#{gestao.sigla} #{gestao.nome} " itemValue="#{gestao}"
+							converter="gestaoConverter"
+							completeMethod="#{usuario_controller.getListGestao()}" />
+					</div>
+
+
+					<div class="d-flex justify-content-end flex-grow-1">
+					
+						<p:link id="add" styleClass="btn btn-success"
+							outcome="/main/cadastro_usuarios_edit_att"
+							rendered="#{usuario_controller.poderEditar()}"
+							title="Adicionar Usuário" style="color:#fff; margin: 8px 2px;">
+							<i class="fa fas fa-plus"></i>
+							<span>Novo</span>
+						</p:link>
+						
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							action="#{adiantamentoController.filtrar()}" onclick="start()"
+							onsuccess="stop()" onerror="stop()" update="list"
+							style="color:#fff; margin: 8px 2px;">
+							<span class="fa fa-fw fa-search"></span>
+							<span>Buscar</span>
+						</p:commandLink>
+
+					</div>
+
+				</div>
+				
+				
 					<div class="ui-g ui-fluid">
-						<div class="ui-g-12 ui-lg-12" style="text-align: right">
-							<p:link id="add" styleClass="btn btn-success"
-								outcome="/main/cadastro_usuarios_edit_att"
-								rendered="#{usuario_controller.poderEditar()}"
-								title="Adicionar Usuário">
-								<i class="fa fas fa-plus"></i> Novo
-								</p:link>
-						</div>
 						<div class="ui-g-12">
 							<p:messages id="messages" showDetail="true" closable="true">
 								<p:autoUpdate />
@@ -64,15 +125,15 @@
 					<p:dataTable id="list" value="#{usuario_controller.usuarios}"
 						var="usuario" paginator="true" rows="12">
 
-						<p:column filterBy="#{usuario.nomeColaborador}" headerText="Nome">
+						<p:column headerText="Nome">
 							<h:outputText value="#{usuario.colaborador.nome}" />
 						</p:column>
 
-						<p:column filterBy="#{usuario.nomeUsuario}" headerText="Usuário">
+						<p:column headerText="Usuário">
 							<h:outputText value="#{usuario.nomeUsuario}" />
 						</p:column>
 
-						<p:column filterBy="#{usuario.email}" headerText="Email">
+						<p:column headerText="Email">
 							<h:outputText value="#{usuario.email}" />
 						</p:column>
 
@@ -81,7 +142,7 @@
 							<p:menuButton value="Opções">
 								<p:menuitem icon="fa fa-fw fa-edit" value="editar"
 									outcome="/main/cadastro_usuarios_edit_att">
-									<f:param name="idUser" value="#{usuario.id}" />
+									<f:param name="id" value="#{usuario.id}" />
 								</p:menuitem>
 
 								<p:menuitem value="remover" ajax="false"

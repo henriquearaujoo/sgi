@@ -71,6 +71,13 @@ public class UsuarioRepository {
 	public User getUsuarioById(Long id) {
 		return this.manager.find(User.class, id);
 	}
+	
+	public User getUsuario(Long id) {
+		String jpql = "FROM User u where u.id = :id";
+		Query query = this.manager.createQuery(jpql);
+		query.setParameter("id", id);
+		return (User) query.getSingleResult();
+	}
 
 	public void salvar(User usuario) {
 		this.manager.merge(usuario);
