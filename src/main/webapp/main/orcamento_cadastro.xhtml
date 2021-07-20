@@ -63,13 +63,13 @@
 
 					<p:tab id="extrato_doacao"
 						rendered="#{orcamento_controller.orcamento.id != null and !orcamento_controller.preCadastro}"
-						title="Extrato">
+						title="Execução de projetos">
 						<ui:include src="/main/doacao/extrato.xhtml" />
 					</p:tab>
 
 					<p:tab id="doacao"
 						rendered="#{orcamento_controller.orcamento.id != null and !orcamento_controller.preCadastro}"
-						title="Doações efetivadas">
+						title="Parcelas de recebimento">
 						<ui:include src="/WEB-INF/orcamento_tab04.xhtml" />
 					</p:tab>
 

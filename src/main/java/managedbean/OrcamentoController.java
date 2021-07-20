@@ -1202,7 +1202,6 @@ public class OrcamentoController implements Serializable {
 		if (index == 0) {
 			executeScript("setarFocused('info-geral')", "focus");
 		} else if (index == 1) {
-
 			executeScript("setarFocused('info-permissoes-input-text')", "focus");
 		} else if (index == 2) {
 			carregarRubrica();

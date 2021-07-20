@@ -522,7 +522,7 @@ public class OrcamentoRepositorio implements Serializable {
 	}
 
 	public List<Orcamento> getOrcamentos(Filtro filtro) {
-		String jpql = "from Orcamento order by id";
+		String jpql = "from Orcamento order by id desc";
 		Query query = this.manager.createQuery(jpql);
 		return query.getResultList();
 	}

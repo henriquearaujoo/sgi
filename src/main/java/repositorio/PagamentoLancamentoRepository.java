@@ -2019,7 +2019,7 @@ public class PagamentoLancamentoRepository {
 				}
 			}
 
-			if (lAux.getIdAdiantamentoDePrestacao() != null) {
+			if (lAux.getIdAdiantamentoDePrestacao() != null) { // é uma prestação de contas
 				if (lAux.getStatusAdDePrestacao().equals("VALIDADO")) {
 					if (lAux.getTipoLancamento().equals("dev") || lAux.getTipoLancamento().equals("reenb")
 							|| lAux.getTipoLancamento().equals("reemb_conta")) {

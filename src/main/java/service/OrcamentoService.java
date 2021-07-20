@@ -357,6 +357,11 @@ public class OrcamentoService implements Serializable {
 
 		return pagRepositorio.getExtratoCtrlDoacao(filtro);
 	}
+	
+	
+	public List<LancamentoAuxiliar> carregarExtratoDeProjetosDeDoacao(Filtro filtro) {
+		return pagRepositorio.getExtratoCtrlDoacao(filtro);
+	}
 
 	public List<LancamentoAuxiliar> getExtratoCtrlDoacaoParaConferencia(Filtro filtro) {
 
