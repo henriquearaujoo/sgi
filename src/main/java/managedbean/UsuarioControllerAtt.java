@@ -25,6 +25,7 @@ import service.SolicitacaoViagemService;
 import service.UsuarioService;
 
 import util.Email;
+import util.Filtro;
 import util.MakeMenu;
 import util.UsuarioSessao;
 import util.Util;
@@ -59,10 +60,20 @@ public class UsuarioControllerAtt implements Serializable {
 
 	private Email email;
 	
+	private Long idUser;
+	
+	private Filtro filtro = new Filtro();
+	
 	// pop-up do usuário
 //	public void popupUsuario() {
 //		usuarioService.popupUsuario();
 //	}
+	
+	public void init() {
+		if(idUser != null) {
+			this.usuario = usuarioService.findUsuarioById(idUser);
+		}
+	}
 	
 	public void setFields() {
 		usuario.setEmail(usuario.getColaborador().getEmail());
@@ -245,6 +256,22 @@ public class UsuarioControllerAtt implements Serializable {
 
 	public void setEmail(Email email) {
 		this.email = email;
+	}
+
+	public Long getIdUser() {
+		return idUser;
+	}
+
+	public void setIdUser(Long idUser) {
+		this.idUser = idUser;
+	}
+
+	public Filtro getFiltro() {
+		return filtro;
+	}
+
+	public void setFiltro(Filtro filtro) {
+		this.filtro = filtro;
 	}
 
 }

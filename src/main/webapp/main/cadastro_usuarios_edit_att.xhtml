@@ -11,6 +11,12 @@
 
 	
 	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{usuario_controller.init()}" />
+			<o:viewParam name="id"
+				value="#{usuario_controller.idUser}" />
+		</f:metadata>
+	
 		<div class="container mt-3">
 			<h:form id="formUsuario" acceptcharset="ISO-8859-1">
 			
@@ -66,7 +72,7 @@
 							<p:outputLabel value="Gestão: " for="gestao" />
 							<p:selectOneMenu id="gestao" filter="true"
 								filterMatchMode="startsWith" style="width:100%"
-								value="#{usuario_controller.usuario.gestao}"
+								value="#{usuario_controller.usuario.colaborador.gestao}"
 								converter="gestaoConverter" required="true">
 								<f:selectItem noSelectionOption="true" />
 								<f:selectItems value="#{usuario_controller.getListGestao()}"
