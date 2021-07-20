@@ -118,7 +118,7 @@
 						<span class="fa fa-plus mx-1" aria-hidden="true"></span>
 						<span>Novo cadastro</span>
 					</p:link>
-					
+
 					<p:commandLink styleClass="btn btn-primary btn-sm"
 						update="dialog_help" oncomplete="PF('dialog_help').show();"
 						onerror="stop();" onsuccess="stop();" onclick="start();"
@@ -173,16 +173,20 @@
 
 					<p:column headerText="Opções" style="width:120px;text-align:center">
 
-						<p:link styleClass="btn btn-primary btn-sm"
+						<p:link styleClass="btn btn-primary btn-sm" onerror="stop();"
+							onsuccess="stop();" onclick="start();"
 							outcome="/main/orcamento_cadastro">
 							<span class="pi pi-pencil"></span>
 							<f:param name="doacao" value="#{doacao.id}" />
 						</p:link>
 
 						<p:commandLink style="color:#FFF;margin-left:5px"
-							styleClass="btn btn-danger btn-sm "
+							styleClass="btn btn-danger btn-sm" onerror="stop();"
+							onsuccess="stop();" onclick="start();"
 							action="#{orcamento_controller.remover()}" process="@this"
 							update="table_doacao :form_listagem_orcamento">
+							<p:confirm header="Confirmação" icon="ui-icon-alert"
+								message="Desejar remover a doação?" />
 							<span class="pi pi-times-circle"></span>
 							<f:setPropertyActionListener value="#{doacao}"
 								target="#{orcamento_controller.orcamento}" />
@@ -192,6 +196,13 @@
 				</p:dataTable>
 
 			</p:panel>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
 		</h:form>
 
 	</ui:define>
