@@ -254,6 +254,12 @@
 
 								<p:column headerText="Fonte" filterBy="#{fonte.nome}"
 									filterMatchMode="contains">
+									<f:facet name="header">
+									 <div style="text-align: left">
+									   <p:outputLabel value="Busque a fonte pelo nome"></p:outputLabel>
+									   <i class="pi pi-search"></i>
+									 </div>
+									</f:facet>
 									<h:outputText escape="false" value="#{fonte.nome}" />
 								</p:column>
 							</p:dataTable>
