@@ -48,34 +48,36 @@
 					<div class="ui-g ui-fluid" style="margin-top: 10px">
 
 					<div class="ui-g-6 form-group focused">
-						<p:outputLabel for="filter-fonte" value="Colaborador:"
+						<p:outputLabel for="filter-col" value="Colaborador:"
 							styleClass="form-label" />
-						<p:autoComplete id="filter-fonte" styleClass="font12-vi"
-							value="#{orcamento_controller.filtro.fontePagadora}" var="fonte"
-							scrollHeight="250" itemLabel="#{fonte.nome}" itemValue="#{fonte}"
-							converter="fontePagadoraConverter"
-							completeMethod="#{orcamento_controller.completeFonte}" />
+						<p:autoComplete id="filter-col" styleClass="font12-vi"
+							value="#{usuario_controller.filtro.userColaborador}"
+							var="responsavelTecnico" itemLabel="#{responsavelTecnico.nome}"
+							itemValue="#{responsavelTecnico}"
+							converter="colaboradorConverter" scrollHeight="250"
+							completeMethod="#{orcamento_controller.completeColaborador}" 
+							 />
 					</div>
 
 					<div class="ui-g-6 form-group focused">
 						<p:outputLabel for="filter-title" value="Nome de Usuário:"
 							styleClass="form-label" />
-
 						<p:autoComplete id="filter-title" styleClass="font12-vi"
-							value="#{orcamento_controller.filtro.titulo}" scrollHeight="250"
-							completeMethod="#{orcamento_controller.completeTitulo}" />
+							value="#{usuario_controller.filtro.usuario}" scrollHeight="250"
+							completeMethod="#{usuario_controller.completeUser}" var="user" 
+							itemLabel="#{user.nomeUsuario}" itemValue="#{user}"/>
 
 					</div>
 
 					<div class="ui-g-6 form-group focused">
-						<p:outputLabel for="filter-tecnic" value="Email:"
+						<p:outputLabel for="filter-email" value="Email:"
 							styleClass="form-label" />
-						<p:autoComplete id="filter-tecnic" styleClass="font12-vi"
-							value="#{orcamento_controller.filtro.responsavelTecnico}"
-							var="responsavelTecnico" itemLabel="#{responsavelTecnico.nome}"
-							itemValue="#{responsavelTecnico}"
-							converter="colaboradorConverter" scrollHeight="250"
-							completeMethod="#{orcamento_controller.completeColaborador}" />
+						<p:autoComplete id="filter-email" styleClass="font12-vi"
+							value="#{usuario_controller.filtro.colaborador}"
+							var="user" itemLabel="#{user.email}"
+							itemValue="#{user}"
+							scrollHeight="250"
+							completeMethod="#{usuario_controller.completeUser}" />
 					</div>
 
 					<div class="ui-g-6 form-group focused">
@@ -84,29 +86,28 @@
 						<p:autoComplete id="filter-gestao" styleClass="font12-vi"
 							value="#{usuario_controller.filtro.gestao}"
 							var="gestao" scrollHeight="250"
-							itemLabel="#{gestao.sigla} #{gestao.nome} " itemValue="#{gestao}"
-							converter="gestaoConverter"
-							completeMethod="#{usuario_controller.getListGestao()}" />
+							itemLabel="#{gestao.nome} " itemValue="#{gestao}"
+							completeMethod="#{usuario_controller.getListGestaoV2}" />
 					</div>
 
 
 					<div class="d-flex justify-content-end flex-grow-1">
 					
-						<p:link id="add" styleClass="btn btn-success"
-							outcome="/main/cadastro_usuarios_edit_att"
-							rendered="#{usuario_controller.poderEditar()}"
-							title="Adicionar Usuário" style="color:#fff; margin: 8px 2px;">
-							<i class="fa fas fa-plus"></i>
-							<span>Novo</span>
-						</p:link>
-						
 						<p:commandLink styleClass="btn btn-primary btn-sm"
-							action="#{adiantamentoController.filtrar()}" onclick="start()"
+							action="#{usuario_controller.filtrar()}" onclick="start()"
 							onsuccess="stop()" onerror="stop()" update="list"
 							style="color:#fff; margin: 8px 2px;">
 							<span class="fa fa-fw fa-search"></span>
 							<span>Buscar</span>
 						</p:commandLink>
+						<p:link id="add" styleClass="btn btn-success"
+							outcome="/main/cadastro_usuarios_edit_att"
+							rendered="#{usuario_controller.poderEditar()}"
+							title="Adicionar Usuário" style="color:#fff; margin: 8px 2px;">
+							<i class="fa fas fa-plus"></i>
+							<span>Novo Colaborador</span>
+						</p:link>
+						
 
 					</div>
 

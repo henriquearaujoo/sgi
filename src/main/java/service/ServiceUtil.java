@@ -24,6 +24,10 @@ public class ServiceUtil implements Serializable {
 		return colaboradorRepositorio.findGestao();
 	}
 	
+	public List<Gestao> findGestaoV2(String s) {
+		return colaboradorRepositorio.findGestaoV2(s);
+	}
+	
 	public List<Colaborador> findColaborador(String s) {
 		return colaboradorRepositorio.buscarColaborador(s);
 	}

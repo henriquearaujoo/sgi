@@ -1,5 +1,6 @@
 package repositorio;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -8,6 +9,7 @@ import javax.persistence.Query;
 
 import anotacoes.Transactional;
 import model.CategoriaProjeto;
+import model.Colaborador;
 import model.Perfil;
 import model.Projeto;
 import model.User;
@@ -43,6 +45,65 @@ public class UsuarioRepository {
 
 	public List<User> getUsuario(String nome) {
 		String jpql = "select u from User u where u.nomeUsuario like :nome";
+		Query query = manager.createQuery(jpql);
+		query.setParameter("nome", "%" + nome + "%");
+		return query.getResultList();
+	}
+	
+	public List<User> filtrarUsuario(Filtro filtro) {
+		StringBuilder jpql = new StringBuilder(
+				"SELECT NEW User(u.id,u.nomeUsuario, u.email, u.colaborador.id, u.colaborador.nome, u.ativo) from User u where 1 = 1");
+		
+		if(filtro.getUserColaborador() != null && filtro.getUserColaborador().getEmail() != null && filtro.getUserColaborador().getEmail() != "") {
+			jpql.append(" and u.email = :email");
+		}
+		
+		if(filtro.getUserColaborador() != null && filtro.getUserColaborador().getNome() != "" &&
+				filtro.getUserColaborador().getNome() != null) {
+			jpql.append(" and u.colaborador.id = :colaborador_id");
+		}
+		
+		if(filtro.getUsuario() != null && filtro.getUsuario().getNomeUsuario() != null && 
+				filtro.getUsuario().getNomeUsuario() != "") {
+			jpql.append(" and u.id = :usuario_id");
+		}
+		
+		if(filtro.getGestao() != null && filtro.getGestao().getId() != null) {
+			jpql.append(" and u.gestao.id = :gestao_id");
+		}
+		
+		Query query = manager.createQuery(jpql.toString());
+		
+		if(filtro.getUserColaborador() != null && filtro.getUserColaborador().getEmail() != null && filtro.getUserColaborador().getEmail() != "") {
+			query.setParameter("email", filtro.getUserColaborador().getEmail());
+		}
+		
+		if(filtro.getUserColaborador() != null && 
+				filtro.getUserColaborador().getNome() != "" && filtro.getUserColaborador().getNome() != null && filtro.getUserColaborador().getId() != null) {
+			query.setParameter("colaborador_id", filtro.getUserColaborador().getId());
+		}
+		
+		if(filtro.getUsuario() != null && filtro.getUsuario().getNomeUsuario() != null && 
+				filtro.getUsuario().getNomeUsuario() != "" && filtro.getUsuario().getId() != null) {
+			query.setParameter("usuario_id", filtro.getUsuario().getId());
+		}
+		
+		if(filtro.getGestao() != null && filtro.getGestao().getId() != null) {
+			query.setParameter("gestao_id", filtro.getGestao().getId());
+		}
+		
+		return query.getResultList().size() > 0 ? query.getResultList() : getUsuarios(filtro);
+	}
+	
+	public List<User> getUsuarioV2(String nome) {
+		String jpql = "select new User(u.id, u.nomeUsuario, u.email) from User u where u.nomeUsuario like :nome";
+		Query query = manager.createQuery(jpql);
+		query.setParameter("nome", "%" + nome + "%");
+		return query.getResultList();
+	}
+	
+	public List<Colaborador> getColaboradorUserV2(String nome) {
+		String jpql = "select new Colaborador(c.nome) from Colaborador c where lower(c.nome) like lower(:nome)";
 		Query query = manager.createQuery(jpql);
 		query.setParameter("nome", "%" + nome + "%");
 		return query.getResultList();

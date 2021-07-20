@@ -111,6 +111,13 @@ public class ColaboradorRepositorio {
 		return query.getResultList();
 	}
 	
+	public List<Gestao> findGestaoV2(String s) {
+		StringBuilder jpql = new StringBuilder("select new Gestao(g.id, g.nome) from Gestao g where lower(g.nome) like :gestao");
+		Query query = manager.createQuery(jpql.toString());
+		query.setParameter("gestao", "%"+s+"%");
+		return query.getResultList();
+	}
+	
 	public List<Cargo> findCargo() {
 		StringBuilder jpql = new StringBuilder("from Cargo k");
 		Query query = manager.createQuery(jpql.toString());

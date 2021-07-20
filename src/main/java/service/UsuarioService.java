@@ -65,6 +65,10 @@ public class UsuarioService implements Serializable {
 	public List<Colaborador> getColaborador() {
 		return colaboradorRepositorio.findAll();
 	}
+	
+	public List<User> filtrarUsuario(Filtro filtro) {
+		return repositorio.filtrarUsuario(filtro);
+	}
 
 	public void addMessage(String summary, String detail, Severity severity) {
 		FacesMessage message = new FacesMessage(severity, summary, detail);
@@ -77,6 +81,14 @@ public class UsuarioService implements Serializable {
 	
 	public User findUsuarioById(Long id) {
 		return repositorio.getUsuario(id);
+	}
+	
+	public List<User> completeUser(String s) {
+		return repositorio.getUsuarioV2(s);
+	}
+	
+	public List<Colaborador> completeColaborador(String s) {
+		return repositorio.getColaboradorUserV2(s);
 	}
 
 	@Transactional

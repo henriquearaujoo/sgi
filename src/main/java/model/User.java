@@ -73,6 +73,17 @@ public class User implements Serializable {
 		this.setColaborador(new Colaborador(colaboradorId, nomeColaborador));
 		this.setAtivo(ativo);
 	}
+	
+	public User(long id, Colaborador colaborador) {
+		setId(id);
+		setColaborador(colaborador);
+	}
+	
+	public User(Long id, String nomeUsuario, String email) {
+		setId(id);
+		setNomeUsuario(nomeUsuario);
+		setEmail(email);
+	}
 
 	public String getEmail() {
 		return email;
