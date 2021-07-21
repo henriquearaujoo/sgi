@@ -270,6 +270,16 @@ public class Filtro {
 
 	private Localidade localidade;
 	private Gestao gestao;
+	
+	private Gestao gestaoV2;
+
+	public Gestao getGestaoV2() {
+		return gestaoV2;
+	}
+
+	public void setGestaoV2(Gestao gestaoV2) {
+		this.gestaoV2 = gestaoV2;
+	}
 
 	private String cnpjcpf;
 

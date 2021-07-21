@@ -52,7 +52,8 @@ public class UsuarioRepository {
 	
 	public List<User> filtrarUsuario(Filtro filtro) {
 		StringBuilder jpql = new StringBuilder(
-				"SELECT NEW User(u.id,u.nomeUsuario, u.email, u.colaborador.id, u.colaborador.nome, u.ativo) from User u where 1 = 1");
+				"SELECT NEW User(u.id,u.nomeUsuario, u.email, u.colaborador.id, u.colaborador.nome, u.ativo) from User u where 1 = 1"
+				+ " and u.nomeUsuario <> 'teste' and u.ativo = true and u.nomeUsuario <> 'testing' and u.nomeUsuario <> 'test.financ'");
 		
 		if(filtro.getUserColaborador() != null && filtro.getUserColaborador().getEmail() != null && filtro.getUserColaborador().getEmail() != "") {
 			jpql.append(" and u.email = :email");
@@ -68,8 +69,8 @@ public class UsuarioRepository {
 			jpql.append(" and u.id = :usuario_id");
 		}
 		
-		if(filtro.getGestao() != null && filtro.getGestao().getId() != null) {
-			jpql.append(" and u.gestao.id = :gestao_id");
+		if(filtro.getGestaoV2() != null && filtro.getGestaoV2().getId() != null) {
+			jpql.append(" and u.colaborador.gestao.id = :gestao_id");
 		}
 		
 		Query query = manager.createQuery(jpql.toString());
@@ -88,15 +89,15 @@ public class UsuarioRepository {
 			query.setParameter("usuario_id", filtro.getUsuario().getId());
 		}
 		
-		if(filtro.getGestao() != null && filtro.getGestao().getId() != null) {
-			query.setParameter("gestao_id", filtro.getGestao().getId());
+		if(filtro.getGestaoV2() != null && filtro.getGestaoV2().getId() != null) {
+			query.setParameter("gestao_id", filtro.getGestaoV2().getId());
 		}
 		
 		return query.getResultList().size() > 0 ? query.getResultList() : getUsuarios(filtro);
 	}
 	
 	public List<User> getUsuarioV2(String nome) {
-		String jpql = "select new User(u.id, u.nomeUsuario, u.email) from User u where u.nomeUsuario like :nome";
+		String jpql = "select new User(u.id, u.nomeUsuario, u.email) from User u where (u.nomeUsuario like :nome) or (u.email like :nome)";
 		Query query = manager.createQuery(jpql);
 		query.setParameter("nome", "%" + nome + "%");
 		return query.getResultList();

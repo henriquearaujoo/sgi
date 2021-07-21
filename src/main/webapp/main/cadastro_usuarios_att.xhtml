@@ -73,7 +73,7 @@
 						<p:outputLabel for="filter-email" value="Email:"
 							styleClass="form-label" />
 						<p:autoComplete id="filter-email" styleClass="font12-vi"
-							value="#{usuario_controller.filtro.colaborador}"
+							value="#{usuario_controller.filtro.usuario}"
 							var="user" itemLabel="#{user.email}"
 							itemValue="#{user}"
 							scrollHeight="250"
@@ -84,9 +84,10 @@
 						<p:outputLabel for="filter-gestao" value="Gestão:"
 							styleClass="form-label" />
 						<p:autoComplete id="filter-gestao" styleClass="font12-vi"
-							value="#{usuario_controller.filtro.gestao}"
+							value="#{usuario_controller.filtro.gestaoV2}"
 							var="gestao" scrollHeight="250"
 							itemLabel="#{gestao.nome} " itemValue="#{gestao}"
+							converter="gestaoConverter"
 							completeMethod="#{usuario_controller.getListGestaoV2}" />
 					</div>
 
