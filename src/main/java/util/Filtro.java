@@ -45,7 +45,25 @@ public class Filtro {
 	private FontePagadora fontePagadora;
 	private Colaborador responsavelTecnico;
 	private Colaborador colaborador;
+	private Colaborador userColaborador;
+	private String email;
 	
+	public Colaborador getUserColaborador() {
+		return userColaborador;
+	}
+
+	public void setUserColaborador(Colaborador userColaborador) {
+		this.userColaborador = userColaborador;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public Colaborador getResponsavelTecnico() {
 		return responsavelTecnico;
 	}
@@ -252,6 +270,16 @@ public class Filtro {
 
 	private Localidade localidade;
 	private Gestao gestao;
+	
+	private Gestao gestaoV2;
+
+	public Gestao getGestaoV2() {
+		return gestaoV2;
+	}
+
+	public void setGestaoV2(Gestao gestaoV2) {
+		this.gestaoV2 = gestaoV2;
+	}
 
 	private String cnpjcpf;
 

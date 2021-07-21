@@ -84,6 +84,10 @@ public class UsuarioControllerAtt implements Serializable {
 		return serviceUtil.findGestao();
 	}
 	
+	public List<Gestao> getListGestaoV2(String s) {
+		return serviceUtil.findGestaoV2(s);
+	}
+	
 	public List<Colaborador> completeListColaborador(String s) {
 		return serviceUtil.findColaborador(s);
 	}
@@ -91,6 +95,14 @@ public class UsuarioControllerAtt implements Serializable {
 	// metodo para buscar por string parcial o colaborador
 	public List<Colaborador> completeColaborador(String s) {
 		return viagemService.buscarColaboradores(s);
+	}
+	
+	public List<Colaborador> completeColaboradorV2(String s) {
+		return usuarioService.completeColaborador(s);
+	}
+	
+	public List<User> completeUser(String s) {
+		return usuarioService.completeUser(s);
 	}
 
 	// metodos de listagem
@@ -115,6 +127,10 @@ public class UsuarioControllerAtt implements Serializable {
 		}
 
 		return listaUsuario;
+	}
+	
+	public void filtrar() {
+		usuarios = usuarioService.filtrarUsuario(filtro);
 	}
 
 	public void carregarUsuarios() {
