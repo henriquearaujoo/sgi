@@ -17,6 +17,9 @@ div[id="enquadramento"] > * {
 	padding: 20px; 
 }
 
+.aw-sidebar  {
+	z-index: auto;
+}
 div[id="info-geral"] > * {
 	padding: 20px; 
 }
