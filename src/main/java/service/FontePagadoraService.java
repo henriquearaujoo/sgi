@@ -35,7 +35,7 @@ public class FontePagadoraService implements Serializable {
 
 	@Transactional
 	public void salvar(FontePagadora fontePagadora) {
-		Long totalFontes = fontePagadoraRespositorio.maxFontes();
+		Long totalFontes = fontePagadoraRespositorio.maxFontes().longValue();
 		List<FontePagadora> fonte = fontePagadoraRespositorio.findAll();
 		for(FontePagadora f : fonte) {
 			if(fontePagadora.getNome() == f.getNome()) {

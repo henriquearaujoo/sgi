@@ -46,6 +46,16 @@ public class Filtro {
 	private Colaborador responsavelTecnico;
 	private Colaborador colaborador;
 	
+	private FontePagadora fontePagadoraV2 = new FontePagadora();
+	
+	public FontePagadora getFontePagadoraV2() {
+		return fontePagadoraV2;
+	}
+
+	public void setFontePagadoraV2(FontePagadora fontePagadoraV2) {
+		this.fontePagadoraV2 = fontePagadoraV2;
+	}
+
 	public Colaborador getResponsavelTecnico() {
 		return responsavelTecnico;
 	}

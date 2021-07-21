@@ -167,7 +167,6 @@ public class OrcamentoController implements Serializable {
 	}
 
 	public void initCadastro() {
-		listarFontesPagadora();
 		carregarComponentes();
 		carregarRubrica();
 		carregarProjetosPorDoacao();
@@ -300,28 +299,21 @@ public class OrcamentoController implements Serializable {
 		return TipoParcelamento.values();
 	}
 	
-	private @Inject FontePagadora fontePagadora = new FontePagadora();
-	
 	public void salvarFontePagadora() {
 		FacesContext context = FacesContext.getCurrentInstance();
-		boolean check = true;
-		for(FontePagadora f: listFontePagadora) {
-			if(f.getNome() == this.fontePagadora.getNome()) {
-				check = false;
+		List<FontePagadora> fontesPagadora = fontePagadoraService.findAll();
+		boolean check = false;
+		for(FontePagadora f: fontesPagadora) {
+			if(filtro.getFontePagadoraV2().getNome().toLowerCase().equals(f.getNome().toLowerCase())) {
+				check = true;
 				break;
 			}
 		}
-		if(check) {			
-			if(this.fontePagadora.getNome() == null || this.fontePagadora.getNome() == "") {
-		         
-		        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Erro ao cadastrar nova fonte.") );
-			} else {
-				fontePagadoraService.salvar(this.fontePagadora);
-				context.addMessage(null, new FacesMessage("Sucesso", "Nova fonte cadastrada.") );
-				PrimeFaces.current().executeScript("PF('dialog_fonte_pagadora').hide()");
-			}
+		if(check) {
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro de Fonte", "Fonte já existente.") );
 		} else {
-			fontePagadoraService.salvar(this.fontePagadora);
+			fontePagadoraService.salvar(filtro.getFontePagadoraV2());
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Fonte Cadastrada", "Uma nova fonte foi registrada.") );
 			PrimeFaces.current().executeScript("PF('dialog_fonte_pagadora').hide()");
 		}
 
@@ -345,14 +337,6 @@ public class OrcamentoController implements Serializable {
 
 	
 	////////////////////// BARRA DE PROGRESSO ///////////////////////////
-	
-	public FontePagadora getFontePagadora() {
-		return fontePagadora;
-	}
-
-	public void setFontePagadora(FontePagadora fontePagadora) {
-		this.fontePagadora = fontePagadora;
-	}
 
 	private BigDecimal valorAtual = BigDecimal.ZERO;
 	
