@@ -32,21 +32,10 @@ public class FontePagadoraService implements Serializable {
 	public List<FontePagadora> findAll() {
 		return fontePagadoraRespositorio.findAll();
 	}
-
+	
 	@Transactional
 	public void salvar(FontePagadora fontePagadora) {
-		Long totalFontes = fontePagadoraRespositorio.maxFontes().longValue();
-		List<FontePagadora> fonte = fontePagadoraRespositorio.findAll();
-		for(FontePagadora f : fonte) {
-			if(fontePagadora.getNome() == f.getNome()) {
-				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro!", "FONTE JÁ EXISTENTE");
-				FacesContext.getCurrentInstance().addMessage(null, msg);
-			} else {
-				fontePagadora.setId(totalFontes + 1L);
-				fontePagadoraRespositorio.salvar(fontePagadora);
-				break;
-			}
-		}
+		fontePagadoraRespositorio.salvar(fontePagadora);
 	}
 
 	@Transactional

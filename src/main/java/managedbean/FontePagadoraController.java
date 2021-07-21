@@ -41,7 +41,7 @@ public class FontePagadoraController implements Serializable {
 	public String salvar() {
 		try {
 			fontePagadoraService.salvar(this.fontePagadora);
-			return "fonte_pagadora?faces-redirect=true&sucesso=1";
+			return "fonte_pagadora?faces-redirect=true";
 		} catch (Exception e) {
 			return "fonte_pagadora?faces-redirect=true&sucesso=0";
 		}
