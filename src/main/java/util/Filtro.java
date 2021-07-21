@@ -48,6 +48,7 @@ public class Filtro {
 	private Colaborador userColaborador;
 	private String email;
 	
+
 	public Colaborador getUserColaborador() {
 		return userColaborador;
 	}
@@ -62,6 +63,15 @@ public class Filtro {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	private FontePagadora fontePagadoraV2 = new FontePagadora();
+	
+	public FontePagadora getFontePagadoraV2() {
+		return fontePagadoraV2;
+	}
+
+	public void setFontePagadoraV2(FontePagadora fontePagadoraV2) {
+		this.fontePagadoraV2 = fontePagadoraV2;
 	}
 
 	public Colaborador getResponsavelTecnico() {

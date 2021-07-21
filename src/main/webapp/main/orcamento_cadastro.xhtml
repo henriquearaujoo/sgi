@@ -158,8 +158,9 @@
 							
 							<div class="d-flex justify-content-end flex-grow-1">							
 								<p:commandLink styleClass="btn btn-sm"
-									update="dialog_fonte_pagadora" ignoreAutoUpdate="true"
+									update="dialog_fonte_pagadora tabela_fonte" process="@parent"
 									oncomplete="PF('dialog_fonte_pagadora').show();"
+									action="#{orcamento_controller.listarFontesPagadora()}"
 									onerror="stop();" onsuccess="stop();" onclick="start();"
 									style="color:#fff; margin: 8px 2px; background: var(--purple);">
 									<span class="fa fa-external-link" aria-hidden="true"></span>
@@ -228,12 +229,11 @@
 			blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()">
 			<p:panel styleClass="panel">
 				<h:form id="form-cadastro-fontes" prependId="false">
-					<p:growl id="growl" showDetail="true" sticky="true" globalOnly="true" for="nome" life="20" >
-					</p:growl>  
 					<div class="ui-g-12">
+						<p:growl id="growl" showDetail="true" sticky="true" /> 
 						<p:commandLink styleClass="btn btn-success" style="color:#fff"
 							action="#{orcamento_controller.salvarFontePagadora()}"
-							update="tabela_fonte"
+							update="tabela_fonte :form-cadastro-fontes"
 							onclick="start()" onsuccess="stop()" onerror="stop()">
 							<span class="fa fas fa-check"></span>
 							<span>Salvar</span>
@@ -243,7 +243,7 @@
 					<div class="ui-g-12 form-group">
 						<p:outputLabel value="Nome:" for="nome" />
 						<p:inputText id="nome" styleClass="form-control"
-							value="#{orcamento_controller.fontePagadora.nome}"
+							value="#{orcamento_controller.filtro.fontePagadoraV2.nome}"
 							placeholder="Ex.:Fonte Pagadora S/A" required="true"/>
 					</div>
 
