@@ -56,8 +56,8 @@
 				</p:breadCrumb>
 
 
-				<p:panel id="filter-pgto" header="Pagamentos">
-					<div class="ui-g ui-fluid" style="margin-top: 8px">
+				<p:panel id="filter-pgto" styleClass="default-style-form-filter" header="Pagamentos">
+					<div class="ui-g ui-fluid " style="margin-top: 8px">
 						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
 							<p:outputLabel value="Código" styleClass="form-label" />
 							<p:inputText value="#{pagamentoController.filtro.codigo}" />
@@ -372,7 +372,7 @@
 		<p:dialog header="Anexos" modal="true" widgetVar="dialog_arquivo"
 			width="60%" hideEffect="clip" closeOnEscape="true" showEffect="clip">
 
-			<h:form id="form-arquivo" enctype="multipart/form-data">
+			<h:form id="form-arquivo" styleClass="default-style-form-filter" enctype="multipart/form-data">
 				<p:messages id="msg_aprouve" showIcon="true" showSummary="false"
 					showDetail="true" closable="true" />
 				<p:panelGrid columns="1">

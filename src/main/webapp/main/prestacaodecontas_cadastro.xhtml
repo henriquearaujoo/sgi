@@ -30,7 +30,7 @@
 			
 		</script>
 
-		<h:form id="form_adiantamento" prependId="false">
+		<h:form id="form_adiantamento" styleClass="default-style-form-filter" prependId="false">
 
 
 			<div id="panel-geral" class="container">
@@ -403,9 +403,10 @@
 				<p:commandLink style="color:#fff"
 					oncomplete="PF('dlg_devolucao').hide();"
 					action="#{prestacao_conta_controller.salvarDevolucao()}"
-					styleClass="btn btn-success btn-xs fa fa-check-square-o"
+					styleClass="btn btn-success btn-xs"
 					update=":form_adiantamento">
-					<span style="font-family: Arial">Confirmar devolução</span>
+					<i class="fa fa-check" aria-hidden="true"></i>
+					<span>Confirmar devolução</span>
 				</p:commandLink>
 
 
@@ -419,7 +420,7 @@
 			showEffect="clip" hideEffect="clip" closable="true"
 			closeOnEscape="true">
 
-			<h:form id="form_reembolso">
+			<h:form id="form_reembolso" styleClass="default-style-form-filter">
 
 				<p:panelGrid columns="3">
 
@@ -459,7 +460,8 @@
 					action="#{prestacao_conta_controller.salvarReembolso()}"
 					styleClass="btn btn-success btn-xs"
 					update=":form_adiantamento">
-					<span style="font-family: Arial">Confirmar reembolso</span>
+					<i class="fa fa-check" aria-hidden="true"></i>
+					<span>Confirmar reembolso</span>
 				</p:commandLink>
 
 

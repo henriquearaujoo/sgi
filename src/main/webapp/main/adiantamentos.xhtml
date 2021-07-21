@@ -34,7 +34,7 @@
 
 			<h:panelGroup id="panel-listagem">
 
-				<h:form id="form-listagem" prependId="false">
+				<h:form id="form-listagem" styleClass="default-style-form-filter" prependId="false">
 
 					<p:messages id="message" showSummary="false"
 						style="margin-top:10px" showDetail="true" closable="true"
@@ -418,7 +418,7 @@
 
 		<p:dialog header="Anexos" modal="true" widgetVar="dialog_arquivo"
 			hideEffect="clip" closeOnEscape="true" showEffect="clip">
-			<h:form id="form-arquivo" enctype="multipart/form-data">
+			<h:form id="form-arquivo" styleClass="default-style-form-filter" enctype="multipart/form-data">
 				<p:messages id="msg_aprouve" showIcon="true" showSummary="false"
 					showDetail="true" closable="true" />
 
@@ -508,7 +508,7 @@
 		<p:dialog header="Filtro" widgetVar="dlg_filtro" modal="false"
 			height="50%" width="50%" showEffect="clip" hideEffect="clip">
 			<div class="ui-fluid">
-				<h:form id="form-filtro">
+				<h:form id="form-filtro" styleClass="default-style-form-filter">
 					<p:messages id="msg_filter" showDetail="true" showSummary="false"
 						showIcon="true" closable="true" />
 					<p:panelGrid columns="1" layout="grid">
@@ -685,7 +685,7 @@
 		<p:dialog header="Mudança de Status" widgetVar="dialogAlterarStatus"
 			modal="false" resizable="false" showEffect="clip" hideEffect="clip">
 			<div class="ui-fluid">
-				<h:form id="formDialogAlterarStatus">
+				<h:form id="formDialogAlterarStatus" styleClass="default-style-form-filter">
 
 					<p:panelGrid columns="1" layout="grid">
 
