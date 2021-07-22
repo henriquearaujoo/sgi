@@ -13,21 +13,18 @@
 
 			<p:panelMenu id="panel-menu-p">
 
-				<p:submenu label="Planejamento" rendered="true">
+				<p:submenu label="Planejamento"
+					rendered="#{message['MENU_PLANNING']}">
 					<p:menuitem value="Doações" url="orcamentos.xhtml" />
 					<p:menuitem value="Projetos" url="projetos.xhtml" />
-					<p:menuitem value="Plano de trabalho" url="planos.xhtml"
-						rendered="false" />
 					<p:menuitem value="Controladoria" url="recursos_projetos.xhtml"
 						rendered="false" />
 					<p:menuitem value="Controle de projeto" url="liberar_projeto.xhtml"
 						rendered="false" />
-					<p:menuitem value="Custo pessoal" url="custo_pessoal.xhtml"
-						rendered="false" />
 
 				</p:submenu>
 
-				<p:submenu label="Solicitações" rendered="true">
+				<p:submenu label="Solicitações" rendered="#{message['MENU_SOLICS']}">
 					<p:menuitem value="Compras" url="compra_new.xhtml"
 						onclick="start()" onerror="stop()" />
 					<p:menuitem value="Pagamentos" url="pagamento.xhtml"
@@ -39,66 +36,90 @@
 
 				</p:submenu>
 
-				<p:submenu label="Financeiro" rendered="true">
+				<p:submenu label="Financeiro" rendered="#{message['MENU_FINANCE']}">
 					<p:menuitem value="Custo pessoal" url="custo_pessoal.xhtml"
 						rendered="false" />
 					<p:menuitem value="Lançamentos OLD" url="lancamentos.xhtml"
 						rendered="false" />
 
-					<p:menuitem value="Validação"
-						url="liberacao_lancamento.xhtml" />
-					
-					<p:menuitem value="Conciliação"
-						url="lancamentosV2.xhtml" />
-					
+					<p:menuitem value="Validação" url="liberacao_lancamento.xhtml" />
+
+					<p:menuitem value="Conciliação" url="lancamentosV2.xhtml" />
+
 					<p:menuitem value="Lançamentos diversos"
 						url="lancamentos_diversos.xhtml" rendered="false" />
+
+					<p:menuitem value="Custo pessoal" url="custo_pessoal.xhtml"
+						rendered="false" />
 				</p:submenu>
 
-				<p:submenu label="Logística" rendered="true">
+				<p:submenu label="Logística" rendered="#{message['MENU_LOG']}">
 					<p:menuitem value="Termos" url="termo_expedicao.xhtml"
 						rendered="true" />
 					<p:menuitem value="Expedição" url="controle_expedicao.xhtml" />
 				</p:submenu>
-				
-				<p:submenu label="Relatórios" rendered="true">
+
+				<p:submenu label="Relatórios" rendered="#{message['MENU_REPORT']}">
 					<p:menuitem value="Relatórios" url="relatorios_fin.xhtml"
 						onclick="start()" onerror="stop()" />
 					<p:menuitem value="Reclassificação" url="reclassificacao.xhtml"
 						rendered="false" />
 				</p:submenu>
 
-				<p:submenu label="Cadastro" rendered="true">
-					<p:menuitem value="Cargos" url="cargos.xhtml" rendered="true"
-						onclick="start()" onerror="stop()" />
-					<p:menuitem value="Colaboradores" url="cadastro_colaborador.xhtml"
-						onclick="start()" onerror="stop()" />
-					<p:menuitem value="Componentes" url="componentes.xhtml"
-						rendered="true" onclick="start()" onerror="stop()" />
-					<p:menuitem value="Comunidades" url="comunidades.xhtml"
-						rendered="true" onclick="start()" onerror="stop()" />
-					<p:menuitem value="Eventos" url="eventos.xhtml" onclick="start()"
+				<p:submenu label="Cadastro" rendered="#{message['MENU_REGISTER']}">
+					<p:menuitem value="Cargos" url="cargos.xhtml"
+						rendered="#{message['SUB_MENU_POSITION']}" onclick="start()"
 						onerror="stop()" />
-					<p:menuitem value="Fontes Pagadoras" url="fonte_pagadora.xhtml"
-						rendered="true" onclick="start()" onerror="stop()" />
-					<p:menuitem value="Produtos" url="produtos.xhtml" onclick="start()"
-						onerror="stop()" />
-					<p:menuitem value="Sub-Componentes" url="subcomponentes.xhtml"
-						rendered="true" onclick="start()" onerror="stop()" />
-					<p:menuitem value="Contas" url="contas.xhtml" rendered="false" />
-					<p:menuitem value="Bancos" url="bancos.xhtml" rendered="false" />
-					<p:menuitem value="Usuários" url="cadastro_usuarios_att.xhtml"
-						rendered="true" onclick="start()" onerror="stop()" />
-					<p:menuitem value="Aprovadores" url="aprovadores.xhtml"
-						rendered="false" />
-					<p:menuitem value="Fornecedores" url="fornecedores.xhtml"
-						rendered="false" />
 
-					<p:menuitem value="Rubricas" url="rubrica.xhtml" rendered="false" />
+					<p:menuitem value="Colaboradores" url="cadastro_colaborador.xhtml"
+						rendered="#{message['SUB_MENU_COLABORATOR']}" onclick="start()"
+						onerror="stop()" />
+
+					<p:menuitem value="Usuários" url="cadastro_usuarios_att.xhtml"
+						onclick="start()" onerror="stop()"
+						rendered="#{message['SUB_MENU_USER']}" />
+
+					<p:menuitem value="Componentes" url="componentes.xhtml"
+						rendered="#{message['SUB_MENU_COMPONENT']}" onclick="start()"
+						onerror="stop()" />
+
+
+					<p:menuitem value="Sub-Componentes" url="subcomponentes.xhtml"
+						rendered="#{message['SUB_MENU_SUBCOMPONENT']}" onclick="start()"
+						onerror="stop()" />
+
+					<p:menuitem value="Comunidades" url="comunidades.xhtml"
+						rendered="#{message['SUB_MENU_COMMUNITY']}" onclick="start()"
+						onerror="stop()" />
+
+					<p:menuitem value="Eventos" url="eventos.xhtml" onclick="start()"
+						rendered="#{message['SUB_MENU_EVENT']}" onerror="stop()" />
+
+					<p:menuitem value="Fontes Pagadoras" url="fonte_pagadora.xhtml"
+						rendered="#{message['SUB_MENU_SOURCE']}" onclick="start()"
+						onerror="stop()" />
+
+					<p:menuitem value="Produtos" url="produtos.xhtml" onclick="start()"
+						rendered="#{message['SUB_MENU_PRODUCT']}" onerror="stop()" />
+
+					<p:menuitem value="Contas" url="contas.xhtml"
+						rendered="#{message['SUB_MENU_ACCOUNT']}" />
+
+					<p:menuitem value="Bancos" url="bancos.xhtml"
+						rendered="#{message['SUB_MENU_BANK']}" />
+
+					<p:menuitem value="Aprovadores" url="aprovadores.xhtml"
+						rendered="#{message['SUB_MENU_APPROVE']}" />
+
+					<p:menuitem value="Fornecedores" url="fornecedores.xhtml"
+						rendered="#{message['SUB_MENU_PROVIDER']}" />
+
+					<p:menuitem value="Rubricas" url="rubrica.xhtml"
+						rendered="#{message['SUB_MENU_CATEGORY']}" />
 
 					<p:menuitem value="Unid. Conservação"
-						url="unidadesConservacao.xhtml" rendered="true" onclick="start()"
-						onerror="stop()" />
+						url="unidadesConservacao.xhtml" onclick="start()"
+						rendered="#{message['SUB_MENU_UC']}" onerror="stop()" />
 				</p:submenu>
 
 				<p:submenu label="PBF" rendered="false">
