@@ -15,8 +15,6 @@
 			<f:viewAction action="#{orcamento_controller.init()}" />
 		</f:metadata>
 
-
-
 		<h:form id="form_listagem_orcamento" acceptcharset="ISO-8859-1">
 
 			<p:messages showSummary="false" showDetail="true" closable="true">
@@ -30,9 +28,8 @@
 
 			<p:panel>
 
-
-
-				<div class="ui-g ui-fluid default-style-form-filter" style="margin-top: 8px">
+				<div class="ui-g ui-fluid default-style-form-filter"
+					style="margin-top: 8px">
 
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
 						<p:outputLabel for="filter-fonte" value="Parceiro:"
@@ -53,7 +50,6 @@
 							completeMethod="#{orcamento_controller.completeTitulo}" />
 
 					</div>
-
 
 
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
@@ -98,10 +94,7 @@
 							completeMethod="#{orcamento_controller.completeColaborador}" />
 					</div>
 
-
 					<div>
-
-
 						<p:commandButton styleClass="btn btn-primary btn-sm"
 							action="#{orcamento_controller.filtroOrcamento()}"
 							onclick="start()" update="table_doacao" onsuccess="stop()"
@@ -111,6 +104,7 @@
 					</div>
 
 				</div>
+				
 				<div class="d-flex justify-content-end">
 					<p:link styleClass="btn btn-success btn-sm" id="table-doacao"
 						style="margin: 8px 2px;" outcome="/main/orcamento_cadastro"
@@ -129,7 +123,7 @@
 				</div>
 
 				<p:dataTable id="table_doacao" paginator="true" style="color: white"
-					rows="12" value="#{orcamento_controller.orcamentos}" var="doacao">
+					rows="8" value="#{orcamento_controller.orcamentos}" var="doacao">
 
 					<p:column headerText="Parceiro" style="text-align:center">
 						<h:outputText value="#{doacao.fonte.nome}" />

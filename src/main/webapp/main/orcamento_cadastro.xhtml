@@ -62,19 +62,19 @@
 					</p:tab>
 
 					<p:tab id="extrato_doacao"
-						rendered="#{orcamento_controller.orcamento.id != null and !orcamento_controller.preCadastro}"
+						rendered="#{message['SHOW_BANKSTATEMENT_DONATION']}"
 						title="Execução de projetos">
 						<ui:include src="/main/doacao/extrato.xhtml" />
 					</p:tab>
 
 					<p:tab id="doacao"
-						rendered="#{orcamento_controller.orcamento.id != null and !orcamento_controller.preCadastro}"
+						rendered="#{message['SHOW_INSTALLMENTS_DONATION']}"
 						title="Parcelas de recebimento">
 						<ui:include src="/WEB-INF/orcamento_tab04.xhtml" />
 					</p:tab>
 
 					<p:tab id="projetos_vinculados"
-						rendered="#{orcamento_controller.orcamento.id != null and !orcamento_controller.preCadastro}"
+						rendered="#{message['SHOW_PROJECT_DONATION']}"
 						title="Projetos Vinculados">
 						<ui:include src="/main/doacao/projetos_vinculados.xhtml" />
 					</p:tab>
