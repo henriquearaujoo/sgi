@@ -12,7 +12,7 @@
 		<div id="info-geral" class="ui-g ui-fluid default-style-form-filter">
 
 			<div class="ui-g-4 form-group focused">
-				<p:outputLabel for="input-fonte" value="Parceiro/Fonte/Doação:"
+				<p:outputLabel for="input-fonte" value="Fonte"
 					styleClass="form-label" />
 				<p:autoComplete id="input-fonte"
 					value="#{orcamento_controller.orcamento.fonte}"
@@ -39,7 +39,7 @@
 
 
 			<div class="ui-g-4 form-group focused">
-				<p:outputLabel for="input-conta" value="Conta"
+				<p:outputLabel for="input-conta" value="Conta bancária"
 					styleClass="form-label" />
 				<p:selectOneMenu id="input-conta" converter="contaConverter"
 					filter="true" filterMatchMode="contains" autoWidth="false"

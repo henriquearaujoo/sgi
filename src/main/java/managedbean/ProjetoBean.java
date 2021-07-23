@@ -1847,19 +1847,17 @@ public class ProjetoBean implements Serializable {
 		if (index == 0) {
 
 		} else if (index == 1) {
-
 			findMetasByIdProjeto();
 			findIndicadoresByProjeto();
 		} else if (index == 2) {
-			carregarAtividades();
-
-		} else if (index == 3) {
-			// carregarRelacaoDeOrcamentos();
 			loadDonations();
 			// carregasRubricasOrcadas();
 			carregarRubricasDeProjeto();
+			//carregarAtividades();
+		} else if (index == 3) {
+			// carregarRelacaoDeOrcamentos();
+			
 			// calculaValor();
-
 			// createMultiAxisModel();
 			// createChartExecucao();
 			// carregarListaDeCategoriasDeProjeto();
@@ -1869,7 +1867,6 @@ public class ProjetoBean implements Serializable {
 			carregarAtividades();
 			createChartExecucao();
 		}
-
 	}
 
 	public String testaMes(Long id) {

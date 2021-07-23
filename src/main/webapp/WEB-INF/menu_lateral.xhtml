@@ -16,7 +16,7 @@
 				<p:submenu label="Planejamento"
 					rendered="#{message['MENU_PLANNING']}">
 					<p:menuitem value="Doações" url="orcamentos.xhtml" />
-					<p:menuitem value="Projetos" url="projetos.xhtml" />
+					<p:menuitem value="Projetos" url="projetos.xhtml" rendered="#{message['SUB_MENU_PROJECT']}"/>
 					<p:menuitem value="Controladoria" url="recursos_projetos.xhtml"
 						rendered="false" />
 					<p:menuitem value="Controle de projeto" url="liberar_projeto.xhtml"

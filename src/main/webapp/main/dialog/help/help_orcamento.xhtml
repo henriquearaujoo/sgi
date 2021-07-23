@@ -5,8 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:jsf="http://xmlns.jcp.org/jsf">
-	
-	
+
+
 	<h:form id="id-help">
 
 		<p:panel id="main-panel-help" styleClass="main_panel_help">
@@ -15,52 +15,49 @@
 				<p:tab>
 
 					<p:graphicImage styleClass="img-fluid"
-						name="image/tutorials/projeto_2.png" />
+						name="image/tutorials/filter_donation.png" />
 
 
 					<div class="table-responsive py-2">
 						<table class="table table-bordered">
 							<thead class="thead-light">
 								<tr>
-									<th scope="col">Campos</th>
-									<th scope="col">Funcionalidade</th>
+									<th scope="col">Campo</th>
+									<th scope="col">Descrição</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td scope="row"><b>Lançamento</b></td>
-									<td>Código gerado pelo sistema de sua SP após a finalizar
-										a criação de uma nova SP.</td>
+									<td scope="row"><b>Fonte</b></td>
+									<td>Quem fez a doação (Bradesco, Samsung ou qualquer outro
+										que esteja na lista). É um campo de autocompletar, ao digitar
+										aparecerá uma lista para que seja selecionado um parceiro</td>
 								</tr>
 								<tr>
-									<td scope="row"><b>Nº Documento Fiscal</b></td>
-									<td>Responsável da SP</td>
+									<td scope="row"><b>Título</b></td>
+									<td>Uma descrição simples que identifique essa doação</td>
 								</tr>
 								<tr>
-									<td scope="row"><b>Pagamento início</b></td>
-									<td>Data de início da SP</td>
+									<td scope="row"><b>Data inicial</b></td>
+									<td>Determina quando começa o período de vigência de uma
+										doação</td>
 								</tr>
 								<tr>
-									<td scope="row"><b>Pagamento fim</b></td>
-									<td>Data final da SP</td>
+									<td scope="row"><b>Data final</b></td>
+									<td>Determina quando termina o período de vigência de uma
+										doação</td>
 								</tr>
 								<tr>
-									<td scope="row"><b>Pagador</b></td>
-									<td>Informada de onde sairá o recurso para a SP</td>
+									<td scope="row"><b>Responsável técnico</b></td>
+									<td>Colaborador responsável por gerenciar e executar e
+										acomapanhar os orçamentos no setor tecnico de projetos</td>
 								</tr>
 								<tr>
-									<td scope="row"><b>Fornecedor</b></td>
-									<td>Local destinado da SP</td>
+									<td scope="row"><b>Analista financeiro</b></td>
+									<td>Colaborador responsável pela análise financeira e
+										controladoria dos recursos da doação</td>
 								</tr>
-								<tr>
-									<td scope="row"><b>Projeto</b></td>
-									<td>Quem prestou o serviço ou forneceu o material para a
-										demanda</td>
-								</tr>
-								<tr>
-									<td scope="row"><b>Status</b></td>
-									<td>Situação do lançamento (Provisionado ou Efetivado)</td>
-								</tr>
+
 							</tbody>
 						</table>
 					</div>
@@ -68,7 +65,7 @@
 				</p:tab>
 				<p:tab>
 					<p:graphicImage styleClass="img-fluid"
-						name="image/tutorials/projeto.png" />
+						name="image/tutorials/buttons_filter_donation.png" />
 
 
 					<div class="table-responsive py-2">
@@ -82,38 +79,65 @@
 							<tbody>
 								<tr>
 									<td scope="row">
-										<div class="btn btn-primary btn-sm">
+										<div class="btn btn-primary">
 											<span class="fa fa-fw fa-search"></span> <span
 												style="margin: 3px;">Buscar</span>
 										</div>
 									</td>
-									<td>Filtra uma busca referente aos campos preenchidos</td>
+									<td>Filtra registros de acordo com os campos preenchidos
+										nos campos de filtros</td>
 								</tr>
 								<tr>
 									<td scope="row">
-										<div class="btn btn-danger btn-sm">
-											<span class="fa fa-fw fa-trash-o"></span> <span
-												style="margin: 3px;">Limpar</span>
+										<div class="btn btn-success">
+											<span class="fa fa-plus mx-1" aria-hidden="true"></span> <span
+												style="margin: 3px;">Novo cadastro</span>
 										</div>
 									</td>
-									<td>Limpa os campos</td>
+									<td>Direciona para o formulário de cadastro de doações</td>
 								</tr>
 								<tr>
 									<td scope="row">
-										<div class="btn btn-primary btn-sm">
+										<div class="btn btn-primary">
+											<span class="pi pi-pencil"></span>
+										</div>
+									</td>
+									<td>Direciona para o formulário de cadastro de doações com
+										as informações do registro selecionado</td>
+								</tr>
+
+								<tr>
+									<td scope="row">
+										<div class="btn btn-danger">
+											<span class="pi pi-times-circle"></span>
+										</div>
+									</td>
+									<td>Remove uma doação, só funcionará caso a doação não tem
+										associações com linhas orçamentárias ou com projetos</td>
+								</tr>
+
+								<tr>
+									<td scope="row"><p:graphicImage styleClass="img-fluid"
+											name="image/tutorials/ordering_donation.png" /></td>
+									<td>Ordena a lista de doações, é possível ordenar por data início, data final e valor. A ordem pode ser crescente ou decrescente de acordo com a seta na coluna</td>
+								</tr>
+								
+								<tr>
+									<td scope="row"><p:graphicImage styleClass="img-fluid"
+											name="image/tutorials/paginator_donation.png" /></td>
+									<td>Paginação da tabel para passar para próximas páginas de registros</td>
+								</tr>
+
+								<tr>
+									<td scope="row">
+										<div class="btn btn-primary">
 											<span class="fa fa-fw fa-question"></span> <span>Ajuda</span>
 										</div>
 									</td>
 									<td>Tutorial para ajudar a entender página</td>
 								</tr>
-								<tr>
-									<td scope="row">
-										<div class="btn btn-primary btn-sm">
-											<span class="fa fa-angle-down"></span> <span class="mx-2">Ações</span>
-										</div>
-									</td>
-									<td>Mais opções para os itens</td>
-								</tr>
+
+
 							</tbody>
 						</table>
 					</div>

@@ -5,62 +5,61 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:jsf="http://xmlns.jcp.org/jsf">
-	
-	
+
+
 	<h:form id="id-help">
 
 		<p:panel id="main-panel-help" styleClass="main_panel_help">
 			<p:carousel numVisible="1" effect="easeInStrong"
 				headerText="Tutorial" styleClass="carousel_help" responsive="true">
-				<p:tab>
 
+				<p:tab>
 					<p:graphicImage styleClass="img-fluid"
-						name="image/tutorials/projeto_2.png" />
+						name="image/tutorials/tabs_donation.png" />
 
 
 					<div class="table-responsive py-2">
 						<table class="table table-bordered">
 							<thead class="thead-light">
 								<tr>
-									<th scope="col">Campos</th>
-									<th scope="col">Funcionalidade</th>
+									<th scope="col">Tab</th>
+									<th scope="col">Descrição</th>
 								</tr>
 							</thead>
 							<tbody>
+
 								<tr>
-									<td scope="row"><b>Lançamento</b></td>
-									<td>Código gerado pelo sistema de sua SP após a finalizar
-										a criação de uma nova SP.</td>
+									<td scope="row"><p:graphicImage styleClass="img-fluid"
+											name="image/tutorials/info_gerais_donation.png" /></td>
+									<td>Registra dados sobre as principais informações de
+										identificação de uma doação, como número do contrato,
+										parceiro, período de vigência. A cor dourada significa que é a
+										tab selecionada.<br /> <strong>IMPORTANTE:</strong> para
+										novos cadastro somente essa tab irá aparecer, as demais só
+										apareceram após o registro das informações gerais.
+									</td>
 								</tr>
+
 								<tr>
-									<td scope="row"><b>Nº Documento Fiscal</b></td>
-									<td>Responsável da SP</td>
+									<td scope="row"><p:graphicImage styleClass="img-fluid"
+											name="image/tutorials/permission_donation.png" /></td>
+									<td>Registra dados a respeito de processos que serão
+										permitidos para a doação e linha orçamentária. <br /> <strong>IMPORTANTE:</strong>
+										Só será vizualizada após o preenchimento e salvamento das
+										informações gerais
+									</td>
 								</tr>
+
 								<tr>
-									<td scope="row"><b>Pagamento início</b></td>
-									<td>Data de início da SP</td>
+									<td scope="row"><p:graphicImage styleClass="img-fluid"
+											name="image/tutorials/budget_donation.png" /></td>
+									<td>Registra dados a respeito do planejamento da doação,
+										divisão de orçamento por linha orçamentária e gestão. <br />
+										<strong>IMPORTANTE:</strong> Só será vizualizada após o
+										preenchimento e salvamento das informações gerais
+									</td>
 								</tr>
-								<tr>
-									<td scope="row"><b>Pagamento fim</b></td>
-									<td>Data final da SP</td>
-								</tr>
-								<tr>
-									<td scope="row"><b>Pagador</b></td>
-									<td>Informada de onde sairá o recurso para a SP</td>
-								</tr>
-								<tr>
-									<td scope="row"><b>Fornecedor</b></td>
-									<td>Local destinado da SP</td>
-								</tr>
-								<tr>
-									<td scope="row"><b>Projeto</b></td>
-									<td>Quem prestou o serviço ou forneceu o material para a
-										demanda</td>
-								</tr>
-								<tr>
-									<td scope="row"><b>Status</b></td>
-									<td>Situação do lançamento (Provisionado ou Efetivado)</td>
-								</tr>
+
 							</tbody>
 						</table>
 					</div>
@@ -68,56 +67,266 @@
 				</p:tab>
 				<p:tab>
 					<p:graphicImage styleClass="img-fluid"
-						name="image/tutorials/projeto.png" />
-
+						name="image/tutorials/fields_general_donation.png" />
 
 					<div class="table-responsive py-2">
 						<table class="table table-bordered">
 							<thead class="thead-light">
 								<tr>
-									<th scope="col">Botões</th>
+									<th scope="col">Campo</th>
 									<th scope="col">Descrição</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td scope="row">
-										<div class="btn btn-primary btn-sm">
-											<span class="fa fa-fw fa-search"></span> <span
-												style="margin: 3px;">Buscar</span>
-										</div>
+									<td scope="row"><b>Fonte</b></td>
+									<td>Quem fez a doação (Bradesco, Samsung ou qualquer outro
+										que esteja na lista). É um campo de autocompletar, ao digitar
+										aparecerá uma lista para que seja selecionado um parceiro <br />
+										<strong>OBS:</strong> É um campo de autocompletar e é
+										necessário selecionar na lista suspensa que aparecerá de
+										acordo com o que foi digitado no campo
 									</td>
-									<td>Filtra uma busca referente aos campos preenchidos</td>
+								</tr>
+
+								<tr>
+									<td scope="row"><b>Título/Identificação</b></td>
+									<td>Uma descrição simples que identifique essa doação</td>
 								</tr>
 								<tr>
-									<td scope="row">
-										<div class="btn btn-danger btn-sm">
-											<span class="fa fa-fw fa-trash-o"></span> <span
-												style="margin: 3px;">Limpar</span>
-										</div>
+									<td scope="row"><b>Contrato</b></td>
+									<td>Número do documento jurídico firmado entre a
+										instituição (FAS) e nossos parceiros (Fontes)</td>
+								</tr>
+
+								<tr>
+									<td scope="row"><b>Conta Bancária</b></td>
+									<td>Número da conta bancária (FAS) em que deve ser usada
+										na doação, tanto para receber os valores acordados em contrato
+										quanto para desembolso/investimentos do projeto</td>
+								</tr>
+
+								<tr>
+									<td scope="row"><b>Tipo de controle</b></td>
+									<td>Determina como o sistema vai bloquear o saldo e não
+										deixar que seja gasto acima do valor disponível. <br /> <strong>Orçamento:</strong>
+										Aponta que o sistema vai bloquear levando em consideração o
+										campo 'Valor orçado' do orçamento. <br /> <strong>Caixa:</strong>
+										Aponta que o sistema vai bloquear levando em consideração o
+										valor que já foi depositado na conta informada no campo
+										'conta', ou seja, valor em caixa.
 									</td>
-									<td>Limpa os campos</td>
+								</tr>
+
+								<tr>
+									<td scope="row"><b>Tipo de doação</b></td>
+									<td>Informa se a doação é vinculada a linhas orçamentárias
+										ou desvinculada. <br /> <strong>Vinculada:</strong> É
+										obrigatório a divisão por linha orçamentária. <br /> <strong>Desvinculada:</strong>
+										Não há necessidade de divisão por linha orçamentária deixando
+										a critério do gestor definir como irá gastar na definição dos
+										projetos
+									</td>
+								</tr>
+
+								<tr>
+									<td scope="row"><b>Data inicial</b></td>
+									<td>Determina quando começa o período de vigência de uma
+										doação</td>
 								</tr>
 								<tr>
-									<td scope="row">
-										<div class="btn btn-primary btn-sm">
-											<span class="fa fa-fw fa-question"></span> <span>Ajuda</span>
-										</div>
-									</td>
-									<td>Tutorial para ajudar a entender página</td>
+									<td scope="row"><b>Data final</b></td>
+									<td>Determina quando termina o período de vigência de uma
+										doação</td>
 								</tr>
 								<tr>
-									<td scope="row">
-										<div class="btn btn-primary btn-sm">
-											<span class="fa fa-angle-down"></span> <span class="mx-2">Ações</span>
-										</div>
+									<td scope="row"><b>Responsável técnico</b></td>
+									<td>Colaborador responsável por gerenciar e executar e
+										acomapanhar os orçamentos no setor tecnico de projetos <br />
+										<strong>OBS:</strong> É um campo de autocompletar e é
+										necessário selecionar na lista suspensa que aparecerá de
+										acordo com o que foi digitado no campo
+
 									</td>
-									<td>Mais opções para os itens</td>
 								</tr>
+								<tr>
+									<td scope="row"><b>Analista financeiro</b></td>
+									<td>Colaborador responsável pela análise financeira e
+										controladoria dos recursos da doação <br /> <strong>OBS:</strong>
+										É um campo de autocompletar e é necessário selecionar na lista
+										suspensa que aparecerá de acordo com o que foi digitado no
+										campo
+									</td>
+								</tr>
+
+								<tr>
+									<td scope="row"><b>Valor orçado</b></td>
+									<td>Valor orçando e contratado entre a instituição (FAS) e
+										nosso parceiro (Fonte).</td>
+								</tr>
+
 							</tbody>
 						</table>
 					</div>
 				</p:tab>
+
+				<p:tab>
+					<p:graphicImage styleClass="img-fluid"
+						name="image/tutorials/fields_permission_donation.png" />
+
+					<div class="table-responsive py-2">
+						<table class="table table-bordered">
+							<thead class="thead-light">
+								<tr>
+									<th scope="col">Campo</th>
+									<th scope="col">Descrição</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td scope="row"><b>Permite empréstimo?</b></td>
+									<td>Determina se uma doação pode emprestar valores de
+										doação para outros projetos.</td>
+								</tr>
+
+								<tr>
+									<td scope="row"><b>Permite remanejamento entre
+											categorias?</b></td>
+									<td>Determina se uma doação pode remanejar valores entre
+										categorias da mesma doação</td>
+								</tr>
+								
+								<tr>
+									<td scope="row"><b>Permite remanejamento entre linhas orçamentárias?</b>
+									</td>
+									<td>Determina se uma doação pode remanejar valores entre
+										Linhas orçamentárias</td>
+								</tr>
+								
+								<tr>
+									<td scope="row"><b>Paga tarifa bancária?</b>
+									</td>
+									<td>Determina se uma doação deve ou não pagar tarifa.
+									 <br/>
+									 <strong>OBS:</strong> Se for marcado será necessário também informar o tipo de controle do pagamento de tarifa
+									</td>
+								</tr>
+								
+								<tr>
+									<td scope="row"><b>Tipo de controle?</b>
+									</td>
+									<td>Determina, em relação a projeto, quem paga a tarifa bancária (Quando necessário pagar).
+									 <br/>
+									 <strong>Mesmo projeto:</strong> Determina que o projeto selecionado na solicitação (SC,SP,SA,SD).
+									 <br/>
+									 <strong>Outro projeto:</strong> Determina que outro projeto deverá pagar a tarifa, caso seja outro é necessário escolher o projeto e a linha orçamentária (SC,SP,SA,SD).
+									</td>
+								</tr>
+								
+								<tr>
+									<td scope="row"><b>Projeto</b>
+									</td>
+									<td>Determina qual projeto (outro projeto que não seja da doação) pagará a tarifa bancária.
+									<br/>
+									<strong>OBS:</strong> Só é ativado caso seja escolhido a opção 'Outro projeto' no campo 'Tipo de controle'.
+									<br/>
+									<strong>OBS:</strong> É um campo de autocompletar, deve ser escolhido um projeto na lista suspensa de acordo com o que foi digitado no campo
+									</td>
+								</tr>
+								
+								<tr>
+									<td scope="row"><b>Linha orçamentária</b>
+									</td>
+									<td>Determina qual linha orçamentária  pagará a tarifa bancária.
+									</td>
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+				</p:tab>
+				
+				<p:tab>
+					<p:graphicImage styleClass="img-fluid"
+						name="image/tutorials/fields_budget_donation.png" />
+
+					<div class="table-responsive py-2">
+						<table class="table table-bordered">
+							<thead class="thead-light">
+								<tr>
+									<th scope="col">Campo</th>
+									<th scope="col">Descrição</th>
+								</tr>
+							</thead>
+							<tbody>
+								
+								<tr>
+									<td scope="row">
+										<div class="btn btn-success">
+											<span class="pi pi-plus"></span> <span
+												style="margin: 3px;">Incluir nova linha</span>
+										</div>
+									</td>
+									<td>Direciona para um formulário onde permite cadastrar novas linhas orçamentárias</td>
+								</tr>
+								<tr>
+									<td scope="row">
+										<div class="btn btn-primary">
+											<span class="pi pi-th-large"></span> <span
+												style="margin: 3px;">Divisão de orçamento</span>
+										</div>
+									</td>
+									<td>Direciona para um formulário onde permite cadastrar valores por gestão, dividindo o valor por setor da instituição e atribuindo um gestor responsável</td>
+								</tr>
+								
+								<tr>
+									<td scope="row"><b>Componente</b>
+									</td>
+									<td>Parte de uma doação que determina um echo de atuação.
+									</td>
+								</tr>
+								
+								<tr>
+									<td scope="row"><b>Subcomponente</b>
+									</td>
+									<td>Parte de uma componente que determina uma atividade do componente.
+									</td>
+								</tr>
+								
+								<tr>
+									<td scope="row"><b>Categoria</b>
+									</td>
+									<td>Dotação orçamentária ou rubrica de gastos de uma doação. 
+									</td>
+								</tr>
+								
+								<tr>
+									<td scope="row"><b>Valor disponível</b>
+									</td>
+									<td>Valor disponível na linha orçamentária para liberar em projetos. 
+									</td>
+								</tr>
+								
+								<tr>
+									<td scope="row"><b>Valor empenhado</b>
+									</td>
+									<td>Valor projetizado ou distribuído para projetos referente linha orçamentária. 
+									</td>
+								</tr>
+								
+								<tr>
+									<td scope="row"><b>Valor</b>
+									</td>
+									<td>Valor orçado para linha orçamentária (componente, subcomponente e categoria). 
+									</td>
+								</tr>
+								
+
+							</tbody>
+						</table>
+					</div>
+				</p:tab>
+
 			</p:carousel>
 
 		</p:panel>

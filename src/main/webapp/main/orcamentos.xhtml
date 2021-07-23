@@ -32,7 +32,7 @@
 					style="margin-top: 8px">
 
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-						<p:outputLabel for="filter-fonte" value="Parceiro:"
+						<p:outputLabel for="filter-fonte" value="Fonte"
 							styleClass="form-label" />
 						<p:autoComplete id="filter-fonte" styleClass="font12-vi"
 							value="#{orcamento_controller.filtro.fontePagadora}" var="fonte"
@@ -42,7 +42,7 @@
 					</div>
 
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-						<p:outputLabel for="filter-title" value="Título:"
+						<p:outputLabel for="filter-title" value="Título"
 							styleClass="form-label" />
 
 						<p:autoComplete id="filter-title" styleClass="font12-vi"
@@ -54,7 +54,7 @@
 
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
 
-						<p:outputLabel for="filter-dt-inicio" value="Data incial:"
+						<p:outputLabel for="filter-dt-inicio" value="Data incial"
 							styleClass="form-label" />
 						<p:calendar id="filter-dt-inicio"
 							value="#{orcamento_controller.filtro.dataInicio}"
@@ -64,7 +64,7 @@
 
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
 
-						<p:outputLabel for="filter-dt-final" value="Data final:"
+						<p:outputLabel for="filter-dt-final" value="Data final"
 							styleClass="form-label" />
 						<p:calendar id="filter-dt-final"
 							value="#{orcamento_controller.filtro.dataFinal}" navigator="true"
@@ -73,7 +73,7 @@
 					</div>
 
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-						<p:outputLabel for="filter-tecnic" value="Responsável técnico:"
+						<p:outputLabel for="filter-tecnic" value="Responsável técnico"
 							styleClass="form-label" />
 						<p:autoComplete id="filter-tecnic" styleClass="font12-vi"
 							value="#{orcamento_controller.filtro.responsavelTecnico}"
@@ -94,18 +94,22 @@
 							completeMethod="#{orcamento_controller.completeColaborador}" />
 					</div>
 
-					<div>
-						<p:commandButton styleClass="btn btn-primary btn-sm"
-							action="#{orcamento_controller.filtroOrcamento()}"
-							onclick="start()" update="table_doacao" onsuccess="stop()"
-							onerror="stop()" oncomplete="stop();"
-							style="color:#fff; margin: 8px 2px;" value="Buscar" />
-
-					</div>
+					<div></div>
 
 				</div>
-				
+
 				<div class="d-flex justify-content-end">
+
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						action="#{orcamento_controller.filtroOrcamento()}"
+						onclick="start()" update="table_doacao" onsuccess="stop()"
+						onerror="stop()" oncomplete="stop();"
+						style="color:#fff; margin: 8px 2px;">
+						<span class="fa fa-fw fa-search"></span>
+						<span>Buscar</span>
+						
+				   </p:commandLink>
+
 					<p:link styleClass="btn btn-success btn-sm" id="table-doacao"
 						style="margin: 8px 2px;" outcome="/main/orcamento_cadastro"
 						title="Adicionar orçamento">
@@ -200,7 +204,7 @@
 
 	<ui:define name="adicionais">
 
-		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help"
+		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help" closable="true" closeOnEscape="true" 
 			header="Ajuda" showEffect="clip" hideEffect="drop" draggable="false"
 			maximizable="true" minimizable="true" resizable="true"
 			blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()">

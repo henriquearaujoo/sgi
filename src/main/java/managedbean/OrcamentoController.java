@@ -151,7 +151,7 @@ public class OrcamentoController implements Serializable {
 	@Inject
 	private TransferenciaOverHead overhead;
 
-	private Boolean preCadastro;
+	private Boolean preCadastro = false;
 
 	private Boolean continueCadastro = false;
 
@@ -188,11 +188,12 @@ public class OrcamentoController implements Serializable {
 		if (orcamento != null && orcamento.getDataFinal() != null)
 			dataFinalOrcamento = orcamento.getDataFinal();
 
-		if (usuarioSessao.getUsuario().getPerfil().getDescricao().equals("administracao")
-				|| usuarioSessao.getUsuario().getPerfil().getDescricao().equals("admin"))
-			preCadastro = false;
-		else
-			preCadastro = true;
+		/*
+		 * if (usuarioSessao.getUsuario().getPerfil().getDescricao().equals(
+		 * "administracao") ||
+		 * usuarioSessao.getUsuario().getPerfil().getDescricao().equals("admin"))
+		 * preCadastro = false; else preCadastro = true;
+		 */
 
 		PrimeFaces.current().executeScript("setarFocused('info-geral')");
 		

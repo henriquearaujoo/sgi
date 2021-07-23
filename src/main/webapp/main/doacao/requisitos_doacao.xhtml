@@ -11,13 +11,13 @@
 		<div id="info-requisitos" class="ui-g ui-fluid">
 
 			<div class="ui-g-12">
-				<p:commandLink styleClass="btn btn-primary btn-sm"
+				<p:commandLink styleClass="btn btn-success btn-sm"
 					onclick="setarWidthHeight('form-nova-linha');start()"
 					onerror="stop()" style="margin-left:5px" title="Incluir nova linha"
 					update="panel-form-nova-linha" process="@this"
 					action="#{orcamento_controller.limparVar()}"
 					oncomplete="PF('dlg-nova-linha').show();stop()">
-					<i class="pi pi-check"></i>
+					<i class="pi pi-plus"></i>
 					<span style="margin: 3px;">Incluir nova linha</span>
 				</p:commandLink>
 				
@@ -27,7 +27,7 @@
 					update="panel-donation-management" process="@this"
 					action="#{orcamento_controller.clearDonationManagement()}"
 					oncomplete="PF('dlg-donation-management').show();stop()">
-					<i class="pi pi-check"></i>
+					<i class="pi pi-th-large"></i>
 					<span style="margin: 3px;">Divisão de orçamento</span>
 				</p:commandLink>
 
@@ -42,20 +42,21 @@
 
 			</div>
 
+
 			<div class="ui-g-12">
-				<p:dataTable id="table_rubrica" rowIndexVar="index"
+				<p:dataTable id="table_rubrica" rowIndexVar="index" scrollable="true" scrollHeight="450"
 					styleClass="ui-fluid" value="#{orcamento_controller.rubricas}"
 					var="rubrica">
 
-					<p:column headerText="Componente" style="width:120px">
+					<p:column headerText="Componente" style="width:320px" filterBy="#{rubrica.nomeComponente}" filterMatchMode="contains">
 						<h:outputText value="#{rubrica.nomeComponente}" />
 					</p:column>
 
-					<p:column headerText="SubComponente">
+					<p:column headerText="Subcomponente" filterBy="#{rubrica.nomeSubComponente}" filterMatchMode="contains">
 						<h:outputText value="#{rubrica.nomeSubComponente}" />
 					</p:column>
 
-					<p:column headerText="Categoria">
+					<p:column headerText="Categoria" filterBy="#{rubrica.rubrica.nome}" filterMatchMode="contains">
 						<h:outputText value="#{rubrica.rubrica.nome}" />
 					</p:column>
 
@@ -125,11 +126,9 @@
 
 					<p:columnGroup type="footer">
 						<p:row>
-							<p:column colspan="5" footerText="Total: "
-								style="text-align:right" />
 							<p:column style="text-align:right"
 								footerText="#{orcamento_controller.buscarValorTotal()}" />
-							<p:column></p:column>
+				
 						</p:row>
 
 					</p:columnGroup>
