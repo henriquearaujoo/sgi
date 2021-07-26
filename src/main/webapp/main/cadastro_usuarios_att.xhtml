@@ -107,6 +107,13 @@
 							<i class="fa fas fa-plus"></i>
 							<span>Novo Colaborador</span>
 						</p:link>
+						<p:commandLink styleClass="btn btn-primary btn-sm" update="dialog_help"
+								oncomplete="PF('dialog_help').show();" onerror="stop();" onsuccess="stop();"
+								onclick="start();"
+								style="color:#fff; margin: 8px 2px;">
+								<span class="fa fa-fw fa-question"></span>
+								<span>Ajuda</span>
+							</p:commandLink>
 						
 
 					</div>
@@ -170,6 +177,12 @@
 		</div>
 	</ui:define>
 	<ui:define name="adicionais">
+		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help" header="Ajuda"
+			showEffect="clip" hideEffect="drop" draggable="false" maximizable="true" minimizable="true" 
+			resizable="true" blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()" >
+				<ui:include src="dialog/help/help_usuarios.xhtml" />
+		</p:dialog>
+	
 		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
 			showHeader="false" draggable="false" closable="false"
 			resizable="false">
