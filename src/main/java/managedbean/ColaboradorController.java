@@ -71,7 +71,8 @@ public class ColaboradorController implements Serializable {
 	
 	public void filtrar() {
 		listaColaborador = new ArrayList<Colaborador>();
-		listaColaborador = colaboradorService.findByFiltro(filtro);
+		listaColaborador = cripto.colaboradorDecrypt(colaboradorService.findByFiltro(filtro));
+		encryptedData();
 	}
 	
 	public void initListagem() {

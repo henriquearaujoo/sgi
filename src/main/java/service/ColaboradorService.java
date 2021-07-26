@@ -44,7 +44,15 @@ public class ColaboradorService implements Serializable{
 		colaboradorRepositorio.salvarColaboradores(cripto.colaboradorEncrypt(colaboradores));
 	}
 	
+	@Transactional
+	public void decryptedData() {
+		List<Colaborador> colaboradores = colaboradorRepositorio.findAll();
+		colaboradorRepositorio.salvarColaboradores(cripto.colaboradorDecrypt(colaboradores));
+	}
+	
+	@Transactional
 	public List<Colaborador> findByFiltro(Filtro filtro){
+		decryptedData();
 		return colaboradorRepositorio.findByFiltro(filtro);
 	}
 

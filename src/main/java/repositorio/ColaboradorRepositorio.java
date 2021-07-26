@@ -2,6 +2,7 @@ package repositorio;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,11 +17,14 @@ import model.Gestao;
 import model.Localidade;
 import model.StatusConta;
 import util.Arquivo;
+import util.Criptografia;
 import util.Filtro;
 
 public class ColaboradorRepositorio {
 	@Inject	
 	private EntityManager manager;
+	
+	private Criptografia cripto = new Criptografia();
 	
 	public ColaboradorRepositorio() {
 	}
@@ -60,7 +64,7 @@ public class ColaboradorRepositorio {
 		return query.getResultList();
 	}
 	
-	public List<Colaborador>findByFiltro(Filtro filtro){
+	public List<Colaborador>findByFiltro(Filtro filtro){ 
 		StringBuilder jpql = new StringBuilder("SELECT NEW Colaborador(c.id,c.nome,c.rg,c.pis,c.email,c.cpf) from Colaborador c where 1 = 1");
 		if(filtro.getNomeColaborador() != null && filtro.getNomeColaborador() !=  "") {
 			jpql.append(" and lower(c.nome) like lower(:pNome)");
@@ -82,7 +86,7 @@ public class ColaboradorRepositorio {
 			query.setParameter("pNome", "%"+filtro.getNomeColaborador()+"%");
 		}
 		if(filtro.getCPF() != null && filtro.getCPF() !=  "") {
-			query.setParameter("pCpf", "%"+filtro.getCPF()+"%");
+			query.setParameter("pCpf", "%"+filtro.getCPF()+"%");	
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		if(filtro.getDataNascimento()  != null) {
