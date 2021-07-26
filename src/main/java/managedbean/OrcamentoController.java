@@ -878,6 +878,14 @@ public class OrcamentoController implements Serializable {
 		lancamentos = orcService.getExtratoCtrlDoacao(filtro);
 		// service.getPagamentosPE(filtro);
 	}
+	
+	
+	public void loadDisbursementInProject() {
+		lancamentos = new ArrayList<>();
+		filtro.setIdDoacao(orcamento.getId());
+		lancamentos = orcService.loadDisbursementInProject(filtro);
+		// service.getPagamentosPE(filtro);
+	}
 
 	private List<LancamentoAuxiliar> lancs = new ArrayList<>();
 
@@ -1194,7 +1202,8 @@ public class OrcamentoController implements Serializable {
 			carregarPainelOrcamentoRequisito();
 			createStackedGroupBarModel();
 		} else if (index == 3) {
-			carregarExtatoDoacao();
+			//carregarExtatoDoacao();
+			loadDisbursementInProject();
 		} else if (index == 4) {
 			carregarDoacoesEfetivadas();
 		} else if (index == 5) {
@@ -1211,6 +1220,11 @@ public class OrcamentoController implements Serializable {
 			// createPieModel();
 			// createHorizontalBarModel();
 		}
+	}
+	
+	
+	public void visualizarLancamento(LancamentoAuxiliar lancamento) {
+		orcService.visualizarLancamento(lancamento);
 	}
 
 	public void carregarInformacoesOverhead() {

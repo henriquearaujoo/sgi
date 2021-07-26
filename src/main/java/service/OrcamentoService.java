@@ -14,12 +14,13 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import model.*;
-
+import operator.LancamentoIterface;
 import anotacoes.Transactional;
 import repositorio.ColaboradorRepositorio;
 import repositorio.ComposicaoOrcamentoRepositorio;
 import repositorio.ContaRepository;
 import repositorio.DonationManagementRepositorio;
+import repositorio.DonationRepo;
 import repositorio.FontePagadoraRepositorio;
 import repositorio.LogRepositorio;
 import repositorio.OrcamentoRepositorio;
@@ -358,9 +359,10 @@ public class OrcamentoService implements Serializable {
 		return pagRepositorio.getExtratoCtrlDoacao(filtro);
 	}
 	
+	private @Inject DonationRepo donationRepo; 
 	
-	public List<LancamentoAuxiliar> carregarExtratoDeProjetosDeDoacao(Filtro filtro) {
-		return pagRepositorio.getExtratoCtrlDoacao(filtro);
+	public List<LancamentoAuxiliar> loadDisbursementInProject(Filtro filtro) {
+		return donationRepo.loadDisbursementInProject(filtro);
 	}
 
 	public List<LancamentoAuxiliar> getExtratoCtrlDoacaoParaConferencia(Filtro filtro) {
@@ -371,6 +373,21 @@ public class OrcamentoService implements Serializable {
 			}
 
 		return pagRepositorio.getExtratoCtrlDoacaoParaConferencia(filtro);
+	}
+	
+	
+	public void visualizarLancamento(LancamentoAuxiliar lancamento) {
+	
+		if (lancamento.getTipov4().equals("PCA")) {
+			LancamentoIterface lancamentoInterface = TipoLancamentoV4.valueOf("SA").obterInstancia();
+			lancamentoInterface.imprimir(lancamento);
+
+		} else {
+			LancamentoIterface lancamentoInterface = TipoLancamentoV4.valueOf(lancamento.getTipov4()).obterInstancia();
+			lancamentoInterface.imprimir(lancamento);
+
+		}
+
 	}
 
 	public List<LancamentoAuxiliar> getDoacoesEfetivadas(Filtro filtro) {
