@@ -132,6 +132,14 @@ public class UsuarioControllerAtt implements Serializable {
 	public void filtrar() {
 		usuarios = usuarioService.filtrarUsuario(filtro);
 	}
+	
+	public boolean perfil() {
+		if(usuarioSessao.getUsuario().getPerfil().getId() == 1 || 
+				usuarioSessao.getUsuario().getPerfil().getId() == 5) {
+			return true;
+		}
+		return false;
+	}
 
 	public void carregarUsuarios() {
 		if (usuarioSessao.getUsuario().getNomeUsuario().equals("admin")) {
