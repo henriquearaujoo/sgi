@@ -37,6 +37,10 @@ public class ConfiguracaoRepositorio {
 	public void update(Configuracao configuracao) {
 		manager.merge(configuracao);		
 	}
+	
+	public void salvar(Configuracao config) {
+		manager.merge(config);
+	}
 
 	
 	public  List<String> getToEmail(Lancamento lancamento) {

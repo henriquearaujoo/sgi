@@ -15,6 +15,7 @@ import org.primefaces.event.RowEditEvent;
 import model.Configuracao;
 import model.MenuLateral;
 import service.ConfiguracaoService;
+import util.Filtro;
 import util.MakeMenu;
 import util.UsuarioSessao;
 
@@ -31,7 +32,7 @@ public class ConfiguracaoController implements Serializable{
 	
 	private MenuLateral menu = new MenuLateral();
 	
-	
+	private Filtro filtro = new Filtro();
 
 	@Inject
 	private ConfiguracaoService configuracaoService;
@@ -60,7 +61,7 @@ public class ConfiguracaoController implements Serializable{
 	}
 	
 	public void salvar(RowEditEvent event) {
-		Configuracao configuracao = (Configuracao) event.getObject(); 
+		Configuracao configuracao = (Configuracao) event.getObject();
 		configuracaoService.salvar(configuracao);
     }
      
@@ -68,6 +69,10 @@ public class ConfiguracaoController implements Serializable{
         FacesMessage msg = new FacesMessage("Edit Cancelled");
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
+    
+	public void salvarV2(Filtro filtro) {
+		configuracaoService.salvarV2(filtro.getConfig());
+    }    
 	
 	
 	public String redirecionar() {
@@ -93,6 +98,17 @@ public class ConfiguracaoController implements Serializable{
 	public void setMenu(MenuLateral menu) {
 		this.menu = menu;
 	}
+
+
+	public Filtro getFiltro() {
+		return filtro;
+	}
+
+
+	public void setFiltro(Filtro filtro) {
+		this.filtro = filtro;
+	}
+
 	
 	
 

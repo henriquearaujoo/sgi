@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import anotacoes.Transactional;
 import model.Configuracao;
 import repositorio.ConfiguracaoRepositorio;
 //Autor = Rafael, data 26/06/2019
@@ -26,10 +27,14 @@ public class ConfiguracaoService implements Serializable {
 		return configuracaoRepositorio.carregaConfiguracao();
 	}
 
-
 	public void salvar(Configuracao configuracao) {
 		configuracaoRepositorio.update(configuracao);
 		
+	}
+	
+	@Transactional
+	public void salvarV2(Configuracao config) {
+		configuracaoRepositorio.salvar(config);
 	}
 	
 	
