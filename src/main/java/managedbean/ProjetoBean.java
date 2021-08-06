@@ -1838,6 +1838,13 @@ public class ProjetoBean implements Serializable {
 		}
 
 	}
+	
+	public void loadDisbursementInProject() {
+		lancamentos = new ArrayList<>();
+		filtro.setProjetoId(projeto.getId());
+		lancamentos = orcService.loadDisbursementInProject(filtro);
+//		 service.getPagamentosPE(filtro);
+	}
 
 	public void definirTabProjeto() {
 		int index = 0;
@@ -1866,6 +1873,10 @@ public class ProjetoBean implements Serializable {
 		} else if (index == 5) {
 			carregarAtividades();
 			createChartExecucao();
+		} else if (index == 6) {
+			
+		} else if (index == 7) {
+			loadDisbursementInProject();
 		}
 	}
 

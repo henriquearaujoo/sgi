@@ -40,6 +40,7 @@
 
 			<f:metadata>
 				<o:viewParam name="project" value="#{projetoBean.projeto}" />
+				<o:viewParam name="type" value="#{projetoBean.filtro.tipo}" />
 				<f:viewAction action="#{projetoBean.initCadastro()}" />
 			</f:metadata>
 
@@ -97,6 +98,12 @@
 					<p:tab id="planejamento_projeto" title="Cronograma"
 						rendered="#{projetoBean.projeto.id != null}">
 						<ui:include src="/main/projeto_tab08.xhtml" />
+					</p:tab>
+					
+					<p:tab id="exec-proj"
+						rendered="true"
+						title="Execução de projetos">
+						<ui:include src="/main/project/execucao_projetos.xhtml" />
 					</p:tab>
 
 					<p:tab id="graf_projeto" title="Gráficos" rendered="false">

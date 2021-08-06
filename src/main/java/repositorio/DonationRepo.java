@@ -65,7 +65,11 @@ public class DonationRepo implements Serializable {
 		hql.append("join lancamento l on l.id = la.lancamento_id ");
 		hql.append("join conta_bancaria conta_pagador on conta_pagador.id = pl.conta_id ");
 		hql.append("join conta_bancaria conta_recebedor on conta_recebedor.id = pl.contarecebedor_id ");
-		hql.append("where o.id = :id_donation ");
+		if (filtro.getTipo().equals("donation")) {
+			hql.append("where o.id = :id_donation ");			
+		} else if (filtro.getTipo().equals("project")) {
+			hql.append("where p.id = :id_project ");			
+		}
 		hql.append("and l.tipo != 'compra' ");
 		hql.append("and (l.versionlancamento = 'MODE01' or pl.reclassificado is true) ");
 		hql.append("and conta_pagador.tipo = 'CB' ");
@@ -73,7 +77,11 @@ public class DonationRepo implements Serializable {
 		hql.append("order by pl.datapagamento desc");
 
 		Query query = manager.createNativeQuery(hql.toString());
-		query.setParameter("id_donation", filtro.getIdDoacao());
+		if (filtro.getTipo().equals("donation")) {
+			query.setParameter("id_donation", filtro.getIdDoacao());			
+		} else if (filtro.getTipo().equals("project")) {
+			query.setParameter("id_project", filtro.getProjetoId());
+		}
 		
 		List<LancamentoAuxiliar> retorno = new ArrayList<LancamentoAuxiliar>();
 		List<Object[]> result = query.getResultList();
