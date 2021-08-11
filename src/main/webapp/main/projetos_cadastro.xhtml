@@ -93,8 +93,6 @@
 						<ui:include src="/main/project/projeto_tab07.xhtml" />
 					</p:tab>
 
-
-
 					<p:tab id="planejamento_projeto" title="Cronograma"
 						rendered="#{projetoBean.projeto.id != null}">
 						<ui:include src="/main/projeto_tab08.xhtml" />
@@ -104,6 +102,14 @@
 						rendered="true"
 						title="Execução">
 						<ui:include src="/main/project/execucao_projetos.xhtml" />
+						<f:attribute name="tab" value="execution" />
+					</p:tab>
+					
+					<p:tab id="devolucao"
+						rendered="true"
+						title="Devoluções">
+						<ui:include src="/main/project/devolucao.xhtml" />
+						<f:attribute name="tab" value="devolution" />
 					</p:tab>
 
 					<p:tab id="graf_projeto" title="Gráficos" rendered="false">

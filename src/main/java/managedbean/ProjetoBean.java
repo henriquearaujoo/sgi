@@ -27,6 +27,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import org.primefaces.PrimeFaces;
+import org.primefaces.component.tabview.Tab;
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.NodeExpandEvent;
@@ -1846,11 +1847,16 @@ public class ProjetoBean implements Serializable {
 //		 service.getPagamentosPE(filtro);
 	}
 
+	private Tab tab = null;
+	
 	public void definirTabProjeto() {
 		int index = 0;
 		if (tabviewProjeto != null)
 			index = tabviewProjeto.getActiveIndex();
 
+		tab = (Tab) tabviewProjeto.getChildren().get(index);
+		filtro.setAttribute(tab.getAttributes().get("tab").toString());
+		
 		if (index == 0) {
 
 		} else if (index == 1) {
@@ -1876,6 +1882,8 @@ public class ProjetoBean implements Serializable {
 		} else if (index == 6) {
 			
 		} else if (index == 7) {
+			loadDisbursementInProject();
+		} else if (index == 8) {
 			loadDisbursementInProject();
 		}
 	}
@@ -3326,6 +3334,14 @@ public class ProjetoBean implements Serializable {
 
 	public void setDonation(Orcamento donation) {
 		this.donation = donation;
+	}
+
+	public Tab getTab() {
+		return tab;
+	}
+
+	public void setTab(Tab tab) {
+		this.tab = tab;
 	}
 
 	/*

@@ -72,8 +72,13 @@ public class DonationRepo implements Serializable {
 		}
 		hql.append("and l.tipo != 'compra' ");
 		hql.append("and (l.versionlancamento = 'MODE01' or pl.reclassificado is true) ");
-		hql.append("and conta_pagador.tipo = 'CB' ");
-		hql.append("and conta_recebedor.tipo = 'CF' ");
+		if (filtro.getAttribute().equals("execution")) {
+			hql.append("and conta_pagador.tipo = 'CB' ");
+			hql.append("and conta_recebedor.tipo = 'CF' ");			
+		} else if (filtro.getAttribute().equals("devolution")){
+			hql.append("and conta_pagador.tipo = 'CF' ");
+			hql.append("and conta_recebedor.tipo = 'CB' ");						
+		}
 		hql.append("order by pl.datapagamento desc");
 
 		Query query = manager.createNativeQuery(hql.toString());
