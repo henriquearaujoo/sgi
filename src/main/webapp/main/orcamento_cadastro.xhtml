@@ -227,7 +227,7 @@
 			maximizable="true" minimizable="true" resizable="true"
 			blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()">
 			<p:panel styleClass="panel">
-				<h:form id="form-cadastro-fontes" prependId="false">
+				<h:form id="form-cadastro-fontes" styleClass="default-style-form-filter" prependId="false">
 					<div class="ui-g-12">
 						<p:growl id="growl" showDetail="true" sticky="true" /> 
 						<p:commandLink styleClass="btn btn-success" style="color:#fff"
@@ -236,6 +236,12 @@
 							onclick="start()" onsuccess="stop()" onerror="stop()">
 							<span class="fa fas fa-check"></span>
 							<span>Salvar</span>
+						</p:commandLink>
+						<p:commandLink styleClass="btn btn-primary"
+							update="dialog_help" oncomplete="PF('dialog_help').show();"
+							onerror="stop();" onsuccess="stop();" onclick="start();">
+							<span class="fa fa-fw fa-question"></span>
+							<span>Ajuda</span>
 						</p:commandLink>
 					</div>
 

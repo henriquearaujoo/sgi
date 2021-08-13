@@ -1,0 +1,69 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<h:form id="id-help">
+
+		<p:panel id="main-panel-help" styleClass="main_panel_help">
+			<p:carousel numVisible="1" effect="easeInStrong"
+				headerText="Tutorial" styleClass="carousel_help" responsive="true">
+				<p:tab>
+
+					<p:graphicImage styleClass="img-fluid"
+						name="image/tutorials/fonte-help.png" />
+
+
+					<div class="table-responsive py-2">
+						<table class="table table-bordered">
+							<thead class="thead-light">
+								<tr>
+									<th scope="col">Campos</th>
+									<th scope="col">Funcionalidade</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td scope="row"><b>Fonte</b></td>
+									<td>Buscar fonte por nome</td>
+								</tr>
+								
+								<tr>
+									<td scope="row">
+										<div class="btn btn-success btn-sm">
+											<i class="fa fas fa-plus"></i> 
+											<span>Novo</span>
+										</div>
+									</td>
+									<td>Criar nova fonte pagadora</td>
+								</tr>
+								<tr>
+									<td scope="row">
+										<div class="btn btn-primary btn-sm">
+											<span class="fa fa-fw fa-question"></span> <span>Ajuda</span>
+										</div>
+									</td>
+									<td>Tutorial para ajudar a entender página</td>
+								</tr>
+								<tr>
+									<td scope="row">
+										<div class="btn btn-primary btn-sm">
+											<span class="fa fa-angle-down"></span> <span class="mx-2">Ações</span>
+										</div>
+									</td>
+									<td>Mais opções para os itens</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+				</p:tab>
+			</p:carousel>
+
+		</p:panel>
+	</h:form>
+
+</ui:fragment>

@@ -1,0 +1,92 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<h:form id="id-help">
+
+		<p:panel id="main-panel-help" styleClass="main_panel_help">
+			<p:carousel numVisible="1" effect="easeInStrong"
+				headerText="Tutorial" styleClass="carousel_help" responsive="true">
+				<p:tab>
+
+					<p:graphicImage styleClass="img-fluid"
+						name="image/tutorials/colaborador.png" />
+
+
+					<div class="table-responsive py-2">
+						<table class="table table-bordered">
+							<thead class="thead-light">
+								<tr>
+									<th scope="col">Campos</th>
+									<th scope="col">Funcionalidade</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td scope="row"><b>Nome</b></td>
+									<td>Procurar colaborador pelo nome</td>
+								</tr>
+								<tr>
+									<td scope="row"><b>CPF</b></td>
+									<td>Procurar colaborador pelo CPF</td>
+								</tr>
+								<tr>
+									<td scope="row"><b>Gestão</b></td>
+									<td>Procurar colaboradores de acordo com a Gestão</td>
+								</tr>
+								<tr>
+									<td scope="row"><b>Data de nascimento</b></td>
+									<td>Procurar colaborador de acordo com a data de nascimento</td>
+								</tr>
+								<tr>
+									<td scope="row">
+										<div class="btn btn-outline-dark">
+											<i class="fa fa-eraser"></i>
+											<span>Limpar</span>
+										</div>
+									</td>
+									<td>Limpar o filtro de busca</td>
+								</tr>
+								<tr>
+									<td scope="row">
+										<div class="btn btn-success">
+											<i class="fa fas fa-plus"></i>
+											<span>Novo</span>
+										</div>
+									</td>
+									<td>Adicionar um novo colaborador</td>
+								</tr>
+								<tr>
+									<td scope="row">
+										<div class="btn btn-primary">
+											<i class="fa fas fa-search"></i>
+											<span>Procurar</span>
+										</div>
+									</td>
+									<td>Buscar colaborador de acordo com os campos preenchidos</td>
+								</tr>
+								<tr>
+									<td scope="row">
+										<div class="btn btn-primary btn-sm"
+											style="color:#fff; margin: 8px 2px;">
+											<span class="fa fa-fw fa-question"></span>
+											<span>Ajuda</span>
+										</div>
+									</td>
+									<td>Ajuda relacionada a página</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+				</p:tab>
+			</p:carousel>
+
+		</p:panel>
+	</h:form>
+
+</ui:fragment>
