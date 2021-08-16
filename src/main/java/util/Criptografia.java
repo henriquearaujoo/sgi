@@ -47,6 +47,14 @@ public class Criptografia {
 		return colaborador;
 	}
 	
+	public String decrypt(String s) {
+		return textEncryptor.decrypt(s);
+	}
+	
+	public String encrypt(String s) {
+		return textEncryptor.encrypt(s);
+	}
+	
 	public Colaborador decrypt(Colaborador colaborador) {
 		if(colaborador.getCpf() != null || colaborador.getCpf() != "") {
 			colaborador.setCpf(textEncryptor.decrypt(colaborador.getCpf()));			
