@@ -62,9 +62,10 @@
 								value="#{message['ACTION_EDIT']}">
 							</p:menuitem>
 
-							<p:menuitem update="form_cadastro_gestao"
-								action="#{gestaoController.editar(bean)}"
-								oncomplete="PF('cadastro_gestao').show()"
+							<p:menuitem update="content_gestao"
+								onerror="stop();" onsuccess="stop();"
+								onclick="start();"
+								action="#{gestaoController.excluir(bean)}"
 								value="#{message['ACTION_REMOVE']}">
 							</p:menuitem>
 						</p:menuButton>

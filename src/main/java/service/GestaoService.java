@@ -45,6 +45,11 @@ public class GestaoService implements Serializable {
 
 		return gestao;
 	}
+	
+	@Transactional
+	public void deleteGestaoById(Gestao gestao) {
+		gestaoRepositorio.deleteGestao(gestao);
+	}
 
 	public Gestao getInstance(Gestao gestao, Gestao aux) {
 

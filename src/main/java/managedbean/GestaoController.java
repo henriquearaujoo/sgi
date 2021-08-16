@@ -41,7 +41,8 @@ public class GestaoController implements Serializable {
 
 	private List<Colaborador> colaborador = new ArrayList<>();
 
-	private Gestao gestao;
+	
+	private Gestao gestao = new Gestao();
 
 	private Aprouve aprouve = new Aprouve();
 	
@@ -76,6 +77,10 @@ public class GestaoController implements Serializable {
 			gestao.setType("reg");
 		}
 
+	}
+	
+	public void excluir(Gestao gestao) {
+		gestaoService.deleteGestaoById(gestao);
 	}
 	
 public void editarGestao(User usuario) {
