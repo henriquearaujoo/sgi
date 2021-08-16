@@ -59,7 +59,8 @@ public class ConfiguracaoController implements Serializable{
 		carregarConfiguracao();
 	}
 	
-	public void salvar(Configuracao configuracao) {
+	public void salvar(RowEditEvent event) {
+		Configuracao configuracao = (Configuracao) event.getObject(); 
 		configuracaoService.salvar(configuracao);
     }
      
