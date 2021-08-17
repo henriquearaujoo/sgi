@@ -340,19 +340,6 @@ body .ui-dialog .ui-dialog-content {
 
 	<h:form id="form-layout">
 
-		<p:dialog id="perfil_dialog" header="" widgetVar="dialog_perfil"
-			hideEffect="clip" closeOnEscape="true" showEffect="clip" width="30%"
-			draggable="false">
-			<ui:include src="/main/home/usuario.xhtml"></ui:include>
-		</p:dialog>
-		
-		<p:dialog id="config_dialog" header="Configurações" widgetVar="dialog_config"
-			hideEffect="clip" closeOnEscape="true" showEffect="clip"
-			draggable="true">
-			<ui:include src="/main/home/configuracao.xhtml"></ui:include>
-		</p:dialog>
-
-
 		<ul id="profile-menu" class="profile-menu fadeInDown  js-profile-menu">
 
 
@@ -361,9 +348,9 @@ body .ui-dialog .ui-dialog-content {
 					<span>Perfil</span>
 				</p:commandLink></li>
 
-			<li>
-				<p:commandLink onclick="PF('dialog_config').show(); "
-					onsuccess="stop();" onerror="stop();" rendered="#{usuario_controller.perfil()}" >
+			<li><p:commandLink onclick="PF('dialog_config').show(); "
+					onsuccess="stop();" onerror="stop();"
+					rendered="#{usuario_controller.perfil()}">
 					<span>Configuração</span>
 				</p:commandLink></li>
 
@@ -431,7 +418,7 @@ body .ui-dialog .ui-dialog-content {
 
 	<ui:insert name="adicionais">
 
-
+		
 
 
 	</ui:insert>

@@ -147,6 +147,70 @@ div[id="form-layout:perfil_dialog_content"] {
 			<p:graphicImage style="width:120px;height:70px" library="image"
 				name="logofas.png" />
 		</p:dialog>
+		
+		<p:dialog id="perfil_dialog" header="" widgetVar="dialog_perfil"
+			hideEffect="clip" closeOnEscape="true" showEffect="clip" width="30%"
+			draggable="false" modal="true">
+			<ui:include src="/main/home/usuario.xhtml"></ui:include>
+		</p:dialog>
+
+		<p:dialog id="config_dialog" header="Configurações"
+			widgetVar="dialog_config" hideEffect="clip" closeOnEscape="true"
+			showEffect="clip" draggable="true">
+			<h:form id="form-configuracao" style="margin-top: 12px">
+				<p:growl id="msgs" showDetail="true" />
+				<div>
+				
+					<div class="ui-g ui-fluid default-style-form-filter" >
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<h4>Parâmetros para bloqueio de compras em projetos</h4><br />
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group focused">
+							<p:outputLabel value="Solicitação de Compra" for="slc-compra"
+								styleClass="form-label" />
+							<p:inputNumber id="slc-compra" 
+								value="#{configuracaoController.filtro.config.tempoSC}" />
+						</div>
+	
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group focused">
+							<p:outputLabel value="Solicitação de Pagamento" style="margin-left:5px"
+								for="slc-pagamento" styleClass="form-label" />
+							<p:inputNumber value="#{configuracaoController.filtro.config.tempoSP}"
+								id="slc-pagamento" style="margin-left:5px" />
+	
+						</div>
+	
+						<div class="ui-g-12 ui-lg-6 form-group focused">
+							<p:outputLabel value="Solicitação de Diária" style="margin-left:4px"
+								for="slc-diaria" styleClass="form-label" />
+							<p:inputNumber id="slc-diaria" value="#{configuracaoController.filtro.config.tempoSD}" />
+	
+						</div>
+						<div class="ui-g-12 ui-md-12 ui-lg-12">
+							<h4>Configuração Financeira</h4><br />
+						</div>
+						<div class="ui-g-12 ui-lg-6 form-group focused">
+							<p:outputLabel value="Valor de tarifa" style="margin-left:4px"
+								for="tarifa" styleClass="form-label" />
+							<p:inputNumber symbol="R$" value="#{configuracaoController.filtro.config.valorTarifaBancaria}"
+								id="tarifa" />
+	
+						</div>
+						
+						<div class="ui-g-12 ui-lg-6 form-group focused">
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								action="#{configuracaoController.salvarV2(configuracaoController.filtro)}" onclick="start()"
+								onsuccess="stop()" onerror="stop()" update="@this" process="@this"
+								style="color:#fff; margin: 8px 2px;">
+								<span class="fa fa-fw fa-check"></span>
+								<span>Salvar</span>
+							</p:commandLink>
+						</div>
+						
+					</div>
+				</div>
+			</h:form>
+		</p:dialog>
 
 	</ui:define>
 

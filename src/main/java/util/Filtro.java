@@ -7,6 +7,7 @@ import java.util.List;
 import model.Acao;
 import model.Colaborador;
 import model.Componente;
+import model.Configuracao;
 import model.ContaBancaria;
 import model.FontePagadora;
 import model.Fornecedor;
@@ -47,8 +48,22 @@ public class Filtro {
 	private Colaborador colaborador;
 	private Colaborador userColaborador;
 	private String email;
+
 	private String attribute;
 
+	
+
+	private Configuracao config = new Configuracao();
+	
+	public Configuracao getConfig() {
+		return config;
+	}
+
+	public void setConfig(Configuracao config) {
+		this.config = config;
+
+	}
+	
 	public String getAttribute() {
 		return attribute;
 	}
