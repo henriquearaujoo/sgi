@@ -1205,6 +1205,7 @@ public class OrcamentoController implements Serializable {
 			createStackedGroupBarModel();
 		} else if (index == 3) {
 			//carregarExtatoDoacao();
+			filtro.setAttribute("execution");
 			loadDisbursementInProject();
 		} else if (index == 4) {
 			carregarDoacoesEfetivadas();
