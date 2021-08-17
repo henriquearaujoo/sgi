@@ -8,10 +8,11 @@
 
 
 	<h:form id="form_cadastro_gestao">
-
+			
 			<p:messages id="message_gestao" showIcon="true" showSummary="false" />
 			<p:panelGrid id="panel_cadastro" columns="2" styleClass="ui-fluid">
 
+					
 				<h:outputText value="Gestão" />
 				<p:inputText value="#{gestaoController.gestao.nome}"
 					style="width:400px" />
@@ -19,6 +20,9 @@
 				<h:outputText value="Sigla" />
 				<p:inputText value="#{gestaoController.gestao.sigla}"
 					style="width:400px" />
+
+				<h:outputText value="Ativo" />
+				<p:selectBooleanCheckbox value="#{gestaoController.gestao.ativo}" style="width:400px" />
 
 
 				<h:outputText value="Tipo" for="tipo" />

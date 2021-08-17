@@ -33,6 +33,11 @@ public class GestaoRepositorio implements Serializable {
 	public GestaoRepositorio(EntityManager manager) {
 		this.manager = manager;
 	}
+	
+	public void deleteGestao(Gestao gestao) {
+		Gestao gest = getGestaoPorId(gestao.getId());
+		this.manager.remove(gest);
+	}
 
 	public Gestao getGestaoPorId(Long id) {
 		return this.manager.find(Gestao.class, id);
