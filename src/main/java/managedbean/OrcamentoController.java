@@ -880,9 +880,11 @@ public class OrcamentoController implements Serializable {
 	}
 	
 	
+	private String type;
 	public void loadDisbursementInProject() {
 		lancamentos = new ArrayList<>();
 		filtro.setIdDoacao(orcamento.getId());
+		filtro.setTipo(type);
 		lancamentos = orcService.loadDisbursementInProject(filtro);
 		// service.getPagamentosPE(filtro);
 	}
@@ -2060,6 +2062,14 @@ public class OrcamentoController implements Serializable {
 
 	public void setListFontePagadora(List<FontePagadora> listFontePagadora) {
 		this.listFontePagadora = listFontePagadora;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

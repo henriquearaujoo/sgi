@@ -47,7 +47,15 @@ public class Filtro {
 	private Colaborador colaborador;
 	private Colaborador userColaborador;
 	private String email;
-	
+	private String attribute;
+
+	public String getAttribute() {
+		return attribute;
+	}
+
+	public void setAttribute(String attribute) {
+		this.attribute = attribute;
+	}
 
 	public Colaborador getUserColaborador() {
 		return userColaborador;
