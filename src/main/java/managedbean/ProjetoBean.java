@@ -632,7 +632,7 @@ public class ProjetoBean implements Serializable {
 
 	public void loadDonations() {
 		listOfDonation = new ArrayList<Orcamento>();
-		listOfDonation = gestaoProjeto.loadDonations(projeto.getId());
+		listOfDonation = gestaoProjeto.loadDonations(projeto.getGestao().getId());
 	}
 
 	public void carregarRubricasDeProjeto() {
@@ -1854,8 +1854,6 @@ public class ProjetoBean implements Serializable {
 		if (tabviewProjeto != null)
 			index = tabviewProjeto.getActiveIndex();
 
-		tab = (Tab) tabviewProjeto.getChildren().get(index);
-		filtro.setAttribute(tab.getAttributes().get("tab").toString());
 		
 		if (index == 0) {
 
@@ -1882,8 +1880,10 @@ public class ProjetoBean implements Serializable {
 		} else if (index == 6) {
 			
 		} else if (index == 7) {
+			filtro.setAttribute("execution");
 			loadDisbursementInProject();
 		} else if (index == 8) {
+			filtro.setAttribute("devolution");
 			loadDisbursementInProject();
 		}
 	}

@@ -989,10 +989,17 @@ public class OrcamentoRepositorio implements Serializable {
 	}
 
 	public List<Orcamento> loadDonations(Long idManagement) {
-		String jpql = "select o.titulo, o.id, sum(dm.value) from \n" + "orcamento o \n"
-				+ "join donation_management dm on \n" + "dm.donation_id = o.id group by o.titulo, o.id";
-		Query query = this.manager.createNativeQuery(jpql);
-		// query.setParameter("id", idManagement);
+		//String jpql = "select o.titulo, o.id, sum(dm.value) from \n" + "orcamento o \n"
+				//+ "join donation_management dm on \n" + "dm.donation_id = o.id group by o.titulo, o.id";
+		
+		StringBuilder hql = new StringBuilder("select o.titulo, o.id, sum(dm.value) from ");
+		hql.append("orcamento o join donation_management dm on dm.donation_id = o.id ");
+		hql.append("where dm.management_id = :id_management ");
+		hql.append("group by o.titulo, o.id ");
+		
+		
+		Query query = this.manager.createNativeQuery(hql.toString());
+		query.setParameter("id_management", idManagement);
 
 		List<Object[]> result = query.getResultList();
 		List<Orcamento> donations = new ArrayList<Orcamento>();
