@@ -11,6 +11,9 @@
 
 
 	<repositories>
+
+
+
 		<repository>
 			<id>prime-repo</id>
 			<name>PrimeFaces Maven Repository</name>
@@ -40,6 +43,21 @@
 
 
 	<dependencies>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.4.2</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.4.2</version>
+			<scope>test</scope>
+		</dependency>
+
 
 		<!-- http://mvnrepository.com/artifact/org.apache.commons/commons-email -->
 		<dependency>
@@ -198,6 +216,8 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+
+
 		</plugins>
 	</build>
 

@@ -414,14 +414,15 @@ public class ProjetoBean implements Serializable {
 		// != null ?
 		// projeto.getQuantidadeAtividade()
 		// : 0;
+		
 		Double evolucaoPlanejada = new Double(0);
 		SimpleDateFormat anoString = new SimpleDateFormat("yyyy");
 		SimpleDateFormat mesString = new SimpleDateFormat("MM");
 		Integer mesAtual = Integer.parseInt(mesString.format(new Date()) + "");
+
 		mesAtual = mesAtual - 1;
 
 		for (int a = 0; a < 12; a++) {
-
 			// planejado.set(meses.get(a), (projeto.getQuantidadeAtividade() / 12) * (a +
 			// 1));
 
@@ -857,6 +858,7 @@ public class ProjetoBean implements Serializable {
 		gestaoProjeto.removerProjetoRubrica(projetoRubrica);
 		carregarRubricasDeProjeto();
 		calculaValor();
+		messageSalvamento("Removido com Sucesso!");
 	}
 
 	public void carregarItens() {
