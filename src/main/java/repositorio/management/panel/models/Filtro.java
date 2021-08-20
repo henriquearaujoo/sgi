@@ -2,6 +2,8 @@ package repositorio.management.panel.models;
 
 import java.io.Serializable;
 
+import model.Projeto;
+
 public class Filtro implements Serializable{
 
 	/**
@@ -153,6 +155,36 @@ public class Filtro implements Serializable{
 		default:
 			return CLAUSE21_COUNT_MONTH_END;
 		}
+	}
+	
+	private Long idProjeto;
+	
+	private Long idGestao;
+	
+	private Long idFonte;
+
+	public Long getIdFonte() {
+		return idFonte;
+	}
+
+	public void setIdFonte(Long idFonte) {
+		this.idFonte = idFonte;
+	}
+
+	public Long getIdGestao() {
+		return idGestao;
+	}
+
+	public void setIdGestao(Long idGestao) {
+		this.idGestao = idGestao;
+	}
+
+	public Long getIdProjeto() {
+		return idProjeto;
+	}
+
+	public void setIdProjeto(Long idProjeto) {
+		this.idProjeto = idProjeto;
 	}
 
 	public String getAno() {
