@@ -35,6 +35,12 @@
 						rendered="false" />
 
 				</p:submenu>
+				
+				<p:submenu label="Gestão" rendered="true">
+					<p:menuitem value="Painel de gestão" url="panel_management.xhtml"
+						onclick="start()" onerror="stop()" />
+				
+				</p:submenu>
 
 				<p:submenu label="Financeiro" rendered="#{message['MENU_FINANCE']}">
 					<p:menuitem value="Custo pessoal" url="custo_pessoal.xhtml"

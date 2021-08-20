@@ -38,7 +38,7 @@
 	                      },
 	                      plugins: {
 	                          datalabels: {
-	                            color: '#36A2EB',
+	                            color: '#000',
 	                            align: 'right',
 	                            font: {
 		                            size: '14'
@@ -77,8 +77,6 @@
 		 	                      legend: {
 		 	                         display: true,
 		 	                      },
-								  
-		 	                      
 		 	                      plugins: {
 		 	                          datalabels: {
 		 	                            color: '#000',
@@ -90,17 +88,66 @@
 		 	                        },
 		 	                        
 		 	                    },
-		 	                    /* data: {
-									datasets:[, {
-                                         data: [15, 30]   
-										}]
-			 	                    } */
+		 	                   data: {
+			                        datasets: [{
+			                          datalabels: {
+			                            color: '#000000'
+			                          },
+			                        }, 
+			                        {
+				                      datalabels: {
+				                            color: '#FFF',
+				                            align: 'right',
+				                            font: {
+												size:'1'
+					                            }
+				                          }
+				                       }
+			                        ]
+			                      },
 		 	               };
 
 		               
 		               $.extend(true, this.cfg.config, chart);
 		               console.log(this.cfg.config);
 		            };
+
+		            function pieExtender() {
+			               var chart = $.extend(true, {}, this.cfg.config);
+			               chart = {
+			 	            	  //plugins: [ChartDataLabels],
+			 	                  options: {
+				 	                  animation:{duration: 1500},
+			 	                      legend: {
+			 	                         display: true,
+			 	                      },
+			 	                      plugins: {
+			 	                          datalabels: {
+			 	                            color: '#fff',
+			 	                            align: 'center',
+			 	                            font: {
+			 		                            size: '18'
+			 		                            },
+			 		                        formatter: (value, ctx) => {
+			 		                              let sum = 0;
+			 		                              let dataArr = ctx.chart.data.datasets[0].data;
+			 		                              dataArr.map(data => {
+			 		                                  sum += data;
+			 		                              });
+			 		                              let percentage = (value*100 / sum).toFixed(0)+"%";
+			 		                              return percentage;
+			 		                        }
+			 	                          }
+			 	                        },
+			 	                        
+			 	                    }
+			 	               };
+
+			               
+			               $.extend(true, this.cfg.config, chart);
+			               //console.log(this.cfg.config);
+			            };
+			            
 
 	           </script>
 
@@ -109,47 +156,65 @@
 					<p:menuitem value="Painel do gestor" url="#" />
 				</p:breadCrumb>
 
-				<div class="ui-g ui-fluid">
+				<div style="margin: 0 auto 0 auto; width: 95%;">
+					<div class="ui-g ui-fluid">
+					
+					     <div class="ui-g-12" style="color:#000;margin-bottom:10px; text-align: center; font-size: 16px; font-family: Courier New">
+					    	Olá, seja bem vindo à versão de testes do painel de monitoramento de dados financeiros, nesse primeiro momento nós temos a 
+					    	<strong>Evolução financeira</strong> com duas séries representando o <strong>planejado</strong> e <strong>efetivado</strong>
+					    	e a <strong>Porcentagem de execução</strong> calculada sem adição das verbas provisionadas.  
+					    	Os filtros contidos nessa seção se aplicam a todos os gráficos e os valores são sempre calculados dentro de 
+					    	um <strong>período de 12 meses</strong>  filtrando de acordo com o <strong>ano</strong>  escolhido.
+					    	
+					    
+					    </div>
 
-					<div class="ui-g-8" style="text-align: center;">
-						<h3>Evolução Financeira</h3>
-						<div>
-							<p:barChart model="#{panelManagement.evolutionFinanceModel}"
-								style="width: 100%; height: 400px;" />
-						</div>
-					</div>
-
-					<div class="ui-g-4" style="text-align: center;">
-						<h3>Poercentagem de execução</h3>
-						<div style="margin-top: 60px">
-							<p:knob value="70" id="knob" foregroundColor="#188826cf"
-								width="325" height="325" disabled="true"
-								labelTemplate="{value}%" max="100">
-							</p:knob>
-						</div>
-					</div>
-
-
-					<div class="ui-g-8" style="text-align: center;">
-						<h3>Fontes/Parceiros da Gestão</h3>
-						<div>
-							<p:barChart model="#{panelManagement.hbarModel}"
-								style="width: 100%; height: 400px;" />
-						</div>
-					</div>
-
-					<div class="ui-g-4" style="text-align: center;">
-						<h3>Status de pagamento</h3>
-						<div style="margin-top: 60px">
-							<p:pieChart model="#{panelManagement.pieModel}"
-								style="width: 100%; height: 350px;" />
+						<div class="ui-g-8" style="text-align: center;">
+							<h3>Evolução Financeira</h3>
+							<div>
+								<p:barChart model="#{panelManagement.evolutionFinanceModel}"
+									style="width: 100%; height: 400px;" />
+							</div>
 						</div>
 
+						<div class="ui-g-4" style="text-align: center;">
+							<h3>Poercentagem de execução</h3>
+							<div style="margin-top: 36px">
+								<p:knob value="#{panelManagement.valuePercentExection}"
+									id="knob" foregroundColor="#188826cf" width="325" height="325"
+									disabled="true" labelTemplate="{value}%" max="100">
+								</p:knob>
+							</div>
+						</div>
 					</div>
+					<div class="ui-g ui-fluid"
+						style="margin-top: 136px; margin-bottom: 76px">
+						
+						<div class="ui-g-12" style="color:#000;margin-bottom:10px; text-align: center; font-size: 16px; font-family: Courier New">
+					    	Essa sessão traz as <strong>Fontes da Gestão</strong>, <strong>fontes de recursos</strong> que indiretamente a  <strong>Gestão</strong>
+					    	deverá prestar conta, nesse gráfico nós temos 3 séries que representam respectivamente <Strong>Orçamento</Strong>, 
+					    	todo o orçamento da gestão ou conjuntos de gestões, <strong>Empenhado</strong>, valor que representa quanto (R$) em relação ao orçamento 
+					    	já houve emprenho e não pode mais ser usado e o <strong>Efetivado</strong>, que representa quanto (R$) em relação ao empenho foi pago e saiu 
+					    	dos caixas da FAS. E o <strong>Status de pagamento</strong> que traz uma divisão por status de pagamento em relação ao total do orçamento.      
+					    </div>
+												
+						<div class="ui-g-8" style="text-align: center;">
+							<h3>Fontes/Parceiros da Gestão</h3>
+							<div>
+								<p:barChart model="#{panelManagement.hbarModel}"
+									style="width: 100%; height: 400px;" />
+							</div>
+						</div>
 
-
+						<div class="ui-g-4" style="text-align: center;">
+							<h3>Status de pagamento</h3>
+							<div style="margin-top: 36px">
+								<p:pieChart model="#{panelManagement.pieModel}"
+									style="width: 100%; height: 350px;" />
+							</div>
+						</div>
+					</div>
 				</div>
-
 
 			</h:form>
 		</div>

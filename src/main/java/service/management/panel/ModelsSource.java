@@ -3,7 +3,7 @@ package service.management.panel;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Models implements Serializable{
+public class ModelsSource implements Serializable{
 
 	/**
 	 * 
@@ -19,7 +19,7 @@ public class Models implements Serializable{
 	private BigDecimal effectiveValue;
   
 
-	public Models() {
+	public ModelsSource() {
 	}
 
 	public Long getId() {

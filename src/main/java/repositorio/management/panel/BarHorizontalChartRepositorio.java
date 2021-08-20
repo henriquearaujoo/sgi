@@ -2,33 +2,14 @@ package repositorio.management.panel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-
-import antlr.Utils;
-import model.Acao;
-import model.AcaoProduto;
-import model.Componente;
-import model.DonationManagement;
-import model.GrupoDeInvestimento;
-import model.MetaPlano;
-import model.Orcamento;
-import model.Projeto;
-import model.TransferenciaOverHead;
-import service.management.panel.Models;
-import util.Filtro;
+import repositorio.management.panel.models.Filtro;
+import service.management.panel.ModelsSource;
 import util.Util;
 
 public class BarHorizontalChartRepositorio {
@@ -42,15 +23,16 @@ public class BarHorizontalChartRepositorio {
 	public BarHorizontalChartRepositorio(EntityManager manager) {
 		this.manager = manager;
 	}
-	
-	public List<Models> loadTotalOfEffectivedBySource() {
-		Query query = this.manager.createNativeQuery(getSqlToEffectivedBySource());
 
+	public List<ModelsSource> loadTotalOfCExecutionBySource(String type, Filtro filtro) {
+
+		Query query = this.manager.createNativeQuery(getSqlToExecutionBySource(type, filtro));
+		setQueryExecuted(query, filtro);
 		List<Object[]> result = query.getResultList();
-		List<Models> effectiveds = new ArrayList<Models>();
+		List<ModelsSource> effectiveds = new ArrayList<ModelsSource>();
 
 		for (Object[] object : result) {
-			Models effectived = new Models();
+			ModelsSource effectived = new ModelsSource();
 			effectived.setId(new Long(object[0].toString()));
 			effectived.setSource(Util.getNullValue(object[1], ""));
 			effectived.setEffectiveValue(Util.getNullValue(new BigDecimal(object[2].toString())));
@@ -60,52 +42,137 @@ public class BarHorizontalChartRepositorio {
 		return effectiveds;
 	}
 	
-	public String getSqlToEffectivedBySource() {
-		return "select\n" + "fp.id,fp.nome, sum(pl.valor) as valor_pago\n" + "from fonte_pagadora fp\n"
-				+ "join orcamento o on fp.id = o.fonte_id\n" + "join rubrica_orcamento ro on ro.orcamento_id  = o.id\n"
-				+ "join projeto_rubrica pr on pr.rubricaorcamento_id = ro.id\n"
-				+ "join projeto p on p.id = pr.projeto_id\n"
-				+ "join lancamento_acao la on la.projetorubrica_id  = pr.id\n"
-				+ "join pagamento_lancamento pl on pl.lancamentoacao_id = la.id\n"
-				+ "join lancamento l on l.id = la.lancamento_id\n"
-				+ "join conta_bancaria conta_pagador on conta_pagador.id = pl.conta_id\n"
-				+ "join conta_bancaria conta_recebedor on conta_recebedor.id = pl.contarecebedor_id\n" + "where\n"
-				+ "((p.gestao_id  = 36) or ((select g.superintendencia_id from gestao g where g.id = p.gestao_id) = 36))\n"
-				+ "and l.tipo != 'compra' \n" + "and conta_pagador.tipo = 'CB'\n" + "and conta_recebedor.tipo = 'CF'\n"
-				+ "-- and pl.stt = 'EFETIVADO'\n" + "-- and l.statuscompra = 'CONCLUIDO'\n"
-				+ "and (l.versionlancamento = 'MODE01' or pl.reclassificado is true)\n"
-				+ "group by fp.id, fp.nome order by sum(pl.valor) desc ";
+	public void setQueryExecuted(Query query, Filtro filtro) {
+		query.setParameter("gestao_id", filtro.getGestao());
 	}
-	
-	
-	public List<Models> loadTotalOfPlaningBySource() {
-		Query query = this.manager.createNativeQuery(getSqlToPlanningBySource());
+
+	public String getSqlToExecutionBySource(String type, Filtro filtro) {
+
+		StringBuilder hql = new StringBuilder("select ");
+		hql.append("fp.id, fp.nome, ");
+		hql.append("sum(pl.valor) as valor_pago ");
+		hql.append("from fonte_pagadora fp join orcamento o on fp.id = o.fonte_id ");
+		hql.append("join rubrica_orcamento ro on ro.orcamento_id  = o.id ");
+		hql.append("join projeto_rubrica pr on pr.rubricaorcamento_id = ro.id ");
+		hql.append("join projeto p on p.id = pr.projeto_id ");
+		hql.append("join lancamento_acao la on la.projetorubrica_id  = pr.id ");
+		hql.append("join pagamento_lancamento pl on pl.lancamentoacao_id = la.id ");
+		hql.append("join lancamento l on l.id = la.lancamento_id ");
+		hql.append("join conta_bancaria conta_pagador on conta_pagador.id = pl.conta_id ");
+		hql.append("join conta_bancaria conta_recebedor on conta_recebedor.id = pl.contarecebedor_id ");
+		hql.append("where 1 = 1 ");
+		
+		if (filtro.getShowUnique()) {
+			hql.append("and p.gestao_id = :gestao_id ");
+		} else {
+			hql.append(
+					"and ((p.gestao_id  = :gestao_id) or ((select g.superintendencia_id from gestao g where g.id = p.gestao_id) = :gestao_id)) ");
+		}
+		
+		hql.append("and l.tipo != 'compra' ");
+		hql.append("and conta_pagador.tipo = 'CB' ");
+		hql.append("and conta_recebedor.tipo = 'CF' ");
+		
+		hql.append(filtro.getClauseYearExecuted());
+
+		if (type == "effectived") {
+			hql.append("and pl.stt = 'EFETIVADO' ");
+			hql.append("and l.statuscompra = 'CONCLUIDO' ");
+		} else {
+			hql.append("and l.statuscompra in ('CONCLUIDO','N_INCIADO') ");
+		}
+
+		hql.append("and (l.versionlancamento = 'MODE01' or pl.reclassificado is true) ");
+		hql.append("group by  fp.id, fp.nome ");
+		hql.append("order by sum(pl.valor) desc  ");
+
+		return hql.toString();
+	}
+
+	public List<ModelsSource> loadTotalOfPlaningBySource(Filtro filtro) {
+		return buildPlanningListByDateProject(filtro);
+	}
+
+	public List<ModelsSource> buildPlanningListByDateProject(Filtro filtro) {
+		List<ModelsSource> plannings = new ArrayList<ModelsSource>();
+
+		Query query = this.manager.createNativeQuery(getSqlToPlanningWithFilterDate(filtro));
+		setQueryPlanning(query, filtro);
 
 		List<Object[]> result = query.getResultList();
-		List<Models> plannings = new ArrayList<Models>();
 
 		for (Object[] object : result) {
-			Models planning = new Models();
+			ModelsSource planning = new ModelsSource();
 			planning.setId(new Long(object[0].toString()));
 			planning.setSource(Util.getNullValue(object[1], ""));
-			planning.setPlanningValue(Util.getNullValue(new BigDecimal(object[2].toString())));
-			plannings.add(planning);
+			planning.setPlanningValue(Util.getNullValue(new BigDecimal(object[7].toString())));
+			accumulatePlanning(planning, plannings);
 		}
 
 		return plannings;
+
 	}
 
-
-	public String getSqlToPlanningBySource() {
-		return "select\n" + "fp.id, fp.nome as fonte,\n" + "sum(pr.valor) as valor_orcado\n"
-				+ "from fonte_pagadora fp\n" + "join orcamento o on fp.id = o.fonte_id\n"
-				+ "join rubrica_orcamento ro on ro.orcamento_id  = o.id\n"
-				+ "join projeto_rubrica pr on pr.rubricaorcamento_id = ro.id\n"
-				+ "join projeto p on p.id = pr.projeto_id\n" + "where \n" + "((p.gestao_id  = 36) or\n"
-				+ "((select g.superintendencia_id from gestao g where g.id = p.gestao_id) = 36))\n"
-				+ "group by fp.id, fp.nome order by  sum(pr.valor) desc";
+	public void setQueryPlanning(Query query, Filtro filtro) {
+		query.setParameter("gestao_id", filtro.getGestao());
 	}
 
-	
+	public void accumulatePlanning(ModelsSource model, List<ModelsSource> plannings) {
+
+		for (ModelsSource planning : plannings) {
+			if (planning.getId().longValue() == model.getId().longValue()) {
+				planning.setPlanningValue(planning.getPlanningValue().add(model.getPlanningValue()));
+				return;
+			}
+		}
+
+		plannings.add(model); // Vai fazer automáticamente uma só vez
+
+	}
+
+	public String getSqlToPlanningWithFilterDate(Filtro filtro) {
+
+		StringBuilder hql = new StringBuilder("select ");
+		hql.append("fp.id as id_fonte, ");
+		hql.append("fp.nome as fonte, ");
+		hql.append("sum(pr.valor) as valor_orcado, ");
+		hql.append("p.id as id_project, ");
+		hql.append("p.nome as projeto, ");
+		hql.append("p.datainicio ,");
+		hql.append("p.datafinal ,");
+		hql.append("case when ");
+		hql.append(filtro.getClauseYearPlanningCase());
+		hql.append("then ");
+		hql.append(filtro.getClauseInitCalcMonth());
+		hql.append("else ");
+		hql.append(filtro.getClauseEndCalcMonth());
+		hql.append(" end  as VALOR_PROJETO_ANO ");
+
+		hql.append("from fonte_pagadora fp ");
+		hql.append("join orcamento o on fp.id = o.fonte_id ");
+		hql.append("join rubrica_orcamento ro on ro.orcamento_id  = o.id ");
+		hql.append("join projeto_rubrica pr on pr.rubricaorcamento_id = ro.id ");
+		hql.append("join projeto p on p.id = pr.projeto_id ");
+		hql.append("where 1 = 1 ");
+
+		if (filtro.getShowUnique()) {
+			hql.append("and p.gestao_id = :gestao_id ");
+		} else {
+			hql.append(
+					"and ((p.gestao_id  = :gestao_id) or ((select g.superintendencia_id from gestao g where g.id = p.gestao_id) = :gestao_id)) ");
+		}
+
+		hql.append(filtro.getClauseYearPlanningDateEnd());
+
+		// hql.append("and (p.datainicio >= '2021-01-01' or p.datafinal >= '2021-01-01')
+		// ");
+
+		hql.append("group by fp.id, fp.nome , p.id, p.nome ");
+		hql.append("order by  sum(pr.valor) desc ");
+
+		String result = hql.toString();
+
+		return result;
+	}
 
 }
