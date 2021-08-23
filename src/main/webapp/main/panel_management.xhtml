@@ -10,7 +10,7 @@
 
 	<ui:define name="content">
 
-	
+
 
 
 		<div class="container-fluid mb-3">
@@ -22,9 +22,6 @@
 
 				<script
 					src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.5.0"></script>
-
-
-
 
 				<script type="text/javascript">
 	             function chartExtender() {
@@ -158,54 +155,81 @@
 
 				<div style="margin: 0 auto 0 auto; width: 95%;">
 					<div class="ui-g ui-fluid">
-					
-					     <div class="ui-g-12" style="color:#000;margin-bottom:10px; text-align: center; font-size: 16px; font-family: Courier New">
-					    	Olá, seja bem vindo à versão de testes do painel de monitoramento de dados financeiros, nesse primeiro momento nós temos a 
-					    	<strong>Evolução financeira</strong> com duas séries representando o <strong>planejado</strong> e <strong>efetivado</strong>
-					    	e a <strong>Porcentagem de execução</strong> calculada sem adição das verbas provisionadas.  
-					    	Os filtros contidos nessa seção se aplicam a todos os gráficos e os valores são sempre calculados dentro de 
-					    	um <strong>período de 12 meses</strong>  filtrando de acordo com o <strong>ano</strong>  escolhido.
-					    	
-					    
-					    </div>
-					    
-					    <div class="ui-g-12">
-					    	<div class="ui-g-3">
-					    		<p:selectOneMenu id="ges" value="#{panelManagement.filtro.idGestao}" effect="fold" editable="true">
-						            <f:selectItem itemLabel="Todas" itemValue="" />
-						            <f:selectItems value="#{panelManagement.gestoes}" var="ges" itemLabel="#{ges.nome}" itemValue="#{ges.id}" />
-						        </p:selectOneMenu>
-						        
-					    	</div>
-					    	<div class="ui-g-3">
-						        <p:selectOneMenu id="proj" value="#{panelManagement.filtro.idProjeto}" effect="fold" editable="true" >
-						            <f:selectItem itemLabel="Todos" itemValue="" />
-						            <f:selectItems var="project" itemLabel="#{project.nome}" itemValue="#{project.id}" value="#{panelManagement.projetos}" />
-						        </p:selectOneMenu>
-					    	</div>
-					    	<div class="ui-g-3">
-					    		<p:selectOneMenu id="select_ano" value="#{panelManagement.ano}" editable="true">
-						            <f:selectItem itemLabel="Selecione o Ano" itemValue="" />
-						            <f:selectItem itemLabel="2018" itemValue="2018" />
-						            <f:selectItem itemLabel="2019" itemValue="2019" />
-						            <f:selectItem itemLabel="2020" itemValue="2020" />
-						            <f:selectItem itemLabel="2021" itemValue="2021" />
-						            <f:selectItem itemLabel="2022" itemValue="2022" />
-						            <f:selectItem itemLabel="2023" itemValue="2023" />
-						        </p:selectOneMenu>
-					    	</div>
-					    	<div class="ui-g-3">
-					    		<p:selectOneMenu id="fonte" value="#{panelManagement.filtro.idFonte}" effect="fold" editable="true" >
-						            <f:selectItem itemLabel="Todos" itemValue="" />
-						            <f:selectItems var="fonte" itemLabel="#{fonte.nome}" itemValue="#{fonte.id}" value="#{panelManagement.fontes}" />
-						        </p:selectOneMenu>
-					    	</div>
-					    	<div>
-					    		<p:selectOneRadio id="select_unique" value="#{panelManagement.unique}" unselectable="true">
-						            <f:selectItem itemLabel="Não mostrar projetos de outras gestões" itemValue="true" />
-						        </p:selectOneRadio>
-					    	</div>
-					    </div>
+
+						<div class="ui-g-12"
+							style="color: #000; margin-bottom: 10px; text-align: center; font-size: 16px; font-family: Courier New">
+							Olá, seja bem vindo à versão de testes do painel de monitoramento
+							de dados financeiros, nesse primeiro momento nós temos a <strong>Evolução
+								financeira</strong> com duas séries representando o <strong>planejado</strong>
+							e <strong>efetivado</strong> e a <strong>Porcentagem de
+								execução</strong> calculada sem adição das verbas provisionadas. Os
+							filtros contidos nessa seção se aplicam a todos os gráficos e os
+							valores são sempre calculados dentro de um <strong>período
+								de 12 meses</strong> filtrando de acordo com o <strong>ano</strong>
+							escolhido.
+
+
+						</div>
+
+						<div class="ui-g-12">
+							<div class="ui-g-3">
+								<p:selectOneMenu id="ges"
+									value="#{panelManagement.filtro.gestao}" editable="true">
+									<f:selectItem itemLabel="Todas" noSelectionOption="true" />
+
+									<f:selectItems value="#{panelManagement.gestoes}" var="ges"
+										itemLabel="#{ges.nome}" itemValue="#{ges.id}" />
+
+									<p:ajax event="itemSelect" update="content"
+										listener="#{panelManagement.execute()}"></p:ajax>
+
+								</p:selectOneMenu>
+
+							</div>
+							<div class="ui-g-3">
+								<p:selectOneMenu id="proj"
+									value="#{panelManagement.filtro.idProjeto}" editable="true">
+									<f:selectItem itemLabel="Todos" itemValue="" />
+									<f:selectItems var="project" itemLabel="#{project.nome}"
+										itemValue="#{project.id}" value="#{panelManagement.projetos}" />
+									<p:ajax event="itemSelect" update="content"
+										listener="#{panelManagement.execute()}"></p:ajax>
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-3">
+								<p:selectOneMenu id="select_ano" value="#{panelManagement.filtro.ano}"
+									editable="true">
+									<f:selectItem itemLabel="Selecione o Ano" itemValue="" />
+									<f:selectItem itemLabel="2018" itemValue="2018" />
+									<f:selectItem itemLabel="2019" itemValue="2019" />
+									<f:selectItem itemLabel="2020" itemValue="2020" />
+									<f:selectItem itemLabel="2021" itemValue="2021" />
+									<f:selectItem itemLabel="2022" itemValue="2022" />
+									<f:selectItem itemLabel="2023" itemValue="2023" />
+									<p:ajax event="itemSelect" update="content"
+										listener="#{panelManagement.execute()}"></p:ajax>
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-3">
+								<p:selectOneMenu id="fonte"
+									value="#{panelManagement.filtro.idFonte}" editable="true">
+									<f:selectItem itemLabel="Todos" itemValue="" />
+									<f:selectItems var="fonte" itemLabel="#{fonte.nome}"
+										itemValue="#{fonte.id}" value="#{panelManagement.fontes}" />
+
+									<p:ajax event="itemSelect" update="content"
+										listener="#{panelManagement.execute()}"></p:ajax>
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-12" style="margin-top: 15px">
+								
+
+								<p:selectBooleanCheckbox value="#{panelManagement.show}"
+									itemLabel="Mostrar projetos de gestõtes abaixo na hierarquia">
+									<p:ajax  update="content" listener="#{panelManagement.execute()}" />
+								</p:selectBooleanCheckbox>
+							</div>
+						</div>
 
 						<div class="ui-g-8" style="text-align: center;">
 							<h3>Evolução Financeira</h3>
@@ -225,19 +249,26 @@
 							</div>
 						</div>
 					</div>
-					
-					
+
+
 					<div class="ui-g ui-fluid"
 						style="margin-top: 136px; margin-bottom: 76px">
-						
-						<div class="ui-g-12" style="color:#000;margin-bottom:10px; text-align: center; font-size: 16px; font-family: Courier New">
-					    	Essa sessão traz as <strong>Fontes da Gestão</strong>, <strong>fontes de recursos</strong> que indiretamente a  <strong>Gestão</strong>
-					    	deverá prestar conta, nesse gráfico nós temos 3 séries que representam respectivamente <Strong>Orçamento</Strong>, 
-					    	todo o orçamento da gestão ou conjuntos de gestões, <strong>Empenhado</strong>, valor que representa quanto (R$) em relação ao orçamento 
-					    	já houve emprenho e não pode mais ser usado e o <strong>Efetivado</strong>, que representa quanto (R$) em relação ao empenho foi pago e saiu 
-					    	dos caixas da FAS. E o <strong>Status de pagamento</strong> que traz uma divisão por status de pagamento em relação ao total do orçamento.      
-					    </div>
-												
+
+						<div class="ui-g-12"
+							style="color: #000; margin-bottom: 10px; text-align: center; font-size: 16px; font-family: Courier New">
+							Essa sessão traz as <strong>Fontes da Gestão</strong>, <strong>fontes
+								de recursos</strong> que indiretamente a <strong>Gestão</strong> deverá
+							prestar conta, nesse gráfico nós temos 3 séries que representam
+							respectivamente <Strong>Orçamento</Strong>, todo o orçamento da
+							gestão ou conjuntos de gestões, <strong>Empenhado</strong>, valor
+							que representa quanto (R$) em relação ao orçamento já houve
+							emprenho e não pode mais ser usado e o <strong>Efetivado</strong>,
+							que representa quanto (R$) em relação ao empenho foi pago e saiu
+							dos caixas da FAS. E o <strong>Status de pagamento</strong> que
+							traz uma divisão por status de pagamento em relação ao total do
+							orçamento.
+						</div>
+
 						<div class="ui-g-8" style="text-align: center;">
 							<h3>Fontes/Parceiros da Gestão</h3>
 							<div>

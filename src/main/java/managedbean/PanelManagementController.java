@@ -1,7 +1,6 @@
 package managedbean;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +21,7 @@ import service.management.panel.BarHorizontalChartService;
 import service.management.panel.KnobChartService;
 import service.management.panel.MixedChartService;
 import service.management.panel.PieChartService;
+import util.UsuarioSessao;
 
 @Named(value = "panelManagement")
 @ViewScoped
@@ -63,20 +63,26 @@ public class PanelManagementController implements Serializable {
 	private String fonte;
 	private boolean unique;
 
-	public void settar() {
-		filtro.setAno(ano);
-		filtro.setProjeto(filtro.getIdProjeto());
-		filtro.setGestao(filtro.getIdGestao());
-		filtro.setShowUnique(unique);
-	}
+	@Inject
+	private UsuarioSessao sessao;
+	
+	private Boolean show = false;
 	
 	public void execute() {
 		
 		generateProjectTest();
 		
 		if (filtro.getAno() == null || filtro.getAno().equals("")) filtro.setAno("2021");
-		filtro.setGestao(new Long(36));
-		filtro.setShowUnique(false);
+		
+		if(filtro.getGestao() == null || filtro.getGestao().intValue() <= 0) filtro.setGestao(sessao.getUsuario().getGestao().getId());
+		
+		
+		if(filtro.getShowUnique() == null) {
+			filtro.setShowUnique(true);
+		}else {
+			filtro.setShowUnique(true && !show);
+		}
+		
 		
 		createEvolutionFinance();
 		createKnob();
@@ -85,6 +91,8 @@ public class PanelManagementController implements Serializable {
 		
 		
 	}
+	
+
 	
 	public void generateProjectTest() {
 		projetos = new ArrayList<>();
@@ -265,6 +273,16 @@ public class PanelManagementController implements Serializable {
 
 	public void setFontes(List<FontePagadora> fontes) {
 		this.fontes = fontes;
+	}
+
+
+	public Boolean getShow() {
+		return show;
+	}
+
+
+	public void setShow(Boolean show) {
+		this.show = show;
 	}
 	
 

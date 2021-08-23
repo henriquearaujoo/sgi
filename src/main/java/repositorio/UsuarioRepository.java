@@ -175,6 +175,14 @@ public class UsuarioRepository {
 		query.setParameter("email", email);
 		return  query.getResultList().size() > 0 ? (User) query.getResultList().get(0) : null;
 	}
+	
+	public User findUsuarioByEmail(String email, Long id) {
+		String jpql = "SELECT NEW User(u.id, u.nomeUsuario, u.email, u.colaborador.id, u.colaborador.nome, u.ativo) FROM User u where u.email = :email and u.id != :id ";
+		Query query = this.manager.createQuery(jpql);
+		query.setParameter("email", email);
+		query.setParameter("id", id);
+		return  query.getResultList().size() > 0 ? (User) query.getResultList().get(0) : null;
+	}
 
 	public List<User> findUsuarioByProjeto(Projeto projetoSelecionado) {
 		String jpql = "select up.user from UserProjeto up where up.projeto = :projeto";

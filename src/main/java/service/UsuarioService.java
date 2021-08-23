@@ -65,7 +65,7 @@ public class UsuarioService implements Serializable {
 	public List<Colaborador> getColaborador() {
 		return colaboradorRepositorio.findAll();
 	}
-	
+
 	public List<User> filtrarUsuario(Filtro filtro) {
 		return repositorio.filtrarUsuario(filtro);
 	}
@@ -78,15 +78,15 @@ public class UsuarioService implements Serializable {
 	public User getUsuario(Long id) {
 		return repositorio.getUsuarioById(id);
 	}
-	
+
 	public User findUsuarioById(Long id) {
 		return repositorio.getUsuario(id);
 	}
-	
+
 	public List<User> completeUser(String s) {
 		return repositorio.getUsuarioV2(s);
 	}
-	
+
 	public List<Colaborador> completeColaborador(String s) {
 		return repositorio.getColaboradorUserV2(s);
 	}
@@ -148,15 +148,19 @@ public class UsuarioService implements Serializable {
 	public List<User> findUsuarioByProjeto(Projeto projetoSelecionado) {
 		return repositorio.findUsuarioByProjeto(projetoSelecionado);
 	}
-	
-	public User findUsuarioByEmail(String email) {
-		return repositorio.findUsuarioByEmail(email);
+
+	public User findUsuarioByEmail(User usuario) {
+		if (usuario.getId() != null) {
+			return repositorio.findUsuarioByEmail(usuario.getEmail(), usuario.getId());
+		}
+		
+		return repositorio.findUsuarioByEmail(usuario.getEmail());
 	}
 
 	public UserProjeto findUsuarioProjeto(Projeto projetoSelecionado, User usuario) {
 		return repositorio.findUsuarioProjeto(projetoSelecionado, usuario);
 	}
-	
+
 //	public void popupUsuario() {
 //		HashMap<String, Object> options = new HashMap<String, Object>();
 //		options.put("height", "98%");

@@ -174,7 +174,7 @@ public class UsuarioControllerAtt implements Serializable {
 
 			// Checar se já existe usuário com o email informado e não está ativo para
 			// edição.
-			User checkEmailUser = this.usuarioService.findUsuarioByEmail(this.usuario.getEmail());
+			User checkEmailUser = this.usuarioService.findUsuarioByEmail(this.usuario);
 			if (checkEmailUser != null && checkEmailUser.getAtivo() == false) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Um usuário já está cadastrado com esse email!",

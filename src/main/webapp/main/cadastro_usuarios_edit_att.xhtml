@@ -71,8 +71,8 @@
 						<div class="col form-group">
 							<p:outputLabel value="Gestão: " for="gestao" />
 							<p:selectOneMenu id="gestao" filter="true"
-								filterMatchMode="startsWith" style="width:100%"
-								value="#{usuario_controller.usuario.colaborador.gestao}"
+								filterMatchMode="contains" style="width:100%"
+								value="#{usuario_controller.usuario.gestao}"
 								converter="gestaoConverter" required="true">
 								<f:selectItem noSelectionOption="true" />
 								<f:selectItems value="#{usuario_controller.getListGestao()}"
@@ -85,7 +85,7 @@
 							<p:outputLabel value="Perfil: " for="perfil"
 								rendered="#{usuario_controller.poderEditar()}" />
 							<p:selectOneMenu id="perfil" filter="true"
-								filterMatchMode="startsWith" style="width:100%"
+								filterMatchMode="contains" style="width:100%"
 								value="#{usuario_controller.usuario.perfil}"
 								converter="perfilConverter" required="true">
 								<f:selectItem noSelectionOption="true" />
