@@ -631,7 +631,7 @@ public class PrestacaoDeContaController implements Serializable {
 
 	public boolean verificarPrivilegioValidacao() {
 		Aprouve ap = new Aprouve();
-		ap.setSigla("VALID_ADT");
+		ap.setSigla("NEW_USER");
 		ap.setUsuario(usuarioSessao.getUsuario());
 		return service.findAprouve(ap);
 	}
