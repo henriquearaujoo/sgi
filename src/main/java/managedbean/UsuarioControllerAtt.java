@@ -166,6 +166,24 @@ public class UsuarioControllerAtt implements Serializable {
 	public List<MenuLateral> getMenus() {
 		return MakeMenu.getMenuConfigurações();
 	}
+	
+	private String senha;
+	
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public boolean editPass() {
+		User currentUser = usuarioSessao.getUsuario();
+		if (this.usuario.getId().longValue() == currentUser.getId().longValue()) {
+			return true;
+		}
+		return false;
+	}
 
 	// and medotos de listagem
 
@@ -206,6 +224,7 @@ public class UsuarioControllerAtt implements Serializable {
 			}
 
 			// Se não for usuário novo, basta salvar os dados vindos do formulário
+			usuario.setSenhav4(senha);
 			usuarioService.salvar(usuario);
 
 			// Retornar com sucesso

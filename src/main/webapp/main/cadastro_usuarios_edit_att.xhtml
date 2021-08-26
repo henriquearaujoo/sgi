@@ -101,8 +101,17 @@
 								value="#{usuario_controller.usuario.nomeUsuario}" />
 						
 						</div>
-					</div>				
-						
+					</div>
+					<p:outputPanel rendered="#{usuario_controller.editPass()}" style="display: block">
+						<div class="row">
+							<div class="form-group col">
+								<p:outputLabel value="Senha: " for="password" />
+								<p:inputText id="password"
+									value="#{usuario_controller.senha}" />
+							
+							</div>						
+						</div>
+					</p:outputPanel>						
 					
 
 				</p:panel>
