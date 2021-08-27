@@ -16,8 +16,12 @@ import model.FontePagadora;
 import model.Gestao;
 import model.Projeto;
 import repositorio.management.panel.models.Filtro;
+import repositorio.management.panel.models.Management;
+import repositorio.management.panel.models.Project;
+import repositorio.management.panel.models.Source;
 import service.ProjetoService;
 import service.management.panel.BarHorizontalChartService;
+import service.management.panel.FilterPanelService;
 import service.management.panel.KnobChartService;
 import service.management.panel.MixedChartService;
 import service.management.panel.PieChartService;
@@ -31,17 +35,13 @@ public class PanelManagementController implements Serializable {
 
 	@Inject
 	private PieChartService pieService;
-
 	@Inject
 	private MixedChartService mixedService;
-	
-	@Inject
-	private ProjetoService projetoService;
-
 	@Inject
 	private BarHorizontalChartService horizontalBarService;
 	
-	@Inject KnobChartService knobService;
+	private @Inject KnobChartService knobService;
+	private @Inject FilterPanelService filterService;
 	
 	private PieChartModel pieModel;
 
@@ -51,9 +51,9 @@ public class PanelManagementController implements Serializable {
 	
 	private Integer valuePercentExection;
 	
-	private List<Gestao> gestoes;
-	private List<Projeto> projetos;
-	private List<FontePagadora> fontes;
+	private List<Management> gestoes;
+	private List<Project> projetos;
+	private List<Source> fontes;
 	
 	private Filtro filtro = new Filtro();
 	
@@ -61,6 +61,7 @@ public class PanelManagementController implements Serializable {
 	private String projeto;
 	private String ano;
 	private String fonte;
+	
 	private boolean unique;
 
 	@Inject
@@ -68,9 +69,19 @@ public class PanelManagementController implements Serializable {
 	
 	private Boolean show = false;
 	
+	public void managements() {
+		gestoes = filterService.loadManagements(filtro);
+	}
+	public void projects() {
+		projetos = filterService.loadProjects(filtro);
+	}
+	public void sources() {
+		fontes = filterService.loadSources(filtro);
+	}
+	
 	public void execute() {
 		
-		generateProjectTest();
+		generateFilter();
 		
 		if (filtro.getAno() == null || filtro.getAno().equals("")) filtro.setAno("2021");
 		
@@ -94,60 +105,10 @@ public class PanelManagementController implements Serializable {
 	
 
 	
-	public void generateProjectTest() {
-		projetos = new ArrayList<>();
-		Projeto p = new Projeto();
-		p.setId(1L);
-		p.setNome("Projeto 1");
-
-		Projeto p1 = new Projeto();
-		p1.setId(2L);
-		p1.setNome("Projeto 2");
-		
-		Projeto p2 = new Projeto();
-		p2.setId(3L);
-		p2.setNome("Projeto 3");
-		
-		projetos.add(p);
-		projetos.add(p1);
-		projetos.add(p2);
-		
-		gestoes = new ArrayList<>();
-		
-		Gestao g = new Gestao();
-		g.setId(1L);
-		g.setNome("Gestao 1");
-		
-		Gestao g1 = new Gestao();
-		g1.setId(2L);
-		g1.setNome("Gestao 2");
-		
-		Gestao g2 = new Gestao();
-		g2.setId(3L);
-		g2.setNome("Gestao 3");
-		
-		gestoes.add(g);
-		gestoes.add(g1);
-		gestoes.add(g2);
-		
-		fontes = new ArrayList<>();
-		
-		FontePagadora f = new FontePagadora();
-		f.setId(1L);
-		f.setNome("Fonte 1");
-
-		FontePagadora f1 = new FontePagadora();
-		f1.setId(2L);
-		f1.setNome("Fonte 2");
-		
-		FontePagadora f2 = new FontePagadora();
-		f2.setId(3L);
-		f2.setNome("Fonte 3");
-		
-		fontes.add(f);
-		fontes.add(f1);
-		fontes.add(f2);
-		
+	public void generateFilter() {
+		managements();
+		projects();
+		sources();
 	}
 	
 	public void createKnob() {
@@ -243,22 +204,6 @@ public class PanelManagementController implements Serializable {
 		this.unique = unique;
 	}
 
-	public List<Gestao> getGestoes() {
-		return gestoes;
-	}
-
-	public void setGestoes(List<Gestao> gestoes) {
-		this.gestoes = gestoes;
-	}
-
-	public List<Projeto> getProjetos() {
-		return projetos;
-	}
-
-	public void setProjetos(List<Projeto> projetos) {
-		this.projetos = projetos;
-	}
-
 	public Filtro getFiltro() {
 		return filtro;
 	}
@@ -267,23 +212,30 @@ public class PanelManagementController implements Serializable {
 		this.filtro = filtro;
 	}
 
-	public List<FontePagadora> getFontes() {
-		return fontes;
-	}
-
-	public void setFontes(List<FontePagadora> fontes) {
-		this.fontes = fontes;
-	}
-
-
 	public Boolean getShow() {
 		return show;
 	}
 
-
 	public void setShow(Boolean show) {
 		this.show = show;
 	}
-	
+	public List<Management> getGestoes() {
+		return gestoes;
+	}
+	public void setGestoes(List<Management> gestoes) {
+		this.gestoes = gestoes;
+	}
+	public List<Project> getProjetos() {
+		return projetos;
+	}
+	public void setProjetos(List<Project> projetos) {
+		this.projetos = projetos;
+	}
+	public List<Source> getFontes() {
+		return fontes;
+	}
+	public void setFontes(List<Source> fontes) {
+		this.fontes = fontes;
+	}
 
 }

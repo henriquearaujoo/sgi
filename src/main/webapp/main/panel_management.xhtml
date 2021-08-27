@@ -178,7 +178,7 @@
 									<f:selectItem itemLabel="Todas" noSelectionOption="true" />
 
 									<f:selectItems value="#{panelManagement.gestoes}" var="ges"
-										itemLabel="#{ges.nome}" itemValue="#{ges.id}" />
+										itemLabel="#{ges.name}" itemValue="#{ges.id}" />
 
 									<p:ajax event="itemSelect" update="content"
 										listener="#{panelManagement.execute()}"></p:ajax>
@@ -188,10 +188,11 @@
 							</div>
 							<div class="ui-g-3">
 								<p:selectOneMenu id="proj"
-									value="#{panelManagement.filtro.idProjeto}" editable="true">
-									<f:selectItem itemLabel="Todos" itemValue="" />
-									<f:selectItems var="project" itemLabel="#{project.nome}"
-										itemValue="#{project.id}" value="#{panelManagement.projetos}" />
+									value="#{panelManagement.filtro.idProjeto}" editable="true"  
+									autoWidth="false"> 
+									<f:selectItem it emLabel="Todos" itemValue="" />
+									<f:selectItems var="project" itemLabel="#{project.name}"
+										itemValue="#{project.id}" value="#{panelManagement.projetos}"/>
 									<p:ajax event="itemSelect" update="content"
 										listener="#{panelManagement.execute()}"></p:ajax>
 								</p:selectOneMenu>
@@ -214,7 +215,7 @@
 								<p:selectOneMenu id="fonte"
 									value="#{panelManagement.filtro.idFonte}" editable="true">
 									<f:selectItem itemLabel="Todos" itemValue="" />
-									<f:selectItems var="fonte" itemLabel="#{fonte.nome}"
+									<f:selectItems var="fonte" itemLabel="#{fonte.name}"
 										itemValue="#{fonte.id}" value="#{panelManagement.fontes}" />
 
 									<p:ajax event="itemSelect" update="content"
