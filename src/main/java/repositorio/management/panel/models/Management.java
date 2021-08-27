@@ -2,32 +2,25 @@ package repositorio.management.panel.models;
 
 import java.io.Serializable;
 
-public class Management implements Serializable{
+import model.Gestao;
+
+public class Management extends Gestao implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Long id; 
-	private String name;
-	
 	public Management() {
+		
 	}
 	
 	public Management(Long id, String name) {
-		super();
-		this.id = id;
+		setId(id);
 		this.name = name;
 	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+	
+	private String name;
 
 	public String getName() {
 		return name;

@@ -173,12 +173,12 @@
 
 						<div class="ui-g-12">
 							<div class="ui-g-3">
-								<p:selectOneMenu id="ges"
-									value="#{panelManagement.filtro.gestao}" editable="true">
+								<p:selectOneMenu id="ges" converter="gestaoConverter"
+									value="#{panelManagement.filtro.management}">
 									<f:selectItem itemLabel="Todas" noSelectionOption="true" />
 
 									<f:selectItems value="#{panelManagement.gestoes}" var="ges"
-										itemLabel="#{ges.name}" itemValue="#{ges.id}" />
+										itemLabel="#{ges.name}" itemValue="#{ges}" />
 
 									<p:ajax event="itemSelect" update="content"
 										listener="#{panelManagement.execute()}"></p:ajax>
@@ -187,12 +187,12 @@
 
 							</div>
 							<div class="ui-g-3">
-								<p:selectOneMenu id="proj"
-									value="#{panelManagement.filtro.idProjeto}" editable="true"  
+								<p:selectOneMenu id="proj" converter="projetoConverter"
+									value="#{panelManagement.filtro.project}" 
 									autoWidth="false"> 
-									<f:selectItem it emLabel="Todos" itemValue="" />
+									<f:selectItem emLabel="Todos" itemValue="" />
 									<f:selectItems var="project" itemLabel="#{project.name}"
-										itemValue="#{project.id}" value="#{panelManagement.projetos}"/>
+										itemValue="#{project}" value="#{panelManagement.projetos}"/>
 									<p:ajax event="itemSelect" update="content"
 										listener="#{panelManagement.execute()}"></p:ajax>
 								</p:selectOneMenu>
@@ -213,10 +213,10 @@
 							</div>
 							<div class="ui-g-3">
 								<p:selectOneMenu id="fonte"
-									value="#{panelManagement.filtro.idFonte}" editable="true">
+									value="#{panelManagement.filtro.source}">
 									<f:selectItem itemLabel="Todos" itemValue="" />
 									<f:selectItems var="fonte" itemLabel="#{fonte.name}"
-										itemValue="#{fonte.id}" value="#{panelManagement.fontes}" />
+										itemValue="#{fonte}" value="#{panelManagement.fontes}" />
 
 									<p:ajax event="itemSelect" update="content"
 										listener="#{panelManagement.execute()}"></p:ajax>

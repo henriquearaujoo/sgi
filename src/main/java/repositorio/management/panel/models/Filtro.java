@@ -162,6 +162,12 @@ public class Filtro implements Serializable{
 	private Long idGestao;
 	
 	private Long idFonte;
+	
+	private Management management;
+	
+	private Project project;
+	
+	private Source source;
 
 	public Long getIdFonte() {
 		return idFonte;
@@ -217,6 +223,30 @@ public class Filtro implements Serializable{
 
 	public void setShowUnique(Boolean showUnique) {
 		this.showUnique = showUnique;
+	}
+
+	public Management getManagement() {
+		return management;
+	}
+
+	public void setManagement(Management management) {
+		this.management = management;
+	}
+
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
+	}
+
+	public Source getSource() {
+		return source;
+	}
+
+	public void setSource(Source source) {
+		this.source = source;
 	}
 	
 	
