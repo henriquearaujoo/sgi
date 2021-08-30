@@ -11,16 +11,19 @@ public class Project extends Projeto implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public Project(Long id,String code ,String name) {
-		setId(id);
-		setCodigo(code);
-		this.name = name;
-	}
-	 
 	private String code;
 	private String name;
 	
-	public Project() {
+	public Project(Long id, String code, String name) {
+		super(id, name, code);
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public String getName() {
@@ -31,13 +34,7 @@ public class Project extends Projeto implements Serializable{
 		this.name = name;
 	}
 
-	public String getCode() {
-		return code;
-	}
 
-	public void setCode(String code) {
-		this.code = code;
-	}
 	
 	
 }

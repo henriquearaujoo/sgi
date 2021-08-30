@@ -16,8 +16,7 @@ public class Management extends Gestao implements Serializable{
 	}
 	
 	public Management(Long id, String name) {
-		setId(id);
-		this.name = name;
+		super(id, name);
 	}
 	
 	private String name;
