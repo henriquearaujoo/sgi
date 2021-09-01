@@ -241,7 +241,8 @@ public class ProjetoBean implements Serializable {
 	private List<Localidade> localidades = new ArrayList<Localidade>();
 	private List<User> allUsuario = new ArrayList<User>();
 	private List<LancamentoAuxiliar> lancamentos = new ArrayList<>();
-
+	private List<LancamentoAuxiliar> advancesProject = new ArrayList<>();
+	
 	private List<Produto> allProdutos = new ArrayList<Produto>();
 
 	private @Inject ProjetoService gestaoProjeto;// = new GestaoProjeto();
@@ -1842,6 +1843,11 @@ public class ProjetoBean implements Serializable {
 
 	}
 	
+	public void loadAdvancesInProject() {
+		filtro.setProjetoId(projeto.getId());
+		advancesProject = orcService.loadAdvancesInProjects(filtro);
+	}
+	
 	public void loadDisbursementInProject() {
 		lancamentos = new ArrayList<>();
 		filtro.setProjetoId(projeto.getId());
@@ -1856,7 +1862,6 @@ public class ProjetoBean implements Serializable {
 		if (tabviewProjeto != null)
 			index = tabviewProjeto.getActiveIndex();
 
-		
 		if (index == 0) {
 
 		} else if (index == 1) {
@@ -1887,6 +1892,8 @@ public class ProjetoBean implements Serializable {
 		} else if (index == 8) {
 			filtro.setAttribute("devolution");
 			loadDisbursementInProject();
+		} else if (index == 9) {
+			loadAdvancesInProject();
 		}
 	}
 
@@ -3312,6 +3319,14 @@ public class ProjetoBean implements Serializable {
 //			return new ArrayList<Gestao>();
 //		else
 			return projetoService.getGestaoAutoComplete(query);
+	}
+
+	public List<LancamentoAuxiliar> getAdvancesProject() {
+		return advancesProject;
+	}
+
+	public void setAdvancesProject(List<LancamentoAuxiliar> advancesProject) {
+		this.advancesProject = advancesProject;
 	}
 
 	public List<Orcamento> getOrcamentos() {
