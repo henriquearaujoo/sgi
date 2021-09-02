@@ -364,6 +364,10 @@ public class OrcamentoService implements Serializable {
 	public List<LancamentoAuxiliar> loadDisbursementInProject(Filtro filtro) {
 		return donationRepo.loadDisbursementInProject(filtro);
 	}
+	
+	public List<LancamentoAuxiliar> loadAdvancesInProjects(Filtro filtro) {
+		return donationRepo.loadAdvancesInProjects(filtro);
+	}
 
 	public List<LancamentoAuxiliar> getExtratoCtrlDoacaoParaConferencia(Filtro filtro) {
 

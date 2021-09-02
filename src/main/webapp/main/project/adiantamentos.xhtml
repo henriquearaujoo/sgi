@@ -1,0 +1,52 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+	<p:panel id="panel-info-advances">
+		<div class="ui-g ui-fluid default-style-form-filter">
+			<p:dataTable id="table-advances-project" value="#{projetoBean.advancesProject}" var="advances">
+				<p:column headerText="Código">
+					<h:outputText value="#{advances.tipov4}#{advances.id}" />
+				</p:column>
+				<p:column headerText="Descrição">
+					<h:outputText value="#{advances.descricao}" />
+				</p:column>
+				<p:column headerText="Solicitante">
+					<h:outputText value="#{advances.solicitante.nome}" />
+				</p:column>
+				<p:column headerText="Gestão">
+					<h:outputText value="#{advances.gestao.nome}" />
+				</p:column>
+				<p:column headerText="Status">
+					<h:outputText value="#{advances.statusCompra.nome}" />
+				</p:column>
+				<p:column headerText="Prestação de Contas">
+					<h:outputText value="#{advances.statusAdiantamento.nome}" />
+				</p:column>
+				<p:column headerText="Data">
+					<h:outputText value="#{advances.dataEmissao}">\
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss " />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Valor">
+					<h:outputText value="R$#{advances.valorTotalComDesconto}" />
+				</p:column>
+				<p:column headerText="Opções">
+					<p:commandLink styleClass="btn btn-sm btn-success">
+						<h:outputText value="Aprovar" />
+					</p:commandLink>
+					<p:commandLink styleClass="btn btn-sm btn-danger">
+						<h:outputText value="Não Aprovar" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</div>
+	
+	</p:panel>
+	
+</ui:fragment>
