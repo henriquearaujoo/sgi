@@ -70,17 +70,16 @@
 					</div>
 
 					<div class="ui-g ui-fluid default-style-form-filter">
-						<p:outputPanel rendered="#{usuarioSessao.usuario.gestao > 1}">
-							<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-								<p:outputLabel for="filter-gestao" value="Gestão"
-									styleClass="form-label" />
-								<p:autoComplete id="filter-gestao" styleClass="font12-vi"
-									value="#{compraController.filtro.gestao}" maxResults="10"
-									completeMethod="#{compraController.completeGestao}" var="gestao"
-									itemLabel="#{gestao.nome}" itemValue="#{gestao}"
-									converter="gestaoConverterVI" minQueryLength="3" />
-							</div>
-						</p:outputPanel>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+							<p:outputLabel for="filter-gestao" value="Gestão"
+								styleClass="form-label" />
+							<p:autoComplete id="filter-gestao" styleClass="font12-vi"
+								value="#{compraController.filtro.gestao}" maxResults="10"
+								completeMethod="#{compraController.completeGestao}" var="gestao"
+								itemLabel="#{gestao.nome}" itemValue="#{gestao}"
+								converter="gestaoConverterVI" minQueryLength="3" />
+						</div>
 
 						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
 
