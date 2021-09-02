@@ -28,7 +28,7 @@ public class FilterRepositorio {
 	
 	public List<Management> loadManagements(Filtro filtro) {
 		Query query = this.manager.createNativeQuery(getSqlToManagements(filtro));
-		//setQuery(query, filtro);
+		setQueryManagements(query, filtro);
 		List<Object[]> result =  query.getResultList();
 		List<Management> managements = new ArrayList<Management>();
 		
@@ -43,7 +43,7 @@ public class FilterRepositorio {
 	
 	public List<Project> loadProjects(Filtro filtro) {
 		Query query = this.manager.createNativeQuery(getSqlToProjects(filtro));
-		//setQuery(query, filtro);
+		setQuery(query, filtro);
 		List<Object[]> result =  query.getResultList();
 		List<Project> projects = new ArrayList<Project>();
 	
@@ -57,7 +57,7 @@ public class FilterRepositorio {
 	
 	public List<Source> loadSources(Filtro filtro) {
 		Query query = this.manager.createNativeQuery(getSqlToSources(filtro));
-		//setQuery(query, filtro);
+		setQuery(query, filtro);
 		List<Object[]> result =  query.getResultList();
 		List<Source> sources = new ArrayList<Source>();
 		
@@ -69,15 +69,26 @@ public class FilterRepositorio {
 		
 		return sources;
 	}
-
+	
 	public void setQuery(Query query, Filtro filtro) {
 		query.setParameter("gestao_id", filtro.getGestao());
 	}
+
+	public void setQueryManagements(Query query, Filtro filtro) {
+		query.setParameter("gestao_id", filtro.getIdGestao());
+	}
 	
 	public String getSqlToManagements(Filtro filtro) {
-		StringBuilder hql = new StringBuilder("select ");		
-		hql.append("g.id, g.nome from gestao g where g.id = 36 or ");//TODO : ADICIONAR ID_GESTAO
-		hql.append("g.superintendencia_id  = 36 ");
+		StringBuilder hql = new StringBuilder("select ");
+		hql.append("g.id, g.nome from gestao g where 1 = 1 ");
+		
+		if (filtro.getShowUnique()) {
+			hql.append("and g.id = :gestao_id ");
+		} else {
+			hql.append(
+					"and (g.id = :gestao_id or g.superintendencia_id  = :gestao_id) ");
+		}
+	
 		String result = hql.toString();
 		return result;
 	}
@@ -85,8 +96,18 @@ public class FilterRepositorio {
 	public String getSqlToProjects(Filtro filtro) {
 		StringBuilder hql = new StringBuilder("select ");
 		hql.append("p.id, p.codigo , p.nome ");
-		hql.append("from projeto p where p.gestao_id = 36 or ");//TODO: ADICIONAR ID_GESTAO
-		hql.append("((select g.superintendencia_id from gestao g where g.id = p.gestao_id) = 36) "); //TODO: ADICIONAR ID_GESTAO 
+		hql.append("from projeto p where 1 = 1 ");//TODO: ADICIONAR ID_GESTAO
+		
+		if (filtro.getShowUnique()) {
+			hql.append("and p.gestao_id = :gestao_id ");
+		} else {
+			hql.append(
+					"and ((p.gestao_id  = :gestao_id) or ((select g.superintendencia_id from gestao g where g.id = p.gestao_id) = :gestao_id)) ");
+		}
+		//hql.append("((select g.superintendencia_id from gestao g where g.id = p.gestao_id) = 36) "); //TODO: ADICIONAR ID_GESTAO
+		hql.append(filtro.getClauseYearPlanningDateEnd());
+		
+		
 		String result = hql.toString();
 		return result;
 	}
@@ -99,8 +120,23 @@ public class FilterRepositorio {
 		hql.append("join orcamento o on o.id = rb.orcamento_id ");
 		hql.append("join fonte_pagadora fp on fp.id = o.fonte_id ");
 		hql.append("where p.id in  ");
-		hql.append("(select p.id from projeto p where p.gestao_id = 36 or ");
-		hql.append("((select g.superintendencia_id from gestao g where g.id = p.gestao_id) = 36)) ");// TODO: ID_GESTAO
+		
+		hql.append("(   ");
+		
+		if (filtro.getShowUnique()) {
+			hql.append("select p.id from projeto p where p.gestao_id = :gestao_id ");
+			hql.append(filtro.getClauseYearPlanningDateEnd());
+			
+		} else {
+			hql.append(
+					"select p.id from projeto p where (p.gestao_id = :gestao_id or ((select g.superintendencia_id from gestao g where g.id = p.gestao_id) = :gestao_id)) ");
+			hql.append(filtro.getClauseYearPlanningDateEnd());
+			
+		}
+		
+		
+		hql.append(") ");
+		
 		hql.append("group by fp.id, fp.nome ");
 		String result = hql.toString();
 		return result;

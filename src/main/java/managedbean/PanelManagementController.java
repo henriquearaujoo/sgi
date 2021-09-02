@@ -1,7 +1,6 @@
 package managedbean;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.view.ViewScoped;
@@ -12,14 +11,10 @@ import org.primefaces.model.charts.bar.BarChartModel;
 import org.primefaces.model.charts.hbar.HorizontalBarChartModel;
 import org.primefaces.model.charts.pie.PieChartModel;
 
-import model.FontePagadora;
-import model.Gestao;
-import model.Projeto;
 import repositorio.management.panel.models.Filtro;
 import repositorio.management.panel.models.Management;
 import repositorio.management.panel.models.Project;
 import repositorio.management.panel.models.Source;
-import service.ProjetoService;
 import service.management.panel.BarHorizontalChartService;
 import service.management.panel.FilterPanelService;
 import service.management.panel.KnobChartService;
@@ -69,6 +64,45 @@ public class PanelManagementController implements Serializable {
 	
 	private Boolean show = false;
 	
+
+	public void execute() {
+		setupFilters();
+		generateFilter();
+		generateGraphics();
+	}
+	
+	public void setupFilters() {
+		
+		filtro.setIdGestao(sessao.getUsuario().getGestao().getId());
+		
+		if(filtro.getShowUnique() == null) {
+			filtro.setShowUnique(true);
+		}else {
+			filtro.setShowUnique(true && !show);
+		}
+
+		if (filtro.getAno() == null || filtro.getAno().equals("")) filtro.setAno("2021");
+	
+		if(filtro.getGestao() == null || filtro.getGestao().intValue() <= 0) filtro.setGestao(sessao.getUsuario().getGestao().getId());
+		
+		generateFilter();
+	}
+	
+	public void generateFilter() {
+		managements();
+		projects();
+		sources();
+	}
+	
+	public void generateGraphics() {
+	
+		createEvolutionFinance();
+		createKnob();
+		createHorizontalBarModel();
+		createPieModel();
+	}
+	
+	
 	public void managements() {
 		gestoes = filterService.loadManagements(filtro);
 	}
@@ -77,43 +111,6 @@ public class PanelManagementController implements Serializable {
 	}
 	public void sources() {
 		fontes = filterService.loadSources(filtro);
-	}
-	
-	public void execute() {
-		
-		generateFilter();
-		
-		if (filtro.getAno() == null || filtro.getAno().equals("")) filtro.setAno("2021");
-		
-		if(filtro.getGestao() == null || filtro.getGestao().intValue() <= 0) filtro.setGestao(sessao.getUsuario().getGestao().getId());
-		
-		
-		if(filtro.getShowUnique() == null) {
-			filtro.setShowUnique(true);
-		}else {
-			filtro.setShowUnique(true && !show);
-		}
-		
-		
-		createEvolutionFinance();
-		createKnob();
-		createHorizontalBarModel();
-		createPieModel();
-		
-		
-	}
-	
-	/*
-	 * public void setFilterAll() {
-	 * filtro.setGestao(filtro.getManagement().getId());
-	 * filtro.setIdProjeto(filtro.getProject().getId());
-	 * filtro.setIdFonte(filtro.getSource().getId()); }
-	 */
-	
-	public void generateFilter() {
-		managements();
-		projects();
-		sources();
 	}
 	
 	public void createKnob() {

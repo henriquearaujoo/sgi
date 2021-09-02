@@ -26,7 +26,6 @@ public class Filtro implements Serializable{
 	private static String CLAUSE22_EXECUTED = "and (pl.datapagamento >= '2022-01-01' and pl.datapagamento <= '2022-12-31') ";
 	private static String CLAUSE23_EXECUTED = "and (pl.datapagamento >= '2023-01-01' and pl.datapagamento <= '2023-12-31') ";
 	
-	
 	private static String CLAUSE18_PLANNING = "(p.datainicio >= '2018-01-01' and p.datainicio <= '2018-12-31') ";
 	private static String CLAUSE19_PLANNING = "(p.datainicio >= '2019-01-01' and p.datainicio <= '2019-12-31') ";
 	private static String CLAUSE20_PLANNING = "(p.datainicio >= '2020-01-01' and p.datainicio <= '2020-12-31') ";
@@ -34,15 +33,12 @@ public class Filtro implements Serializable{
 	private static String CLAUSE22_PLANNING = "(p.datainicio >= '2022-01-01' and p.datainicio <= '2022-12-31') ";
 	private static String CLAUSE23_PLANNING = "(p.datainicio >= '2023-01-01' and p.datainicio <= '2023-12-31') ";
 	
-	
-	private static String CLAUSE18_PLANNING_DATE_END = "and (p.datainicio >= '2018-01-01' or p.datafinal >= '2018-01-01') ";
-	private static String CLAUSE19_PLANNING_DATE_END = "and (p.datainicio >= '2019-01-01' or p.datafinal >= '2019-01-01') ";
-	private static String CLAUSE20_PLANNING_DATE_END = "and (p.datainicio >= '2020-01-01' or p.datafinal >= '2020-01-01') ";
-	private static String CLAUSE21_PLANNING_DATE_END = "and (p.datainicio >= '2021-01-01' or p.datafinal >= '2021-01-01') ";
-	private static String CLAUSE22_PLANNING_DATE_END = "and (p.datainicio >= '2022-01-01' or p.datafinal >= '2022-01-01') ";
-	private static String CLAUSE23_PLANNING_DATE_END = "and (p.datainicio >= '2023-01-01' or p.datafinal >= '2023-01-01') ";
-	
-	 
+	private static String CLAUSE18_PLANNING_DATE_END = "and ((p.datainicio >= '2018-01-01' and p.datainicio  <= '2018-12-31') or (p.datainicio  <= '2018-01-01' and  p.datafinal >= '2018-01-01')) ";
+	private static String CLAUSE19_PLANNING_DATE_END = "and ((p.datainicio >= '2019-01-01' and p.datainicio  <= '2019-12-31') or (p.datainicio  <= '2019-01-01' and  p.datafinal >= '2019-01-01')) ";
+	private static String CLAUSE20_PLANNING_DATE_END = "and ((p.datainicio >= '2020-01-01' and p.datainicio  <= '2020-12-31') or (p.datainicio  <= '2020-01-01' and  p.datafinal >= '2020-01-01')) ";
+	private static String CLAUSE21_PLANNING_DATE_END = "and ((p.datainicio >= '2021-01-01' and p.datainicio  <= '2021-12-31') or (p.datainicio  <= '2021-01-01' and  p.datafinal >= '2021-01-01')) ";
+	private static String CLAUSE22_PLANNING_DATE_END = "and ((p.datainicio >= '2022-01-01' and p.datainicio  <= '2022-12-31') or (p.datainicio  <= '2022-01-01' and  p.datafinal >= '2022-01-01')) ";
+	private static String CLAUSE23_PLANNING_DATE_END = "and ((p.datainicio >= '2023-01-01' and p.datainicio  <= '2023-12-31') or (p.datainicio  <= '2023-01-01' and  p.datafinal >= '2023-01-01')) ";
 	
 	private static String CLAUSE18_COUNT_MONTH_INIT = "(CAST(TO_CHAR(AGE('2018-12-31', p.datainicio),'MM') AS INTEGER) + 1) * (sum(pr.valor) / ((p.datafinal - p.datainicio) / 30)) ";
 	private static String CLAUSE19_COUNT_MONTH_INIT = "(CAST(TO_CHAR(AGE('2019-12-31', p.datainicio),'MM') AS INTEGER) + 1) * (sum(pr.valor) / ((p.datafinal - p.datainicio) / 30)) ";
@@ -51,16 +47,12 @@ public class Filtro implements Serializable{
 	private static String CLAUSE22_COUNT_MONTH_INIT = "(CAST(TO_CHAR(AGE('2022-12-31', p.datainicio),'MM') AS INTEGER) + 1) * (sum(pr.valor) / ((p.datafinal - p.datainicio) / 30)) ";
 	private static String CLAUSE23_COUNT_MONTH_INIT = "(CAST(TO_CHAR(AGE('2023-12-31', p.datainicio),'MM') AS INTEGER) + 1) * (sum(pr.valor) / ((p.datafinal - p.datainicio) / 30)) ";
 	
-	
 	private static String CLAUSE18_COUNT_MONTH_END = "(CAST(TO_CHAR(AGE(p.datafinal, '2018-01-01'),'MM') AS INTEGER) + 1) * (sum(pr.valor) / ((p.datafinal - p.datainicio) / 30)) ";
 	private static String CLAUSE19_COUNT_MONTH_END = "(CAST(TO_CHAR(AGE(p.datafinal, '2019-01-01'),'MM') AS INTEGER) + 1) * (sum(pr.valor) / ((p.datafinal - p.datainicio) / 30)) ";
 	private static String CLAUSE20_COUNT_MONTH_END = "(CAST(TO_CHAR(AGE(p.datafinal, '2020-01-01'),'MM') AS INTEGER) + 1) * (sum(pr.valor) / ((p.datafinal - p.datainicio) / 30)) ";
 	private static String CLAUSE21_COUNT_MONTH_END = "(CAST(TO_CHAR(AGE(p.datafinal, '2021-01-01'),'MM') AS INTEGER) + 1) * (sum(pr.valor) / ((p.datafinal - p.datainicio) / 30)) ";
 	private static String CLAUSE22_COUNT_MONTH_END = "(CAST(TO_CHAR(AGE(p.datafinal, '2022-01-01'),'MM') AS INTEGER) + 1) * (sum(pr.valor) / ((p.datafinal - p.datainicio) / 30)) ";
 	private static String CLAUSE23_COUNT_MONTH_END = "(CAST(TO_CHAR(AGE(p.datafinal, '2023-01-01'),'MM') AS INTEGER) + 1) * (sum(pr.valor) / ((p.datafinal - p.datainicio) / 30)) ";
-	
-
-	
 	
 	public String getClauseYearExecuted() {
 		switch (this.ano) {
@@ -80,6 +72,8 @@ public class Filtro implements Serializable{
 			return CLAUSE21_EXECUTED;
 		}
 	}
+	
+	
 	
 	public String getClauseYearPlanningCase() {
 		switch (this.ano) {
@@ -248,6 +242,8 @@ public class Filtro implements Serializable{
 	public void setSource(Source source) {
 		this.source = source;
 	}
+
+
 	
 	
 	

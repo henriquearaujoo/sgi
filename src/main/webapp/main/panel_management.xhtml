@@ -175,31 +175,20 @@
 							<div class="ui-g-3">
 								<p:selectOneMenu id="ges"
 									value="#{panelManagement.filtro.gestao}" autoWidth="false">
-									<f:selectItem itemLabel="Todas" noSelectionOption="true" />
-
+									<f:selectItem itemLabel="Gestões" noSelectionOption="true" />
 									<f:selectItems value="#{panelManagement.gestoes}" var="ges"
 										itemLabel="#{ges.nome}" itemValue="#{ges.id}" />
-
-									<p:ajax event="itemSelect" update="content"
-										listener="#{panelManagement.execute()}"></p:ajax>
-
-								</p:selectOneMenu>
-
-							</div>
-							<div class="ui-g-3">
-								<p:selectOneMenu id="proj"
-									value="#{panelManagement.filtro.idProjeto}" autoWidth="false">
-									<f:selectItem itemLabel="Todos" noSelectionOption="true" />
-									<f:selectItems var="project" itemLabel="#{project.name}"
-										itemValue="#{project.id}" value="#{panelManagement.projetos}" />
 									<p:ajax event="itemSelect" update="content"
 										listener="#{panelManagement.execute()}"></p:ajax>
 								</p:selectOneMenu>
+
 							</div>
+
+
 							<div class="ui-g-3">
 								<p:selectOneMenu id="select_ano"
 									value="#{panelManagement.filtro.ano}" editable="true">
-									<f:selectItem itemLabel="Selecione o Ano" itemValue="" />
+									<f:selectItem itemLabel="Selecione o ano" itemValue="" />
 									<f:selectItem itemLabel="2018" itemValue="2018" />
 									<f:selectItem itemLabel="2019" itemValue="2019" />
 									<f:selectItem itemLabel="2020" itemValue="2020" />
@@ -210,10 +199,12 @@
 										listener="#{panelManagement.execute()}"></p:ajax>
 								</p:selectOneMenu>
 							</div>
+
 							<div class="ui-g-3">
 								<p:selectOneMenu id="fonte"
 									value="#{panelManagement.filtro.idFonte}">
-									<f:selectItem itemLabel="Todos" noSelectionOption="true" />
+									<f:selectItem itemLabel="Selecione uma fonte"
+										noSelectionOption="true" />
 									<f:selectItems var="fonte" itemLabel="#{fonte.nome}"
 										itemValue="#{fonte.id}" value="#{panelManagement.fontes}" />
 
@@ -221,9 +212,19 @@
 										listener="#{panelManagement.execute()}"></p:ajax>
 								</p:selectOneMenu>
 							</div>
+							<div class="ui-g-3">
+								<p:selectOneMenu id="proj"
+									value="#{panelManagement.filtro.idProjeto}" autoWidth="false">
+									<f:selectItem itemLabel="Selecione um projeto"
+										noSelectionOption="true" />
+									<f:selectItems var="project" itemLabel="#{project.name}"
+										itemValue="#{project.id}" value="#{panelManagement.projetos}" />
+									<p:ajax event="itemSelect" update="content"
+										listener="#{panelManagement.execute()}"></p:ajax>
+								</p:selectOneMenu>
+							</div>
+
 							<div class="ui-g-12" style="margin-top: 15px">
-
-
 								<p:selectBooleanCheckbox value="#{panelManagement.show}"
 									itemLabel="Mostrar projetos de gestõtes abaixo na hierarquia">
 									<p:ajax update="content"
