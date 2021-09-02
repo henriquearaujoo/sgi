@@ -582,6 +582,7 @@ public class CompraController implements Serializable {
 		filtro = new Filtro();
 		filtro.setDataInicio(DataUtil.getDataInicio(new Date()));
 		filtro.setDataFinal(DataUtil.getDataFinal(new Date()));
+		filtro.setGestao(usuarioSessao.getUsuario().getGestao()); // setar o valor da gestão de acordo com o perfil do usuário
 		carregarCompras();
 		// carregarMunicipiosDeCompra();
 		carregarProjetos();
@@ -1510,6 +1511,8 @@ public class CompraController implements Serializable {
 
 		if (filtro.getGestao() != null && filtro.getGestao().getId() != null) {
 			filtro.setGestaoID(filtro.getGestao().getId());
+		} else {
+			filtro.setGestao(usuarioSessao.getUsuario().getGestao()); // setar o valor da gestão de acordo com o perfil do usuário
 		}
 
 		if (filtro.getLocalidade() != null && filtro.getLocalidade().getId() != null) {

@@ -2403,7 +2403,6 @@ public class LancamentoRepository implements Serializable {
 				"SELECT NEW Compra(c.id, c.gestao.nome, c.solicitante.nome, c.localidade.mascara, c.dataEmissao,c.statusCompra, c.bootUrgencia, c.CategoriaDespesaClass.nome) FROM  Compra c join c.lancamentosAcoes la  join la.projetoRubrica pr join pr.projeto p where 1 = 1");
 
 		jpql.append(" and c.versionLancamento = 'MODE01' ");
-
 		if (filtro.getCategoriaID() != null) {
 			jpql.append(" and c.CategoriaDespesaClass.id = :catego ");
 		}
