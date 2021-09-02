@@ -103,11 +103,12 @@ public class PanelManagementController implements Serializable {
 		
 	}
 	
-	public void setFilterAll() {
-		filtro.setGestao(filtro.getManagement().getId());
-		filtro.setIdProjeto(filtro.getProject().getId());
-		filtro.setIdFonte(filtro.getSource().getId());
-	}
+	/*
+	 * public void setFilterAll() {
+	 * filtro.setGestao(filtro.getManagement().getId());
+	 * filtro.setIdProjeto(filtro.getProject().getId());
+	 * filtro.setIdFonte(filtro.getSource().getId()); }
+	 */
 	
 	public void generateFilter() {
 		managements();
