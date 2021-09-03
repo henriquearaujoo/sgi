@@ -693,7 +693,7 @@ public class CompraController implements Serializable {
 	}
 	
 	public void carregarCompras() {
-		filtro.setGestaoID(carregarUsuarioSessao().getGestao().getId());
+		filtro.setGestaoID(carregarUsuarioSessao().getColaborador().getGestao().getId());
 		compras = compraService.getCompras(filtro);
 		itemCompra = new ItemCompra();
 		itemCompra.setCompra(new Compra());
