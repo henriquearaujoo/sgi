@@ -106,6 +106,7 @@
 							title="Adicionar Usuário" style="color:#fff; margin: 8px 2px;">
 							<i class="fa fas fa-plus"></i>
 							<span>Novo Colaborador</span>
+							<f:param name="action" value="new" />
 						</p:link>
 						<p:commandLink styleClass="btn btn-primary btn-sm" update="dialog_help"
 								oncomplete="PF('dialog_help').show();" onerror="stop();" onsuccess="stop();"
@@ -151,6 +152,7 @@
 								<p:menuitem icon="fa fa-fw fa-edit" value="editar"
 									outcome="/main/cadastro_usuarios_edit_att">
 									<f:param name="id" value="#{usuario.id}" />
+									<f:param name="action" value="edit" />
 								</p:menuitem>
 
 								<p:menuitem value="remover" ajax="false"
