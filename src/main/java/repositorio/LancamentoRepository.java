@@ -2395,6 +2395,11 @@ public class LancamentoRepository implements Serializable {
 		query.setParameter("id", id);
 		return query.getResultList().size() > 0 ? true : false;
 	}
+	
+	// TODO: CONTINUAR DAQUI
+	public List<Compra> getPurchaseByManagement(Filtro filtro) {
+		return new ArrayList<Compra>();
+	}
 
 	// public Compra(Long id,String nomeGestao, String nomeSolicitante, String
 	// nomeDestino, Date data, StatusCompra status)

@@ -686,6 +686,11 @@ public class CompraController implements Serializable {
 			return true;
 		}
 	}
+	
+	// TODO: continuar daqui
+	public void loadingPurchaseByManagement() {
+		compras = compraService.getPurchaseByManagement(filtro);
+	}
 
 	public void carregarCompras() {
 		compras = compraService.getCompras(filtro);
