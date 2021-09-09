@@ -23,6 +23,7 @@ import model.Acao;
 import model.Aprouve;
 import model.CategoriaDespesaClass;
 import model.CategoriaProjeto;
+import model.Colaborador;
 import model.Compra;
 import model.CompraMunicipio;
 import model.Estado;
@@ -555,46 +556,6 @@ public class CompraService implements Serializable {
 
 	public CompraService(LancamentoRepository repositorio) {
 		this.repositorio = repositorio;
-	}
-	
-	public List<Compra> getPurchaseByManagement(Filtro filtro) {
-		if (filtro.getDataInicio() != null && filtro.getDataFinal() != null) {
-			if (filtro.getDataInicio().after(filtro.getDataFinal())) {
-				addMessage("", "Data inicio maior que data final", FacesMessage.SEVERITY_ERROR);
-				return new ArrayList<Compra>();
-			}
-
-			Calendar calInicio = Calendar.getInstance();
-			calInicio.setTime(filtro.getDataInicio());
-
-			Calendar calFinal = Calendar.getInstance();
-			calFinal.setTime(filtro.getDataFinal());
-
-			calInicio.set(Calendar.HOUR, 0);
-			calInicio.set(Calendar.MINUTE, 0);
-			calInicio.set(Calendar.SECOND, 0);
-			calInicio.set(Calendar.MILLISECOND, 0);
-
-			calFinal.set(Calendar.HOUR, 24);
-			calFinal.set(Calendar.MINUTE, 0);
-			calFinal.set(Calendar.SECOND, 0);
-			calFinal.set(Calendar.MILLISECOND, 0);
-
-			filtro.setDataInicio(calInicio.getTime());
-			filtro.setDataFinal(calFinal.getTime());
-
-
-		} else if (filtro.getDataInicio() != null) {
-			Calendar calInicio = Calendar.getInstance();
-			calInicio.setTime(filtro.getDataInicio());
-			calInicio.set(Calendar.HOUR, 0);
-			calInicio.set(Calendar.MINUTE, 0);
-			calInicio.set(Calendar.SECOND, 0);
-			calInicio.set(Calendar.MILLISECOND, 0);
-			filtro.setDataInicio(calInicio.getTime());
-		}
-		
-		return repositorio.getPurchaseByManagement(filtro);
 	}
 
 	public List<Compra> getCompras(Filtro filtro) {

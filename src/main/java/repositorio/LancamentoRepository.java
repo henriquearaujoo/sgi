@@ -2396,14 +2396,7 @@ public class LancamentoRepository implements Serializable {
 		return query.getResultList().size() > 0 ? true : false;
 	}
 	
-	// TODO: CONTINUAR DAQUI
-	public List<Compra> getPurchaseByManagement(Filtro filtro) {
-		return new ArrayList<Compra>();
-	}
-
-	// public Compra(Long id,String nomeGestao, String nomeSolicitante, String
-	// nomeDestino, Date data, StatusCompra status)
-	public List<Compra> getCompras(Filtro filtro) {
+	public String getSQLPurchase(Filtro filtro) {
 		StringBuilder jpql = new StringBuilder(
 				"SELECT NEW Compra(c.id, c.gestao.nome, c.solicitante.nome, c.localidade.mascara, c.dataEmissao,c.statusCompra, c.bootUrgencia, c.CategoriaDespesaClass.nome) FROM  Compra c join c.lancamentosAcoes la  join la.projetoRubrica pr join pr.projeto p where 1 = 1");
 
@@ -2435,7 +2428,7 @@ public class LancamentoRepository implements Serializable {
 		}
 
 		if (filtro.getGestaoID() != null) {
-			jpql.append(" and c.gestao.id = :gestaoID ");
+			jpql.append(" and ((c.gestao.id = :gestaoID) or (select g.id from Gestao g where g.id = c.gestao.id) = :gestaoID) ");
 		}
 
 		if (filtro.getLocalidadeID() != null) {
@@ -2447,18 +2440,23 @@ public class LancamentoRepository implements Serializable {
 					" and ((select count(it) from ItemCompra it where it.compra.id = c.id and  lower(it.produto.descricao) like lower(:descricao_produto) )   >  0) ");
 		}
 
+		if (filtro.getCategoriaID() != null) {
+			jpql.append(" and compra.CategoriaDespesaClass.id = :catego ");
+		}
+
 		if (filtro.getProjeto() != null && filtro.getProjeto().getId() != null) {
 			jpql.append(" and :pProjetoID = p.id");
 		}
 
 		jpql.append(" order by c.dataEmissao desc");
-
 		
-
-		Query query = manager.createQuery(jpql.toString());
+		return jpql.toString();
+	}
+	
+	public List<Compra> setQueryPurchase(Query query, Filtro filtro) {
 
 		if (filtro.getCategoriaID() != null) {
-			jpql.append(" and compra.CategoriaDespesaClass.id = :catego ");
+//			jpql.append(" and compra.CategoriaDespesaClass.id = :catego ");
 			query.setParameter("catego", filtro.getCategoriaID());
 		}
 
@@ -2511,6 +2509,13 @@ public class LancamentoRepository implements Serializable {
 		}
 
 		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<Compra>();
+	}
+
+	// public Compra(Long id,String nomeGestao, String nomeSolicitante, String
+	// nomeDestino, Date data, StatusCompra status)
+	public List<Compra> getCompras(Filtro filtro) {
+		Query query = manager.createQuery(getSQLPurchase(filtro));
+		return setQueryPurchase(query, filtro);
 	}
 
 	public List<ItemCompra> getItensCompraDetalhados(Filtro filtro) {

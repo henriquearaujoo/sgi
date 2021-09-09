@@ -580,7 +580,7 @@ public class CompraController implements Serializable {
 		}
 		
 		filtro = new Filtro();
-		filtro.setDataInicio(DataUtil.getDataInicio(new Date()));
+//		filtro.setDataInicio(DataUtil.getDataInicio(new Date()));
 		filtro.setDataFinal(DataUtil.getDataFinal(new Date()));
 		carregarCompras();
 		// carregarMunicipiosDeCompra();
@@ -687,12 +687,12 @@ public class CompraController implements Serializable {
 		}
 	}
 	
-	// TODO: continuar daqui
-	public void loadingPurchaseByManagement() {
-		compras = compraService.getPurchaseByManagement(filtro);
+	public User currentUser() {
+		return usuarioSessao.getUsuario();
 	}
 
 	public void carregarCompras() {
+		filtro.setGestao(currentUser().getColaborador().getGestao());
 		compras = compraService.getCompras(filtro);
 		itemCompra = new ItemCompra();
 		itemCompra.setCompra(new Compra());
@@ -1513,9 +1513,7 @@ public class CompraController implements Serializable {
 
 	public void filtrar() {
 
-		if (filtro.getGestao() != null && filtro.getGestao().getId() != null) {
-			filtro.setGestaoID(filtro.getGestao().getId());
-		}
+		filtro.setGestaoID(currentUser().getColaborador().getGestao().getId());
 
 		if (filtro.getLocalidade() != null && filtro.getLocalidade().getId() != null) {
 			filtro.setLocalidadeID(filtro.getLocalidade().getId());
