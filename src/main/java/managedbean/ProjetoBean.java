@@ -1854,47 +1854,73 @@ public class ProjetoBean implements Serializable {
 		lancamentos = orcService.loadDisbursementInProject(filtro);
 //		 service.getPagamentosPE(filtro);
 	}
-
-	private Tab tab = null;
+	
+	public void loadTabFraming() {
+		findMetasByIdProjeto();
+		findIndicadoresByProjeto();
+	}
+	
+	public void loadTabBudget() {
+		loadDonations();
+		// carregasRubricasOrcadas();
+		carregarRubricasDeProjeto();
+		//carregarAtividades();
+	}
+	
+	public void loadTabGoals() {
+		// carregarRelacaoDeOrcamentos();
+		// calculaValor();
+		// createMultiAxisModel();
+		// createChartExecucao();
+		// carregarListaDeCategoriasDeProjeto();
+	}
+	
+	public void loadTabActivities() {
+		carregarAtividades();
+		createChartExecucao();
+	}
+	
+	public void tabsProject(int index) {
+		switch(index) {
+		case 1:
+			loadTabFraming();
+			break;
+		case 2:
+			loadTabBudget();
+			break;
+		case 3:
+			loadTabGoals();
+			break;
+		case 4:
+			carregarCronograma();
+			break;
+		case 5:
+			loadTabActivities();
+			break;
+		case 6:
+			break;
+		case 7:
+			filtro.setAttribute("execution");
+			loadDisbursementInProject();
+			break;
+		case 8:
+			filtro.setAttribute("devolution");
+			loadDisbursementInProject();
+			break;
+		case 9:
+			loadAdvancesInProject();
+			break;
+		default:
+			break;
+		}
+	}
 	
 	public void definirTabProjeto() {
 		int index = 0;
 		if (tabviewProjeto != null)
 			index = tabviewProjeto.getActiveIndex();
-
-		if (index == 0) {
-
-		} else if (index == 1) {
-			findMetasByIdProjeto();
-			findIndicadoresByProjeto();
-		} else if (index == 2) {
-			loadDonations();
-			// carregasRubricasOrcadas();
-			carregarRubricasDeProjeto();
-			//carregarAtividades();
-		} else if (index == 3) {
-			// carregarRelacaoDeOrcamentos();
-			
-			// calculaValor();
-			// createMultiAxisModel();
-			// createChartExecucao();
-			// carregarListaDeCategoriasDeProjeto();
-		} else if (index == 4) {
-			carregarCronograma();
-		} else if (index == 5) {
-			carregarAtividades();
-			createChartExecucao();
-		} else if (index == 6) {
-			
-		} else if (index == 7) {
-			filtro.setAttribute("execution");
-			loadDisbursementInProject();
-		} else if (index == 8) {
-			filtro.setAttribute("devolution");
-			loadDisbursementInProject();
-		} else if (index == 9) {
-			loadAdvancesInProject();
-		}
+		
+		tabsProject(index);
 	}
 
 	public String testaMes(Long id) {
@@ -3351,14 +3377,6 @@ public class ProjetoBean implements Serializable {
 
 	public void setDonation(Orcamento donation) {
 		this.donation = donation;
-	}
-
-	public Tab getTab() {
-		return tab;
-	}
-
-	public void setTab(Tab tab) {
-		this.tab = tab;
 	}
 
 	/*
