@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import anotacoes.Transactional;
+import model.AprovadorDocumento;
 import model.Colaborador;
 import model.Gestao;
 import model.LancamentoAuxiliar;
@@ -81,7 +83,17 @@ public class AprovacoesService implements Serializable{
 	}
 
 	public void newApprover(Filtro filtro) {
+		AprovadorDocumento ad = new AprovadorDocumento();
 		
+		ad.setColaborador(filtro.getColaboradorIdApprover());
+		ad.setDocumento(filtro.getDocumento());
+		ad.setEmail(filtro.getEmail());
+		ad.setGestao(filtro.getGestaoIdApprover());
+		ad.setOrdem(Long.parseLong(filtro.getOrdemApprover()));
+		ad.setStatus(filtro.getStatusApprover());
+		ad.setStatusBefore(filtro.getStatusBeforeApprover());
+		
+		aprovacoesRepositorio.saveApprover(ad);
 	}
 	
 	public Boolean verificaAprovacoesPendentes(User usuario) {

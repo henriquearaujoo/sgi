@@ -57,6 +57,33 @@ public class Filtro {
 	private String documento;
 	private String statusApprover;
 	private String statusBeforeApprover;
+	private String ordemApprover;
+	private Long gestaoIdApprover;
+	private Long colaboradorIdApprover;
+	
+	public Long getColaboradorIdApprover() {
+		return colaboradorIdApprover;
+	}
+
+	public void setColaboradorIdApprover(Long colaboradorIdApprover) {
+		this.colaboradorIdApprover = colaboradorIdApprover;
+	}
+
+	public Long getGestaoIdApprover() {
+		return gestaoIdApprover;
+	}
+
+	public void setGestaoIdApprover(Long gestaoIdApprover) {
+		this.gestaoIdApprover = gestaoIdApprover;
+	}
+
+	public String getOrdemApprover() {
+		return ordemApprover;
+	}
+
+	public void setOrdemApprover(String ordemApprover) {
+		this.ordemApprover = ordemApprover;
+	}
 
 	public String getStatusBeforeApprover() {
 		return statusBeforeApprover;

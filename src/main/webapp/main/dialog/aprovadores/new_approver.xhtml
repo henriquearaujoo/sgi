@@ -12,55 +12,55 @@
 			<h:form>
 				<div class="ui-g ui-fluid default-style-form-filter"
 					style="margin-top: 8px">
-					<div class="ui-g-4 form-group focused">
+					<div class="ui-g-6 form-group focused">
 						<p:outputLabel for="colaborador"
 							value="#{message['FILTER_EMPLOYEE']}" styleClass="form-label" />
-						<p:autoComplete id="colaborador" maxResults="10"
-							value="#{AprovacoesController.filtro.colaborador}"
+						<p:autoComplete id="colaborador" maxResults="10" required="true"
+							value="#{AprovacoesController.filtro.colaboradorIdApprover}"
 							completeMethod="#{AprovacoesController.colaboradorAutoComplete}"
-							var="col" itemLabel="#{col.nome}" itemValue="#{col}"
+							var="col" itemLabel="#{col.nome}" itemValue="#{col.id}"
 							effect="blind" forceSelection="true" />
 					</div>
 
-					<div class="ui-g-4 form-group focused">
+					<div class="ui-g-6 form-group focused">
 						<p:outputLabel for="document"
 							value="#{message['FILTER_DOCUMENT']}" styleClass="form-label" />
-						<p:selectOneMenu id="document" dynamic="true"
+						<p:selectOneMenu id="document" dynamic="true" required="true"
 							value="#{AprovacoesController.filtro.documento}">
 							<f:selectItem itemLabel="Selecione" itemValue="" />
 							<f:selectItems value="#{AprovacoesController.getDocumentList()}" />
 						</p:selectOneMenu>
 					</div>
-					<div class="ui-g-4 form-group focused">
+					<div class="ui-g-6 form-group focused">
 						<p:outputLabel for="colaborador-email"
 							value="#{message['FILTER_EMAIL']}" styleClass="form-label" />
-						<p:inputText id="colaborador-email"
+						<p:inputText id="colaborador-email" required="true"
 							value="#{AprovacoesController.filtro.email}" />
 					</div>
-					<div class="ui-g-4 form-group focused">
+					<div class="ui-g-6 form-group focused">
 						<p:outputLabel for="gestao"
 							value="#{message['FILTER_MANAGEMENT']}" styleClass="form-label" />
-						<p:selectOneMenu id="gestao" dynamic="true"
-							value="#{AprovacoesController.filtro.gestao}">
+						<p:selectOneMenu id="gestao" dynamic="false" required="true"
+							value="#{AprovacoesController.filtro.gestaoIdApprover}">
 							<f:selectItem itemLabel="Selecione..." itemValue="" />
 							<f:selectItems value="#{AprovacoesController.getGestaoList()}"
-								var="gestao" itemLabel="#{gestao.nome}" itemValue="#{gestao}" />
+								var="gestao" itemLabel="#{gestao.nome}" itemValue="#{gestao.id}" />
 						</p:selectOneMenu>
 					</div>
-					<div class="ui-g-4 form-group focused">
+					<div class="ui-g-6 form-group focused">
 						<p:outputLabel for="ordem" value="#{message['FILTER_ORDER']}"
 							styleClass="form-label" />
-						<p:selectOneMenu id="ordem" dynamic="true"
-							value="#{AprovacoesController.filtro.gestao}">
+						<p:selectOneMenu id="ordem" dynamic="true" required="true"
+							value="#{AprovacoesController.filtro.ordemApprover}">
 							<f:selectItem itemLabel="Selecione..." itemValue="" />
 							<f:selectItem itemLabel="1" itemValue="1" />
 							<f:selectItem itemLabel="2" itemValue="2" />
 						</p:selectOneMenu>
 					</div>
-					<div class="ui-g-4 form-group focused">
+					<div class="ui-g-6 form-group focused">
 						<p:outputLabel for="status" value="#{message['FILTER_STATUS']}"
 							styleClass="form-label" />
-						<p:selectOneMenu id="status"
+						<p:selectOneMenu id="status" required="true"
 							value="#{AprovacoesController.filtro.statusApprover}">
 							<f:selectItem itemLabel="Selecione..." itemValue="" />
 							<f:selectItems value="#{AprovacoesController.getStatusList()}" />
@@ -70,7 +70,7 @@
 						<p:outputLabel for="status_before"
 							value="#{message['FILTER_STATUS_BEFORE']}"
 							styleClass="form-label" />
-						<p:selectOneMenu id="status_before"
+						<p:selectOneMenu id="status_before" required="true"
 							value="#{AprovacoesController.filtro.statusApprover}">
 							<f:selectItem itemLabel="Selecione..." itemValue="" />
 							<f:selectItems
@@ -80,8 +80,7 @@
 					<div class="ui-g-12" align="right">
 						<p:commandLink styleClass="btn btn-info btn-sm"
 							style="color:#fff;" onclick="start();" onsuccess="stop();"
-							oncomplete="PF('dlg_cadastro_aprovador').show();"
-							actionListener="#{AprovacoesController.newApprover()}"
+							action="#{AprovacoesController.newApprover()}" update=":form_lista_aprovador"
 							onerror="stop();" title="Adicionar Aprovador">
 							<i class="fa fa-check"></i>
 							<span>#{message['BUTTON_LABEL_SAVE']}</span>

@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import anotacoes.Transactional;
 import model.AprovadorDocumento;
 import model.Colaborador;
 import model.LancamentoAuxiliar;
@@ -63,6 +64,11 @@ public class AprovacoesRepositorio implements Serializable {
 
 		Query query = manager.createQuery(jpql.toString());
 		return query.getResultList();
+	}
+	
+	@Transactional
+	public void saveApprover(AprovadorDocumento ad) {
+		manager.merge(ad);
 	}
 	
 	public List<String> getSatusBeforeList() {

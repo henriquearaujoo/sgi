@@ -33,7 +33,9 @@ public class AprovacoesController implements Serializable {
 	@Inject
 	private UsuarioSessao usuarioSessao;
 	
-	private Filtro filtro =  new Filtro();
+	@Inject
+	private Filtro filtro;
+	
 	private HashMap<String, String> status = new HashMap<String, String>();
 	
 	@Inject
@@ -83,6 +85,10 @@ public class AprovacoesController implements Serializable {
 		} else {
 			addMessage("", "Você não tem permissão para esta ação! ", FacesMessage.SEVERITY_ERROR);
 		}
+	}
+	
+	public void searchApprover() {
+		
 	}
 	
 	public HashMap<String, String> getStatusList() {

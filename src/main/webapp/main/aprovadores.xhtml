@@ -85,7 +85,7 @@
 					<p:commandLink styleClass="btn btn-primary btn-sm"
 						style="color:#fff;" onclick="start();" onsuccess="stop();"
 						oncomplete="PF('dlg_cadastro_aprovador').show();"
-						actionListener="#{AprovacoesController.newApprover()}"
+						actionListener="#{AprovacoesController.searchApprover()}"
 						onerror="stop();" title="Adicionar Aprovador">
 						<i class="fa fa-search"></i>
 						<span>#{message['BUTTON_LABEL_SEARCH']}</span>
@@ -94,7 +94,6 @@
 					<p:commandLink styleClass="btn btn-success btn-sm"
 						style="color:#fff;" onclick="start();" onsuccess="stop();"
 						oncomplete="PF('dlg_cadastro_aprovador').show();"
-						actionListener="#{AprovacoesController.newApprover()}"
 						onerror="stop();" title="Adicionar Aprovador">
 						<i class="fa fa-user-plus"></i>
 						<span>#{message['BUTTON_LABEL_NEW']}</span>
