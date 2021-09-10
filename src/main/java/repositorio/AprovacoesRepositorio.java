@@ -12,7 +12,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import model.Colaborador;
 import model.LancamentoAuxiliar;
+import model.Orcamento;
 import util.Filtro;
 
 public class AprovacoesRepositorio implements Serializable {
@@ -38,7 +40,14 @@ public class AprovacoesRepositorio implements Serializable {
 	    return new SimpleDateFormat("dd/MM/yyyy").format(date);
 	}
 	
-	
+	public List<Colaborador> getColaboradorAutoComplete(String txt) {
+		StringBuilder jpql = new StringBuilder(
+			"SELECT NEW Colaborador(c.id, c.nome, c.email) from Colaborador c "
+			+ " where lower(c.nome) like lower(:nome_colaborador) ");
+		Query query = manager.createQuery(jpql.toString());
+		query.setParameter("nome_colaborador", "%" + txt + "%");
+		return query.getResultList();
+	}
 
 	public List<LancamentoAuxiliar> filtar(Filtro filtro) {
 		StringBuilder sql = 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import model.Colaborador;
 import model.LancamentoAuxiliar;
 import model.User;
 import repositorio.AprovacoesRepositorio;
@@ -32,6 +33,14 @@ public class AprovacoesService implements Serializable{
 
 	public void aprovarLancamentos(List<LancamentoAuxiliar> listLancamento) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	public List<Colaborador> getColaboradorAutoComplete(String query) {
+		return aprovacoesRepositorio.getColaboradorAutoComplete(query);
+	}
+
+	public void newApprover(Filtro filtro) {
 		
 	}
 	
