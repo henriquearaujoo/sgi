@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import model.AprovadorDocumento;
 import model.Colaborador;
 import model.LancamentoAuxiliar;
 import model.Orcamento;
@@ -46,6 +47,29 @@ public class AprovacoesRepositorio implements Serializable {
 			+ " where lower(c.nome) like lower(:nome_colaborador) ");
 		Query query = manager.createQuery(jpql.toString());
 		query.setParameter("nome_colaborador", "%" + txt + "%");
+		return query.getResultList();
+	}
+	
+	public List<String> getDocumentList() {
+		StringBuilder jpql = new StringBuilder(
+				"SELECT DISTINCT(ad.documento) FROM AprovadorDocumento ad where 1=1");
+		Query query = manager.createQuery(jpql.toString());
+		return query.getResultList();
+	}
+	
+	public List<String> getSatusList() {
+		StringBuilder jpql = new StringBuilder(
+				"SELECT DISTINCT(ad.status) FROM AprovadorDocumento ad where 1=1");
+
+		Query query = manager.createQuery(jpql.toString());
+		return query.getResultList();
+	}
+	
+	public List<String> getSatusBeforeList() {
+		StringBuilder jpql = new StringBuilder(
+				"SELECT DISTINCT(ad.statusBefore) FROM AprovadorDocumento ad where 1=1");
+		
+		Query query = manager.createQuery(jpql.toString());
 		return query.getResultList();
 	}
 

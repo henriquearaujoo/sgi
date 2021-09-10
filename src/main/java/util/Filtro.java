@@ -53,7 +53,34 @@ public class Filtro {
 	private String attribute;
 
 	private String param;
-	private AprovadorDocumento aprovadorDocumento = new AprovadorDocumento();
+	private AprovadorDocumento aprovadorDocumento;
+	private String documento;
+	private String statusApprover;
+	private String statusBeforeApprover;
+
+	public String getStatusBeforeApprover() {
+		return statusBeforeApprover;
+	}
+
+	public void setStatusBeforeApprover(String statusBeforeApprover) {
+		this.statusBeforeApprover = statusBeforeApprover;
+	}
+
+	public String getStatusApprover() {
+		return statusApprover;
+	}
+
+	public void setStatusApprover(String statusApprover) {
+		this.statusApprover = statusApprover;
+	}
+
+	public String getDocumento() {
+		return documento;
+	}
+
+	public void setDocumento(String documento) {
+		this.documento = documento;
+	}
 
 	public AprovadorDocumento getAprovadorDocumento() {
 		return aprovadorDocumento;

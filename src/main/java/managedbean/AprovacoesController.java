@@ -1,6 +1,8 @@
 package managedbean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import model.Colaborador;
+import model.Gestao;
 import model.LancamentoAuxiliar;
 import service.AprovacoesService;
 import util.Filtro;
@@ -31,6 +34,7 @@ public class AprovacoesController implements Serializable {
 	private UsuarioSessao usuarioSessao;
 	
 	private Filtro filtro =  new Filtro();
+	private HashMap<String, String> status = new HashMap<String, String>();
 	
 	@Inject
 	private AprovacoesService aprovacoesService;
@@ -80,6 +84,22 @@ public class AprovacoesController implements Serializable {
 			addMessage("", "Você não tem permissão para esta ação! ", FacesMessage.SEVERITY_ERROR);
 		}
 	}
+	
+	public HashMap<String, String> getStatusList() {
+		return aprovacoesService.getStatusList(status);
+	}
+	
+	public List<String> getStatusBeforeList() {
+		return aprovacoesService.getStatusBeforeList();
+	}
+	
+	public List<Gestao> getGestaoList() {
+		return aprovacoesService.getGestaoList();
+	}
+	
+	public List<String> getDocumentList() {
+		return aprovacoesService.getDocumentList();
+	}
 
 	public List<Colaborador> colaboradorAutoComplete(String query) {
 		return aprovacoesService.getColaboradorAutoComplete(query);
@@ -104,5 +124,9 @@ public class AprovacoesController implements Serializable {
 
 	public void setUsuarioSessao(UsuarioSessao usuarioSessao) {
 		this.usuarioSessao = usuarioSessao;
+	}
+
+	public HashMap<String, String> getStatus() {
+		return status;
 	}
 }

@@ -35,60 +35,62 @@
 					<div class="ui-g-4 form-group focused">
 						<p:outputLabel for="document"
 							value="#{message['FILTER_DOCUMENT']}" styleClass="form-label" />
-						<p:autoComplete id="document" maxResults="10"
-							converter="projetoConverterV2"
-							value="#{projetoBean.filtro.projeto}"
-							completeMethod="#{projetoBean.completeProjetoByUserV2}" var="pro"
-							itemLabel="#{pro.codigo}" itemValue="#{pro}" effect="blind" />
+						<p:selectOneMenu id="document" dynamic="true" value="#{AprovacoesController.filtro.documento}">
+						<f:selectItem itemLabel="Selecione" itemValue="" />
+							<f:selectItems value="#{AprovacoesController.getDocumentList()}"  />
+						</p:selectOneMenu>
 					</div>
 					<div class="ui-g-4 form-group focused">
 						<p:outputLabel for="colaborador-email"
 							value="#{message['FILTER_EMAIL']}" styleClass="form-label" />
-						<p:autoComplete id="colaborador-email" maxResults="10"
-							converter="projetoConverterV2"
-							value="#{projetoBean.filtro.projeto}"
-							completeMethod="#{projetoBean.completeProjetoByUserV2}" var="pro"
-							itemLabel="#{pro.codigo}" itemValue="#{pro}" effect="blind" />
+							<p:inputText id="colaborador-email" value="#{AprovacoesController.filtro.email}" />
 					</div>
 					<div class="ui-g-4 form-group focused">
 						<p:outputLabel for="gestao"
 							value="#{message['FILTER_MANAGEMENT']}" styleClass="form-label" />
-						<p:autoComplete id="gestao" maxResults="10"
-							converter="projetoConverterV2"
-							value="#{projetoBean.filtro.projeto}"
-							completeMethod="#{projetoBean.completeProjetoByUserV2}" var="pro"
-							itemLabel="#{pro.codigo}" itemValue="#{pro}" effect="blind" />
+						<p:selectOneMenu id="gestao" dynamic="true" value="#{AprovacoesController.filtro.gestao}">
+						<f:selectItem itemLabel="Selecione..." itemValue="" />
+							<f:selectItems value="#{AprovacoesController.getGestaoList()}" var="gestao"
+								itemLabel="#{gestao.nome}" itemValue="#{gestao}" />
+						</p:selectOneMenu>
 					</div>
 					<div class="ui-g-4 form-group focused">
 						<p:outputLabel for="ordem" value="#{message['FILTER_ORDER']}"
 							styleClass="form-label" />
-						<p:autoComplete id="ordem" maxResults="10"
-							converter="projetoConverterV2"
-							value="#{projetoBean.filtro.projeto}"
-							completeMethod="#{projetoBean.completeProjetoByUserV2}" var="pro"
-							itemLabel="#{pro.codigo}" itemValue="#{pro}" effect="blind" />
+						<p:selectOneMenu id="ordem" dynamic="true" value="#{AprovacoesController.filtro.gestao}">
+							<f:selectItem itemLabel="Selecione..." itemValue="" />
+							<f:selectItem itemLabel="1" itemValue="1"/>
+							<f:selectItem itemLabel="2" itemValue="2"/>
+						</p:selectOneMenu>
 					</div>
 					<div class="ui-g-4 form-group focused">
 						<p:outputLabel for="status" value="#{message['FILTER_STATUS']}"
 							styleClass="form-label" />
-						<p:autoComplete id="status" maxResults="10"
-							converter="projetoConverterV2"
-							value="#{projetoBean.filtro.projeto}"
-							completeMethod="#{projetoBean.completeProjetoByUserV2}" var="pro"
-							itemLabel="#{pro.codigo}" itemValue="#{pro}" effect="blind" />
+						<p:selectOneMenu id="status" value="#{AprovacoesController.filtro.statusApprover}">
+							<f:selectItem itemLabel="Selecione..." itemValue="" />
+							<f:selectItems value="#{AprovacoesController.getStatusList()}" />
+						</p:selectOneMenu>
 					</div>
 					<div class="ui-g-12 form-group focused">
 						<p:outputLabel for="status_before"
 							value="#{message['FILTER_STATUS_BEFORE']}"
 							styleClass="form-label" />
-						<p:autoComplete id="status_before" maxResults="10"
-							converter="projetoConverterV2"
-							value="#{projetoBean.filtro.projeto}"
-							completeMethod="#{projetoBean.completeProjetoByUserV2}" var="pro"
-							itemLabel="#{pro.codigo}" itemValue="#{pro}" effect="blind" />
+						<p:selectOneMenu id="status_before" value="#{AprovacoesController.filtro.statusApprover}">
+							<f:selectItem itemLabel="Selecione..." itemValue="" />
+							<f:selectItems value="#{AprovacoesController.getStatusBeforeList()}" />
+						</p:selectOneMenu>
 					</div>
 				</div>
-				<div class="botao_central" align="right">
+				<div class="botao_central" align="right">					
+					<p:commandLink styleClass="btn btn-primary btn-sm"
+						style="color:#fff;" onclick="start();" onsuccess="stop();"
+						oncomplete="PF('dlg_cadastro_aprovador').show();"
+						actionListener="#{AprovacoesController.newApprover()}"
+						onerror="stop();" title="Adicionar Aprovador">
+						<i class="fa fa-search"></i>
+						<span>#{message['BUTTON_LABEL_SEARCH']}</span>
+					</p:commandLink>
+					
 					<p:commandLink styleClass="btn btn-success btn-sm"
 						style="color:#fff;" onclick="start();" onsuccess="stop();"
 						oncomplete="PF('dlg_cadastro_aprovador').show();"
@@ -99,7 +101,7 @@
 						<f:param name="type" value="new" />
 					</p:commandLink>
 
-					<p:commandLink styleClass="btn btn-primary btn-sm"
+					<p:commandLink styleClass="btn btn-info btn-sm"
 						update="dialog_help" oncomplete="PF('dialog_help').show();"
 						onerror="stop();" onsuccess="stop();" onclick="start();"
 						style="color:#fff; margin: 8px 2px;">
@@ -114,10 +116,11 @@
 	<ui:define name="adicionais">
 
 		<p:dialog id="dlg_cadastro_aprovador"
-			widgetVar="dlg_cadastro_aprovador" header="Ajuda" showEffect="clip"
-			hideEffect="drop" draggable="false" maximizable="true"
+			widgetVar="dlg_cadastro_aprovador" header="Cadastro de Aprovador" showEffect="clip"
+			hideEffect="drop" draggable="true" maximizable="true" 
+			style="height: 80vh !important; width: 80vw !important"
 			minimizable="true" resizable="true">
-			<h1>oi</h1>
+			<ui:include src="dialog/aprovadores/new_approver.xhtml" />
 		</p:dialog>
 
 		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help"
