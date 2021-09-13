@@ -53,61 +53,7 @@ public class Filtro {
 	private String attribute;
 
 	private String param;
-	private AprovadorDocumento aprovadorDocumento;
-	private String documento;
-	private String statusApprover;
-	private String statusBeforeApprover;
-	private String ordemApprover;
-	private Long gestaoIdApprover;
-	private Long colaboradorIdApprover;
-	
-	public Long getColaboradorIdApprover() {
-		return colaboradorIdApprover;
-	}
-
-	public void setColaboradorIdApprover(Long colaboradorIdApprover) {
-		this.colaboradorIdApprover = colaboradorIdApprover;
-	}
-
-	public Long getGestaoIdApprover() {
-		return gestaoIdApprover;
-	}
-
-	public void setGestaoIdApprover(Long gestaoIdApprover) {
-		this.gestaoIdApprover = gestaoIdApprover;
-	}
-
-	public String getOrdemApprover() {
-		return ordemApprover;
-	}
-
-	public void setOrdemApprover(String ordemApprover) {
-		this.ordemApprover = ordemApprover;
-	}
-
-	public String getStatusBeforeApprover() {
-		return statusBeforeApprover;
-	}
-
-	public void setStatusBeforeApprover(String statusBeforeApprover) {
-		this.statusBeforeApprover = statusBeforeApprover;
-	}
-
-	public String getStatusApprover() {
-		return statusApprover;
-	}
-
-	public void setStatusApprover(String statusApprover) {
-		this.statusApprover = statusApprover;
-	}
-
-	public String getDocumento() {
-		return documento;
-	}
-
-	public void setDocumento(String documento) {
-		this.documento = documento;
-	}
+	private AprovadorDocumento aprovadorDocumento = new AprovadorDocumento();
 
 	public AprovadorDocumento getAprovadorDocumento() {
 		return aprovadorDocumento;

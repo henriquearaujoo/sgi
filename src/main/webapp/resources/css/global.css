@@ -159,6 +159,11 @@ body .ui-breadcrumb {
 	height: 100% !important;
 }
 
+.dialog {
+	width: 80% !important;
+	height: 80% !important;
+}
+
 .fonte_pagadora {
 	width: 100% !important;
 	height: 100% !important;
@@ -172,10 +177,6 @@ body .ui-breadcrumb {
 	height: 100vh !important;
 }
 
-.dialog {
-	width: 100vw !important;
-	height: 100vh !important;
-}
 
 .panel.ui-panel .ui-panel-content {
 	border: none !important;
@@ -305,6 +306,14 @@ body .ui-breadcrumb {
 
 
 
+.dialog-aprovador {
+	width: 80vw !important;
+	height: 80vh !important;
+}
+
+.dialog-aprovador.ui-dialog-content .ui-widget-content {
+	height: 100% !important;
+}
 
 
 /*///////////////////////////////////////////*/

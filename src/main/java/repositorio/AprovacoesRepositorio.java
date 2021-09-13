@@ -58,6 +58,13 @@ public class AprovacoesRepositorio implements Serializable {
 		return query.getResultList();
 	}
 	
+	public List<AprovadorDocumento> getAllApprover() {
+		StringBuilder jpql = new StringBuilder(
+				"SELECT ad FROM AprovadorDocumento ad where 1=1");
+		Query query = manager.createQuery(jpql.toString());
+		return query.getResultList();
+	}
+	
 	public List<String> getSatusList() {
 		StringBuilder jpql = new StringBuilder(
 				"SELECT DISTINCT(ad.status) FROM AprovadorDocumento ad where 1=1");

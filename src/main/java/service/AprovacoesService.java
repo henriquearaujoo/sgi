@@ -82,18 +82,12 @@ public class AprovacoesService implements Serializable{
 		return aprovacoesRepositorio.getSatusBeforeList();
 	}
 
-	public void newApprover(Filtro filtro) {
-		AprovadorDocumento ad = new AprovadorDocumento();
-		
-		ad.setColaborador(filtro.getColaboradorIdApprover());
-		ad.setDocumento(filtro.getDocumento());
-		ad.setEmail(filtro.getEmail());
-		ad.setGestao(filtro.getGestaoIdApprover());
-		ad.setOrdem(Long.parseLong(filtro.getOrdemApprover()));
-		ad.setStatus(filtro.getStatusApprover());
-		ad.setStatusBefore(filtro.getStatusBeforeApprover());
-		
-		aprovacoesRepositorio.saveApprover(ad);
+	public void newApprover(AprovadorDocumento aprovador) {
+		aprovacoesRepositorio.saveApprover(aprovador);
+	}
+	
+	public List<AprovadorDocumento> getAllApprover() {
+		return aprovacoesRepositorio.getAllApprover();
 	}
 	
 	public Boolean verificaAprovacoesPendentes(User usuario) {
