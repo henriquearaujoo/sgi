@@ -9,58 +9,75 @@
 
 	<ui:define name="content">
 
+		<f:metadata>
+			<f:viewAction action="#{aprovadorController.initApprover()}" />
+		</f:metadata>
+
 		<h:form id="form_lista_aprovador" style="padding-top: 24px">
 			<p:breadCrumb>
-				<p:menuitem value="Home" title="Página Inicial"
+				<p:menuitem value="Home" title="Página Inicial" onclick="start();"
+					oncomplete="start();"
 					style="margin-top: 4px" url="home_new.xhtml" />
-				<p:menuitem value="Lista de Aprovadores" />
+				<p:menuitem value="Lista de Aprovadores" onclick="start();"
+					oncomplete="stop();"/>
 			</p:breadCrumb>
 
 			<p:growl id="growl" showDetail="true" sticky="true" />
 
 			<p:panel>
 
+				<p:dataTable var="ap" value="#{aprovadorController.approvers}"
+					rows="10" paginator="true" sortBy="#{ap.id}">
 
-				<div class="botao_central" align="right">
-
-					<p:commandLink styleClass="btn btn-success btn-sm"
-						style="color:#fff;" onclick="start();" onsuccess="stop();"
-						oncomplete="PF('dlg_cadastro_aprovador').show();" update="panel_new_approver"
-						action="#{aprovadorController.initObjectApprover()}"
-						onerror="stop();" title="Adicionar Aprovador">
-						<i class="fa fa-user-plus"></i>
-						<span>#{message['BUTTON_LABEL_NEW']}</span>
-					</p:commandLink>
-
-				</div>
-			</p:panel>
-			<p:panel>
-				<p:dataTable var="ap" value="#{aprovadorController.getAllApprover()}" rows="10"
-					paginator="true">
-					<p:column headerText="Id">
-						<h:outputText value="#{ap.id}" />
+					<p:column headerText="Colaborador">
+						<h:outputText value="#{ap.collaborator.nome}" />
 					</p:column>
 
-					<p:column headerText="Documento">
+					<p:column headerText="Gestão">
+						<h:outputText value="#{ap.management.nome}" />
+					</p:column>
+
+					<p:column headerText="Documento" styleClass="text-center">
 						<h:outputText value="#{ap.documento}" />
 					</p:column>
 
-					<p:column headerText="status">
+					<p:column headerText="status" styleClass="text-center">
 						<h:outputText value="#{ap.status}" />
 					</p:column>
 
-					<p:column headerText="status before">
-						<h:outputText value="#{ap.statusBefore}" />
+					<p:column headerText="status before" styleClass="text-center">
+						<h:outputText
+							value="#{ap.statusBefore}" />
 					</p:column>
+
+					<p:column headerText="#" styleClass="text-center">
+						<p:menuButton value="Opções">
+							<p:menuitem icon="fa fa-fw fa-edit" value="editar"
+								outcome="/main/aprovadores_cadastro">
+								<f:param name="id" value="#{ap.id}" />
+								<f:param name="colaborador" value="#{ap.colaborador}" />
+							</p:menuitem>
+
+							<p:menuitem value="remover" process="@this" update=":form_lista_aprovador"
+								icon="fa fa-fw fa-trash-o" onclick="start()"
+								actionListener="#{aprovadorController.removeApprover(ap)}"
+								onsuccess="stop()" onerror="stop()">
+							</p:menuitem>
+						</p:menuButton>
+					</p:column>
+					<f:facet name="paginatorTopRight">
+						<p:link styleClass="btn btn-success btn-sm" style="color:#fff;"
+							onclick="start();" onsuccess="stop();"
+							update=":form_lista_aprovador"
+							outcome="/main/aprovadores_cadastro"
+							action="#{aprovadorController.initObjectApprover()}"
+							onerror="stop();" title="NOVO APROVADOR">
+							<i class="fa fa-user-plus"></i>
+						</p:link>
+					</f:facet>
 
 				</p:dataTable>
 			</p:panel>
-			<p:dialog id="dlg_cadastro_aprovador" styleClass="dialog-aprovador"
-				widgetVar="dlg_cadastro_aprovador" header="Cadastro de Aprovador"
-				showEffect="clip" hideEffect="drop" draggable="true"
-				maximizable="true" minimizable="true" resizable="true">
-				<ui:include src="dialog/aprovadores/new_approver.xhtml" />
-			</p:dialog>
 		</h:form>
 
 	</ui:define>

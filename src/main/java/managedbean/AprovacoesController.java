@@ -1,15 +1,16 @@
 package managedbean;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.ManagedBean;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -21,8 +22,9 @@ import service.AprovacoesService;
 import util.Filtro;
 import util.UsuarioSessao;
 
-@ManagedBean
+
 @Named("aprovadorController")
+@ViewScoped
 public class AprovacoesController implements Serializable {
 
 	/**
@@ -34,24 +36,42 @@ public class AprovacoesController implements Serializable {
 	private UsuarioSessao usuarioSessao;
 
 	private Filtro filtro = new Filtro();
-	private String teste;
 
-	private AprovadorDocumento aprovadorDocumento = new AprovadorDocumento();
+	@Inject
+	private AprovadorDocumento aprovador;
+	
+	@Inject
+	private Colaborador colaborador;
 
 	private HashMap<String, String> status = new HashMap<String, String>();
-	private List<AprovadorDocumento> approvers = new ArrayList<>();
+	private List<AprovadorDocumento> approvers;
+	private List<String> statusBefore = new ArrayList<String>();
+	private List<Gestao> managements = new ArrayList<Gestao>();
+	private List<String> documents = new ArrayList<String>();
+	
+	private Long idApprover;
+	private Long idColaborador;
 
 	@Inject
 	private AprovacoesService aprovacoesService;
 
-	public List<LancamentoAuxiliar> listaLancamentoPrincipal;
+	private List<LancamentoAuxiliar> listaLancamentoPrincipal;
 
-	public void init() {
+	public void init() { 	
 		filtrarListaPrincipal(filtro);
+	}
+	
+	public void initCadastro() {
+		if (idApprover != null && idColaborador != null) {
+			this.colaborador = aprovacoesService.getColaboradorById(idColaborador);
+			this.aprovador = aprovacoesService.getApproverById(idApprover);
+		}
+		
+		initAllListLabels();
 	}
 
 	public void initApprover() {
-//		filtro = new Filtro();
+		initAllApprover();
 	}
 
 	public void reprovaLancamento(List<LancamentoAuxiliar> listLancamento) {
@@ -85,55 +105,61 @@ public class AprovacoesController implements Serializable {
 	}
 
 	public void newApprover() {
-		
-		System.out.println(teste);
-		
-//		if (verificaPrivilegio()) {
-//			filtro.setParam(getParamOption());
-//			aprovacoesService.newApprover(aprovadorDocumento);
-//		} else {
-//			addMessage("", "Você não tem permissão para esta ação! ", FacesMessage.SEVERITY_ERROR);
-//		}
+		if (verificaPrivilegio()) {
+			aprovador.setColaborador(getColaborador().getId());
+			aprovacoesService.newApprover(aprovador);
+			if (idApprover != null && idColaborador != null) {
+				redirectWithMessageSuccess("APROVADOR ATUALIZADO!!! 🥳");
+			} else {
+				redirectWithMessageSuccess("NOVO APROVADOR SALVO!!! 🥳");				
+			}
+		} else {
+			addMessage("", "Você não tem permissão para esta ação! 😓", FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void removeApprover(AprovadorDocumento approver) {
+		if (verificaPrivilegio()) {
+			boolean approverRemove = aprovacoesService.removeApprover(approver); 
+			if (approverRemove) {
+				initAllApprover();
+				addMessage("REMOVIDO", "O aprovador foi removido! Sentiremos saudades! 🙁", FacesMessage.SEVERITY_INFO);
+			} else {
+				addMessage("ERRO AO REMOVER", "Não foi possível remover este aprovador! 🙁", FacesMessage.SEVERITY_INFO);
+			}
+		} else {
+			addMessage("IMPOSSÍVEL", "Você não tem permissão para esta ação! 😓", FacesMessage.SEVERITY_ERROR);
+		}
+	}
+	
+	public void redirectWithMessageSuccess(String message) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		addMessage("SUCESSO", message, FacesMessage.SEVERITY_INFO);
+		context.getExternalContext().getFlash().setKeepMessages(true);
+		try {			
+			context.getExternalContext().redirect("/sgi_0.0.1/main/aprovadores.xhtml");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void initObjectApprover() {
-		aprovadorDocumento = new AprovadorDocumento();
+		aprovador = new AprovadorDocumento();
+	}
+	
+	public void initAllListLabels() {
+		status = aprovacoesService.getStatusList();
+		
+		statusBefore = aprovacoesService.getStatusBeforeList();
+		
+		managements = aprovacoesService.getGestaoList();
+		
+		documents = aprovacoesService.getDocumentList();
+		
 	}
 
-	public void searchApprover() {
-
-	}
-
-	public void initAllListsApprover() {
-
-	}
-
-	public String getTeste() {
-		return teste;
-	}
-
-	public void setTeste(String teste) {
-		this.teste = teste;
-	}
-
-	public List<AprovadorDocumento> getAllApprover() {
-		return aprovacoesService.getAllApprover();
-	}
-
-	public HashMap<String, String> getStatusList() {
-		return aprovacoesService.getStatusList(status);
-	}
-
-	public List<String> getStatusBeforeList() {
-		return aprovacoesService.getStatusBeforeList();
-	}
-
-	public List<Gestao> getGestaoList() {
-		return aprovacoesService.getGestaoList();
-	}
-
-	public List<String> getDocumentList() {
-		return aprovacoesService.getDocumentList();
+	public void initAllApprover() {
+		approvers = aprovacoesService.getAllApproverDataConverter();
 	}
 
 	public List<Colaborador> colaboradorAutoComplete(String query) {
@@ -165,12 +191,12 @@ public class AprovacoesController implements Serializable {
 		return status;
 	}
 
-	public AprovadorDocumento getAprovadorDocumento() {
-		return aprovadorDocumento;
+	public AprovadorDocumento getAprovador() {
+		return aprovador;
 	}
 
-	public void setAprovadorDocumento(AprovadorDocumento aprovadorDocumento) {
-		this.aprovadorDocumento = aprovadorDocumento;
+	public void setAprovador(AprovadorDocumento aprovador) {
+		this.aprovador = aprovador;
 	}
 
 	public List<AprovadorDocumento> getApprovers() {
@@ -179,5 +205,65 @@ public class AprovacoesController implements Serializable {
 
 	public void setApprovers(List<AprovadorDocumento> approvers) {
 		this.approvers = approvers;
+	}
+
+	public List<String> getStatusBefore() {
+		return statusBefore;
+	}
+
+	public void setStatusBefore(List<String> statusBefore) {
+		this.statusBefore = statusBefore;
+	}
+
+	public List<Gestao> getManagements() {
+		return managements;
+	}
+
+	public void setManagements(List<Gestao> managements) {
+		this.managements = managements;
+	}
+
+	public List<String> getDocuments() {
+		return documents;
+	}
+
+	public void setDocuments(List<String> documents) {
+		this.documents = documents;
+	}
+
+	public void setStatus(HashMap<String, String> status) {
+		this.status = status;
+	}
+
+	public List<LancamentoAuxiliar> getListaLancamentoPrincipal() {
+		return listaLancamentoPrincipal;
+	}
+
+	public void setListaLancamentoPrincipal(List<LancamentoAuxiliar> listaLancamentoPrincipal) {
+		this.listaLancamentoPrincipal = listaLancamentoPrincipal;
+	}
+
+	public Colaborador getColaborador() {
+		return colaborador;
+	}
+
+	public void setColaborador(Colaborador colaborador) {
+		this.colaborador = colaborador;
+	}
+
+	public Long getIdApprover() {
+		return idApprover;
+	}
+
+	public void setIdApprover(Long idApprover) {
+		this.idApprover = idApprover;
+	}
+
+	public Long getIdColaborador() {
+		return idColaborador;
+	}
+
+	public void setIdColaborador(Long idColaborador) {
+		this.idColaborador = idColaborador;
 	}
 }

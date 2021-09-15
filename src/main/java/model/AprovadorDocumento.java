@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 @Entity
 public class AprovadorDocumento implements Serializable {
@@ -39,9 +40,53 @@ public class AprovadorDocumento implements Serializable {
 	@Column(name = "status_before") // status compatível 
 	private String statusBefore;
 	
-
+	@Transient
+	private Colaborador collaborator;
+	
+	@Transient
+	private Gestao management;
 	
 	public AprovadorDocumento() {
+	}
+	
+	public AprovadorDocumento(AprovadorDocumento aprovador) {
+		this.id = aprovador.getId();
+		this.colaborador = aprovador.getColaborador();
+		this.documento = aprovador.getDocumento();
+		this.gestao = aprovador.getGestao();
+		this.email = aprovador.getEmail();
+		this.ordem = aprovador.getOrdem();
+		this.status = aprovador.getStatus();
+		this.statusBefore = aprovador.getStatusBefore();
+	}
+	
+	public AprovadorDocumento(Long id, Long colaborador, Long gestao, String documento, String email, Long ordem,
+			String status, String statusBefore) {
+		this.id = id;
+		this.colaborador = colaborador;
+		this.gestao = gestao;
+		this.documento = documento;
+		this.email = email;
+		this.ordem = ordem;
+		this.status = status;
+		this.statusBefore = statusBefore;
+	}
+
+	public AprovadorDocumento(
+			Colaborador colaborador, 
+			Gestao management,
+			String documento,
+			String email,
+			Long ordem,
+			String status,
+			String statusBefore) {
+		this.collaborator = colaborador;
+		this.management = management;
+		this.documento = documento;
+		this.email = email;
+		this.ordem = ordem;
+		this.status = status;
+		this.statusBefore = statusBefore;
 	}
 
 	@Override
@@ -131,6 +176,22 @@ public class AprovadorDocumento implements Serializable {
 
 	public void setStatusBefore(String statusBefore) {
 		this.statusBefore = statusBefore;
+	}
+
+	public Colaborador getCollaborator() {
+		return collaborator;
+	}
+
+	public void setCollaborator(Colaborador collaborator) {
+		this.collaborator = collaborator;
+	}
+
+	public Gestao getManagement() {
+		return management;
+	}
+
+	public void setManagement(Gestao management) {
+		this.management = management;
 	}
 
 

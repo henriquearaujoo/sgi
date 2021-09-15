@@ -16,7 +16,6 @@ import anotacoes.Transactional;
 import model.AprovadorDocumento;
 import model.Colaborador;
 import model.LancamentoAuxiliar;
-import model.Orcamento;
 import util.Filtro;
 
 public class AprovacoesRepositorio implements Serializable {
@@ -42,6 +41,11 @@ public class AprovacoesRepositorio implements Serializable {
 	    return new SimpleDateFormat("dd/MM/yyyy").format(date);
 	}
 	
+	@Transactional
+	public void removeApprover(AprovadorDocumento approver) {
+		manager.remove(manager.merge(approver));
+	}
+	
 	public List<Colaborador> getColaboradorAutoComplete(String txt) {
 		StringBuilder jpql = new StringBuilder(
 			"SELECT NEW Colaborador(c.id, c.nome, c.email) from Colaborador c "
@@ -49,6 +53,31 @@ public class AprovacoesRepositorio implements Serializable {
 		Query query = manager.createQuery(jpql.toString());
 		query.setParameter("nome_colaborador", "%" + txt + "%");
 		return query.getResultList();
+	}
+	
+	public List<Colaborador> getAllColaborador() {
+		StringBuilder jpql = new StringBuilder(
+				"FROM Colaborador c where 1=1");
+		Query query = manager.createQuery(jpql.toString());
+		return query.getResultList();
+	}
+	
+	public Colaborador getColaboradorById(Long id) {
+		StringBuilder jpql = new StringBuilder(
+				"SELECT NEW Colaborador(c.id, c.nome) from Colaborador c where c.id = :id_approver");
+		
+		Query query = manager.createQuery(jpql.toString());
+		query.setParameter("id_approver", id);
+		return (Colaborador) query.getSingleResult();
+	}
+	
+	public AprovadorDocumento getApproverById(Long id) {
+		StringBuilder jpql = new StringBuilder(
+				"from AprovadorDocumento ad where ad.id = :id_approver");
+		
+		Query query = manager.createQuery(jpql.toString());
+		query.setParameter("id_approver", id);
+		return (AprovadorDocumento) query.getSingleResult();
 	}
 	
 	public List<String> getDocumentList() {
