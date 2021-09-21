@@ -239,7 +239,7 @@ public class LancamentoRepository implements Serializable {
 					"where l.tipolancamento  = 'ad' and l.versionlancamento = 'MODE01'  and l.statuscompra = 'CONCLUIDO' order by l.data_emissao desc ");
 
 		}
-		
+
 		Query query = this.manager.createNativeQuery(jpql.toString());
 
 		if (idConta != null) {
@@ -629,8 +629,6 @@ public class LancamentoRepository implements Serializable {
 
 			LancamentoAuxiliar lancamento = new LancamentoAuxiliar();
 
-			
-
 			lancamento.setDataEmissao(DataUtil.converteDataSql(objects[0].toString()));
 			lancamento.setDataPagamento(DataUtil.converteDataSql(objects[1].toString()));
 			lancamento.setNumeroDocumento(objects[2] != null ? objects[2].toString() : "");
@@ -829,8 +827,6 @@ public class LancamentoRepository implements Serializable {
 		// hql.append(" and l.statusCompra = 'CONCLUIDO' ");
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-		
 
 		if (filtro.getLancamentoID() != null) {
 			hql.append(" and l.id = :lancamento");
@@ -1119,8 +1115,6 @@ public class LancamentoRepository implements Serializable {
 		hql.append(" and (l.categoriadespesaclass_id != 30 OR l.categoriadespesaclass_id IS NULL) ");
 		Query query = this.manager.createNativeQuery(hql.toString());
 
-		
-
 		List<LancamentoAvulso> lancamentos = new ArrayList<>();
 		List<Object[]> result = query.getResultList();
 
@@ -1170,8 +1164,6 @@ public class LancamentoRepository implements Serializable {
 
 		hql.append(" and (l.categoriadespesaclass_id != 30 OR l.categoriadespesaclass_id IS NULL) ");
 		Query query = this.manager.createNativeQuery(hql.toString());
-
-		
 
 		List<LancamentoAvulso> lancamentos = new ArrayList<>();
 		List<Object[]> result = query.getResultList();
@@ -2160,7 +2152,6 @@ public class LancamentoRepository implements Serializable {
 
 	public LancamentoAvulso salvarLancamentoAvulso(LancamentoAvulso lancamento, User usuario) {
 
-
 		if (lancamento.getId() != null) {
 			this.manager.createNativeQuery(
 					"delete from pagamento_lancamento pl where lancamentoacao_id in (select la.id from lancamento_acao la where la.lancamento_id = :id)")
@@ -2395,11 +2386,14 @@ public class LancamentoRepository implements Serializable {
 		query.setParameter("id", id);
 		return query.getResultList().size() > 0 ? true : false;
 	}
-	
+
 	public String getSQLPurchase(Filtro filtro) {
 		StringBuilder jpql = new StringBuilder(
-				"SELECT NEW Compra(c.id, c.gestao.nome, c.solicitante.nome, c.localidade.mascara, c.dataEmissao,c.statusCompra, c.bootUrgencia, c.CategoriaDespesaClass.nome) FROM  Compra c join c.lancamentosAcoes la  join la.projetoRubrica pr join pr.projeto p where 1 = 1");
+				"SELECT NEW Compra(c.id, c.gestao.nome, c.solicitante.nome, c.localidade.mascara, c.dataEmissao,c.statusCompra, c.bootUrgencia, c.CategoriaDespesaClass.nome) ");
 
+		// jpql.append(" FROM Compra c join c.lancamentosAcoes la join la.projetoRubrica
+		// pr join pr.projeto p where 1 = 1 ");
+		jpql.append(" FROM  Compra c  where 1 = 1 ");
 		jpql.append(" and c.versionLancamento = 'MODE01' ");
 
 		if (filtro.getCategoriaID() != null) {
@@ -2428,7 +2422,7 @@ public class LancamentoRepository implements Serializable {
 		}
 
 		if (filtro.getGestaoID() != null) {
-			jpql.append(" and ((c.gestao.id = :gestaoID) or (select g.id from Gestao g where g.id = c.gestao.id) = :gestaoID) ");
+			jpql.append("and (c.gestao.id = :gestaoID or c.gestao.superintendencia.id = :gestaoID) ");
 		}
 
 		if (filtro.getLocalidadeID() != null) {
@@ -2444,19 +2438,21 @@ public class LancamentoRepository implements Serializable {
 			jpql.append(" and compra.CategoriaDespesaClass.id = :catego ");
 		}
 
-		if (filtro.getProjeto() != null && filtro.getProjeto().getId() != null) {
-			jpql.append(" and :pProjetoID = p.id");
+		if (filtro.getProjetoId() != null && filtro.getProjetoId() != null) {
+			jpql.append(
+					" and ((select count(la) from LancamentoAcao la where la.lancamento.id = c.id and la.projetoRubrica.projeto.id = :pProjetoID)   >  0) ");
+
 		}
 
 		jpql.append(" order by c.dataEmissao desc");
-		
+
 		return jpql.toString();
 	}
-	
+
 	public List<Compra> setQueryPurchase(Query query, Filtro filtro) {
 
 		if (filtro.getCategoriaID() != null) {
-//			jpql.append(" and compra.CategoriaDespesaClass.id = :catego ");
+			// jpql.append(" and compra.CategoriaDespesaClass.id = :catego ");
 			query.setParameter("catego", filtro.getCategoriaID());
 		}
 
@@ -2504,8 +2500,8 @@ public class LancamentoRepository implements Serializable {
 			query.setParameter("descricao_produto", "%" + filtro.getDescricaoProduto() + "%");
 		}
 
-		if (filtro.getProjeto() != null && filtro.getProjeto().getId() != null) {
-			query.setParameter("pProjetoID", filtro.getProjeto().getId());
+		if (filtro.getProjetoId() != null && filtro.getProjetoId() != null) {
+			query.setParameter("pProjetoID", filtro.getProjetoId());
 		}
 
 		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<Compra>();
@@ -2552,10 +2548,6 @@ public class LancamentoRepository implements Serializable {
 			} else {
 				jpql.append(" and i.compra.dataEmissao >= :data_inicio");
 			}
-		}
-
-		if (filtro.getGestaoID() != null) {
-			jpql.append(" and i.compra.gestao.id = :gestaoID ");
 		}
 
 		if (filtro.getLocalidadeID() != null) {
@@ -2624,13 +2616,11 @@ public class LancamentoRepository implements Serializable {
 		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<ItemCompra>();
 	}
 
-	
 	public List<SolicitacaoPagamento> fetchOrdersByTypeAdPaySA(Filtro filtro) {
 
 		StringBuilder jpql = new StringBuilder(
 				"SELECT NEW SolicitacaoPagamento(p.id, p.gestao.nome, p.solicitante.nome, p.localidade.mascara,  ");
-		jpql.append(
-				"p.dataEmissao,p.statusCompra,  ");
+		jpql.append("p.dataEmissao,p.statusCompra,  ");
 		jpql.append("forn.nomeFantasia, p.descricao, p.valorTotalComDesconto, p.statusAdiantamento) ");
 		jpql.append(" from SolicitacaoPagamento p ");
 		jpql.append(" left join p.contaRecebedor recebedor ");
@@ -2656,7 +2646,6 @@ public class LancamentoRepository implements Serializable {
 			jpql.append(" and p.id = :codigo ");
 
 		}
-
 
 		if (filtro.getDataInicio() != null) {
 			if (filtro.getDataFinal() != null) {
@@ -2751,9 +2740,7 @@ public class LancamentoRepository implements Serializable {
 
 		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<SolicitacaoPagamento>();
 	}
-	
-	
-	
+
 	public List<SolicitacaoPagamento> getPagamentos(Filtro filtro) {
 
 		StringBuilder jpql = new StringBuilder(

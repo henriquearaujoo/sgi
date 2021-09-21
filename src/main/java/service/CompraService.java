@@ -23,7 +23,6 @@ import model.Acao;
 import model.Aprouve;
 import model.CategoriaDespesaClass;
 import model.CategoriaProjeto;
-import model.Colaborador;
 import model.Compra;
 import model.CompraMunicipio;
 import model.Estado;
@@ -63,6 +62,10 @@ import repositorio.PedidoRepositorio;
 import repositorio.ProdutoRepositorio;
 import repositorio.ProjetoRepositorio;
 import repositorio.UsuarioRepository;
+import repositorio.management.panel.FilterRepositorio;
+import repositorio.management.panel.models.Management;
+import repositorio.management.panel.models.Project;
+import repositorio.management.panel.models.Source;
 import util.CompraUtil;
 import util.Email;
 import util.Filtro;
@@ -167,6 +170,32 @@ public class CompraService implements Serializable {
 		}
 		return localDeCompra;
 
+	}
+
+	private @Inject FilterRepositorio filterRepo;
+	
+
+	public List<Management> loadManagements(Filtro filter) {
+		repositorio.management.panel.models.Filtro filterPanelUtil = new repositorio.management.panel.models.Filtro();
+		filterPanelUtil.setIdGestao(filter.getGestaoID());;
+		filterPanelUtil.setShowUnique(false);
+		return filterRepo.loadManagements(filterPanelUtil);
+	}
+	
+	public List<Project> loadProjects(Filtro filter) {
+		repositorio.management.panel.models.Filtro filterPanelUtil = new repositorio.management.panel.models.Filtro();
+		filterPanelUtil.setIdGestao(filter.getGestaoID());;
+		filterPanelUtil.setGestao(filter.getGestaoID());
+		filterPanelUtil.setShowUnique(false);
+		filterPanelUtil.setAno("2021");
+		return filterRepo.loadProjects(filterPanelUtil);
+	}
+	
+	public List<Source> loadSources(Filtro filter) {
+		repositorio.management.panel.models.Filtro filterPanelUtil = new repositorio.management.panel.models.Filtro();
+		filterPanelUtil.setIdGestao(filter.getGestaoID());;
+		filterPanelUtil.setShowUnique(false);
+		return filterRepo.loadSources(filterPanelUtil);
 	}
 
 	public void imprimirCompra(Compra compra) {
@@ -294,13 +323,14 @@ public class CompraService implements Serializable {
 				compra.setStatusCompra(StatusCompra.PENDENTE_APROVACAO);
 				compra = repositorio.salvarCompra(compra, usuario);
 				enviarEmailAutorizacaoSC(compra, type);
-				addMessage("", "Salvo com sucesso, confirme o e-mail na sua caixa de entrada, caso não tenha recebido clique em reenviar", FacesMessage.SEVERITY_INFO);
+				addMessage("",
+						"Salvo com sucesso, confirme o e-mail na sua caixa de entrada, caso não tenha recebido clique em reenviar",
+						FacesMessage.SEVERITY_INFO);
 			} else {
 				compra.setStatusCompra(StatusCompra.PENDENTE_APROVACAO);
 				compra = repositorio.salvarCompra(compra, usuario);
 				addMessage("", "Salvo com sucesso.", FacesMessage.SEVERITY_INFO);
 			}
-
 
 			return true;
 
@@ -334,7 +364,6 @@ public class CompraService implements Serializable {
 			stb.append(",");
 			stb.append(email);
 		}
-
 
 		return stb.toString();
 	}
@@ -392,8 +421,7 @@ public class CompraService implements Serializable {
 
 		return html.toString();
 	}
-	
-	
+
 	@Transactional
 	public void atualizarStatus(Long id) {
 		repositorio.mudarStatus(id, StatusCompra.PENDENTE_APROVACAO);
@@ -401,18 +429,18 @@ public class CompraService implements Serializable {
 
 	public void enviarEmailAutorizacaoSC(Compra compra, Integer type) {
 		Email email = new Email();
-		
+
 		if (type == 0) {
 			atualizarStatus(compra.getId());
 		}
-		
+
 		prepararEmailAutorizacaoSC(email, compra);
 
 		try {
 			try {
 				if (email.verificaInternet()) { // verificar internet
 					email.EnviarSolicitacaoCompra(compra);
-					//addMessage("", "Mensagem enviada com sucesso", FacesMessage.SEVERITY_INFO);
+					// addMessage("", "Mensagem enviada com sucesso", FacesMessage.SEVERITY_INFO);
 				}
 			} catch (IOException e) {
 
@@ -584,7 +612,6 @@ public class CompraService implements Serializable {
 			filtro.setDataInicio(calInicio.getTime());
 			filtro.setDataFinal(calFinal.getTime());
 
-
 		} else if (filtro.getDataInicio() != null) {
 			Calendar calInicio = Calendar.getInstance();
 			calInicio.setTime(filtro.getDataInicio());
@@ -667,7 +694,6 @@ public class CompraService implements Serializable {
 			filtro.setDataInicio(calInicio.getTime());
 			filtro.setDataFinal(calFinal.getTime());
 
-
 		} else if (filtro.getDataInicio() != null) {
 			Calendar calInicio = Calendar.getInstance();
 			calInicio.set(Calendar.HOUR, 0);
@@ -705,7 +731,6 @@ public class CompraService implements Serializable {
 
 			filtro.setDataInicio(calInicio.getTime());
 			filtro.setDataFinal(calFinal.getTime());
-
 
 		} else if (filtro.getDataInicio() != null) {
 			Calendar calInicio = Calendar.getInstance();

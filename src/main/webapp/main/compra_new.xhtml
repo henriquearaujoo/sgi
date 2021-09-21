@@ -73,13 +73,16 @@
 					<div class="ui-g ui-fluid default-style-form-filter focused">
 
 						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+
 							<p:outputLabel for="filter-gestao" value="Gestão"
 								styleClass="form-label" />
-							<p:autoComplete id="filter-gestao" styleClass="font12-vi"
-								value="#{compraController.filtro.gestao}" maxResults="10"
-								completeMethod="#{compraController.completeGestao}" var="gestao"
-								itemLabel="#{gestao.nome}" itemValue="#{gestao}"
-								converter="gestaoConverterVI" minQueryLength="3" />
+
+							<p:selectOneMenu id="filter-gestao"
+								value="#{compraController.filtro.gestaoID}" autoWidth="false">
+								<f:selectItems value="#{compraController.managements}" var="ges"
+									itemLabel="#{ges.nome}" itemValue="#{ges.id}" />
+							</p:selectOneMenu>
+
 						</div>
 
 						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
@@ -122,24 +125,28 @@
 					<div class="ui-g ui-fluid default-style-form-filter focused	">
 						<div class="ui-g-12 ui-lg-6 form-group">
 
-							<p:outputLabel for="filter-projeto" value="Projeto"
+							<p:outputLabel for="proj-id" value="Projeto"
 								style="margin-left:1px" styleClass="form-label" />
 
-							<p:autoComplete id="filter-projeto"
-								value="#{compraController.filtro.projeto}"
-								completeMethod="#{compraController.completeProjetos}"
-								var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}"
-								converter="projetoConverter">
+
+							<p:selectOneMenu id="proj-id"
+								value="#{compraController.filtro.projetoId}" autoWidth="false">
+								<f:selectItem itemLabel="Selecione um projeto"
+									noSelectionOption="true" />
+								<f:selectItems var="project" itemLabel="#{project.name}"
+									itemValue="#{project.id}" value="#{compraController.projects}" />
 
 								<p:column>
-									<h:outputText value="#{projeto.codigo}" />
+									<h:outputText value="#{project.code}" />
 								</p:column>
 
 								<p:column>
-									<h:outputText value="#{projeto.nome}" />
+									<h:outputText value="#{project.name}" />
 								</p:column>
 
-							</p:autoComplete>
+
+
+							</p:selectOneMenu>
 
 						</div>
 
@@ -196,7 +203,7 @@
 
 								</p:column>
 
-								<p:column headerText="Gestão">
+								<p:column headerText="Gestão" sortBy="#{compra.nomeGestao}">
 									<h:outputText value="#{compra.nomeGestao}" />
 								</p:column>
 
@@ -223,7 +230,7 @@
 									<h:outputText value="#{compra.nomeCategoria}" />
 								</p:column>
 
-								<p:column style="width:45px" >
+								<p:column style="width:45px">
 									<p:commandLink rendered="#{compra.bootUrgencia}">
 										<span style="color: red" class="glyphicon glyphicon-alert"></span>
 									</p:commandLink>

@@ -76,11 +76,14 @@ import repositorio.CalculatorRubricaRepositorio;
 import repositorio.GestaoRepositorio;
 import repositorio.LocalRepositorio;
 import repositorio.RubricaRepositorio;
+import repositorio.management.panel.models.Management;
+import repositorio.management.panel.models.Project;
 import service.CompraService;
 import service.FornecedorService;
 import service.HomeService;
 import service.PedidoService;
 import service.ProjetoService;
+import service.management.panel.FilterPanelService;
 import util.ArquivoLancamento;
 import util.CDILocator;
 import util.DataUtil;
@@ -121,6 +124,8 @@ public class CompraController implements Serializable {
 	private Boolean panelCadastro = false;
 
 	private List<Gestao> gestoes;
+	private List<Management> managements;
+	private List<Project> projects;
 	private List<Produto> allProdutos = new ArrayList<Produto>();
 
 	private List<FontePagadora> allFontes = new ArrayList<FontePagadora>();
@@ -554,6 +559,17 @@ public class CompraController implements Serializable {
 			// findAtividadesByProjetoWithSaldo();
 		}
 	}
+	
+	public void loadManagements() {
+		managements = new ArrayList<Management>();
+		managements = compraService.loadManagements(filtro);
+	}
+	
+
+	public void loadProjects() {
+		projects = new ArrayList<Project>();
+		projects = compraService.loadProjects(filtro);
+	}
 
 	public List<Gestao> completeGestao(String query) {
 		return projetoService.getGestaoAutoComplete(query);
@@ -569,6 +585,9 @@ public class CompraController implements Serializable {
 	@Inject
 	private HomeService homeService;
 	
+	@Inject
+	private UsuarioSessao sessao;
+	
 	public void init() throws IOException {
 		
 		if (homeService.verificarSolicitacoes(usuarioSessao.getIdColadorador())) {
@@ -580,8 +599,11 @@ public class CompraController implements Serializable {
 		}
 		
 		filtro = new Filtro();
+		filtro.setGestaoID(sessao.getUsuario().getGestao().getId());
 //		filtro.setDataInicio(DataUtil.getDataInicio(new Date()));
 		filtro.setDataFinal(DataUtil.getDataFinal(new Date()));
+		loadManagements();
+		loadProjects();
 		carregarCompras();
 		// carregarMunicipiosDeCompra();
 		carregarProjetos();
@@ -692,7 +714,7 @@ public class CompraController implements Serializable {
 	}
 
 	public void carregarCompras() {
-		filtro.setGestao(currentUser().getColaborador().getGestao());
+		//filtro.setGestao(currentUser().getColaborador().getGestao());
 		compras = compraService.getCompras(filtro);
 		itemCompra = new ItemCompra();
 		itemCompra.setCompra(new Compra());
@@ -1513,7 +1535,7 @@ public class CompraController implements Serializable {
 
 	public void filtrar() {
 
-		filtro.setGestaoID(currentUser().getColaborador().getGestao().getId());
+		//filtro.setGestaoID(currentUser().getColaborador().getGestao().getId());
 
 		if (filtro.getLocalidade() != null && filtro.getLocalidade().getId() != null) {
 			filtro.setLocalidadeID(filtro.getLocalidade().getId());
@@ -2000,6 +2022,24 @@ public class CompraController implements Serializable {
 	public void setListaProjeto(List<Projeto> listaProjeto) {
 		this.listaProjeto = listaProjeto;
 	}
+
+	public List<Management> getManagements() {
+		return managements;
+	}
+
+	public void setManagements(List<Management> managements) {
+		this.managements = managements;
+	}
+
+	public List<Project> getProjects() {
+		return projects;
+	}
+
+	public void setProjects(List<Project> projects) {
+		this.projects = projects;
+	}
+
+
 
 	// ----------------------------------------------------------------------------------------------------------
 
