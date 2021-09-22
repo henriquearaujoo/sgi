@@ -48,7 +48,15 @@ public class Filtro {
 	private Colaborador colaborador;
 	private Colaborador userColaborador;
 	private String email;
+	private Long fontePagadoraId;
 
+	public Long getFontePagadoraId() {
+		return fontePagadoraId;
+	}
+
+	public void setFontePagadoraId(Long fontePagadoraId) {
+		this.fontePagadoraId = fontePagadoraId;
+	}
 	private String attribute;
 
 	

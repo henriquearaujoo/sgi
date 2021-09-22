@@ -11,10 +11,12 @@ import org.primefaces.model.charts.bar.BarChartModel;
 import org.primefaces.model.charts.hbar.HorizontalBarChartModel;
 import org.primefaces.model.charts.pie.PieChartModel;
 
+import model.LancamentoAuxiliar;
 import repositorio.management.panel.models.Filtro;
 import repositorio.management.panel.models.Management;
 import repositorio.management.panel.models.Project;
 import repositorio.management.panel.models.Source;
+import service.OrcamentoService;
 import service.management.panel.BarHorizontalChartService;
 import service.management.panel.FilterPanelService;
 import service.management.panel.KnobChartService;
@@ -49,6 +51,7 @@ public class PanelManagementController implements Serializable {
 	private List<Management> gestoes;
 	private List<Project> projetos;
 	private List<Source> fontes;
+	private List<LancamentoAuxiliar> lancamentos;
 	
 	private Filtro filtro = new Filtro();
 	
@@ -111,6 +114,16 @@ public class PanelManagementController implements Serializable {
 	}
 	public void sources() {
 		fontes = filterService.loadSources(filtro);
+	}
+	@Inject
+	OrcamentoService orcamentoService;
+	
+	public void statements() {
+		util.Filtro f = new util.Filtro();
+		f.setGestaoID(filtro.getGestao());
+		f.setFontePagadoraId(filtro.getIdFonte());
+		f.setProjetoId(filtro.getIdProjeto());
+		lancamentos = orcamentoService.loadDisbursementInProject(f);
 	}
 	
 	public void createKnob() {
@@ -238,6 +251,14 @@ public class PanelManagementController implements Serializable {
 	}
 	public void setFontes(List<Source> fontes) {
 		this.fontes = fontes;
+	}
+
+	public List<LancamentoAuxiliar> getLancamentos() {
+		return lancamentos;
+	}
+
+	public void setLancamentos(List<LancamentoAuxiliar> lancamentos) {
+		this.lancamentos = lancamentos;
 	}
 
 }
