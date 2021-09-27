@@ -1,0 +1,121 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<p:panel id="panel-info-extrato">
+		<style type="text/css">
+.ui-datatable {
+	margin-bottom: 25px
+}
+
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+</style>
+
+
+		<div class="ui-g ui-fluid default-style-form-filter">
+				
+			
+			
+			<div class="ui-g-12">
+
+				<p:dataTable id="table-lancamentos-statement" widgetVar="lancs"
+					value="#{panelManagement.lancamentos}" var="lancamento"
+					scrollable="true" scrollHeight="250">
+
+					<p:column headerText="Nº" style="width:75px;text-align:center"
+						filterBy="#{lancamento.id}">
+						<h:outputText value="#{lancamento.id}" />
+					</p:column>
+
+					<p:column headerText="Pagamento"
+						style="width:125px;text-align:center"
+						sortBy="#{lancamento.dataPagamento}">
+						<h:outputText value="#{lancamento.dataPagamento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Projeto" filterBy="#{lancamento.nomeProjeto}"
+						filterMatchMode="contains">
+						<h:outputText value="#{lancamento.nomeProjeto}" />
+					</p:column>
+
+					<p:column headerText="Pagador"
+						filterBy="#{lancamento.fonte}"
+						filterMatchMode="contains">
+						<h:outputText value="#{lancamento.fonte}" />
+					</p:column>
+
+					<p:column headerText="Recebedor"
+						filterBy="#{lancamento.contaRecebedorLbl}"
+						filterMatchMode="contains">
+						<h:outputText value="#{lancamento.contaRecebedorLbl}" />
+					</p:column>
+
+					<p:column style="width:140px;text-align:center" headerText="Status"
+						filterBy="#{lancamento.status}" filterMatchMode="exact">
+						<f:facet name="filter">
+							<p:selectOneMenu onchange="PF('lancs').filter()"
+								styleClass="custom-filter">
+								<f:selectItem itemLabel="" itemValue="#{null}"
+									noSelectionOption="true" />
+								<f:selectItem itemLabel="EFETIVADO" itemValue="EFETIVADO" />
+								<f:selectItem itemLabel="PROVISIONADO" itemValue="PROVISIONADO" />
+
+							</p:selectOneMenu>
+						</f:facet>
+
+						<h:outputText value="#{lancamento.status}" />
+					</p:column>
+
+
+					<p:column style="width:135px;text-align:center">
+						<f:facet name="header">
+							<div style="text-align: right">
+								<p:outputLabel value="Valor"></p:outputLabel>
+							</div>
+						</f:facet>
+						<h:outputText style="color:red;float:right"
+							value="#{lancamento.valorPagoAcao}">
+							<f:convertNumber type="currency" locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+			</div>
+
+		</div>
+
+
+	</p:panel>
+
+
+
+
+
+
+</ui:fragment>

@@ -92,7 +92,8 @@ public class LancamentoAuxiliar extends Lancamento{
 	//Adicionado para implementar a unificação das aprovaações
 	
 	private Boolean isSolicitacaoViagem;
-	
+
+	public LancamentoAuxiliar(){}
 	
 	public Boolean getIsSolicitacaoViagem() {
 		return isSolicitacaoViagem;
@@ -162,10 +163,6 @@ public class LancamentoAuxiliar extends Lancamento{
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
-
-
-
-	public LancamentoAuxiliar(){}
 
 	public Long getAcaoId() {
 		return AcaoId;

@@ -95,6 +95,7 @@ public class PanelManagementController implements Serializable {
 		managements();
 		projects();
 		sources();
+//		statements();
 	}
 	
 	public void generateGraphics() {
@@ -118,12 +119,9 @@ public class PanelManagementController implements Serializable {
 	@Inject
 	OrcamentoService orcamentoService;
 	
+	private @Inject MixedChartService mixedChartService;
 	public void statements() {
-		util.Filtro f = new util.Filtro();
-		f.setGestaoID(filtro.getGestao());
-		f.setFontePagadoraId(filtro.getIdFonte());
-		f.setProjetoId(filtro.getIdProjeto());
-		lancamentos = orcamentoService.loadDisbursementInProject(f);
+		lancamentos = mixedChartService.getStatementExecution(filtro);
 	}
 	
 	public void createKnob() {

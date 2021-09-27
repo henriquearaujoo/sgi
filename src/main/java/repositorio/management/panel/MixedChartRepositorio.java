@@ -24,6 +24,7 @@ import model.AcaoProduto;
 import model.Componente;
 import model.DonationManagement;
 import model.GrupoDeInvestimento;
+import model.LancamentoAuxiliar;
 import model.MetaPlano;
 import model.Orcamento;
 import model.Projeto;
@@ -123,6 +124,76 @@ public class MixedChartRepositorio {
 		hql.append("order by ano, mes ");
 		
 		String result = hql.toString();
+
+		return hql.toString();
+	}
+	
+	public List<LancamentoAuxiliar> getStatementExecution(Filtro filtro) {
+		Query query = manager.createNativeQuery(getSqlToStatementExecution(filtro));
+		setQueryExecuted(query, filtro);
+		
+		List<LancamentoAuxiliar> retorno = new ArrayList<>();
+		LancamentoAuxiliar lancamento = new LancamentoAuxiliar();
+		
+		List<Object[]> result = query.getResultList();
+		
+		for(Object[] object : result ) {
+			lancamento = new LancamentoAuxiliar();
+			lancamento.setId(new Long(object[1].toString()));
+			lancamento.setNomeProjeto(Util.getNullValue(object[2], ""));
+			lancamento.setContaRecebedorLbl(Util.getNullValue(object[3], ""));
+			lancamento.setValorPagoAcao(new BigDecimal(object[4].toString()));
+			lancamento.setFonte(Util.getNullValue(object[5], ""));
+			retorno.add(lancamento);
+		}
+		
+		return retorno;
+	}
+	
+	
+	public String getSqlToStatementExecution(Filtro filtro) {
+
+		StringBuilder hql = new StringBuilder("select ");
+		hql.append("(select g.nome from gestao g where g.id = p.gestao_id) as gestao_00, l.id, ");
+		hql.append("p.nome as projeto, conta_recebedor.nome_conta, l.valor_total_com_desconto, fp.nome as fonte ");
+		hql.append("from fonte_pagadora fp ");
+		hql.append("join orcamento o on fp.id = o.fonte_id ");
+		hql.append("join rubrica_orcamento ro on ro.orcamento_id  = o.id ");
+		hql.append("join projeto_rubrica pr on pr.rubricaorcamento_id = ro.id ");
+		hql.append("join projeto p on p.id = pr.projeto_id ");
+		hql.append("join lancamento_acao la on la.projetorubrica_id  = pr.id ");
+		hql.append("join pagamento_lancamento pl on pl.lancamentoacao_id = la.id ");
+		hql.append("join lancamento l on l.id = la.lancamento_id ");
+		hql.append("join conta_bancaria conta_pagador on conta_pagador.id = pl.conta_id ");
+		hql.append("join conta_bancaria conta_recebedor on conta_recebedor.id = pl.contarecebedor_id ");
+		hql.append("where 1 = 1 ");
+
+		if (filtro.getShowUnique()) {
+			hql.append("and p.gestao_id = :gestao_id ");
+		} else {
+			hql.append(
+					"and ((p.gestao_id  = :gestao_id) or ((select g.superintendencia_id from gestao g where g.id = p.gestao_id) = :gestao_id)) ");
+		}
+		
+		if (filtro.getIdFonte() != null) {
+			hql.append(" and fp.id = :fonte_id ");
+		}
+		
+		if (filtro.getIdProjeto() != null) {
+			hql.append(" and p.id = :projeto_id ");
+		}
+
+		hql.append("and l.tipo != 'compra' ");
+		hql.append("and conta_pagador.tipo = 'CB' ");
+		hql.append("and conta_recebedor.tipo = 'CF' ");
+		hql.append(filtro.getClauseYearExecuted());
+		hql.append("and (l.versionlancamento = 'MODE01' or pl.reclassificado is true) ");
+		// if (type == "effectived") {
+		hql.append("and pl.stt = 'EFETIVADO' ");
+		hql.append("and l.statuscompra = 'CONCLUIDO' ");
+		// } else {
+		// hql.append("and l.statuscompra in ('CONCLUIDO','N_INCIADO') ");
+		// }
 
 		return hql.toString();
 	}
