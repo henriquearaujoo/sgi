@@ -129,7 +129,16 @@ public class MixedChartRepositorio {
 	}
 	
 	public List<LancamentoAuxiliar> getStatementExecution(Filtro filtro) {
-		Query query = manager.createNativeQuery(getSqlToStatementExecution(filtro));
+		StringBuilder jpql = new StringBuilder(getSqlToStatementExecution(filtro));
+		
+		Query query = manager.createNativeQuery(jpql.toString());
+		if (filtro.getIdFonte() != null) {
+			query.setParameter("fonte_id", filtro.getIdFonte());
+		}
+		
+		if (filtro.getIdProjeto() != null) {
+			query.setParameter("projeto_id", filtro.getIdProjeto());
+		}
 		setQueryExecuted(query, filtro);
 		
 		List<LancamentoAuxiliar> retorno = new ArrayList<>();
