@@ -253,10 +253,10 @@
 						
 						<div class="d-flex justify-content-end flex-grow-1">
 							<p:commandLink styleClass="btn btn-primary btn-sm"
-							 update="table-lancamentos-statement"
+							 update="panel-table"
 							 actionListener="#{panelManagement.statements()}"
 							 onclick="PF('statement').show();" >
-								<span>Extrado</span>
+								<span>Extrato</span>
 							</p:commandLink>
 						</div>
 					</div>
@@ -304,8 +304,8 @@
 
 	<ui:define name="adicionais">
 		<p:dialog modal="true" draggable="true" widgetVar="statement"
-		 id="statement">
-			<ui:include src="/main/dialog/panel/statement.xhtml" />
+		 id="statement" width="100%" styleClass="dialog" blockScroll="true">
+			<ui:include  src="/main/dialog/panel/statement.xhtml" />
 		</p:dialog>
 	
 		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"

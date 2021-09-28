@@ -177,6 +177,10 @@ body .ui-breadcrumb {
 	height: 100vh !important;
 }
 
+#panel-info-extrato {
+	height: 100vh !important;
+}
+
 .panel.ui-panel .ui-panel-content {
 	border: none !important;
 }

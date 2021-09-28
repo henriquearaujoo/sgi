@@ -36,77 +36,44 @@
 </style>
 
 
-		<div class="ui-g ui-fluid default-style-form-filter">
-				
-			
-			
+		<div class="ui-g ui-fluid default-style-form-filter" style="padding-bottom: 60px;">
 			<div class="ui-g-12">
+				<p:outputPanel id="panel-table">
+					<table class="table table-striped">
+						<thead class="thead-dark">
+							<tr>
+								<th scope="col">Código</th>
+								<th scope="col">Projeto</th>
+								<th scope="col">Recebedor</th>
+								<th scope="col">Valor</th>
 
-				<p:dataTable id="table-lancamentos-statement" widgetVar="lancs"
-					value="#{panelManagement.lancamentos}" var="lancamento"
-					scrollable="true" scrollHeight="250">
+							</tr>
+						</thead>
+						<tbody>
 
-					<p:column headerText="Nº" style="width:75px;text-align:center"
-						filterBy="#{lancamento.id}">
-						<h:outputText value="#{lancamento.id}" />
-					</p:column>
+							<ui:repeat var="lancamento"
+								value="#{panelManagement.lancamentos}">
 
-					<p:column headerText="Pagamento"
-						style="width:125px;text-align:center"
-						sortBy="#{lancamento.dataPagamento}">
-						<h:outputText value="#{lancamento.dataPagamento}">
-							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
-						</h:outputText>
-					</p:column>
+								<tr>
+									<td>#{lancamento.id}</td>
 
-					<p:column headerText="Projeto" filterBy="#{lancamento.nomeProjeto}"
-						filterMatchMode="contains">
-						<h:outputText value="#{lancamento.nomeProjeto}" />
-					</p:column>
+									<td>#{lancamento.nomeProjeto}</td>
 
-					<p:column headerText="Pagador"
-						filterBy="#{lancamento.fonte}"
-						filterMatchMode="contains">
-						<h:outputText value="#{lancamento.fonte}" />
-					</p:column>
+									<td>#{lancamento.contaRecebedorLbl}</td>
 
-					<p:column headerText="Recebedor"
-						filterBy="#{lancamento.contaRecebedorLbl}"
-						filterMatchMode="contains">
-						<h:outputText value="#{lancamento.contaRecebedorLbl}" />
-					</p:column>
-
-					<p:column style="width:140px;text-align:center" headerText="Status"
-						filterBy="#{lancamento.status}" filterMatchMode="exact">
-						<f:facet name="filter">
-							<p:selectOneMenu onchange="PF('lancs').filter()"
-								styleClass="custom-filter">
-								<f:selectItem itemLabel="" itemValue="#{null}"
-									noSelectionOption="true" />
-								<f:selectItem itemLabel="EFETIVADO" itemValue="EFETIVADO" />
-								<f:selectItem itemLabel="PROVISIONADO" itemValue="PROVISIONADO" />
-
-							</p:selectOneMenu>
-						</f:facet>
-
-						<h:outputText value="#{lancamento.status}" />
-					</p:column>
-
-
-					<p:column style="width:135px;text-align:center">
-						<f:facet name="header">
-							<div style="text-align: right">
-								<p:outputLabel value="Valor"></p:outputLabel>
-							</div>
-						</f:facet>
-						<h:outputText style="color:red;float:right"
-							value="#{lancamento.valorPagoAcao}">
-							<f:convertNumber type="currency" locale="pt_BR" />
-						</h:outputText>
-					</p:column>
-
-				</p:dataTable>
+									<td><h:outputText 
+											value="#{lancamento.valorPagoAcao}">
+											<f:convertNumber type="currency" locale="pt_BR" />
+										</h:outputText></td>
+								</tr>
+							</ui:repeat>
+						</tbody>
+					</table>
+				</p:outputPanel>
 			</div>
+
+
+
 
 		</div>
 
