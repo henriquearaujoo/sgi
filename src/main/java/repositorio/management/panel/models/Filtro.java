@@ -162,6 +162,36 @@ public class Filtro implements Serializable{
 	private Project project;
 	
 	private Source source;
+	
+	private int pageCurrent;
+	
+	private int pageSize;
+	
+	private int lastPage;
+
+	public int getLastPage() {
+		return lastPage;
+	}
+
+	public void setLastPage(int lastPage) {
+		this.lastPage = lastPage;
+	}
+
+	public int getPageCurrent() {
+		return pageCurrent;
+	}
+
+	public void setPageCurrent(int pageCurrent) {
+		this.pageCurrent = pageCurrent;
+	}
+
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
 
 	public Long getIdFonte() {
 		return idFonte;

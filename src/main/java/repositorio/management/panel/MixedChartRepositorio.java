@@ -144,6 +144,13 @@ public class MixedChartRepositorio {
 		List<LancamentoAuxiliar> retorno = new ArrayList<>();
 		LancamentoAuxiliar lancamento = new LancamentoAuxiliar();
 		
+		query.setFirstResult((filtro.getPageCurrent() - 1) * filtro.getPageSize());
+		query.setMaxResults(filtro.getPageSize());
+		
+		filtro.setLastPage(query.getResultList().size() / filtro.getPageSize());
+		
+		System.out.println(filtro.getLastPage());
+		
 		List<Object[]> result = query.getResultList();
 		
 		for(Object[] object : result ) {

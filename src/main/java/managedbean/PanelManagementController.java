@@ -16,7 +16,6 @@ import repositorio.management.panel.models.Filtro;
 import repositorio.management.panel.models.Management;
 import repositorio.management.panel.models.Project;
 import repositorio.management.panel.models.Source;
-import service.OrcamentoService;
 import service.management.panel.BarHorizontalChartService;
 import service.management.panel.FilterPanelService;
 import service.management.panel.KnobChartService;
@@ -36,6 +35,8 @@ public class PanelManagementController implements Serializable {
 	private MixedChartService mixedService;
 	@Inject
 	private BarHorizontalChartService horizontalBarService;
+	
+	private @Inject MixedChartService mixedChartService;
 	
 	private @Inject KnobChartService knobService;
 	private @Inject FilterPanelService filterService;
@@ -69,6 +70,9 @@ public class PanelManagementController implements Serializable {
 	
 
 	public void execute() {
+		filtro.setPageCurrent(1); // set initial page
+		filtro.setPageSize(5); // total render items
+		
 		setupFilters();
 		generateFilter();
 		generateGraphics();
@@ -116,10 +120,18 @@ public class PanelManagementController implements Serializable {
 	public void sources() {
 		fontes = filterService.loadSources(filtro);
 	}
-	@Inject
-	OrcamentoService orcamentoService;
 	
-	private @Inject MixedChartService mixedChartService;
+	public void nextPageStatement() {
+		filtro.setPageCurrent(filtro.getPageCurrent()+1);
+		statements();
+	}
+	
+	public void previousPageStatement() {
+		int current = filtro.getPageCurrent();
+		filtro.setPageCurrent(current-1);
+		statements();
+	}
+	
 	public void statements() {
 		lancamentos = mixedChartService.getStatementExecution(filtro);
 	}
