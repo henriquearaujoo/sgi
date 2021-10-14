@@ -71,7 +71,7 @@ public class PanelManagementController implements Serializable {
 
 	public void execute() {
 		filtro.setPageCurrent(1); // set initial page
-		filtro.setPageSize(5); // total render items
+		filtro.setItemForPage(5); // total render items
 		
 		setupFilters();
 		generateFilter();
@@ -127,8 +127,7 @@ public class PanelManagementController implements Serializable {
 	}
 	
 	public void previousPageStatement() {
-		int current = filtro.getPageCurrent();
-		filtro.setPageCurrent(current-1);
+		filtro.setPageCurrent(filtro.getPageCurrent()-1);
 		statements();
 	}
 	

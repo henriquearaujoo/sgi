@@ -144,12 +144,13 @@ public class MixedChartRepositorio {
 		List<LancamentoAuxiliar> retorno = new ArrayList<>();
 		LancamentoAuxiliar lancamento = new LancamentoAuxiliar();
 		
-		query.setFirstResult((filtro.getPageCurrent() - 1) * filtro.getPageSize());
-		query.setMaxResults(filtro.getPageSize());
+		int allResults = query.getResultList().size();
 		
-		filtro.setLastPage(query.getResultList().size() / filtro.getPageSize());
+		query.setFirstResult((filtro.getPageCurrent() - 1) * filtro.getItemForPage());
+		query.setMaxResults(filtro.getItemForPage());
 		
-		System.out.println(filtro.getLastPage());
+		filtro.setPageSize(allResults / filtro.getItemForPage());
+		filtro.setLastPage(filtro.getPageSize()+1);
 		
 		List<Object[]> result = query.getResultList();
 		
@@ -207,6 +208,7 @@ public class MixedChartRepositorio {
 		// if (type == "effectived") {
 		hql.append("and pl.stt = 'EFETIVADO' ");
 		hql.append("and l.statuscompra = 'CONCLUIDO' ");
+		hql.append(" order by fonte");
 		// } else {
 		// hql.append("and l.statuscompra in ('CONCLUIDO','N_INCIADO') ");
 		// }
