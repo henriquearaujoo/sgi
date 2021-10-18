@@ -53,8 +53,9 @@
 									<th scope="col">Código</th>
 									<th scope="col">Projeto</th>
 									<th scope="col">Recebedor</th>
+									<th scope="col">Tipo</th>
 									<th scope="col">Valor</th>
-
+									<th scope="col">#</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -68,10 +69,17 @@
 										<td>#{lancamento.nomeProjeto}</td>
 
 										<td>#{lancamento.contaRecebedorLbl}</td>
+										<td>#{lancamento.tipov4}</td>
 
 										<td><h:outputText value="#{lancamento.valorPagoAcao}">
 												<f:convertNumber type="currency" locale="pt_BR" />
 											</h:outputText></td>
+										
+										<td><p:commandLink title="Imprimir" process="@this"
+							action="#{panelManagement.visualizarLancamento(lancamento)}" ajax="false"
+							target="_blank">
+							<i class="pi pi-print"></i>
+						</p:commandLink></td>
 									</tr>
 								</ui:repeat>
 							</tbody>

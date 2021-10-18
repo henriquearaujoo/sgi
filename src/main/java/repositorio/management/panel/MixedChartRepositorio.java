@@ -161,6 +161,7 @@ public class MixedChartRepositorio {
 			lancamento.setContaRecebedorLbl(Util.getNullValue(object[3], ""));
 			lancamento.setValorPagoAcao(new BigDecimal(object[4].toString()));
 			lancamento.setFonte(Util.getNullValue(object[5], ""));
+			lancamento.setTipov4(Util.getNullValue(object[6], ""));
 			retorno.add(lancamento);
 		}
 		
@@ -172,7 +173,7 @@ public class MixedChartRepositorio {
 
 		StringBuilder hql = new StringBuilder("select ");
 		hql.append("(select g.nome from gestao g where g.id = p.gestao_id) as gestao_00, l.id, ");
-		hql.append("p.nome as projeto, conta_recebedor.nome_conta, l.valor_total_com_desconto, fp.nome as fonte ");
+		hql.append("p.nome as projeto, conta_recebedor.nome_conta, l.valor_total_com_desconto, fp.nome as fonte, l.tipo_v4 ");
 		hql.append("from fonte_pagadora fp ");
 		hql.append("join orcamento o on fp.id = o.fonte_id ");
 		hql.append("join rubrica_orcamento ro on ro.orcamento_id  = o.id ");
