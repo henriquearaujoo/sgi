@@ -2395,7 +2395,6 @@ public class LancamentoRepository implements Serializable {
 		// pr join pr.projeto p where 1 = 1 ");
 		jpql.append(" FROM  Compra c  where 1 = 1 ");
 		jpql.append(" and c.versionLancamento = 'MODE01' ");
-
 		if (filtro.getCategoriaID() != null) {
 			jpql.append(" and c.CategoriaDespesaClass.id = :catego ");
 		}

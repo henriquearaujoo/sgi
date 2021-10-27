@@ -621,7 +621,7 @@ public class CompraService implements Serializable {
 			calInicio.set(Calendar.MILLISECOND, 0);
 			filtro.setDataInicio(calInicio.getTime());
 		}
-
+		
 		return repositorio.getCompras(filtro);
 	}
 

@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.primefaces.PrimeFaces;
 
@@ -61,6 +62,8 @@ public class UsuarioControllerAtt implements Serializable {
 	private Email email;
 	
 	private Long idUser;
+	
+	private String action;
 	
 	private Filtro filtro = new Filtro();
 	
@@ -178,13 +181,26 @@ public class UsuarioControllerAtt implements Serializable {
 	}
 
 	public boolean editPass() {
-		User currentUser = usuarioSessao.getUsuario();
-		if (this.usuario.getId().longValue() == currentUser.getId().longValue()) {
+		User currentUser = currentUser();
+		User userEdit = this.usuario;
+		
+		if (userEdit.getId() != null) {
+			if (userEdit.getId().longValue() == currentUser.getId().longValue()
+					&& action.equals("edit") || currentUser.getId().longValue() == 1L) {
+				return true;
+			}
+		}
+		if (action.equals("new") && currentUser.getId().longValue() == 1L) {
 			return true;
 		}
 		return false;
 	}
 
+	public User currentUser() {
+		User user = usuarioSessao.getUsuario();
+		return user;
+	}
+	
 	// and medotos de listagem
 
 	public String salvar() throws AddressException, MessagingException {
@@ -315,6 +331,14 @@ public class UsuarioControllerAtt implements Serializable {
 
 	public void setFiltro(Filtro filtro) {
 		this.filtro = filtro;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
 	}
 
 }
