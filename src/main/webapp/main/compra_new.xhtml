@@ -77,10 +77,24 @@
 							<p:outputLabel for="filter-gestao" value="Gestão"
 								styleClass="form-label" />
 
-							<p:selectOneMenu id="filter-gestao"
+							<p:selectOneMenu id="filter-gestao" style="margin-top: 5px"
 								value="#{compraController.filtro.gestaoID}" autoWidth="false">
 								<f:selectItems value="#{compraController.managements}" var="ges"
 									itemLabel="#{ges.nome}" itemValue="#{ges.id}" />
+							</p:selectOneMenu>
+
+						</div>
+						
+						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
+							<p:outputLabel for="filter-categoria" value="Categoria"
+								style="margin-left:4px" styleClass="form-label" />
+							<p:selectOneMenu id="filter-categoria" filter="true" style="margin-top: 5px"
+								filterMatchMode="contains" autoWidth="false"
+								value="#{compraController.filtro.categoriaID}">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{compraController.categorias}"
+									var="categoria" itemLabel="#{categoria.nome}"
+									itemValue="#{categoria.id}" />
 							</p:selectOneMenu>
 
 						</div>
@@ -106,51 +120,13 @@
 
 						</div>
 
-						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-							<p:outputLabel for="filter-categoria" value="Categoria"
-								style="margin-left:4px" styleClass="form-label" />
-							<p:selectOneMenu id="filter-categoria" filter="true"
-								filterMatchMode="contains" autoWidth="false"
-								value="#{compraController.filtro.categoriaID}">
-								<f:selectItem noSelectionOption="true" />
-								<f:selectItems value="#{compraController.categorias}"
-									var="categoria" itemLabel="#{categoria.nome}"
-									itemValue="#{categoria.id}" />
-							</p:selectOneMenu>
 
-						</div>
 
 					</div>
 
 					<div class="ui-g ui-fluid default-style-form-filter focused	">
-						<div class="ui-g-12 ui-lg-6 form-group">
 
-							<p:outputLabel for="proj-id" value="Projeto"
-								style="margin-left:1px" styleClass="form-label" />
-
-
-							<p:selectOneMenu id="proj-id"
-								value="#{compraController.filtro.projetoId}" autoWidth="false">
-								<f:selectItem itemLabel="Selecione um projeto"
-									noSelectionOption="true" />
-								<f:selectItems var="project" itemLabel="#{project.name}"
-									itemValue="#{project.id}" value="#{compraController.projects}" />
-
-								<p:column>
-									<h:outputText value="#{project.code}" />
-								</p:column>
-
-								<p:column>
-									<h:outputText value="#{project.name}" />
-								</p:column>
-
-
-
-							</p:selectOneMenu>
-
-						</div>
-
-						<div class="ui-g-12 ui-lg-6" style="text-align: right">
+						<div class="ui-g-12" style="text-align: left;">
 
 							<p:commandLink styleClass="btn btn-primary btn-sm"
 								action="#{compraController.filtrar()}" onclick="start()"
