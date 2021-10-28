@@ -96,6 +96,12 @@ public class Colaborador extends Person implements Serializable {
 		setEmail(email);
 		setCpf(cpf);
 	}
+	
+	public Colaborador(Long id, String nome, String email) {
+		setId(id);
+		setNome(nome);
+		setEmail(email);
+	}
 
 	public RelatorioCampo getRelatorioCampo() {
 		return relatorioCampo;

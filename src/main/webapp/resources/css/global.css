@@ -159,6 +159,11 @@ body .ui-breadcrumb {
 	height: 100% !important;
 }
 
+.dialog {
+	width: 80% !important;
+	height: 80% !important;
+}
+
 .fonte_pagadora {
 	width: 100% !important;
 	height: 100% !important;
@@ -172,10 +177,6 @@ body .ui-breadcrumb {
 	height: 100vh !important;
 }
 
-.dialog {
-	width: 100vw !important;
-	height: 100vh !important;
-}
 
 .panel.ui-panel .ui-panel-content {
 	border: none !important;
@@ -295,6 +296,27 @@ body .ui-breadcrumb {
 .carousel_help.ui-carousel .ui-carousel-viewport::-webkit-scrollbar-thumb {
     background: #888a85;
     border-radius: 10px;
+}
+
+
+/*///////////////////////////////////////////*/
+
+
+/*/////////////////APROVADORES///////////////*/
+
+
+
+.dialog-aprovador {
+	width: 80vw !important;
+	height: 80vh !important;
+}
+
+.dialog-aprovador.ui-dialog-content .ui-widget-content {
+	height: 100% !important;
+}
+
+.ui-growl-item {
+	padding: 0 !important;
 }
 
 

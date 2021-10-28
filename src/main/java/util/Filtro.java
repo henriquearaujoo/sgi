@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import model.Acao;
+import model.AprovadorDocumento;
 import model.Colaborador;
 import model.Componente;
 import model.Configuracao;
@@ -51,8 +52,24 @@ public class Filtro {
 
 	private String attribute;
 
-	
+	private String param;
+	private AprovadorDocumento aprovadorDocumento = new AprovadorDocumento();
 
+	public AprovadorDocumento getAprovadorDocumento() {
+		return aprovadorDocumento;
+	}
+
+	public void setAprovadorDocumento(AprovadorDocumento aprovadorDocumento) {
+		this.aprovadorDocumento = aprovadorDocumento;
+	}
+
+	public String getParam() {
+		return param;
+	}
+
+	public void setParam(String param) {
+		this.param = param;
+	}
 	private Configuracao config = new Configuracao();
 	
 	public Configuracao getConfig() {
