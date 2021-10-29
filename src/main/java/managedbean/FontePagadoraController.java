@@ -2,16 +2,14 @@ package managedbean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import org.primefaces.PrimeFaces;
 
 import model.FontePagadora;
 import service.FontePagadoraService;
@@ -47,6 +45,8 @@ public class FontePagadoraController implements Serializable {
 		}
 	}
 
+	private String attributePartner = "";
+	
 	public void remover() {
 		try {
 			fontePagadoraService.remover(fontePagadora);
@@ -56,8 +56,13 @@ public class FontePagadoraController implements Serializable {
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage("messages", new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"Erro!",
-					"Não foi possível remover a fonte desejada. Provavelmente, ela ainda está associada a algum orçamento."));
+					attributePartner + " não pode ser excluído, existem planejamentos associados a ele."));
 		}
+	}
+	
+	public void removeListener(ActionEvent event) {
+		String p = (String) event.getComponent().getAttributes().get("partner");
+		this.attributePartner = p;
 	}
 
 	public FontePagadora getFontePagadora() {
