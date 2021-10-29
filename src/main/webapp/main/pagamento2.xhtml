@@ -41,7 +41,9 @@
 						style="margin-top:10px" showDetail="true" closable="true"
 						showIcon="true" />
 						
-					<p:breadCrumb>
+					<p:breadCrumb class="breadcrumb-container">
+
+
 						<p:menuitem value="Categories" url="home_new.xhtml" />
 						<p:menuitem value="Listagem de Solicitação de Pagamento"  />
 					</p:breadCrumb>	
@@ -377,7 +379,9 @@
 					
 					<h:form id="form-cadastro">
 					
-					<p:breadCrumb>
+					<p:breadCrumb class="breadcrumb-container">
+
+
 						<p:menuitem value="Categories" url="home_new.xhtml" />
 						<p:menuitem value="Listagem de Solicitação de Pagamento" action="#{pagamentoController.mudarPanelListar()}" immediate="true" update="panel-content" />
 						<p:menuitem value="Cadastro de Solicitação de Pagamento"  update="panel-content" />
