@@ -50,9 +50,34 @@ public class Filtro {
 	private String email;
 
 	private String attribute;
-
 	
+	private String parceiro;
+	private String cnpj;
+	private String razaoSocial;
 
+	public String getParceiro() {
+		return parceiro;
+	}
+
+	public void setParceiro(String parceiro) {
+		this.parceiro = parceiro;
+	}
+
+	public String getCnpj() {
+		return cnpj;
+	}
+
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
+	}
+
+	public String getRazaoSocial() {
+		return razaoSocial;
+	}
+
+	public void setRazaoSocial(String razaoSocial) {
+		this.razaoSocial = razaoSocial;
+	}
 	private Configuracao config = new Configuracao();
 	
 	public Configuracao getConfig() {

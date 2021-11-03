@@ -71,6 +71,31 @@ public class FontePagadoraRepositorio {
 		return query.getResultList().size() > 0  ? query.getResultList() : (List) new ArrayList<FontePagadora>();
 	}
 	
+	public List<FontePagadora> filtroParceiro(Filtro filtro) {
+		StringBuilder jpql = new StringBuilder(
+				"SELECT New FontePagadora(fp.id, fp.nome, fp.cnpj, fp.razaoSocial) from FontePagadora fp where 1 = 1"
+		);
+		if (!filtro.getParceiro().equals(null)) {
+			jpql.append(" and lower(fp.nome) = lower(:nome)");
+		}
+		
+		if (!filtro.getRazaoSocial().equals(null)) {			
+			jpql.append(" and lower(fp.razaoSocial) = lower(:razaoSocial)");
+		}
+		
+		if (!filtro.getCnpj().equals(null)) {			
+			jpql.append(" and lower(fp.cnpj) = lower(:cnpj)");
+		}
+		
+		Query query = manager.createQuery(jpql.toString());
+		
+		query.setParameter("nome", filtro.getParceiro());
+		query.setParameter("razaoSocial", filtro.getRazaoSocial());
+		query.setParameter("cnpj", filtro.getCnpj());
+		
+		return query.getResultList().size() > 0 ? query.getResultList() : new ArrayList<FontePagadora>();
+	}
+	
 	
 	public List<FontePagadora> getFonteAutoComplete(String fonte){
 		StringBuilder jpql = new StringBuilder("from  FontePagadora f where lower(f.nome) like lower(:nome)");	

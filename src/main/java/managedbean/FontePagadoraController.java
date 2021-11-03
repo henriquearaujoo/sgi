@@ -13,6 +13,7 @@ import javax.inject.Named;
 
 import model.FontePagadora;
 import service.FontePagadoraService;
+import util.Filtro;
 
 @Named(value = "fonte_pagadora_controller")
 @ViewScoped
@@ -25,6 +26,9 @@ public class FontePagadoraController implements Serializable {
 
 	@Inject
 	private FontePagadora fontePagadora = new FontePagadora();
+	
+	@Inject
+	private Filtro filtro;
 
 	private List<FontePagadora> fontes = new ArrayList<>();
 
@@ -43,6 +47,10 @@ public class FontePagadoraController implements Serializable {
 		} catch (Exception e) {
 			return "fonte_pagadora?faces-redirect=true&sucesso=0";
 		}
+	}
+	
+	public void filtrarFonte() {
+		this.fontes = fontePagadoraService.filtrarParceiro(filtro);
 	}
 
 	private String attributePartner = "";
@@ -79,6 +87,14 @@ public class FontePagadoraController implements Serializable {
 
 	public void setFontes(List<FontePagadora> fontes) {
 		this.fontes = fontes;
+	}
+
+	public Filtro getFiltro() {
+		return filtro;
+	}
+
+	public void setFiltro(Filtro filtro) {
+		this.filtro = filtro;
 	}
 
 }
