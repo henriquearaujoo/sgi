@@ -27,8 +27,8 @@ public class FontePagadoraController implements Serializable {
 	@Inject
 	private FontePagadora fontePagadora = new FontePagadora();
 	
-	@Inject
-	private Filtro filtro;
+	
+	private Filtro filtro = new Filtro();
 
 	private List<FontePagadora> fontes = new ArrayList<>();
 

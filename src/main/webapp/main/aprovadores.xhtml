@@ -13,79 +13,75 @@
 			<f:viewAction action="#{aprovadorController.initApprover()}" />
 		</f:metadata>
 
-		<h:form id="form_lista_aprovador" style="padding-top: 24px">
-			<p:breadCrumb>
 
+		<h:form id="form_lista_aprovador" style="padding-top: 24px">
+			<p:breadCrumb class="breadcrumb-container">
+
+				<p:menuitem value="Home" title="Página Inicial" onclick="start();"
+					oncomplete="start();" style="margin-top: 4px" url="home_new.xhtml" />
+				<p:menuitem value="Lista de Aprovadores" onclick="start();"
+					oncomplete="stop();" />
 			</p:breadCrumb>
 
-			<h:form id="form_lista_aprovador">
-				<p:breadCrumb class="breadcrumb-container">
+			<p:growl id="growl" showDetail="true" sticky="true" />
 
-					<p:menuitem value="Home" title="Página Inicial" onclick="start();"
-						oncomplete="start();" style="margin-top: 4px" url="home_new.xhtml" />
-					<p:menuitem value="Lista de Aprovadores" onclick="start();"
-						oncomplete="stop();" />
-				</p:breadCrumb>
+			<p:panel>
 
-				<p:growl id="growl" showDetail="true" sticky="true" />
+				<p:dataTable var="ap" value="#{aprovadorController.approvers}"
+					rows="10" paginator="true" sortBy="#{ap.id}">
 
-				<p:panel>
+					<p:column headerText="Colaborador">
+						<h:outputText value="#{ap.collaborator.nome}" />
+					</p:column>
 
-					<p:dataTable var="ap" value="#{aprovadorController.approvers}"
-						rows="10" paginator="true" sortBy="#{ap.id}">
+					<p:column headerText="Gestão">
+						<h:outputText value="#{ap.management.nome}" />
+					</p:column>
 
-						<p:column headerText="Colaborador">
-							<h:outputText value="#{ap.collaborator.nome}" />
-						</p:column>
+					<p:column headerText="Documento" styleClass="text-center">
+						<h:outputText value="#{ap.documento}" />
+					</p:column>
 
-						<p:column headerText="Gestão">
-							<h:outputText value="#{ap.management.nome}" />
-						</p:column>
+					<p:column headerText="Status ao ser Aprovado"
+						styleClass="text-center">
+						<h:outputText value="#{ap.status}" />
+					</p:column>
 
-						<p:column headerText="Documento" styleClass="text-center">
-							<h:outputText value="#{ap.documento}" />
-						</p:column>
+					<p:column headerText="Status ao ser Recusado"
+						styleClass="text-center">
+						<h:outputText value="#{ap.statusBefore}" />
+					</p:column>
 
-						<p:column headerText="Status ao ser Aprovado"
-							styleClass="text-center">
-							<h:outputText value="#{ap.status}" />
-						</p:column>
+					<p:column headerText="#" styleClass="text-center">
+						<p:menuButton value="Opções">
+							<p:menuitem icon="fa fa-fw fa-edit" value="editar"
+								outcome="/main/aprovadores_cadastro">
+								<f:param name="id" value="#{ap.id}" />
+								<f:param name="colaborador" value="#{ap.colaborador}" />
+							</p:menuitem>
 
-						<p:column headerText="Status ao ser Recusado"
-							styleClass="text-center">
-							<h:outputText value="#{ap.statusBefore}" />
-						</p:column>
+							<p:menuitem value="remover" process="@this"
+								update=":form_lista_aprovador" icon="fa fa-fw fa-trash-o"
+								onclick="start()"
+								actionListener="#{aprovadorController.removeApprover(ap)}"
+								onsuccess="stop()" onerror="stop()">
+							</p:menuitem>
+						</p:menuButton>
+					</p:column>
+					<f:facet name="paginatorTopRight">
+						<p:link styleClass="btn btn-success btn-sm" style="color:#fff;"
+							onclick="start();" onsuccess="stop();"
+							update=":form_lista_aprovador"
+							outcome="/main/aprovadores_cadastro"
+							action="#{aprovadorController.initObjectApprover()}"
+							onerror="stop();" title="NOVO APROVADOR">
+							<i class="fa fa-user-plus"></i>
+						</p:link>
+					</f:facet>
 
-						<p:column headerText="#" styleClass="text-center">
-							<p:menuButton value="Opções">
-								<p:menuitem icon="fa fa-fw fa-edit" value="editar"
-									outcome="/main/aprovadores_cadastro">
-									<f:param name="id" value="#{ap.id}" />
-									<f:param name="colaborador" value="#{ap.colaborador}" />
-								</p:menuitem>
-
-								<p:menuitem value="remover" process="@this"
-									update=":form_lista_aprovador" icon="fa fa-fw fa-trash-o"
-									onclick="start()"
-									actionListener="#{aprovadorController.removeApprover(ap)}"
-									onsuccess="stop()" onerror="stop()">
-								</p:menuitem>
-							</p:menuButton>
-						</p:column>
-						<f:facet name="paginatorTopRight">
-							<p:link styleClass="btn btn-success btn-sm" style="color:#fff;"
-								onclick="start();" onsuccess="stop();"
-								update=":form_lista_aprovador"
-								outcome="/main/aprovadores_cadastro"
-								action="#{aprovadorController.initObjectApprover()}"
-								onerror="stop();" title="NOVO APROVADOR">
-								<i class="fa fa-user-plus"></i>
-							</p:link>
-						</f:facet>
-
-					</p:dataTable>
-				</p:panel>
-			</h:form>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
 	</ui:define>
 
 	<ui:define name="adicionais">
