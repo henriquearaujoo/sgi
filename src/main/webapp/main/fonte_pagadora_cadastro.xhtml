@@ -60,19 +60,19 @@
 						<div class="col-4 form-group">
 							<p:outputLabel value="CNPJ:" for="CNPJ" />
 							<p:inputText id="CNPJ" styleClass="form-control"
-								value="#{fonte_pagadora_controller.fontePagadora.CNPJ}"
+								value="#{fonte_pagadora_controller.fontePagadora.cnpj}"
 								requiredMessage="Preencha o campo Nome!"
 								placeholder="Ex.:Fonte Pagadora S/A" required="true" />
-							<p:message for="nome" />
+							<p:message for="CNPJ" />
 						</div>
 						
 						<div class="col-4 form-group">
 							<p:outputLabel value="Razão social" for="razao_social" />
-							<p:inputText id="nome" styleClass="form-control"
-								value="#{fonte_pagadora_controller.fontePagadora.razao_social}"
+							<p:inputText id="razao_social" styleClass="form-control"
+								value="#{fonte_pagadora_controller.fontePagadora.razaoSocial}"
 								requiredMessage="Preencha o campo Nome!"
 								placeholder="Ex.:Fonte Pagadora S/A" required="true" />
-							<p:message for="nome" />
+							<p:message for="razao_social" />
 						</div>
 					</div>
 

@@ -82,14 +82,14 @@
 									<h:outputText escape="false" value="#{fonte.nome}" />
 								</p:column>
 								
-								<p:column headerText="CNPJ" filterBy=""
+								<p:column headerText="CNPJ" filterBy="#{fonte.cnpj}"
 									filterMatchMode="contains">
-									<h:outputText escape="false" value="" />
+									<h:outputText escape="false" value="#{fonte.cnpj}" />
 								</p:column>
 								
-								<p:column headerText="Razão Social" filterBy=""
+								<p:column headerText="Razão Social" filterBy="#{fonte.razaoSocial}"
 									filterMatchMode="contains">
-									<h:outputText escape="false" value="" />
+									<h:outputText escape="false" value="#{fonte.razaoSocial}" />
 								</p:column>
 
 								<p:column headerText="Opções" style="width:10vw;">
