@@ -81,6 +81,16 @@
 									filterMatchMode="contains">
 									<h:outputText escape="false" value="#{fonte.nome}" />
 								</p:column>
+								
+								<p:column headerText="CNPJ" filterBy="#{fonte.cnpj}"
+									filterMatchMode="contains">
+									<h:outputText escape="false" value="#{fonte.cnpj}" />
+								</p:column>
+								
+								<p:column headerText="Razão Social" filterBy="#{fonte.razaoSocial}"
+									filterMatchMode="contains">
+									<h:outputText escape="false" value="#{fonte.razaoSocial}" />
+								</p:column>
 
 								<p:column headerText="Opções" style="width:10vw;">
 									<p:menuButton value="Opções">
@@ -103,6 +113,7 @@
 										</p:menuitem>
 									</p:menuButton>
 								</p:column>
+								
 							</p:dataTable>
 						</div>
 						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">

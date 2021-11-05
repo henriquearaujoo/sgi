@@ -15,8 +15,12 @@
 
 				<p:submenu label="Planejamento"
 					rendered="#{message['MENU_PLANNING']}">
+					<p:menuitem value="Entidades Financiadoras" url="parceiros.xhtml"
+						rendered="#{message['SUB_MENU_SOURCE']}" onclick="start()"
+						onerror="stop()" />
 					<p:menuitem value="Doações" url="orcamentos.xhtml" />
-					<p:menuitem value="Projetos" url="projetos.xhtml" rendered="#{message['SUB_MENU_PROJECT']}"/>
+					<p:menuitem value="Subprojetos" url="projetos.xhtml"
+						rendered="#{message['SUB_MENU_PROJECT']}" />
 					<p:menuitem value="Controladoria" url="recursos_projetos.xhtml"
 						rendered="false" />
 					<p:menuitem value="Controle de projeto" url="liberar_projeto.xhtml"
@@ -35,11 +39,11 @@
 						rendered="false" />
 
 				</p:submenu>
-				
+
 				<p:submenu label="Gestão" rendered="true">
 					<p:menuitem value="Painel de gestão" url="panel_management.xhtml"
 						onclick="start()" onerror="stop()" />
-				
+
 				</p:submenu>
 
 				<p:submenu label="Financeiro" rendered="#{message['MENU_FINANCE']}">
@@ -101,9 +105,7 @@
 					<p:menuitem value="Eventos" url="eventos.xhtml" onclick="start()"
 						rendered="#{message['SUB_MENU_EVENT']}" onerror="stop()" />
 
-					<p:menuitem value="Parceiros" url="parceiros.xhtml"
-						rendered="#{message['SUB_MENU_SOURCE']}" onclick="start()"
-						onerror="stop()" />
+
 
 					<p:menuitem value="Produtos" url="produtos.xhtml" onclick="start()"
 						rendered="#{message['SUB_MENU_PRODUCT']}" onerror="stop()" />
