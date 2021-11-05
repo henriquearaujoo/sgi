@@ -1,0 +1,104 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<p:panel id="panel-info-extrato">
+		<style type="text/css">
+.ui-datatable {
+	margin-bottom: 25px
+}
+
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}
+</style>
+
+
+		<div class="ui-g ui-fluid default-style-form-filter"
+			style="padding-bottom: 60px;">
+			<div class="ui-g-12">
+				<h:form id="form-statemente" prependId="false">
+					<p:outputPanel id="panel-table">
+						<p:commandLink action="#{panelManagement.previousPageStatement()}" update="@form">
+							<span>Previous</span>
+						</p:commandLink>
+						<p:commandLink action="#{panelManagement.nextPageStatement()}" update="@form">
+							<span>Next</span>
+						</p:commandLink>
+						<table id="table-statement" class="table table-striped">
+							<thead class="thead-dark">
+								<tr>
+									<th scope="col">Código</th>
+									<th scope="col">Projeto</th>
+									<th scope="col">Recebedor</th>
+									<th scope="col">Tipo</th>
+									<th scope="col">Valor</th>
+									<th scope="col">#</th>
+								</tr>
+							</thead>
+							<tbody>
+
+								<ui:repeat var="lancamento"
+									value="#{panelManagement.lancamentos}">
+
+									<tr>
+										<td>#{lancamento.id}</td>
+
+										<td>#{lancamento.nomeProjeto}</td>
+
+										<td>#{lancamento.contaRecebedorLbl}</td>
+										<td>#{lancamento.tipov4}</td>
+
+										<td><h:outputText value="#{lancamento.valorPagoAcao}">
+												<f:convertNumber type="currency" locale="pt_BR" />
+											</h:outputText></td>
+										
+										<td><p:commandLink title="Imprimir" process="@this"
+							action="#{panelManagement.visualizarLancamento(lancamento)}" ajax="false"
+							target="_blank">
+							<i class="pi pi-print"></i>
+						</p:commandLink></td>
+									</tr>
+								</ui:repeat>
+							</tbody>
+						</table>
+					</p:outputPanel>
+				</h:form>
+			</div>
+
+
+
+
+		</div>
+
+
+	</p:panel>
+
+
+
+
+
+
+</ui:fragment>

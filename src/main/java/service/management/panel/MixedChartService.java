@@ -17,6 +17,7 @@ import org.primefaces.model.charts.bar.BarChartModel;
 import org.primefaces.model.charts.bar.BarChartOptions;
 import org.primefaces.model.charts.line.LineChartDataSet;
 
+import model.LancamentoAuxiliar;
 import repositorio.management.panel.BarHorizontalChartRepositorio;
 import repositorio.management.panel.MixedChartRepositorio;
 import repositorio.management.panel.models.Filtro;
@@ -113,6 +114,10 @@ public class MixedChartService implements Serializable {
 		dataSet.setData(values);
 		dataSet.setLabel("Executato");
 		dataSet.setBorderColor("rgb(54, 162, 235)");
+	}
+	
+	public List<LancamentoAuxiliar> getStatementExecution(Filtro filtro) {
+		return mixedRepositorio.getStatementExecution(filtro);
 	}
 
 }

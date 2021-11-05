@@ -11,10 +11,12 @@ import org.primefaces.model.charts.bar.BarChartModel;
 import org.primefaces.model.charts.hbar.HorizontalBarChartModel;
 import org.primefaces.model.charts.pie.PieChartModel;
 
+import model.LancamentoAuxiliar;
 import repositorio.management.panel.models.Filtro;
 import repositorio.management.panel.models.Management;
 import repositorio.management.panel.models.Project;
 import repositorio.management.panel.models.Source;
+import service.OrcamentoService;
 import service.management.panel.BarHorizontalChartService;
 import service.management.panel.FilterPanelService;
 import service.management.panel.KnobChartService;
@@ -35,8 +37,11 @@ public class PanelManagementController implements Serializable {
 	@Inject
 	private BarHorizontalChartService horizontalBarService;
 	
+	private @Inject MixedChartService mixedChartService;
+	
 	private @Inject KnobChartService knobService;
 	private @Inject FilterPanelService filterService;
+	private @Inject OrcamentoService orcService;
 	
 	private PieChartModel pieModel;
 
@@ -49,6 +54,7 @@ public class PanelManagementController implements Serializable {
 	private List<Management> gestoes;
 	private List<Project> projetos;
 	private List<Source> fontes;
+	private List<LancamentoAuxiliar> lancamentos;
 	
 	private Filtro filtro = new Filtro();
 	
@@ -66,6 +72,9 @@ public class PanelManagementController implements Serializable {
 	
 
 	public void execute() {
+		filtro.setPageCurrent(1); // set initial page
+		filtro.setItemForPage(5); // total render items
+		
 		setupFilters();
 		generateFilter();
 		generateGraphics();
@@ -92,6 +101,7 @@ public class PanelManagementController implements Serializable {
 		managements();
 		projects();
 		sources();
+//		statements();
 	}
 	
 	public void generateGraphics() {
@@ -113,6 +123,20 @@ public class PanelManagementController implements Serializable {
 		fontes = filterService.loadSources(filtro);
 	}
 	
+	public void nextPageStatement() {
+		filtro.setPageCurrent(filtro.getPageCurrent()+1);
+		statements();
+	}
+	
+	public void previousPageStatement() {
+		filtro.setPageCurrent(filtro.getPageCurrent()-1);
+		statements();
+	}
+	
+	public void statements() {
+		lancamentos = mixedChartService.getStatementExecution(filtro);
+	}
+	
 	public void createKnob() {
 		valuePercentExection = knobService.loadValuePercentExected(filtro);
 	}
@@ -132,7 +156,9 @@ public class PanelManagementController implements Serializable {
 		hbarModel =  horizontalBarService.createHorizontalBarModel(hbarModel, filtro);
 	}
 
-	
+	public void visualizarLancamento(LancamentoAuxiliar lancamento) {
+		orcService.visualizarLancamento(lancamento);
+	}
 
 	public PieChartModel getPieModel() {
 		return pieModel;
@@ -238,6 +264,14 @@ public class PanelManagementController implements Serializable {
 	}
 	public void setFontes(List<Source> fontes) {
 		this.fontes = fontes;
+	}
+
+	public List<LancamentoAuxiliar> getLancamentos() {
+		return lancamentos;
+	}
+
+	public void setLancamentos(List<LancamentoAuxiliar> lancamentos) {
+		this.lancamentos = lancamentos;
 	}
 
 }
