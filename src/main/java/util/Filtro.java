@@ -58,28 +58,44 @@ public class Filtro {
 	public void setFontePagadoraId(Long fontePagadoraId) {
 		this.fontePagadoraId = fontePagadoraId;
 	}
+
 	private String attribute;
 
 	private String param;
 	private AprovadorDocumento aprovadorDocumento = new AprovadorDocumento();
 
-	public AprovadorDocumento getAprovadorDocumento() {
-		return aprovadorDocumento;
-	}
-
-	public void setAprovadorDocumento(AprovadorDocumento aprovadorDocumento) {
-		this.aprovadorDocumento = aprovadorDocumento;
-	}
-
-	public String getParam() {
-		return param;
-	}
-
-	public void setParam(String param) {
-		this.param = param;
-	}
-	private Configuracao config = new Configuracao();
 	
+
+	private String parceiro;
+	private String cnpj;
+	private String razaoSocial;
+
+	public String getParceiro() {
+		return parceiro;
+	}
+
+	public void setParceiro(String parceiro) {
+		this.parceiro = parceiro;
+	}
+
+	public String getCnpj() {
+		return cnpj;
+	}
+
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
+	}
+
+	public String getRazaoSocial() {
+		return razaoSocial;
+	}
+
+	public void setRazaoSocial(String razaoSocial) {
+		this.razaoSocial = razaoSocial;
+	}
+
+	private Configuracao config = new Configuracao();
+
 	public Configuracao getConfig() {
 		return config;
 	}
@@ -88,7 +104,7 @@ public class Filtro {
 		this.config = config;
 
 	}
-	
+
 	public String getAttribute() {
 		return attribute;
 	}
@@ -112,8 +128,9 @@ public class Filtro {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 	private FontePagadora fontePagadoraV2 = new FontePagadora();
-	
+
 	public FontePagadora getFontePagadoraV2() {
 		return fontePagadoraV2;
 	}
@@ -141,7 +158,7 @@ public class Filtro {
 	public FontePagadora getFontePagadora() {
 		return fontePagadora;
 	}
-	
+
 	public void setFontePagadora(FontePagadora fontePagadora) {
 		this.fontePagadora = fontePagadora;
 	}
@@ -162,10 +179,10 @@ public class Filtro {
 		this.planoDeTrabalho = planoDeTrabalho;
 	}
 
-	//filtro criado para buscar por (numero de adiantemento) numero de documento 03/09/2018
+	// filtro criado para buscar por (numero de adiantemento) numero de documento
+	// 03/09/2018
 	private String numeroDocumentoAdiantemento;
 
-	
 	public String getNumeroDocumentoAdiantemento() {
 		return numeroDocumentoAdiantemento;
 	}
@@ -173,9 +190,10 @@ public class Filtro {
 	public void setNumeroDocumentoAdiantemento(String numeroDocumentoAdiantemento) {
 		this.numeroDocumentoAdiantemento = numeroDocumentoAdiantemento;
 	}
-	//end
+	// end
 
 	private Date dataInicioEmissao;
+
 	public Gestao getSuperintendencia() {
 		return superintendencia;
 	}
@@ -241,10 +259,10 @@ public class Filtro {
 	}
 
 	private Date dataFinalEmissao;
-	
+
 	private ContaBancaria fornecedor;
 	private ContaBancaria pagador;
-	
+
 	public ContaBancaria getFornecedor() {
 		return fornecedor;
 	}
@@ -265,13 +283,14 @@ public class Filtro {
 	private Boolean consolidado = false;
 
 	private String[] colunasRelatorio;
-	
+
 	private int primeiroRegistro;
 	private int quantidadeRegistros;
 	private String propriedadeOrdenacao;
 	private boolean ascendente;
 	private Boolean status;
 	private Boolean tarifado;
+
 	public Integer[] getProjetos() {
 		return projetos;
 	}
@@ -290,9 +309,8 @@ public class Filtro {
 	private Integer[] projetos;
 	private Integer[] doacoes;
 	private Integer[] planos;
-	
+
 	private List<ProjetoRubrica> rubricas;
-	
 
 	public Integer[] getDoacoes() {
 		return doacoes;
@@ -310,11 +328,11 @@ public class Filtro {
 	private Componente[] componentes;
 	private String notaFiscal;
 	private String nomeFornecedor;
-	
+
 	private String sp;
-	
+
 	private Long idDoacao;
-	
+
 	private Long idPlano;
 
 	private String missao;
@@ -328,7 +346,7 @@ public class Filtro {
 
 	private Localidade localidade;
 	private Gestao gestao;
-	
+
 	private Gestao gestaoV2;
 
 	public Gestao getGestaoV2() {
@@ -344,7 +362,7 @@ public class Filtro {
 	private Long solicitacaoExpedicaoID;
 
 	private String codigo;
-	
+
 	private String tipoLancamento;
 
 	private ContaBancaria contaFiltro;
@@ -354,7 +372,7 @@ public class Filtro {
 	private Long localidadeID;
 	private Long gestaoID;
 	private Long fornecedorID;
-	
+
 	private String competencia;
 
 	private TipoGestao tipoGestao;
@@ -366,7 +384,7 @@ public class Filtro {
 	private Long lancamentoID;
 
 	private User usuario;
-	
+
 	private Integer statusPagamentoInt;
 
 	public Integer getStatusPagamentoInt() {
@@ -406,37 +424,37 @@ public class Filtro {
 	private Long componenteClass;
 
 	private Long subComponente;
-	// Usados em Recursos de Projetos---------------------------------------------------------------------
+	// Usados em Recursos de
+	// Projetos---------------------------------------------------------------------
 	private Orcamento doacao;
-	
+
 	private String tipo;
-	
+
 	private String tipoRelatorio;
-	
+
 	private String statusRecurso;
-	
+
 	private Date dataInicialRecurso;
-	
+
 	private Date dataFinalRecurso;
-	
+
 	private Long rubricaID;
-	//----------------------------------------------------------------------------------------------------
-	//Alterado 10/09/2018 para adicionar filtro de colaborador -----------------------------------------------
-	
+	// ----------------------------------------------------------------------------------------------------
+	// Alterado 10/09/2018 para adicionar filtro de colaborador
+	// -----------------------------------------------
+
 	private String nomeColaborador;
 	private String CPF;
 	private Date dataNascimento;
 	private Gestao gestaoColaborador;
-	
-	
-	//alterado para filtro de solicitações detalhadas
+
+	// alterado para filtro de solicitações detalhadas
 	private Date dataPedidoInicial;
-	
+
 	private Date dataPedidoFinal;
 
 	private Integer tipoDespesa;
-	
-	
+
 	public String getNomeColaborador() {
 		return nomeColaborador;
 	}
@@ -468,11 +486,8 @@ public class Filtro {
 	public void setGestaoColaborador(Gestao gestaoColaborador) {
 		this.gestaoColaborador = gestaoColaborador;
 	}
-	
-	
-	//end
 
-	
+	// end
 
 	private List<Integer> projetosInt = new ArrayList<>();
 
@@ -481,16 +496,15 @@ public class Filtro {
 		this.data = new Date();
 		this.nome = "";
 		/*
-		 * this.descricao = ""; this.data = null; this.nome = ""; this.destino =
-		 * ""; this.dataInicio = null; this.dataFinal = null;
-		 * this.primeiroRegistro = 0; this.quantidadeRegistros = 0;
-		 * this.propriedadeOrdenacao = ""; this.ascendente = false; this.status
-		 * = false; this.anoViagem = 0; this.premioRifa = premioRifa;
-		 * this.telefone = telefone; this.nomeMissionario = nomeMissionario;
-		 * this.diaRecebimento = diaRecebimento; this.codigo = codigo;
-		 * this.statusCompra = statusCompra; this.localidadeID = localidadeID;
-		 * this.gestaoID = gestaoID; this.tipoGestao = tipoGestao;
-		 * this.tipoLocalidade = tipoLocalidade; this.usuario = usuario;
+		 * this.descricao = ""; this.data = null; this.nome = ""; this.destino = "";
+		 * this.dataInicio = null; this.dataFinal = null; this.primeiroRegistro = 0;
+		 * this.quantidadeRegistros = 0; this.propriedadeOrdenacao = ""; this.ascendente
+		 * = false; this.status = false; this.anoViagem = 0; this.premioRifa =
+		 * premioRifa; this.telefone = telefone; this.nomeMissionario = nomeMissionario;
+		 * this.diaRecebimento = diaRecebimento; this.codigo = codigo; this.statusCompra
+		 * = statusCompra; this.localidadeID = localidadeID; this.gestaoID = gestaoID;
+		 * this.tipoGestao = tipoGestao; this.tipoLocalidade = tipoLocalidade;
+		 * this.usuario = usuario;
 		 */
 	}
 
@@ -940,10 +954,10 @@ public class Filtro {
 	}
 
 	public void setGestao(Gestao gestao) {
-		if (gestao != null) 
-		if (gestao.getId() != null) {
-			this.gestaoID = gestao.getId();
-		}
+		if (gestao != null)
+			if (gestao.getId() != null) {
+				this.gestaoID = gestao.getId();
+			}
 
 		this.gestao = gestao;
 	}
@@ -1089,7 +1103,7 @@ public class Filtro {
 	public void setSp(String sp) {
 		this.sp = sp;
 	}
-	
+
 	public String getTipo() {
 		return tipo;
 	}
@@ -1177,7 +1191,7 @@ public class Filtro {
 	public void setConsolidado(Boolean consolidado) {
 		this.consolidado = consolidado;
 	}
-	
+
 	public String getCodigoDaria() {
 		return codigoDaria;
 	}
@@ -1233,6 +1247,21 @@ public class Filtro {
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
-
 	
+	public AprovadorDocumento getAprovadorDocumento() {
+		return aprovadorDocumento;
+	}
+
+	public void setAprovadorDocumento(AprovadorDocumento aprovadorDocumento) {
+		this.aprovadorDocumento = aprovadorDocumento;
+	}
+
+	public String getParam() {
+		return param;
+	}
+
+	public void setParam(String param) {
+		this.param = param;
+	}
+
 }

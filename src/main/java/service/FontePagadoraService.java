@@ -1,19 +1,14 @@
 package service;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import anotacoes.Transactional;
-import model.Evento;
 import model.FontePagadora;
-import model.Versao;
 import repositorio.FontePagadoraRepositorio;
+import util.Filtro;
 
 public class FontePagadoraService implements Serializable {
 
@@ -45,6 +40,10 @@ public class FontePagadoraService implements Serializable {
 
 	public FontePagadora findByid(Long id) {
 		return fontePagadoraRespositorio.findById(id);
+	}
+	
+	public List<FontePagadora> filtrarParceiro(Filtro filtro) {
+		return fontePagadoraRespositorio.filtroParceiro(filtro);
 	}
 
 }

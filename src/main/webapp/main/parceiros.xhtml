@@ -38,7 +38,7 @@
 
 				<br />
 
-				<p:breadCrumb styleClass="mt-3 px-3 py-2">
+				<p:breadCrumb class="breadcrumb-container">
 					<p:menuitem value="Home" url="home_new.xhtml" />
 					<p:menuitem value="Fontes pagadoras" url="#" />
 				</p:breadCrumb>
@@ -92,12 +92,14 @@
 										<p:menuitem value="remover" ajax="false"
 											icon="fa fa-fw fa-trash-o" update="tabela_fonte"
 											action="#{fonte_pagadora_controller.remover()}"
+											actionListener="#{fonte_pagadora_controller.removeListener}"
 											onclick="start()" onsuccess="stop()" onerror="stop()">
 											<p:confirm header="Confirmação"
 												message="Você realmente deseja remover a fonte #{fonte.nome}?"
 												icon="pi pi-exclamation-triangle" />
 											<f:setPropertyActionListener value="#{fonte}"
 												target="#{fonte_pagadora_controller.fontePagadora}" />
+											<f:attribute name="partner" value="#{fonte.nome}" />
 										</p:menuitem>
 									</p:menuButton>
 								</p:column>

@@ -17,6 +17,10 @@ div[id="enquadramento"] > * {
 	padding: 20px; 
 }
 
+.breadcrumb-container ul li:first-child {
+  margin-top: 7px;
+}
+
 .aw-sidebar  {
 	z-index: auto;
 }

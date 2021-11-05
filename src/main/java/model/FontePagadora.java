@@ -23,7 +23,12 @@ public class FontePagadora implements Serializable {
 	private Long id;
 	@Column(name = "nome")
 	private String nome;
+	
+	@Column(name="cnpj", length = 20)
+	private String cnpj;
 
+	@Column(name = "razao_social")
+	private String razaoSocial;
 	
 	public String getNome() {
 		return nome;
@@ -47,6 +52,29 @@ public class FontePagadora implements Serializable {
 	public FontePagadora(Long _id, String _nome){
 		this.id = _id;
 		this.nome = _nome;
+	}
+	
+	public FontePagadora(Long id, String nome, String cnpj, String razaoSocial) {
+		this.id = id;
+		this.nome = nome;
+		this.cnpj = cnpj;
+		this.razaoSocial = razaoSocial;
+	}
+
+	public String getCnpj() {
+		return cnpj;
+	}
+
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
+	}
+
+	public String getRazaoSocial() {
+		return razaoSocial;
+	}
+
+	public void setRazaoSocial(String razaoSocial) {
+		this.razaoSocial = razaoSocial;
 	}
 
 	@Override

@@ -20,14 +20,14 @@
 			<h:form id="form-listagem" prependId="false">
 
 
-				<p:messages id="msg-list" showSummary="false"
-					style="margin-top:10px" showDetail="true" closable="true"
-					showIcon="true" />
-				<p:breadCrumb>
-					<p:menuitem value="Categories" url="home_new.xhtml" />
-					<p:menuitem value="Compras" />
-				</p:breadCrumb>
+				<p:messages id="msg-list" showSummary="false" showDetail="true"
+					closable="true" showIcon="true" />
+					
+				<p:breadCrumb class="breadcrumb-container">
 
+					<p:menuitem value="Categories" url="home_new.xhtml" />
+					<p:menuitem value="Compras" url="compra_new.xhtml"/>
+				</p:breadCrumb>
 
 				<p:panel id="filter-list">
 
