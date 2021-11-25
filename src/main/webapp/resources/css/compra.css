@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+/* Itens da lista de opções */
+.ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link {
+	padding: 8px 5px !important;
+}
+
+
+/* Lista de opções */
+.ui-menu.ui-menu-dynamic {
+	width: 230px !important;
+}

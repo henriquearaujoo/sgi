@@ -126,11 +126,12 @@
 
 					<div class="ui-g ui-fluid default-style-form-filter focused	">
 
-						<div class="ui-g-12" style="text-align: left;">
+						<div class="ui-g-12" style="text-align: right;">
 
 							<p:commandLink styleClass="btn btn-primary btn-sm"
 								action="#{compraController.filtrar()}" onclick="start()"
 								update="table-compras" onsuccess="stop()" onerror="stop()"
+								title="Filtrar SC's"
 								oncomplete="stop();" style="color:#fff; margin: 8px 2px;">
 								<span class="fa fa-fw fa-search"></span>
 								<span style="margin: 3px;">#{message['BUTTON_LABEL_SEARCH']}</span>
@@ -139,7 +140,7 @@
 
 							<p:commandLink styleClass="btn btn-danger btn-sm"
 								action="#{compraController.limparFiltro()}"
-								update="form-listagem" process="@this"
+								update="form-listagem" process="@this" title="Limpar Filtro"
 								style="color:#fff; margin: 8px 2px;" onclick="start();"
 								onerror="stop();" oncomplete="stop();">
 								<span class="fa fa-fw fa-trash-o"></span>
@@ -153,7 +154,7 @@
 								<span class="fa fa-fw fa-plus"></span>
 								<span style="margin: 3px;">#{message['BUTTON_LABEL_NEW']}</span>
 							</p:link>
-							<p:commandLink styleClass="btn btn-primary btn-sm"
+							<p:commandLink styleClass="btn btn-primary btn-sm" title="Ajuda"
 								update="dialog_help" oncomplete="PF('dialog_help').show();"
 								onerror="stop();" onsuccess="stop();" onclick="start();"
 								style="color:#fff; margin: 8px 2px;">
@@ -169,13 +170,15 @@
 								value="#{compraController.compras}" var="compra"
 								paginator="true" widgetVar="comprasTable" rows="10">
 
-								<p:column headerText="Código" style="width:95px">
-
-									<p:link value="SC#{compra.id}" title="Editar"
-										outcome="/main/compra_cadastro" onclick="start();"
-										oncomplete="stop();" style="margin-left:9px;color:#000">
-										<f:param name="lanc" value="#{compra.id}" />
-									</p:link>
+								<p:column headerText="Código" style="text-align: center;">
+									
+									<u>									
+										<p:link value="SC#{compra.id}" title="Acessar SC#{compra.id}"
+											outcome="/main/compra_cadastro" onclick="start();"
+											oncomplete="stop();" style="margin-left:9px;color:#000">
+											<f:param name="lanc" value="#{compra.id}" />
+										</p:link>
+									</u>
 
 								</p:column>
 
@@ -183,11 +186,11 @@
 									<h:outputText value="#{compra.nomeGestao}" />
 								</p:column>
 
-								<p:column headerText="Destino">
+								<p:column headerText="Destino" style="text-align: center;">
 									<h:outputText value="#{compra.nomeDestino}" />
 								</p:column>
 
-								<p:column headerText="Data" style="width:150px">
+								<p:column headerText="Data">
 									<h:outputText value="#{compra.dataEmissao}">
 										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss " />
 									</h:outputText>
@@ -198,22 +201,27 @@
 								</p:column>
 
 								<p:column headerText="Status"
-									style="text-align:center;width:125px">
+									style="text-align:center;">
 									<h:outputText value="#{compra.statusCompra.nome}" />
 								</p:column>
 
-								<p:column headerText="Categoria" style="width:225px">
+								<p:column headerText="Categoria" style="width:200px">
 									<h:outputText value="#{compra.nomeCategoria}" />
 								</p:column>
 
-								<p:column style="width:45px">
-									<p:commandLink rendered="#{compra.bootUrgencia}">
-										<span style="color: red" class="glyphicon glyphicon-alert"></span>
-									</p:commandLink>
+								<p:column headerText="Urgente?" style="width: 80px; text-align: center;">
+									<h:outputText value="#{compra.bootUrgencia ? 'Sim' : 'Não'}" />
 								</p:column>
 
 								<p:column headerText="Opções" styleClass="text-center">
 									<p:menuButton value="Opções">
+										<p:menuitem value="Acessar Solicitação" icon="fa fa-folder-open-o">
+											<p:link value="Acessar Solicitação" title="Editar"
+											outcome="/main/compra_cadastro" onclick="start();"
+											oncomplete="stop();" style="margin-left:9px;color:#000">
+											<f:param name="lanc" value="#{compra.id}" />
+										</p:link>
+										</p:menuitem>
 
 										<p:menuitem update=":form-pedidos" icon="fa fa-cart-plus"
 											oncomplete="PF('dlg_pedido').show()" value="Pedidos"
