@@ -35,21 +35,72 @@
 			</script>
 
 			<h:form id="content_fonte" styleClass="default-style-form-filter">
+			
+				<p:growl id="message_parceiros" showDetail="true" sticky="true" />
 
 				<br />
 
 				<p:breadCrumb class="breadcrumb-container">
 					<p:menuitem value="Home" url="home_new.xhtml" />
-					<p:menuitem value="Fontes pagadoras" url="#" />
+					<p:menuitem value="Parceiros" url="#" />
 				</p:breadCrumb>
 
 				<p:panel>
 
 					<div class="ui-g ui-fluid">
+						
+						<div class="flex-grow-1" style="margin-top: 25px">
+							<div class="ui-g-4 form-group focused pb-0 pt-0 mb-1">
+								<p:outputLabel value="Fonte" for="fonteAutoComplete"
+									styleClass="form-label" />
+								<p:autoComplete styleClass="font12-vi" id="fonteAutoComplete"
+									panelStyle="width:180px"
+									value="#{fonte_pagadora_controller.fontePagadora}"
+									completeMethod="#{fonte_pagadora_controller.fonteAutoComplete}"
+									var="fonte" itemLabel="#{fonte.nome}" itemValue="#{fonte}"
+									converter="fontePagadoraConverter" minQueryLength="2" />
+							</div>
+							<div class="ui-g-4 form-group focused pb-0 pt-0 mb-1">
+								<p:outputLabel value="CNPJ" for="cnpjAutoComplete"
+									styleClass="form-label" />
+								<p:autoComplete styleClass="font12-vi" id="cnpjAutoComplete"
+									panelStyle="width:180px"
+									value="#{fonte_pagadora_controller.fontePagadora}"
+									completeMethod="#{fonte_pagadora_controller.cnpjAutoComplete}"
+									var="fonte" itemLabel="#{fonte.cnpj}" itemValue="#{fonte}"
+									converter="fontePagadoraConverter" />
+							</div>
+							<div class="ui-g-4 form-group focused pb-0 pt-0 mb-1">
+								<p:outputLabel value="Razão Social" for="razaoSocialAutoComplete"
+									styleClass="form-label" />
+								<p:autoComplete styleClass="font12-vi" id="razaoSocialAutoComplete"
+									panelStyle="width:180px"
+									value="#{fonte_pagadora_controller.fontePagadora}"
+									completeMethod="#{fonte_pagadora_controller.razaoSocialAutoComplete}"
+									var="fonte" itemLabel="#{fonte.razaoSocial}" itemValue="#{fonte}"
+									converter="fontePagadoraConverter" />
+							</div>
+						</div>
+						<div class="ui-g-12 ui-lg-12 p-0" style="text-align: right">
+						
+							<p:commandLink styleClass="btn btn-primary btn-sm"
+								action="#{fonte_pagadora_controller.filtrarFonte()}" onclick="start()"
+								onsuccess="stop()" onerror="stop()" update="tabela_fonte"
+								style="color:#fff; margin: 8px 2px;">
+								<span class="fa fa-fw fa-search"></span>
+								<span>Buscar</span>
+							</p:commandLink>
+							
+							<p:commandLink styleClass="btn btn-danger btn-sm"
+								action="#{fonte_pagadora_controller.limparFiltro()}"
+								onclick="start()" onsuccess="stop()" onerror="stop()"
+								update="@form" process="@this"
+								style="color:#fff; margin: 8px 2px;">
+								<span class="fa fa-fw fa-trash-o"></span>
+								<span>Limpar</span>
+							</p:commandLink>
 
-						<div class="ui-g-12 ui-lg-12 " style="text-align: right">
-
-							<p:link styleClass="btn btn-success" title="Novo"
+							<p:link styleClass="btn btn-success btn-sm" title="Novo"
 								outcome="/main/fonte_pagadora_cadastro">
 								<i class="fa fas fa-plus"></i> Novo
 							</p:link>
@@ -68,31 +119,23 @@
 
 					<div class="ui-g ui-fluid">
 						<div class="ui-g-12">
-							<p:messages id="messages" showDetail="true" closable="true">
-								<p:autoUpdate />
-							</p:messages>
-						</div>
-						<div class="ui-g-12">
 
 							<p:dataTable id="tabela_fonte" paginator="true" rows="12"
 								value="#{fonte_pagadora_controller.fontes}" var="fonte">
 
-								<p:column headerText="Fonte" filterBy="#{fonte.nome}"
-									filterMatchMode="contains">
+								<p:column headerText="Fonte">
 									<h:outputText escape="false" value="#{fonte.nome}" />
 								</p:column>
 								
-								<p:column headerText="CNPJ" filterBy="#{fonte.cnpj}"
-									filterMatchMode="contains">
+								<p:column headerText="CNPJ">
 									<h:outputText escape="false" value="#{fonte.cnpj}" />
 								</p:column>
 								
-								<p:column headerText="Razão Social" filterBy="#{fonte.razaoSocial}"
-									filterMatchMode="contains">
+								<p:column headerText="Razão Social">
 									<h:outputText escape="false" value="#{fonte.razaoSocial}" />
 								</p:column>
 
-								<p:column headerText="Opções" style="width:10vw;">
+								<p:column headerText="Opções" style="width:10vw; text-align:center;">
 									<p:menuButton value="Opções">
 										<p:menuitem icon="fa fa-fw fa-edit" value="editar"
 											outcome="/main/fonte_pagadora_cadastro">

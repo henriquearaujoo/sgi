@@ -71,27 +71,43 @@ public class FontePagadoraRepositorio {
 		return query.getResultList().size() > 0  ? query.getResultList() : (List) new ArrayList<FontePagadora>();
 	}
 	
-	public List<FontePagadora> filtroParceiro(Filtro filtro) {
+	public List<FontePagadora> filtroParceiro(FontePagadora fontePagadora) {
 		StringBuilder jpql = new StringBuilder(
 				"SELECT New FontePagadora(fp.id, fp.nome, fp.cnpj, fp.razaoSocial) from FontePagadora fp where 1 = 1"
 		);
-		if (!filtro.getParceiro().equals(null)) {
+		
+		if (fontePagadora.getId() != null) {
+			jpql.append(" and fp.id = :id");
+		}
+		/*if (!fontePagadora.getNome().equals(null) || !fontePagadora.getNome().equals("")) {
 			jpql.append(" and lower(fp.nome) = lower(:nome)");
 		}
 		
-		if (!filtro.getRazaoSocial().equals(null)) {			
+		if (!fontePagadora.getRazaoSocial().equals(null) || !fontePagadora.getRazaoSocial().equals("")) {			
 			jpql.append(" and lower(fp.razaoSocial) = lower(:razaoSocial)");
 		}
-		
-		if (!filtro.getCnpj().equals(null)) {			
+		*/
+		if (!fontePagadora.getCnpj().equals(null) || !fontePagadora.getCnpj().equals("")) {			
 			jpql.append(" and lower(fp.cnpj) = lower(:cnpj)");
 		}
 		
 		Query query = manager.createQuery(jpql.toString());
 		
-		query.setParameter("nome", filtro.getParceiro());
-		query.setParameter("razaoSocial", filtro.getRazaoSocial());
-		query.setParameter("cnpj", filtro.getCnpj());
+		if (fontePagadora.getId() != null) {
+			query.setParameter("id", fontePagadora.getId());
+		}
+		/*
+		if (!fontePagadora.getNome().equals(null) || !fontePagadora.getNome().equals("")) {
+			query.setParameter("nome", fontePagadora.getNome());			
+		}
+		
+		if (!fontePagadora.getRazaoSocial().equals(null) || !fontePagadora.getRazaoSocial().equals("")) {
+			query.setParameter("razaoSocial", fontePagadora.getRazaoSocial());			
+		}
+		*/
+		if (!fontePagadora.getCnpj().equals(null) || !fontePagadora.getCnpj().equals("")) {			
+			query.setParameter("cnpj", fontePagadora.getCnpj());
+		}
 		
 		return query.getResultList().size() > 0 ? query.getResultList() : new ArrayList<FontePagadora>();
 	}
@@ -106,6 +122,23 @@ public class FontePagadoraRepositorio {
 		return query.getResultList().size() > 0  ? query.getResultList() : (List) new ArrayList<FontePagadora>();
 	}
 	
+	public List<FontePagadora> getCnpjAutoComplete(String cnpj){
+		StringBuilder jpql = new StringBuilder("from  FontePagadora f where lower(f.cnpj) like lower(:cnpj)");	
+		jpql.append(" order by f.nome ");
+		Query query = manager.createQuery(jpql.toString());
+		query.setParameter("cnpj", "%"+cnpj+"%");
+		query.setMaxResults(20);
+		return query.getResultList().size() > 0  ? query.getResultList() : (List) new ArrayList<FontePagadora>();
+	}
+	
+	public List<FontePagadora> getRazaoSocialAutoComplete(String razaoSocial){
+		StringBuilder jpql = new StringBuilder("from  FontePagadora f where lower(f.razaoSocial) like lower(:razaoSocial)");	
+		jpql.append(" order by f.nome ");
+		Query query = manager.createQuery(jpql.toString());
+		query.setParameter("razaoSocial", "%"+razaoSocial+"%");
+		query.setMaxResults(20);
+		return query.getResultList().size() > 0  ? query.getResultList() : (List) new ArrayList<FontePagadora>();
+	}
 	
 	public void remover(FontePagadora fontePagadora){
 		this.manager.remove(this.manager.find(FontePagadora.class, fontePagadora.getId()));

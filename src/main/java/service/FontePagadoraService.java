@@ -42,8 +42,20 @@ public class FontePagadoraService implements Serializable {
 		return fontePagadoraRespositorio.findById(id);
 	}
 	
-	public List<FontePagadora> filtrarParceiro(Filtro filtro) {
-		return fontePagadoraRespositorio.filtroParceiro(filtro);
+	public List<FontePagadora> fonteAutoComplete(String query) {
+		return fontePagadoraRespositorio.getFonteAutoComplete(query);
+	}
+	
+	public List<FontePagadora> cnpjAutoComplete(String query) {
+		return fontePagadoraRespositorio.getCnpjAutoComplete(query);
+	}
+	
+	public List<FontePagadora> razaoSocialAutoComplete(String query) {
+		return fontePagadoraRespositorio.getRazaoSocialAutoComplete(query);
+	}
+	
+	public List<FontePagadora> filtrarParceiro(FontePagadora fontePagadora) {
+		return fontePagadoraRespositorio.filtroParceiro(fontePagadora);
 	}
 
 }

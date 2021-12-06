@@ -9,6 +9,22 @@ body .ui-widget:not(.pi), body .ui-widget .ui-widget:not(.pi) {
     
 }
 
+[id="content_fonte:message_parceiros_container"] {
+	width: 350px;
+}
+
+[id="content_fonte:j_idt97_content"] {
+	padding: 0 !important;
+}
+
+[id="content_fonte:j_idt131"] {
+	margin-bottom: 0 !important;
+}
+
+[id="content_fonte:message_parceiros_container"] > div[class="ui-growl-message"] {
+	width: 300px;
+}
+
 div[id="info-geral"], div[id="enquadramento"] {
 	margin: 30px 24px 0px 24px; 
 }

@@ -24,7 +24,6 @@ public class FontePagadoraController implements Serializable {
 	@Inject
 	private FontePagadoraService fontePagadoraService;
 
-	@Inject
 	private FontePagadora fontePagadora = new FontePagadora();
 	
 	private Filtro filtro = new Filtro();
@@ -49,7 +48,24 @@ public class FontePagadoraController implements Serializable {
 	}
 	
 	public void filtrarFonte() {
-		this.fontes = fontePagadoraService.filtrarParceiro(filtro);
+		this.fontes = fontePagadoraService.filtrarParceiro(fontePagadora);
+	}
+	
+	public void limparFiltro() {
+		fontePagadora = new FontePagadora();
+		this.fontes = fontePagadoraService.findAll();
+	}
+	
+	public List<FontePagadora> fonteAutoComplete(String query) {
+		return fontePagadoraService.fonteAutoComplete(query);
+	}
+	
+	public List<FontePagadora> cnpjAutoComplete(String query) {
+		return fontePagadoraService.cnpjAutoComplete(query);
+	}
+	
+	public List<FontePagadora> razaoSocialAutoComplete(String query) {
+		return fontePagadoraService.razaoSocialAutoComplete(query);
 	}
 
 	private String attributePartner = "";
