@@ -1,6 +1,7 @@
 package service;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -42,16 +43,25 @@ public class FontePagadoraService implements Serializable {
 		return fontePagadoraRespositorio.findById(id);
 	}
 	
-	public List<FontePagadora> fonteAutoComplete(String query) {
-		return fontePagadoraRespositorio.getFonteAutoComplete(query);
+	public List<String> fonteAutoComplete(String query) {
+		List<FontePagadora> fontes = fontePagadoraRespositorio.getFonteAutoComplete(query);
+		List<String> fontesString = new ArrayList<String>();
+		fontes.stream().forEach(f -> fontesString.add(f.getNome()));
+		return fontesString;
 	}
 	
-	public List<FontePagadora> cnpjAutoComplete(String query) {
-		return fontePagadoraRespositorio.getCnpjAutoComplete(query);
+	public List<String> cnpjAutoComplete(String query) {
+		List<FontePagadora> cnpjs = fontePagadoraRespositorio.getCnpjAutoComplete(query);
+		List<String> cnpjString = new ArrayList<>();
+		cnpjs.stream().forEach(f -> cnpjString.add(f.getCnpj()));
+		return cnpjString;
 	}
 	
-	public List<FontePagadora> razaoSocialAutoComplete(String query) {
-		return fontePagadoraRespositorio.getRazaoSocialAutoComplete(query);
+	public List<String> razaoSocialAutoComplete(String query) {
+		List<FontePagadora> razaoSocial = fontePagadoraRespositorio.getRazaoSocialAutoComplete(query);
+		List<String> razaoSocialString = new ArrayList<>();
+		razaoSocial.stream().forEach(f -> razaoSocialString.add(f.getRazaoSocial()));
+		return razaoSocialString;
 	}
 	
 	public List<FontePagadora> filtrarParceiro(FontePagadora fontePagadora) {

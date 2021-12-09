@@ -76,36 +76,29 @@ public class FontePagadoraRepositorio {
 				"SELECT New FontePagadora(fp.id, fp.nome, fp.cnpj, fp.razaoSocial) from FontePagadora fp where 1 = 1"
 		);
 		
-		if (fontePagadora.getId() != null) {
-			jpql.append(" and fp.id = :id");
-		}
-		/*if (!fontePagadora.getNome().equals(null) || !fontePagadora.getNome().equals("")) {
+		if (!fontePagadora.getNome().equals("")) {
 			jpql.append(" and lower(fp.nome) = lower(:nome)");
 		}
 		
-		if (!fontePagadora.getRazaoSocial().equals(null) || !fontePagadora.getRazaoSocial().equals("")) {			
+		if (!fontePagadora.getRazaoSocial().equals("")) {			
 			jpql.append(" and lower(fp.razaoSocial) = lower(:razaoSocial)");
 		}
-		*/
-		if (!fontePagadora.getCnpj().equals(null) || !fontePagadora.getCnpj().equals("")) {			
-			jpql.append(" and lower(fp.cnpj) = lower(:cnpj)");
+		
+		if (!fontePagadora.getCnpj().equals("")) {			
+			jpql.append(" and lower(fp.cnpj) like lower(:cnpj)");
 		}
 		
 		Query query = manager.createQuery(jpql.toString());
 		
-		if (fontePagadora.getId() != null) {
-			query.setParameter("id", fontePagadora.getId());
-		}
-		/*
-		if (!fontePagadora.getNome().equals(null) || !fontePagadora.getNome().equals("")) {
+		if (!fontePagadora.getNome().equals("")) {
 			query.setParameter("nome", fontePagadora.getNome());			
 		}
 		
-		if (!fontePagadora.getRazaoSocial().equals(null) || !fontePagadora.getRazaoSocial().equals("")) {
+		if (!fontePagadora.getRazaoSocial().equals("")) {
 			query.setParameter("razaoSocial", fontePagadora.getRazaoSocial());			
 		}
-		*/
-		if (!fontePagadora.getCnpj().equals(null) || !fontePagadora.getCnpj().equals("")) {			
+		
+		if (!fontePagadora.getCnpj().equals("")) {			
 			query.setParameter("cnpj", fontePagadora.getCnpj());
 		}
 		

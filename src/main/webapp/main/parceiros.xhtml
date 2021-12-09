@@ -55,35 +55,35 @@
 									styleClass="form-label" />
 								<p:autoComplete styleClass="font12-vi" id="fonteAutoComplete"
 									panelStyle="width:180px"
-									value="#{fonte_pagadora_controller.fontePagadora}"
+									value="#{fonte_pagadora_controller.filtro.parceiro}"
 									completeMethod="#{fonte_pagadora_controller.fonteAutoComplete}"
-									var="fonte" itemLabel="#{fonte.nome}" itemValue="#{fonte}"
-									converter="fontePagadoraConverter" minQueryLength="2" />
+									var="parceiro" itemLabel="#{parceiro}" itemValue="#{parceiro}"
+									scrollHeight="250" />
 							</div>
 							<div class="ui-g-4 form-group focused pb-0 pt-0 mb-1">
 								<p:outputLabel value="CNPJ" for="cnpjAutoComplete"
 									styleClass="form-label" />
 								<p:autoComplete styleClass="font12-vi" id="cnpjAutoComplete"
 									panelStyle="width:180px"
-									value="#{fonte_pagadora_controller.fontePagadora}"
+									value="#{fonte_pagadora_controller.filtro.cnpj}"
 									completeMethod="#{fonte_pagadora_controller.cnpjAutoComplete}"
-									var="fonte" itemLabel="#{fonte.cnpj}" itemValue="#{fonte}"
-									converter="fontePagadoraConverter" />
+									var="cnpj" itemLabel="#{cnpj}" itemValue="#{cnpj}" 
+									/>
 							</div>
 							<div class="ui-g-4 form-group focused pb-0 pt-0 mb-1">
 								<p:outputLabel value="Razão Social" for="razaoSocialAutoComplete"
 									styleClass="form-label" />
 								<p:autoComplete styleClass="font12-vi" id="razaoSocialAutoComplete"
 									panelStyle="width:180px"
-									value="#{fonte_pagadora_controller.fontePagadora}"
+									value="#{fonte_pagadora_controller.filtro.razaoSocial}"
 									completeMethod="#{fonte_pagadora_controller.razaoSocialAutoComplete}"
-									var="fonte" itemLabel="#{fonte.razaoSocial}" itemValue="#{fonte}"
-									converter="fontePagadoraConverter" />
+									var="razaoSocial" itemLabel="#{razaoSocial}" itemValue="#{razaoSocial}"
+									/>
 							</div>
 						</div>
 						<div class="ui-g-12 ui-lg-12 p-0" style="text-align: right">
 						
-							<p:commandLink styleClass="btn btn-primary btn-sm"
+							<p:commandLink styleClass="btn btn-primary btn-sm" ajax="false"
 								action="#{fonte_pagadora_controller.filtrarFonte()}" onclick="start()"
 								onsuccess="stop()" onerror="stop()" update="tabela_fonte"
 								style="color:#fff; margin: 8px 2px;">
