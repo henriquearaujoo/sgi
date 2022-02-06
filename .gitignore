@@ -1,4 +1,4 @@
-src/main/java/META-INF/persistence.xml
+src/main/resources/META-INF/persistence.xml
 
 .classpath
 .metadata/
@@ -9,3 +9,4 @@ src/main/java/META-INF/persistence.xml
 target/
 src/test
 .vscode
+.idea

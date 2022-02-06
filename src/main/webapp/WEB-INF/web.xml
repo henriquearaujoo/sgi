@@ -8,6 +8,16 @@
 		<welcome-file>login.xhtml</welcome-file>
 	</welcome-file-list>
 
+	<error-page>
+		<error-code>404</error-code>
+		<location>/main/errors/not_found.xhtml</location>
+	</error-page>
+
+	<error-page>
+		<error-code>500</error-code>
+		<location>/main/errors/internal_error.xhtml</location>
+	</error-page>
+
 	<session-config>
 		<session-timeout>120</session-timeout>
 	</session-config>
