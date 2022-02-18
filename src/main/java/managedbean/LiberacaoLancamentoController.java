@@ -628,7 +628,6 @@ public class LiberacaoLancamentoController implements Serializable {
 			addMessage("Erro de validação:", "Senha incorreta!", 
 					FacesMessage.SEVERITY_WARN);
 		}
-		aprouve.setSenha("");
 	}
 
 	public void invalidarLancamentos() {
