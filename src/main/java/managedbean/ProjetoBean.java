@@ -1569,12 +1569,18 @@ public class ProjetoBean implements Serializable {
 		// return;
 		// }
 		// }
-
-		setarTipoGestaoInProjeto();
-		// setarTipoLocalidadeInProjeto();
-		projeto.setVersionProjeto("mode01");
-		projeto.setStatusAprovacao(StatusAprovacaoProjeto.EM_APROVACAO);
-		projeto = gestaoProjeto.salvarMODE01(projeto, usuarioSessao.getUsuario());
+		
+		Long currentPerfil = usuarioSessao.getUsuario().getPerfil().getId();
+		
+		if (currentPerfil == 1) {
+			setarTipoGestaoInProjeto();
+			// setarTipoLocalidadeInProjeto();
+			projeto.setVersionProjeto("mode01");
+			projeto.setStatusAprovacao(StatusAprovacaoProjeto.EM_APROVACAO);
+			projeto = gestaoProjeto.salvarMODE01(projeto, usuarioSessao.getUsuario());			
+		} else {
+			addMessage("Você não tem autorização!", "Sem autorização", FacesMessage.SEVERITY_ERROR);
+		}
 		// createChartExecucao();
 
 		// messageSalvamento("Projeto salvo com sucesso");
