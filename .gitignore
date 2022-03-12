@@ -10,3 +10,4 @@ target/
 src/test
 .vscode
 .idea
+.env
