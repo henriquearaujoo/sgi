@@ -2,7 +2,7 @@ version: '3'
 
 services:
   app:
-    image: sgi_app:v1.0.1
+    image: sgi_app:v1
     restart: always
     volumes:
       - .:/usr/local/sgi
@@ -15,17 +15,30 @@ services:
       - ${PORT}:8080
     networks:
       - nwfas
-  #   depends_on:
-  #     - database
-
-  # database:
-  #   image: postgres:13-alpine
-  #   container_name: fas_database
-  #   environment:
-  #     POSTGRES_PASSWORD: caio16532
-  #   networks:
-  #     - nwfas
+#    depends_on:
+#      - database
+#    links:
+#      - database
+#
+#  database:
+#    image: fas_database:v1
+#    build:
+#      context: .
+#      dockerfile: docker/database.dockerfile
+#    container_name: fas_database
+#    environment:
+#      POSTGRES_PASSWORD: 123456
+#      POSTGRES_DB: ${DATABASE:-fas}
+#    networks:
+#      - nwfas
+#    volumes:
+#      - backup:/var/lib/postgresql/data
+#    ports:
+#      - 5432:5432
 
 networks:
   nwfas:
     driver: bridge
+
+volumes:
+  backup:

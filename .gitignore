@@ -11,3 +11,4 @@ src/test
 .vscode
 .idea
 .env
+tmp
