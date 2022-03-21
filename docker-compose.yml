@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  app:
+    image: sgi_app:v1
+    restart: always
+    volumes:
+      - .:/usr/local/sgi
+    build:
+      dockerfile: Dockerfile
+      context: .
+    command: "catalina.sh run"
+    container_name: sgi_server
+    ports:
+      - ${PORT}:8080
+    networks:
+      - nwfas
+#    depends_on:
+#      - database
+#    links:
+#      - database
+#
+#  database:
+#    image: fas_database:v1
+#    build:
+#      context: .
+#      dockerfile: docker/database.dockerfile
+#    container_name: fas_database
+#    environment:
+#      POSTGRES_PASSWORD: 123456
+#      POSTGRES_DB: ${DATABASE:-fas}
+#    networks:
+#      - nwfas
+#    volumes:
+#      - backup:/var/lib/postgresql/data
+#    ports:
+#      - 5432:5432
+
+networks:
+  nwfas:
+    driver: bridge
+
+volumes:
+  backup:

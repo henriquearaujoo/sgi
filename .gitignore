@@ -10,3 +10,5 @@ target/
 src/test
 .vscode
 .idea
+.env
+tmp
