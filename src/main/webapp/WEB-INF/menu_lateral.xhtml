@@ -21,10 +21,14 @@
 					<p:menuitem value="Doações" url="orcamentos.xhtml" />
 					<p:menuitem value="Subprojetos" url="projetos.xhtml"
 						rendered="#{message['SUB_MENU_PROJECT']}" />
-					<p:menuitem value="Controladoria" url="recursos_projetos.xhtml"
-						rendered="false" />
-					<p:menuitem value="Controle de projeto" url="liberar_projeto.xhtml"
-						rendered="false" />
+					<p:menuitem value="Controladoria (Em Desenvolvimento)"
+								url="recursos_projetos.xhtml"
+								style="color: red;"
+								rendered="true" />
+					<p:menuitem value="Controle de projeto (Em Desenvolvimento)"
+								url="liberar_projeto.xhtml"
+								style="color: red;"
+								rendered="true" />
 
 				</p:submenu>
 
@@ -35,8 +39,10 @@
 						onclick="start()" onerror="stop()" />
 					<p:menuitem value="Adiantamentos" url="adiantamentos.xhtml"
 						onclick="start()" onerror="stop()" />
-					<p:menuitem value="Viagens" url="SolicitacaoViagem.xhtml"
-						rendered="false" />
+					<p:menuitem value="Viagens (Em Desenvolvimento)"
+								url="SolicitacaoViagem.xhtml"
+								style="color: red;"
+								rendered="true" />
 
 				</p:submenu>
 
@@ -47,33 +53,41 @@
 				</p:submenu>
 
 				<p:submenu label="Financeiro" rendered="#{message['MENU_FINANCE']}">
-					<p:menuitem value="Custo pessoal" url="custo_pessoal.xhtml"
-						rendered="false" />
-					<p:menuitem value="Lançamentos OLD" url="lancamentos.xhtml"
-						rendered="false" />
+					<p:menuitem value="Lançamentos OLD (Em desenvolvimento)"
+								url="lancamentos.xhtml"
+								rendered="true"
+								style="color: red;"/>
 
 					<p:menuitem value="Validação" url="liberacao_lancamento.xhtml" />
 
 					<p:menuitem value="Conciliação" url="lancamentosV2.xhtml" />
 
-					<p:menuitem value="Lançamentos diversos"
-						url="lancamentos_diversos.xhtml" rendered="false" />
+					<p:menuitem value="Lançamentos diversos (Em Desenvolvimento)"
+								style="color: red;"
+								url="lancamentos_diversos.xhtml"
+								rendered="true" />
 
-					<p:menuitem value="Custo pessoal" url="custo_pessoal.xhtml"
-						rendered="false" />
+					<p:menuitem value="Custo pessoal (Em Desenvolvimento)"
+								url="custo_pessoal.xhtml"
+								style="color: red;"
+								rendered="true" />
 				</p:submenu>
 
-				<p:submenu label="Logística" rendered="#{message['MENU_LOG']}">
+				<p:submenu label="Logística (Em Desenvolvimento)" rendered="#{message['MENU_LOG']}">
 					<p:menuitem value="Termos" url="termo_expedicao.xhtml"
-						rendered="true" />
-					<p:menuitem value="Expedição" url="controle_expedicao.xhtml" />
+								style="color: red;"
+								rendered="true" />
+					<p:menuitem value="Expedição" url="controle_expedicao.xhtml"
+								style="color: red;"/>
 				</p:submenu>
 
-				<p:submenu label="Relatórios" rendered="#{message['MENU_REPORT']}">
+				<p:submenu label="Relatórios (Em Desenvolvimento)" rendered="true">
 					<p:menuitem value="Relatórios" url="relatorios_fin.xhtml"
-						onclick="start()" onerror="stop()" />
+								style="color: red;"
+								onclick="start()" onerror="stop()" />
 					<p:menuitem value="Reclassificação" url="reclassificacao.xhtml"
-						rendered="false" />
+								style="color: red;"
+								rendered="true" />
 				</p:submenu>
 
 				<p:submenu label="Cadastro" rendered="#{message['MENU_REGISTER']}">
@@ -98,41 +112,57 @@
 						rendered="#{message['SUB_MENU_SUBCOMPONENT']}" onclick="start()"
 						onerror="stop()" />
 
-					<p:menuitem value="Comunidades" url="comunidades.xhtml"
-						rendered="#{message['SUB_MENU_COMMUNITY']}" onclick="start()"
-						onerror="stop()" />
+					<p:menuitem value="Comunidades (Em Desenvolvimento)"
+								style="color: red;"
+								url="comunidades.xhtml"
+								rendered="#{message['SUB_MENU_COMMUNITY']}"
+								onclick="start()"
+								onerror="stop()" />
 
-					<p:menuitem value="Eventos" url="eventos.xhtml" onclick="start()"
-						rendered="#{message['SUB_MENU_EVENT']}" onerror="stop()" />
+					<p:menuitem value="Eventos (Em Desenvolvimento)"
+								url="eventos.xhtml" onclick="start()"
+								style="color: red;"
+								rendered="#{message['SUB_MENU_EVENT']}" onerror="stop()" />
 
+					<p:menuitem value="Produtos (Em Desenvolvimento)"
+								url="produtos.xhtml" onclick="start()"
+								style="color: red;"
+								rendered="#{message['SUB_MENU_PRODUCT']}" onerror="stop()" />
 
+					<p:menuitem value="Contas (Em Desenvolvimento)"
+								url="contas.xhtml"
+								style="color: red;"
+								rendered="#{message['SUB_MENU_ACCOUNT']}" />
 
-					<p:menuitem value="Produtos" url="produtos.xhtml" onclick="start()"
-						rendered="#{message['SUB_MENU_PRODUCT']}" onerror="stop()" />
+					<p:menuitem value="Bancos (Em Desenvolvimento)" url="bancos.xhtml"
+								style="color: red;"
+								rendered="#{message['SUB_MENU_BANK']}" />
 
-					<p:menuitem value="Contas" url="contas.xhtml"
-						rendered="#{message['SUB_MENU_ACCOUNT']}" />
+					<p:menuitem value="Aprovadores (Em Desenvolvimento)" url="aprovadores.xhtml"
+								style="color: red;"
+								rendered="#{message['SUB_MENU_APPROVE']}" />
 
-					<p:menuitem value="Bancos" url="bancos.xhtml"
-						rendered="#{message['SUB_MENU_BANK']}" />
-
-					<p:menuitem value="Aprovadores" url="aprovadores.xhtml"
-						rendered="#{message['SUB_MENU_APPROVE']}" />
-
-					<p:menuitem value="Fornecedores" url="fornecedores.xhtml"
-						rendered="#{message['SUB_MENU_PROVIDER']}" />
+					<p:menuitem value="Fornecedores (Em Desenvolvimento)"
+								style="color: red;"
+								url="fornecedores.xhtml"
+								rendered="#{message['SUB_MENU_PROVIDER']}" />
 
 					<p:menuitem value="Rubricas" url="rubrica.xhtml"
 						rendered="#{message['SUB_MENU_CATEGORY']}" />
 
-					<p:menuitem value="Unid. Conservação"
+					<p:menuitem value="Unid. Conservação (Em Desenvolvimento)"
 						url="unidadesConservacao.xhtml" onclick="start()"
+						style="color: red;"
 						rendered="#{message['SUB_MENU_UC']}" onerror="stop()" />
 				</p:submenu>
 
-				<p:submenu label="PBF" rendered="false">
-					<p:menuitem value="Familiar" url="cadastro_familiar.xhtml" />
-					<p:menuitem value="Comunitário" url="cadastro_comunitario.xhtml" />
+				<p:submenu label="PBF (Em Desenvolvimento)" rendered="true">
+					<p:menuitem value="Familiar"
+								style="color: red;"
+								url="cadastro_familiar.xhtml" />
+					<p:menuitem value="Comunitário"
+								style="color: red;"
+								url="cadastro_comunitario.xhtml" />
 				</p:submenu>
 
 			</p:panelMenu>

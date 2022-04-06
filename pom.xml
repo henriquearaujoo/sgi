@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>sgi</groupId>
 	<artifactId>sgi</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-TEST</version>
 	<packaging>war</packaging>
 	<name>sgi</name>
 	<description>oneclick</description>
@@ -205,7 +205,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>sgi_0.0.1</finalName>
+		<finalName>sgi_1.0.0_test</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
