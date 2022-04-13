@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 
 import model.Banco;
@@ -46,13 +47,7 @@ import service.BancoService;
 import service.FornecedorService;
 import service.PagamentoService;
 import service.UsuarioService;
-import util.ArquivoFornecedor;
-import util.DiretorioUtil;
-import util.DownloadUtil;
-import util.Filtro;
-import util.MakeMenu;
-import util.ReportUtil;
-import util.UsuarioSessao;
+import util.*;
 
 @Named(value = "fornecedor_controller")
 @ViewScoped
@@ -82,6 +77,8 @@ public class FornecedorController implements Serializable {
 
     @Inject
     private UsuarioSessao usuarioSessao;
+
+	private Util util = new Util();
 
     private List<Fornecedor> listaFiltroFornecedores;
 
@@ -116,6 +113,10 @@ public class FornecedorController implements Serializable {
 
     @Inject
     private BancoService bancoService;
+
+	private boolean selectCNPJ = true;
+
+	private boolean selectFornecedor = true;
 
     public String mandaPronovo() {
 
@@ -175,6 +176,15 @@ public class FornecedorController implements Serializable {
 	}
     }
 
+	public void validateCNPJ() {
+		if (util.isCNPJ(filtro.getCnpjcpf())) {
+			return;
+		} else {
+			PrimeFaces.current().executeScript("alert('Invalido')");
+		}
+
+	}
+
     public void carregarUltimoFornecimento() {
 	if (fornecedor.getId() != null) {
 	    carregarCidades();
@@ -211,7 +221,9 @@ public class FornecedorController implements Serializable {
     }
 
     public void limparFiltro() {
-	filtro = new Filtro();
+		filtro = new Filtro();
+		filtro.setAtivo(true);
+		carregarFornecedores();
     }
 
     public List<MenuLateral> getMenus() {
@@ -809,4 +821,28 @@ public class FornecedorController implements Serializable {
     public void setListaLocalidade(List<Localidade> listaLocalidade) {
 	this.listaLocalidade = listaLocalidade;
     }
+
+	public boolean isSelectCNPJ() {
+		return selectCNPJ;
+	}
+
+	public void setSelectCNPJ(boolean selectCNPJ) {
+		this.selectCNPJ = selectCNPJ;
+	}
+
+	public boolean isSelectFornecedor() {
+		return selectFornecedor;
+	}
+
+	public void setSelectFornecedor(boolean selectFornecedor) {
+		this.selectFornecedor = selectFornecedor;
+	}
+
+	public Util getUtil() {
+		return util;
+	}
+
+	public void setUtil(Util util) {
+		this.util = util;
+	}
 }

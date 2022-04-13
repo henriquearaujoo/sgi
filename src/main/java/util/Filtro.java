@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
 import model.Acao;
 import model.AprovadorDocumento;
 import model.Colaborador;
@@ -26,6 +28,17 @@ import model.TipoLocalidade;
 import model.User;
 
 public class Filtro {
+
+
+	private String cpf;
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
 
 	private String descricao;
 	private Date data;
@@ -64,7 +77,6 @@ public class Filtro {
 	private String param;
 	private AprovadorDocumento aprovadorDocumento = new AprovadorDocumento();
 
-	
 
 	private String parceiro;
 	private String cnpj;
