@@ -14,6 +14,11 @@
 	</error-page>
 
 	<error-page>
+		<exception-type>java.lang.NullPointerException</exception-type>
+		<location>/main/errors/not_found.xhtml</location>
+	</error-page>
+
+	<error-page>
 		<error-code>500</error-code>
 		<location>/main/errors/internal_error.xhtml</location>
 	</error-page>

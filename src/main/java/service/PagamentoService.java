@@ -225,6 +225,10 @@ public class PagamentoService implements Serializable {
 				lancamentoRepositorio.validarLancamentos(la.getId());
 		}
 	}
+
+	public List<Aprouve> findAprouve(User user) {
+		return aprouveRepositorio.findAprouve(user);
+	}
 	
 	@Transactional
 	public void  invalidarLancamentos(List<LancamentoAuxiliar> lancamentos){
