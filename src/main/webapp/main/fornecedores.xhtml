@@ -107,11 +107,11 @@
 					<div class="ui-g ui-fluid">
 						<div class="ui-g-1 ui-lg-12 " style="text-align: right">
 							<p:commandLink title="Exportar para excel"
-								style="margin-right:10px"
+								style="margin-right:10px" rendered="false"
 								action="#{fornecedor_controller.exportarExcel}" ajax="false">
 								<p:graphicImage library="image" name="excel.png" width="24" />
 							</p:commandLink>
-							<p:commandLink title="Exportar para PDF"
+							<p:commandLink title="Exportar para PDF" rendered="false"
 								style="margin-right:20px"
 								action="#{fornecedor_controller.exportarPDF}" ajax="false">
 								<p:graphicImage library="image" name="pdf.png" width="24" />

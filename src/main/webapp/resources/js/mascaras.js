@@ -79,6 +79,9 @@ function moedabrl(a, e, r, t) {
 }
 
 function verificarCNPJ(cnpj) {
+	const stringDefault = '__.___.___/____-__';
+	if(cnpj.value === stringDefault) return true;
+
 	if (!validarCNPJ(cnpj)) {
 		cnpj.value = "";
 		alert("CNPJ inválido");
@@ -89,6 +92,9 @@ function verificarCNPJ(cnpj) {
 }
 
 function verificarCPF(cpf) {
+	const stringDefault = '___.___.___-__';
+	if (cpf.value === stringDefault) return true;
+
 	if (!validarCPF(cpf)) {
 		cpf.value = "";
 		alert("CPF invalido");

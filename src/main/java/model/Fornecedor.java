@@ -48,6 +48,9 @@ public class Fornecedor implements Serializable {
 	@Column
 	private Boolean ativoReceita;
 
+	@Transient
+	private String logradouro;
+
 	@Column(name="nome_fantasia")
 	private String nomeFantasia;
 	@Column
@@ -679,5 +682,13 @@ public class Fornecedor implements Serializable {
 
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
+	}
+
+	public String getLogradouro() {
+		return logradouro;
+	}
+
+	public void setLogradouro(String logradouro) {
+		this.logradouro = logradouro;
 	}
 }

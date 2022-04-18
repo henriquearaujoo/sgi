@@ -24,6 +24,9 @@ public class Estado implements Serializable {
 	private Long id;
 	@Column
 	private String nome;
+
+	@Column
+	private String uf;
 	
 	public Estado(){}
 	
@@ -82,7 +85,12 @@ public class Estado implements Serializable {
 	public void setPais(Pais pais) {
 		this.pais = pais;
 	}
-	
-	
 
+	public String getUf() {
+		return uf;
+	}
+
+	public void setUf(String uf) {
+		this.uf = uf;
+	}
 }

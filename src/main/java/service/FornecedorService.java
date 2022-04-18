@@ -53,6 +53,18 @@ import util.Filtro;
 		public List<Estado> getEstados() {
 			return local.getEstados();
 		}
+
+		public Estado getEstadoByUf(String uf) {
+			return local.getEstadosByUf(uf);
+		}
+
+		public Localidade getCidadeByEstado(Estado estado, String cidade) {
+			return local.getCidadeByEstado(estado.getId(), cidade);
+		}
+
+		public List<Localidade> getCidades() {
+			return local.getMunicipio();
+		}
 		
 		public List<Localidade> findCidadeByEstado(Long estado) {
 			return local.getMunicipioByEstado(estado);

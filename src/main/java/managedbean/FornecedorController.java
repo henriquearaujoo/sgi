@@ -1,10 +1,6 @@
 package managedbean;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,21 +18,15 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import model.*;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 
-import model.Banco;
-import model.CategoriaDespesaClass;
-import model.ClassificacaoConta;
-import model.ClassificacaoFornecedor;
-import model.ContaBancaria;
-import model.Estado;
-import model.Fornecedor;
-import model.LancamentoAuxiliar;
-import model.Localidade;
-import model.MenuLateral;
-import model.TipoArquivo;
-import model.TipoPagamento;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
@@ -119,8 +109,7 @@ public class FornecedorController implements Serializable {
 	private boolean selectFornecedor = true;
 
     public String mandaPronovo() {
-
-	return "fornecedores_cadastro?faces-redirect=true";
+		return "fornecedores_cadastro?faces-redirect=true";
     }
 
     public List<Localidade> completeLocalidade(String s) {
@@ -147,6 +136,10 @@ public class FornecedorController implements Serializable {
 	    panelBloqueio = true;
 	}
     }
+
+	public void loadCity() {
+		listaLocalidade = fornecedorService.getCidades();
+	}
 
     public String voltarTelaDeListagem() {
 	return "fornecedores?faces-redirect=true";
@@ -177,26 +170,27 @@ public class FornecedorController implements Serializable {
     }
 
 	public void validateCNPJ() {
-		if (util.isCNPJ(filtro.getCnpjcpf())) {
+		if (filtro.getCnpjcpf().equals("")) {
+			return;
+		} else if (util.isCNPJ(filtro.getCnpjcpf())) {
 			return;
 		} else {
 			PrimeFaces.current().executeScript("alert('Invalido')");
 		}
-
 	}
 
     public void carregarUltimoFornecimento() {
-	if (fornecedor.getId() != null) {
-	    carregarCidades();
-	    existeFornecimento = fornecedorService.verificarExisteFornecimento(fornecedor.getId());
-	    if (existeFornecimento) {
-		lancamento = fornecedorService.buscarUltimoFornecimento(fornecedor.getId());
-	    }
-	} else {
-	    existeFornecimento = false;
-	    fornecedor.setAtivo(true);
-	}
-
+		loadCity();
+		if (fornecedor.getId() != null) {
+			carregarCidades();
+			existeFornecimento = fornecedorService.verificarExisteFornecimento(fornecedor.getId());
+			if (existeFornecimento) {
+			lancamento = fornecedorService.buscarUltimoFornecimento(fornecedor.getId());
+			}
+		} else {
+			existeFornecimento = false;
+			fornecedor.setAtivo(true);
+		}
     }
 
     public void removerFornecedor() {
@@ -347,6 +341,81 @@ public class FornecedorController implements Serializable {
 
 	return false;
     }
+
+	// TODO: Consultar API externa para autocompletar os campos de endereço (https://viacep.com.br/)
+	public void autoCompleteAddress() throws IOException {
+		if (fornecedor.getCep().isEmpty()) {
+			fornecedor.setBairro("");
+			return;
+		}
+		String cep = fornecedor.getCep().replaceAll("\\p{Punct}", "");
+
+		EstadoUtil estadoUtil = consultarCEP(cep, EstadoUtil.class);
+
+		selectState(estadoUtil, fornecedor);
+	}
+
+	public void preencherFornecedor(Fornecedor forn, EstadoUtil estadoUtil) {
+		Estado estado = fornecedorService.getEstadoByUf(estadoUtil.getUf());
+
+		Localidade cidade = fornecedorService.getCidadeByEstado(estado, estadoUtil.getLocalidade());
+
+		forn.setEstado(estado);
+		forn.setCidade(cidade);
+		forn.setCep(estadoUtil.getCep());
+		forn.setBairro(estadoUtil.getBairro());
+		forn.setEndereco(estadoUtil.getLogradouro());
+	}
+
+	public void selectState(EstadoUtil estadoUtil, Fornecedor forn) {
+
+		switch (estadoUtil.getUf()) {
+			case "AC":
+			case "AL":
+			case "TO":
+			case "SE":
+			case "SP":
+			case "SC":
+			case "RR":
+			case "RO":
+			case "RS":
+			case "RN":
+			case "RJ":
+			case "PI":
+			case "AP":
+			case "AM":
+			case "BA":
+			case "CE":
+			case "DF":
+			case "ES":
+			case "GO":
+			case "MA":
+			case "MT":
+			case "MS":
+			case "MG":
+			case "PA":
+			case "PB":
+			case "PR":
+			case "PE":
+				preencherFornecedor(forn, estadoUtil);
+				break;
+		}
+	}
+
+	public <T> T consultarCEP(String cep, Class<T> tClass) throws IOException {
+		String cepRequest = "https://viacep.com.br/ws/" + cep + "/json/";
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+		OkHttpClient client = new OkHttpClient();
+
+		Request request = new Request.Builder()
+				.url(cepRequest).build();
+
+		Response response = client.newCall(request).execute();
+
+		return mapper.readValue(response.body().byteStream(), tClass);
+	}
 
     public void removerConta(ContaBancaria contaBancaria) {
 	if (fornecedor.getContasBancarias() != null)
