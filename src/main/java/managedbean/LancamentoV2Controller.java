@@ -32,6 +32,7 @@ import org.primefaces.model.UploadedFile;
 import anotacoes.Transactional;
 import model.Acao;
 import model.Aprouve;
+import model.AprouveSigla;
 import model.CategoriaFinanceira;
 import model.ContaBancaria;
 import model.DespesaReceita;
@@ -80,6 +81,7 @@ import util.DownloadUtil;
 import util.Filtro;
 import util.MakeMenu;
 import util.UsuarioSessao;
+import util.ValidarAcesso;
 
 @Named(value = "lancamentos_v2")
 @ViewScoped
@@ -559,6 +561,8 @@ public class LancamentoV2Controller implements Serializable {
 	private HomeService homeService;
 
 	public void init() throws IOException {
+		
+		ValidarAcesso.checkEnterPage(usuarioSessao.getUsuario());
 
 		if (homeService.verificarSolicitacoes(usuarioSessao.getIdColadorador())) {
 			HttpServletResponse resp = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
@@ -876,6 +880,19 @@ public class LancamentoV2Controller implements Serializable {
 		service.efetivar(id);
 		carregarPagamentosPE();
 	}
+	
+	public void validar() {
+		if(ValidarAcesso.checkPasswordAprouve(usuarioSessao.getUsuario(), 
+				  AprouveSigla.CONCILIACAO, 
+				  aprouve, service)) {
+			service.efetivarMultiplos(lancamentosSelected);
+			carregarLancamentos();
+			lancamentosSelected = new ArrayList<>();
+		} else {
+			addMessage("Erro de validação:", "Senha incorreta!", 
+					FacesMessage.SEVERITY_WARN);
+		}
+	}
 
 	public void efetivarMultiplos() {
 
@@ -889,10 +906,15 @@ public class LancamentoV2Controller implements Serializable {
 		 * for (LancamentoAuxiliar la : lancamentosSelected) { if
 		 * (la.getStatus().equals("EFETIVADO")) { continue; } }
 		 */
-
-		service.efetivarMultiplos(lancamentosSelected);
-		carregarLancamentos();
-		lancamentosSelected = new ArrayList<>();
+		
+		// TODO
+		if(ValidarAcesso.checkIfUserCanApprove(usuarioSessao.getUsuario(), 
+											   AprouveSigla.CONCILIACAO, 
+											   service)) {
+			executeScript("PF('dialogValid').show();");
+		} else {
+			addMessage("Sem autorização:", "Você não tem autorização para efetivar esse lançamento.", FacesMessage.SEVERITY_ERROR);
+		}
 	}
 
 	// TODO: Put it on the util package
@@ -913,8 +935,9 @@ public class LancamentoV2Controller implements Serializable {
 
 	public void reverseTransaction() {
 		try {
-			aprouve.setSigla("ADM-II");
-			if (service.verificaAprouveEstorno(aprouve)) {
+//			aprouve.setSigla("ADM-II");
+			if (ValidarAcesso.checkPasswordAprouve(usuarioSessao.getUsuario(), 
+					AprouveSigla.CONCILIACAO, aprouve, service)) {
 				service.reverseTransaction(lancamentosSelected);
 				carregarLancamentos();
 				closeDialoEstorno();
