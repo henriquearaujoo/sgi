@@ -36,6 +36,11 @@ import util.Filtro;
 		public List<Banco> getTodosBancos(Filtro filtro){
 			return repositorio.getTodosBancos(filtro);
 		}
+
+		public List<Banco> getTodosBancos(){
+			return repositorio.getTodosBancos();
+		}
+
 		
 		public Banco findBancoById(Long id){
 			return repositorio.findBancoById(id);

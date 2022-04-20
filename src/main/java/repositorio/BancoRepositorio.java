@@ -64,6 +64,16 @@ public class BancoRepositorio implements Serializable {
 		return query.getResultList();
 	}
 
+	public List<Banco> getTodosBancos() {
+		StringBuilder jpql = new StringBuilder("from Banco as b where 1 = 1 ");
+
+		jpql.append(" order by b.numeroBanco asc");
+
+		Query query = this.manager.createQuery(jpql.toString());
+
+		return query.getResultList();
+	}
+
 	public List<Banco> getBancoAutoComplete(String s) {
 		StringBuilder jpql = new StringBuilder(
 				"from  Banco b where ( lower(b.nomeBanco) like lower(:nome) or lower(b.numeroBanco) like lower(:nome)) ");
