@@ -12,3 +12,4 @@ src/test
 .idea
 .env
 tmp
+sgi.iml

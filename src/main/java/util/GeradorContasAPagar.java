@@ -85,24 +85,26 @@ public class GeradorContasAPagar implements Serializable {
 
 			totalEntrada = new Double(0);
 			totalSaida = new Double(0);
-
+/*
 			filtro.setIdConta(conta.getId());
 			ContaBancaria contaBancaria = service.getContaSaldoCA(filtro);
 			saldo = contaBancaria.getSaldoInicial().doubleValue() - contaBancaria.getTotalSaida().doubleValue()
 					+ contaBancaria.getTotalEntrada().doubleValue();
-
+*/
 			rownum++;
 
+
 			Row row = sheetOrcamento.createRow(rownum++);
+			/*
 			createCellColNegrito(conta.getNomeConta(), row, 0);
 			createCellColNegrito("Saldo anterior:", row, 1);
 			createCellColNegrito(saldo, row, 2);
-			
+			*/
 
 			filtro.setIdConta(conta.getId());
 			int i = 0;
 			rownum++;
-			for (RelatorioContasAPagar relatorio : service.getPagamentosByContaMODE01(filtro)) {
+			for (RelatorioContasAPagar relatorio : service.getPagamentosByContaMODE01Relatorio(filtro)) {
 				
 				totalEntrada = new Double(0);
 				totalSaida = new Double(0);
@@ -191,6 +193,7 @@ public class GeradorContasAPagar implements Serializable {
 		// 4 //last column (0-based)
 		// ));
 
+		// TODO: testando linhas
 		Row rowCabecalho = sheetOrcamento.createRow(rownum++);
 		createTitulos(rowCabecalho);
 
@@ -229,7 +232,7 @@ public class GeradorContasAPagar implements Serializable {
 
 			for (RelatorioContasAPagar relatorio : conta.getTipo().equals("CA")
 					? service.getPagamentosByContaCAMODE01(filtro)
-					: service.getPagamentosByContaMODE01(filtro)) {
+					: service.getPagamentosByContaMODE01Relatorio(filtro)) {
 
 				dataAtual = relatorio.getPagamento();
 
@@ -342,8 +345,10 @@ public class GeradorContasAPagar implements Serializable {
 		cell.setCellValue("CP - Contas a pagar");
 		cell.setCellStyle(styleTituloGeral);
 
-		Row rowCabecalho = sheetOrcamento.createRow(rownum++);
-		createTitulos(rowCabecalho);
+		Row rowCabecalho = sheetOrcamento.createRow(4);
+		Row rowLabels = sheetOrcamento.createRow(8);
+		createCellColHeader("Conta", rowCabecalho, 0);
+		createTitulos(rowLabels);
 
 		for (ContaBancaria conta : selectedContas) {
 
@@ -459,7 +464,7 @@ public class GeradorContasAPagar implements Serializable {
 
 	public void createTitulos(Row rowCabecalho) {
 		Integer collNumHeader = 0;
-		createCellColHeader("Conta", rowCabecalho, collNumHeader++);
+		//createCellColHeader("Conta", rowCabecalho, collNumHeader++);
 		createCellColHeader("Tipo", rowCabecalho, collNumHeader++);
 		createCellColHeader("Pagamento", rowCabecalho, collNumHeader++);
 		createCellColHeader("Emissão", rowCabecalho, collNumHeader++);
@@ -467,10 +472,10 @@ public class GeradorContasAPagar implements Serializable {
 		createCellColHeader("Tipo de documento", rowCabecalho, collNumHeader++);
 		createCellColHeader("Nota fiscal", rowCabecalho, collNumHeader++);
 		createCellColHeader("Categoria", rowCabecalho, collNumHeader++);
-		createCellColHeader("Condição de pagamento", rowCabecalho, collNumHeader++);
+		//createCellColHeader("Condição de pagamento", rowCabecalho, collNumHeader++);
 		createCellColHeader("Nº Lançamento", rowCabecalho, collNumHeader++);
-		createCellColHeader("Nº da SV", rowCabecalho, collNumHeader++);
-		createCellColHeader("Nº da SC", rowCabecalho, collNumHeader++);
+		//createCellColHeader("Nº da SV", rowCabecalho, collNumHeader++);
+		//createCellColHeader("Nº da SC", rowCabecalho, collNumHeader++);
 		createCellColHeader("Pagador", rowCabecalho, collNumHeader++);
 		createCellColHeader("Recebedor", rowCabecalho, collNumHeader++);
 		createCellColHeader("CPF/CNPJ", rowCabecalho, collNumHeader++);
@@ -480,9 +485,9 @@ public class GeradorContasAPagar implements Serializable {
 		createCellColHeader("Projeto", rowCabecalho, collNumHeader++);
 		createCellColHeader("Componente", rowCabecalho, collNumHeader++);
 		createCellColHeader("Subcomponente", rowCabecalho, collNumHeader++);
-		createCellColHeader("Gestão", rowCabecalho, collNumHeader++);
-		createCellColHeader("Programa", rowCabecalho, collNumHeader++);
-		createCellColHeader("Tipo de trensferência", rowCabecalho, collNumHeader++);
+		//createCellColHeader("Gestão", rowCabecalho, collNumHeader++);
+		//createCellColHeader("Programa", rowCabecalho, collNumHeader++);
+		//createCellColHeader("Tipo de trensferência", rowCabecalho, collNumHeader++);
 		createCellColHeader("Requisitos de doação", rowCabecalho, collNumHeader++);
 		createCellColHeader("Ação", rowCabecalho, collNumHeader++);
 		createCellColHeader("Status", rowCabecalho, collNumHeader++);
@@ -493,14 +498,14 @@ public class GeradorContasAPagar implements Serializable {
 
 	public void createConteudo(RelatorioContasAPagar relatorio, Row row) {
 		int cellnum = 0;
-		createCellCol(relatorio.getTipo(), row, cellnum++);
-		createCellCol(relatorio.getPagamento(), row, cellnum++);
-		createCellCol(relatorio.getEmissao(), row, cellnum++);
-		createCellCol(relatorio.getDoc(), row, cellnum++);
-		createCellCol(relatorio.getTipoDocumento(), row, cellnum++);
-		createCellCol(relatorio.getNotaFiscal(), row, cellnum++);
-		createCellCol(relatorio.getCategoriaDespesa(), row, cellnum++);
-		createCellCol(relatorio.getNumeroLancamento(), row, cellnum++);
+		createCellCol(relatorio.getTipo(), row, cellnum++); // Tipo
+		createCellCol(relatorio.getPagamento(), row, cellnum++); // Data pagamento
+		createCellCol(relatorio.getEmissao(), row, cellnum++); // Data Emissão
+		createCellCol(relatorio.getDoc(), row, cellnum++); // Número do documento
+		createCellCol(relatorio.getTipoDocumento(), row, cellnum++); // Tipo do Documento
+		createCellCol(relatorio.getNotaFiscal(), row, cellnum++); // Nota fiscal
+		createCellCol(relatorio.getCategoriaDespesa(), row, cellnum++); // Categoria
+		createCellCol(relatorio.getNumeroLancamento(), row, cellnum++); 
 		createCellCol(relatorio.getPagador(), row, cellnum++);
 		createCellCol(relatorio.getRecebedor(), row, cellnum++);
 		createCellCol(relatorio.getDescricao(), row, cellnum++);

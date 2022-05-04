@@ -132,11 +132,11 @@ public class ContasApagarControllerMODE01 implements Serializable {
 
 	public void gerarContasApagar() throws WriteException, IOException {
 
-		selectedContas = contaService.getContaSaldoMODE01(filtro);
-		GeradorContasAPagar gerador = new GeradorContasAPagar();
-		//gerador.setOutputFile("/home/developer/Documents/import/relatorio_cp.xls");
-		gerador.setOutputFile("C:/temp/relatorios/relatorio.xls");
-		gerador.gerarCPDetalhado(selectedContas, contaService, filtro);
+		// selectedContas = contaService.getContaSaldoMODE01(filtro);
+		// GeradorContasAPagar gerador = new GeradorContasAPagar();
+		// gerador.setOutputFile("/home/caio/Documentos/apache-tomcat-8.5.78/relatorios/relatorio.xls");
+		// gerador.setOutputFile("C:/temp/relatorios/relatorio.xls");e
+		// gerador.gerarCPDetalhado(selectedContas, contaService, filtro);
 
 		if (detalhado) {
 			gerarCPdetalhado();
@@ -161,8 +161,8 @@ public class ContasApagarControllerMODE01 implements Serializable {
 	public void gerarCP() throws IOException {
 		selectedContas = contaService.getContaSaldoMODE01(filtro);
 		GeradorContasAPagar gerador = new GeradorContasAPagar();
-//		gerador.setOutputFile("/home/developer/Documents/import/relatorio_cp.xls");
-		gerador.setOutputFile("C:/temp/relatorios/relatorio.xls");
+		gerador.setOutputFile("/home/caio/Documentos/apache-tomcat-8.5.78/relatorios/relatorio.xls");
+//		gerador.setOutputFile("C:/temp/relatorios/relatorio.xls");
 		gerador.gerarCP(selectedContas, contaService, filtro);
 
 	}
@@ -170,16 +170,16 @@ public class ContasApagarControllerMODE01 implements Serializable {
 	public void gerarCPdetalhado() throws IOException {
 		selectedContas = contaService.getContaSaldoMODE01(filtro);
 		GeradorContasAPagar gerador = new GeradorContasAPagar();
-//		gerador.setOutputFile("/home/developer/Documents/import/relatorio_cp.xls");
-		gerador.setOutputFile("C:/temp/relatorios/relatorio.xls");
+		gerador.setOutputFile("/home/caio/Documentos/apache-tomcat-8.5.78/relatorios/relatorio.xls");
+		//gerador.setOutputFile("C:/temp/relatorios/relatorio.xls");
 		gerador.gerarCPDetalhado(selectedContas, contaService, filtro);
 	}
 
 	public void gerarRelatorioContas() throws IOException {
 		selectedContas = contaService.getContaSaldoMODE01(filtro);
 		GeradorContasAPagar gerador = new GeradorContasAPagar();
-//		gerador.setOutputFile("/home/developer/Documents/import/relatorio_cp.xls");
-		gerador.setOutputFile("/Users/henriquearaujo/Desktop/relatorio/relatorio.xls");
+		gerador.setOutputFile("/home/caio/Documentos/apache-tomcat-8.5.78/relatorios/relatorio.xls");
+		//gerador.setOutputFile("/Users/henriquearaujo/Desktop/relatorio/relatorio.xls");
 		gerador.gerarRelatorioContas(selectedContas, contaService, filtro);
 	}
 	

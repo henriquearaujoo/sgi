@@ -725,11 +725,12 @@ public class ContaRepository implements Serializable {
 				+ "(select proj_r.rubricaorcamento_id from projeto_rubrica proj_r  where proj_r.id = (select lla.projetorubrica_id from lancamento_acao lla where \n"
 				+ " lla.id = pl.lancamentoacao_id))))  else  \n"
 				+ "(select orc.titulo from orcamento orc  where orc.id =  (select rubric.orcamento_id from rubrica_orcamento rubric where rubric.id = \n"
-				+ "(select lla.rubricaorcamento_id from lancamento_acao lla where  lla.id = pl.lancamentoacao_id)))  end as orcamento_26 ");
-
+				+ "(select lla.rubricaorcamento_id from lancamento_acao lla where  lla.id = pl.lancamentoacao_id)))  end as orcamento_26, ");
+		hql.append("cf.nome as categoria_27 ");
 		hql.append("from pagamento_lancamento pl join lancamento_acao la \n");
 		hql.append("on pl.lancamentoacao_id = la.id \n");
 		hql.append("join lancamento l on l.id = la.lancamento_id \n");
+		hql.append("join categoria_financeira cf on cf.id = l.categoriafinanceira_id \n");
 		hql.append("left join localidade loc on l.localidade_id = loc.id \n");
 		hql.append("where (pl.conta_id = :conta or pl.contarecebedor_id = :conta) and \n");
 		hql.append(" CASE  when l.versionlancamento = 'MODE01' then \n");
@@ -756,9 +757,9 @@ public class ContaRepository implements Serializable {
 			rel.setEmissao(object[1] != null ? object[1].toString() : "");
 			rel.setNotaFiscal(object[2] != null ? object[2].toString() : "");
 			rel.setDoc(object[3] != null ? object[3].toString() : "");
-			// rel.setCategoriaDespesa(object[18] != null ?
-			// CategoriadeDespesa.valueOf(object[18].toString()).getNome() : "");
-			rel.setCategoriaDespesa("");
+			//rel.setCategoriaDespesa(object[18] != null ?
+			//CategoriadeDespesa.valueOf(object[18].toString()).getNome() : "");
+			rel.setCategoriaDespesa(object[27].toString());
 			rel.setNumeroLancamento(object[5] != null ? object[5].toString() : "");
 			rel.setPagador(object[6].toString());
 			rel.setRecebedor(object[7].toString());
@@ -896,6 +897,9 @@ public class ContaRepository implements Serializable {
 
 		RelatorioContasAPagar rel = new RelatorioContasAPagar();
 
+		System.out.println(System.getProperty("os.name").equals("Linux"));
+		
+		
 		for (Object[] object : result) {
 
 			rel = new RelatorioContasAPagar();
