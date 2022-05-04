@@ -126,8 +126,8 @@ public class GeradorContasAPagar implements Serializable {
 			rownum++;
 			row = sheetOrcamento.createRow(rownum++);
 
-			createCellColNegrito("Saldo no período: ", row, 19);
-			createCellColNegrito(saldo, row, 20);
+			createCellColNegrito("Saldo no período: ", row, 22);
+			createCellColNegrito(saldo, row, 23);
 
 		}
 
@@ -247,10 +247,10 @@ public class GeradorContasAPagar implements Serializable {
 
 					row = sheetOrcamento.createRow(rownum++);
 
-					createCellColNegrito("Totais do dia " + dataAnterior, row, 18);
-					createCellColNegrito(totalEntrada, row, 19);
-					createCellColNegrito(totalSaida, row, 20);
-					createCellColNegrito(saldo, row, 21);
+					createCellColNegrito("Totais do dia " + dataAnterior, row, 20);
+					createCellColNegrito(totalEntrada, row, 21);
+					createCellColNegrito(totalSaida, row, 22);
+					createCellColNegrito(saldo, row, 23);
 
 					totalEntrada = new Double(0);
 					totalSaida = new Double(0);
@@ -280,16 +280,16 @@ public class GeradorContasAPagar implements Serializable {
 			rownum++;
 			row = sheetOrcamento.createRow(rownum++);
 
-			createCellColNegrito("Totais do dia " + dataAnterior, row, 18);
-			createCellColNegrito(totalEntrada, row, 19);
-			createCellColNegrito(totalSaida, row, 20);
-			createCellColNegrito(saldo, row, 21);
+			createCellColNegrito("Totais do dia " + dataAnterior, row, 20);
+			createCellColNegrito(totalEntrada, row, 21);
+			createCellColNegrito(totalSaida, row, 22);
+			createCellColNegrito(saldo, row, 23);
 
 			rownum++;
 			row = sheetOrcamento.createRow(rownum++);
 
-			createCellColNegrito("Saldo no período: ", row, 20);
-			createCellColNegrito(saldo, row, 21);
+			createCellColNegrito("Saldo no período: ", row, 22);
+			createCellColNegrito(saldo, row, 23);
 
 		}
 
@@ -478,6 +478,7 @@ public class GeradorContasAPagar implements Serializable {
 		//createCellColHeader("Nº da SC", rowCabecalho, collNumHeader++);
 		createCellColHeader("Pagador", rowCabecalho, collNumHeader++);
 		createCellColHeader("Recebedor", rowCabecalho, collNumHeader++);
+		createCellColHeader("Razão Social", rowCabecalho, collNumHeader++);
 		createCellColHeader("CPF/CNPJ", rowCabecalho, collNumHeader++);
 		createCellColHeader("Descrição", rowCabecalho, collNumHeader++);
 		createCellColHeader("Fonte", rowCabecalho, collNumHeader++);
@@ -508,6 +509,8 @@ public class GeradorContasAPagar implements Serializable {
 		createCellCol(relatorio.getNumeroLancamento(), row, cellnum++); 
 		createCellCol(relatorio.getPagador(), row, cellnum++);
 		createCellCol(relatorio.getRecebedor(), row, cellnum++);
+		createCellCol(relatorio.getRazaoSocial(), row, cellnum++);
+		createCellCol(relatorio.getCpfcnpj(), row, cellnum++);
 		createCellCol(relatorio.getDescricao(), row, cellnum++);
 		createCellCol(relatorio.getFonte(), row, cellnum++);
 		createCellCol(relatorio.getDoacao(), row, cellnum++);

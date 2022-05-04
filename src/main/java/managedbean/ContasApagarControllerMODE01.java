@@ -1,5 +1,6 @@
 package managedbean;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -161,8 +162,21 @@ public class ContasApagarControllerMODE01 implements Serializable {
 	public void gerarCP() throws IOException {
 		selectedContas = contaService.getContaSaldoMODE01(filtro);
 		GeradorContasAPagar gerador = new GeradorContasAPagar();
-		gerador.setOutputFile("/home/caio/Documentos/apache-tomcat-8.5.78/relatorios/relatorio.xls");
-//		gerador.setOutputFile("C:/temp/relatorios/relatorio.xls");
+		if (System.getProperty("os.name").equals("Linux")) {
+			String repositoryReport = System.getProperty("user.home") + "/relatorios";
+			File dir = new File(repositoryReport);
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			gerador.setOutputFile(repositoryReport + "/relatorio.xls");
+		} else {
+			String repositoryReport = System.getProperty("user.home") + "/relatorios";
+			File dir = new File(repositoryReport);
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			gerador.setOutputFile(repositoryReport + "/relatorio.xls");
+		}
 		gerador.gerarCP(selectedContas, contaService, filtro);
 
 	}
@@ -170,16 +184,42 @@ public class ContasApagarControllerMODE01 implements Serializable {
 	public void gerarCPdetalhado() throws IOException {
 		selectedContas = contaService.getContaSaldoMODE01(filtro);
 		GeradorContasAPagar gerador = new GeradorContasAPagar();
-		gerador.setOutputFile("/home/caio/Documentos/apache-tomcat-8.5.78/relatorios/relatorio.xls");
-		//gerador.setOutputFile("C:/temp/relatorios/relatorio.xls");
+		if (System.getProperty("os.name").equals("Linux")) {
+			String repositoryReport = System.getProperty("user.home") + "/relatorios";
+			File dir = new File(repositoryReport);
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			gerador.setOutputFile(repositoryReport + "/relatorio.xls");
+		} else {
+			String repositoryReport = System.getProperty("user.home") + "/relatorios";
+			File dir = new File(repositoryReport);
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			gerador.setOutputFile(repositoryReport + "/relatorio.xls");
+		}
 		gerador.gerarCPDetalhado(selectedContas, contaService, filtro);
 	}
 
 	public void gerarRelatorioContas() throws IOException {
 		selectedContas = contaService.getContaSaldoMODE01(filtro);
 		GeradorContasAPagar gerador = new GeradorContasAPagar();
-		gerador.setOutputFile("/home/caio/Documentos/apache-tomcat-8.5.78/relatorios/relatorio.xls");
-		//gerador.setOutputFile("/Users/henriquearaujo/Desktop/relatorio/relatorio.xls");
+		if (System.getProperty("os.name").equals("Linux")) {
+			String repositoryReport = System.getProperty("user.home") + "/relatorios";
+			File dir = new File(repositoryReport);
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			gerador.setOutputFile(repositoryReport + "/relatorio.xls");
+		} else {
+			String repositoryReport = System.getProperty("user.home") + "/relatorios";
+			File dir = new File(repositoryReport);
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			gerador.setOutputFile(repositoryReport + "/relatorio.xls");
+		}
 		gerador.gerarRelatorioContas(selectedContas, contaService, filtro);
 	}
 	

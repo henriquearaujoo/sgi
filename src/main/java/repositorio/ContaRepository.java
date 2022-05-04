@@ -880,7 +880,13 @@ public class ContaRepository implements Serializable {
 		hql.append("l.compra_id as sc_31,\n");
 		hql.append("l.sv_id as sv_32,\n");
 		hql.append("(select case trim(tipo) when 'fisica' then cpf when 'juridica' then cnpj end as cpfcnpj from fornecedor\n");
-		hql.append("where id = (select fornecedor_id from conta_bancaria where id = :conta)) as cpfcnpj_33\n");
+		hql.append("where id = (select fornecedor_id from conta_bancaria where id = :conta)) as cpfcnpj_33, \n");
+		hql.append("(select case trim(fd.tipo) when 'fisica' then fd.cpf else fd.cnpj end as cpf_cnpj "
+				+ "from conta_bancaria cb join fornecedor fd on fd.id = cb.fornecedor_id"
+				+ " where cb.id = l.contarecebedor_id) as cpf_cnpj_34, \n");
+		hql.append("( select cf.nome from categoria_financeira cf where cf.id = l.categoriafinanceira_id ) as categoria_financeira_35, \n");
+		hql.append("( select fd.razao_social from conta_bancaria cb "
+				+ "join fornecedor fd on fd.id = cb.fornecedor_id where cb.id = l.contarecebedor_id ) as razao_social_36 \n");
 		hql.append("from pagamento_lancamento pl join lancamento_acao la \n");
 		hql.append("on pl.lancamentoacao_id = la.id \n");
 		hql.append("join lancamento l on l.id = la.lancamento_id \n");
@@ -907,7 +913,8 @@ public class ContaRepository implements Serializable {
 			rel.setEmissao(object[1] != null ? object[1].toString() : "");
 			rel.setNotaFiscal(object[2] != null ? object[2].toString() : "");
 			rel.setDoc(object[3] != null ? object[3].toString() : "");
-			rel.setCategoriaDespesa("");
+			rel.setCategoriaDespesa(object[35] != null ? 
+					object[35].toString() : "");
 			rel.setNumeroLancamento(object[5] != null ? object[5].toString() : "");
 			rel.setPagador(object[6].toString());
 			rel.setRecebedor(object[7].toString());
@@ -935,7 +942,9 @@ public class ContaRepository implements Serializable {
 			rel.setDespesaReceita(Util.getNullValue(object[30], ""));
 			rel.setSc(Util.getNullValue(object[31], ""));
 			rel.setSv(Util.getNullValue(object[32], ""));
-			rel.setCpfcnpj(Util.getNullValue(object[33], ""));
+			rel.setCpfcnpj(Util.getNullValue(object[34], ""));
+			rel.setRazaoSocial(object[36] != null ? 
+					object[36].toString() : "");
 			relatorio.add(rel);
 
 		}
