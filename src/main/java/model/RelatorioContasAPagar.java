@@ -59,6 +59,8 @@ public class RelatorioContasAPagar {
 	private String sc = "";
 
 	private String cpfcnpj = "";
+	
+	private String razaoSocial = "";
 
 	public RelatorioContasAPagar() {
 	}
@@ -123,6 +125,14 @@ public class RelatorioContasAPagar {
 	}
 	
 	
+
+	public String getRazaoSocial() {
+		return razaoSocial;
+	}
+
+	public void setRazaoSocial(String razaoSocial) {
+		this.razaoSocial = razaoSocial;
+	}
 
 	public String getDoacao() {
 		return Doacao;

@@ -120,8 +120,8 @@ public class ContasApagarController implements Serializable {
 	public void gerarContasApagar() throws WriteException, IOException {
 		selectedContas = contaService.getContaSaldo(filtro);
 		JxlUtil jxl = new JxlUtil();
-		// jxl.setOutputFile("/home/developer/Documents/import/relatorio_cp.xls");
-		jxl.setOutputFile("C:/temp/relatorios/relatorio.xls");
+		jxl.setOutputFile("/home/caio/Documentos/apache-tomcat-8.5.78/relatorios/relatorio.xls");
+		// jxl.setOutputFile("C:/temp/relatorios/relatorio.xls");
 		jxl.insere(selectedContas, contaService, filtro);
 	}
 

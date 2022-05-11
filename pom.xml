@@ -217,7 +217,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>sgi_1.0.0_test</finalName>
+		<finalName>sgi_1.1.0</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
