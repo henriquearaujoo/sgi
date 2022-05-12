@@ -984,7 +984,7 @@ public class ContaRepository implements Serializable {
 		hql.append("left join localidade loc on l.localidade_id = loc.id \n");
 		hql.append("where (pl.conta_id = :conta or pl.contarecebedor_id = :conta)");
 		hql.append("and pl.datapagamento between '" + sdf.format(filtro.getDataInicio()) + "' and '" + sdf.format(filtro.getDataFinal()) + "' ");
-		hql.append("and l.statuscompra != 'N_INCIADO' and la.status = 0 ");
+		hql.append("and l.statuscompra != 'N_INCIADO' and l.statuscompra != 'CANCELADO' and la.status = 0 ");
 		hql.append("order by pl.datapagamento asc \n");
 	
 		Query query = manager.createNativeQuery(hql.toString());
