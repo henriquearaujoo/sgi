@@ -126,8 +126,8 @@ public class GeradorContasAPagar implements Serializable {
 			rownum++;
 			row = sheetOrcamento.createRow(rownum++);
 
-			createCellColNegrito("Saldo no período: ", row, 22);
-			createCellColNegrito(saldo, row, 23);
+			createCellColNegrito("Saldo no período: ", row, 26);
+			createCellColNegrito(saldo, row, 27);
 
 		}
 
@@ -193,7 +193,6 @@ public class GeradorContasAPagar implements Serializable {
 		// 4 //last column (0-based)
 		// ));
 
-		// TODO: testando linhas
 		Row rowCabecalho = sheetOrcamento.createRow(rownum++);
 		createTitulos(rowCabecalho);
 
@@ -247,10 +246,10 @@ public class GeradorContasAPagar implements Serializable {
 
 					row = sheetOrcamento.createRow(rownum++);
 
-					createCellColNegrito("Totais do dia " + dataAnterior, row, 20);
-					createCellColNegrito(totalEntrada, row, 21);
-					createCellColNegrito(totalSaida, row, 22);
-					createCellColNegrito(saldo, row, 23);
+					createCellColNegrito("Totais do dia " + dataAnterior, row, 24);
+					createCellColNegrito(totalEntrada, row, 25);
+					createCellColNegrito(totalSaida, row, 26);
+					createCellColNegrito(saldo, row, 27);
 
 					totalEntrada = new Double(0);
 					totalSaida = new Double(0);
@@ -487,7 +486,9 @@ public class GeradorContasAPagar implements Serializable {
 		createCellColHeader("Componente", rowCabecalho, collNumHeader++);
 		createCellColHeader("Subcomponente", rowCabecalho, collNumHeader++);
 		//createCellColHeader("Gestão", rowCabecalho, collNumHeader++);
-		//createCellColHeader("Programa", rowCabecalho, collNumHeader++);
+		createCellColHeader("Gerência", rowCabecalho, collNumHeader++);
+		createCellColHeader("Programa", rowCabecalho, collNumHeader++);
+		createCellColHeader("Agenda", rowCabecalho, collNumHeader++);
 		//createCellColHeader("Tipo de trensferência", rowCabecalho, collNumHeader++);
 		createCellColHeader("Requisitos de doação", rowCabecalho, collNumHeader++);
 		createCellColHeader("Ação", rowCabecalho, collNumHeader++);
@@ -517,6 +518,10 @@ public class GeradorContasAPagar implements Serializable {
 		createCellCol(relatorio.getProjeto(), row, cellnum++);
 		createCellCol(relatorio.getComponente(), row, cellnum++);
 		createCellCol(relatorio.getSubcomponente(), row, cellnum++);
+		createCellCol(relatorio.getGerencia(), row, cellnum++);
+		createCellCol(relatorio.getPrograma(), row, cellnum++);
+		createCellCol(relatorio.getAgenda(), row, cellnum++);
+		createCellCol(relatorio.getPrograma(), row, cellnum++);
 		createCellCol(relatorio.getRubrica(), row, cellnum++);
 		createCellCol(relatorio.getAcao(), row, cellnum++);
 		createCellCol(relatorio.getStatus(), row, cellnum++);
