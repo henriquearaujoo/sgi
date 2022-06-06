@@ -1290,7 +1290,7 @@ public class LancamentoRepository implements Serializable {
 		log.setData(new Date());
 		log.setSigla(lancamento.getGestao().getSigla());
 
-		lancamento = this.manager.merge(lancamento);
+		//lancamento = this.manager.merge(lancamento);
 		lancamento.setNumeroDocumento(lancamento.getId().toString());
 		log.setLancamento(lancamento);
 

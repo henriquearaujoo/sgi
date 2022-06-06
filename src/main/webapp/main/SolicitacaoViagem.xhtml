@@ -42,7 +42,7 @@
 
 
 
-				<h:form id="form-listagem">
+				<h:form id="form-listagem" styleClass="default-style-form-filter">
 					<br />
 					<p:breadCrumb class="breadcrumb-container">
 
@@ -175,7 +175,7 @@
 						{FirstPageLink} {PreviousPageLink} {PageLinks} 
 						{NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
 
-							<p:column headerText="Codigo" style="width:70px"
+							<p:column headerText="Codigo" style="width:5%"
 								filterBy="SV#{viagem.id}" filterMatchMode="contains">
 
 								<p:link value="SV#{viagem.id}" styleClass="link-content"
@@ -188,23 +188,20 @@
 
 							</p:column>
 
-							<p:column headerText="Missão" style="width:350px">
+							<p:column headerText="Missão" style="width:10%" filterBy="#{viagem.missao}"
+								filterMatchMode="contains">
 								<h:outputText value="#{viagem.missao}" />
 							</p:column>
 
-							<p:column headerText="Descrição" style="width:20%">
+							<p:column headerText="Descrição" style="width:58%" filterBy="#{viagem.motivo}"
+								filterMatchMode="contains">
 								<h:outputText id="motivo"
-									value="#{viagem.motivo.length() > 30 ? viagem.motivo.substring(0,30) : viagem.motivo}" />
-								
-								<h:outputText rendered="#{viagem.motivo.length() > 30}" id="mot"
-									value=" . . ." />
-									
-								<p:tooltip id="toolTipFade" for="mot" value="#{viagem.motivo}" style="width:50%" position="top"/>	
+									value="#{viagem.motivo}" />
 
 							</p:column>
 
 
-							<p:column headerText="Data" style="width:100px"
+							<p:column headerText="Data" style="width:5%"
 								filterBy="#{viagem.dataEmissao}">
 								<h:outputText value="#{viagem.dataEmissao}">
 									<f:convertDateTime pattern="dd/MM/yyy"
@@ -212,33 +209,35 @@
 								</h:outputText>
 							</p:column>
 
-							<p:column headerText="Solicitante" style="width:250px"
+							<p:column headerText="Solicitante" style="width:10%"
 								filterBy="#{viagem.solicitante.nome.toLowerCase()}">
 								<h:outputText value="#{viagem.solicitante.nome.toLowerCase()}" />
 							</p:column>
 
-							<p:column style="width:110px;text-align:center;"
+							<p:column style="width:8%;text-align:center;"
 								headerText="Opções">
-
-								<p:commandLink title="Imprimir"
-									styleClass="btn btn-primary btn-sm" target="_blank"
-									style="margin-left:9px;color:#000" ajax="false"
-									action="#{viagemController.gerarRelatorioViagem(viagem)}">
-									<f:setPropertyActionListener value="#{compra}"
-										target="#{compraController.compra}" />
-									<span class="fa fa-fw fa-print"></span>
-								</p:commandLink>
-
-								<p:commandLink style="color:#FFF;margin-left:5px"
-									rendered="#{viagem.statusViagem == null or viagem.statusViagem.nome != 'Concluído'}"
-									title="Excluir" styleClass="btn btn-danger btn-xs "
-									action="#{viagemController.remover()}"
-									update="table-viagem,:form-listagem:msg-pagamento">
-									<span class="fa fa-fw fa-trash-o"></span>
-									<f:setPropertyActionListener value="#{viagem}"
-										target="#{viagemController.viagem}" />
-
-								</p:commandLink>
+								<p:menuButton value="Opções">
+									<p:menuitem title="Imprimir"
+										target="_blank" style="font-size: 1.4rem"
+										ajax="false" styleClass="bg-warning"
+										action="#{viagemController.gerarRelatorioViagem(viagem)}">
+										<f:setPropertyActionListener value="#{compra}"
+											target="#{compraController.compra}" />
+										<span class="fa fa-fw fa-print p-2"></span>
+										<span>Imprimir</span>
+									</p:menuitem>
+	
+									<p:menuitem
+										rendered="#{viagem.statusViagem == null or viagem.statusViagem.nome != 'Concluído'}"
+										title="Excluir" style="font-size: 1.4rem"
+										action="#{viagemController.remover()}"
+										update="table-viagem,:form-listagem:msg-pagamento">
+										<span class="fa fa-fw fa-trash-o p-2"></span>
+										<span>Excluir</span>
+										<f:setPropertyActionListener value="#{viagem}"
+											target="#{viagemController.viagem}" />
+									</p:menuitem>
+								</p:menuButton>
 
 							</p:column>
 						</p:dataTable>

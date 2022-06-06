@@ -24,11 +24,11 @@
 					<p:menuitem value="Controladoria (Em Desenvolvimento)"
 								url="recursos_projetos.xhtml"
 								style="color: red;"
-								rendered="true" />
+								rendered="false" />
 					<p:menuitem value="Controle de projeto (Em Desenvolvimento)"
 								url="liberar_projeto.xhtml"
 								style="color: red;"
-								rendered="true" />
+								rendered="false" />
 
 				</p:submenu>
 
@@ -46,7 +46,7 @@
 
 				</p:submenu>
 
-				<p:submenu label="Gestão" rendered="true">
+				<p:submenu label="Gestão" rendered="false">
 					<p:menuitem value="Painel de gestão" url="panel_management.xhtml"
 						onclick="start()" onerror="stop()" />
 
@@ -55,7 +55,7 @@
 				<p:submenu label="Financeiro" rendered="#{message['MENU_FINANCE']}">
 					<p:menuitem value="Lançamentos OLD (Em desenvolvimento)"
 								url="lancamentos.xhtml"
-								rendered="true"
+								rendered="false"
 								style="color: red;"/>
 
 					<p:menuitem value="Validação" url="liberacao_lancamento.xhtml" />
@@ -155,7 +155,7 @@
 						rendered="#{message['SUB_MENU_UC']}" onerror="stop()" />
 				</p:submenu>
 
-				<p:submenu label="PBF (Em Desenvolvimento)" rendered="true">
+				<p:submenu label="PBF (Em Desenvolvimento)" rendered="false">
 					<p:menuitem value="Familiar"
 								style="color: red;"
 								url="cadastro_familiar.xhtml" />
