@@ -154,15 +154,15 @@ public class GeradorContasAPagar implements Serializable {
 		BigDecimal saldoTotalPorConta = BigDecimal.ZERO;
 		Double saldo = 0.0;
 
-		Double entrada = new Double(0);
-		Double saida = new Double(0);
-		Double prestacao = new Double(0);
-		Double adiantamento = new Double(0);
+		Double entrada = 0.0;
+		Double saida = 0.0;
+		Double prestacao = 0.0;
+		Double adiantamento = 0.0;
 
-		Double totalEntrada = new Double(0);
-		Double totalSaida = new Double(0);
-		Double totalPrestacao = new Double(0);
-		Double totalAdiantamento = new Double(0);
+		Double totalEntrada = 0.0;
+		Double totalSaida = 0.0;
+		Double totalPrestacao = 0.0;
+		Double totalAdiantamento = 0.0;
 
 		String dataAnterior = "";
 		String dataAtual = "";
@@ -198,10 +198,10 @@ public class GeradorContasAPagar implements Serializable {
 
 		for (ContaBancaria conta : selectedContas) {
 
-			totalEntrada = new Double(0);
-			totalSaida = new Double(0);
-			totalPrestacao = new Double(0);
-			totalAdiantamento = new Double(0);
+			totalEntrada = 0.0;
+			totalSaida = 0.0;
+			totalPrestacao = 0.0;
+			totalAdiantamento = 0.0;
 
 			if (!conta.getTipo().equals("CA")) {
 				saldo = conta.getSaldoInicial().doubleValue() - conta.getTotalSaida().doubleValue()
@@ -218,7 +218,7 @@ public class GeradorContasAPagar implements Serializable {
 						+ contaBancaria.getTotalEntrada().doubleValue();
 			}
 
-			rownum++;
+//			rownum++;
 
 			Row row = sheetOrcamento.createRow(rownum++);
 			createCellColNegrito(conta.getNomeConta(), row, 0);
@@ -242,14 +242,14 @@ public class GeradorContasAPagar implements Serializable {
 
 				if (!dataAtual.equals(dataAnterior)) {
 
-					rownum++;
+//					rownum++;
 
 					row = sheetOrcamento.createRow(rownum++);
 
-					createCellColNegrito("Totais do dia " + dataAnterior, row, 24);
+					createCellColNegrito("Totais do dia " + dataAnterior, row, 23);
+					createCellColNegrito(saldo, row, 24);
 					createCellColNegrito(totalEntrada, row, 25);
 					createCellColNegrito(totalSaida, row, 26);
-					createCellColNegrito(saldo, row, 27);
 
 					totalEntrada = new Double(0);
 					totalSaida = new Double(0);
@@ -279,10 +279,10 @@ public class GeradorContasAPagar implements Serializable {
 			rownum++;
 			row = sheetOrcamento.createRow(rownum++);
 
-			createCellColNegrito("Totais do dia " + dataAnterior, row, 20);
-			createCellColNegrito(totalEntrada, row, 21);
-			createCellColNegrito(totalSaida, row, 22);
-			createCellColNegrito(saldo, row, 23);
+			createCellColNegrito("Totais do dia " + dataAnterior, row, 23);
+			createCellColNegrito(saldo, row, 24);
+			createCellColNegrito(totalEntrada, row, 25);
+			createCellColNegrito(totalSaida, row, 26);
 
 			rownum++;
 			row = sheetOrcamento.createRow(rownum++);
@@ -499,29 +499,29 @@ public class GeradorContasAPagar implements Serializable {
 	}
 
 	public void createConteudo(RelatorioContasAPagar relatorio, Row row) {
+
 		int cellnum = 0;
-		createCellCol(relatorio.getTipo(), row, cellnum++); // Tipo
+		createCellCol(relatorio.getTipo(), row, cellnum++); // Tiposasadas
 		createCellCol(relatorio.getPagamento(), row, cellnum++); // Data pagamento
 		createCellCol(relatorio.getEmissao(), row, cellnum++); // Data Emissão
 		createCellCol(relatorio.getDoc(), row, cellnum++); // Número do documento
 		createCellCol(relatorio.getTipoDocumento(), row, cellnum++); // Tipo do Documento
 		createCellCol(relatorio.getNotaFiscal(), row, cellnum++); // Nota fiscal
 		createCellCol(relatorio.getCategoriaDespesa(), row, cellnum++); // Categoria
-		createCellCol(relatorio.getNumeroLancamento(), row, cellnum++); 
-		createCellCol(relatorio.getPagador(), row, cellnum++);
-		createCellCol(relatorio.getRecebedor(), row, cellnum++);
-		createCellCol(relatorio.getRazaoSocial(), row, cellnum++);
-		createCellCol(relatorio.getCpfcnpj(), row, cellnum++);
-		createCellCol(relatorio.getDescricao(), row, cellnum++);
-		createCellCol(relatorio.getFonte(), row, cellnum++);
-		createCellCol(relatorio.getDoacao(), row, cellnum++);
-		createCellCol(relatorio.getProjeto(), row, cellnum++);
-		createCellCol(relatorio.getComponente(), row, cellnum++);
-		createCellCol(relatorio.getSubcomponente(), row, cellnum++);
+		createCellCol(relatorio.getNumeroLancamento(), row, cellnum++); // Nº lançamento
+		createCellCol(relatorio.getPagador(), row, cellnum++); // Pagador
+		createCellCol(relatorio.getRecebedor(), row, cellnum++); // Recebedor
+		createCellCol(relatorio.getRazaoSocial(), row, cellnum++); // Razão Social
+		createCellCol(relatorio.getCpfcnpj(), row, cellnum++); // CPF/CNPJ
+		createCellCol(relatorio.getDescricao(), row, cellnum++); // Descrição
+		createCellCol(relatorio.getFonte(), row, cellnum++); // Fonte
+		createCellCol(relatorio.getDoacao(), row, cellnum++); // Doação
+		createCellCol(relatorio.getProjeto(), row, cellnum++); // Projeto
+		createCellCol(relatorio.getComponente(), row, cellnum++); // Compnente
+		createCellCol(relatorio.getSubcomponente(), row, cellnum++); // Subcomponente
 		createCellCol(relatorio.getGerencia(), row, cellnum++);
 		createCellCol(relatorio.getPrograma(), row, cellnum++);
 		createCellCol(relatorio.getAgenda(), row, cellnum++);
-		createCellCol(relatorio.getPrograma(), row, cellnum++);
 		createCellCol(relatorio.getRubrica(), row, cellnum++);
 		createCellCol(relatorio.getAcao(), row, cellnum++);
 		createCellCol(relatorio.getStatus(), row, cellnum++);

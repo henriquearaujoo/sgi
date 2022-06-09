@@ -1026,8 +1026,10 @@ public class ContaRepository implements Serializable {
 		hql.append("join lancamento l on l.id = la.lancamento_id \n");
 		hql.append("left join localidade loc on l.localidade_id = loc.id \n");
 		hql.append("where (pl.conta_id = :conta or pl.contarecebedor_id = :conta)");
-		hql.append("and pl.datapagamento between '" + sdf.format(filtro.getDataInicio()) + "' and '" + sdf.format(filtro.getDataFinal()) + "' ");
-		hql.append("and l.statuscompra != 'N_INCIADO' and l.statuscompra != 'CANCELADO' and la.status = 0 ");
+		hql.append("and pl.datapagamento between '" + sdf.format(filtro.getDataInicio()) + "' and '" + sdf.format(filtro.getDataFinal()) + "' \n");
+		hql.append("and CASE  when l.versionlancamento = 'MODE01' then\n");
+		hql.append("la.status = 0   else 1 = 1 end\n");
+		hql.append("and l.statuscompra = 'CONCLUIDO'");
 		hql.append("order by pl.datapagamento asc \n");
 	
 		Query query = manager.createNativeQuery(hql.toString());
@@ -1061,7 +1063,7 @@ public class ContaRepository implements Serializable {
 			rel.setRubrica(Util.getNullValue(object[21], ""));
 			rel.setComponente(Util.getNullValue(object[22], ""));
 			rel.setSubcomponente(Util.getNullValue(object[23], ""));
-			rel.setTipoDocumento(Util.getNullValue(object[24], ""));
+			rel.setTipoDocumento(Util.getNullValue(object[20], ""));
 
 			if (Long.valueOf(object[17].toString()).intValue() == filtro.getIdConta().intValue()) {
 				rel.setSaida(Double.valueOf(object[12].toString()));
