@@ -1154,7 +1154,6 @@ public class CompraController implements Serializable {
 	}
 
 	public void editarCompraMODE01() {
-
 		carregarProjetos();
 		carregarMunicipiosDeCompra();
 		// carregarUnidades();
@@ -1170,7 +1169,7 @@ public class CompraController implements Serializable {
 
 		compra = compraService.getCompraById(compra.getId());
 		buscarMunicipiosDeCompra();
-		// compra.setLocalidade(compraService.getLocalidadeById(compra.getId()));
+		compra.setLocalidade(compraService.getLocalidadeById(compra.getId()));
 		compra.setItens(new ArrayList<ItemCompra>());
 		compra.setItens(compraService.getItensByCompraAllProducts(compra));
 		compra.setLancamentosAcoes(compraService.getLancamentosAcoes(compra));

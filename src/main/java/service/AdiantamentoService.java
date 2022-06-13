@@ -183,19 +183,20 @@ public class AdiantamentoService implements Serializable {
 	@Transactional
 	public SolicitacaoPagamento salvar(SolicitacaoPagamento adiantamento, User usuario, Integer type) {
 
+		adiantamento.setTipoLancamento("ad");
+		adiantamento.setCategoriaDespesaClass(null);
+		adiantamento.setQuantidadeParcela(1);
+		adiantamento.setDataDocumentoFiscal(new Date());
+		adiantamento.setTipoParcelamento(TipoParcelamento.PARCELA_UNICA);
+		adiantamento.setNotaFiscal("");
+		adiantamento.setCondicaoPagamentoEnum(CondicaoPagamento.DEPOSITO);
+		adiantamento.setTipoDocumentoFiscal(TipoDeDocumentoFiscal.OUTRO);
+		adiantamento.setTipoGestao(buscarTipoGestao(adiantamento));
+		adiantamento.setTipoLocalidade(buscarTipoLocalidade(adiantamento));
+		adiantamento.setVersionLancamento("MODE01");
+		
 		try {
 
-			adiantamento.setTipoLancamento("ad");
-			adiantamento.setCategoriaDespesaClass(null);
-			adiantamento.setQuantidadeParcela(1);
-			adiantamento.setDataDocumentoFiscal(new Date());
-			adiantamento.setTipoParcelamento(TipoParcelamento.PARCELA_UNICA);
-			adiantamento.setNotaFiscal("");
-			adiantamento.setCondicaoPagamentoEnum(CondicaoPagamento.DEPOSITO);
-			adiantamento.setTipoDocumentoFiscal(TipoDeDocumentoFiscal.OUTRO);
-			adiantamento.setTipoGestao(buscarTipoGestao(adiantamento));
-			adiantamento.setTipoLocalidade(buscarTipoLocalidade(adiantamento));
-			adiantamento.setVersionLancamento("MODE01");
 
 			if (adiantamento.getLancamentosAcoes().size() > 1) {
 				addMessage("",

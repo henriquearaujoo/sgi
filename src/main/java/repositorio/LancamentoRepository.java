@@ -37,6 +37,9 @@ public class LancamentoRepository implements Serializable {
 	private CalculatorRubricaRepositorio calculatorRubricaRepositorio;
 
 	private TipoParcelamento tipoParcelamento;
+	
+	@Inject
+	private LogRepositorio logRepositorio;
 
 	public LancamentoRepository() {
 	}
@@ -1577,23 +1580,15 @@ public class LancamentoRepository implements Serializable {
 
 	public Compra salvarCompra(Lancamento lancamento, User usuario) {
 
+		String siglaPrivilegio = "NEW";
+		if (lancamento.getId() != null) {
+			siglaPrivilegio = "EDIT";
+		}
+		
 		lancamento = this.manager.merge(lancamento);
 		lancamento.setNumeroDocumento(lancamento.getId().toString());
-
-		LogStatus log = new LogStatus();
-		log.setUsuario(usuario);
-		log.setData(new Date());
-		log.setSigla(lancamento.getGestao().getSigla());
-		if (lancamento.getId() != null) {
-
-			log.setSiglaPrivilegio("EDIT");
-		} else {
-			log.setStatusLog(StatusCompra.N_INCIADO);
-			log.setSiglaPrivilegio("NEW");
-		}
-
-		log.setLancamento(lancamento);
-		this.manager.merge(log);
+		
+		logRepositorio.saveLogLancamento(lancamento, usuario, siglaPrivilegio);
 
 		return (Compra) lancamento;
 	}
