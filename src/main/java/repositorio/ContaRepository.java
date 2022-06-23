@@ -977,14 +977,59 @@ public class ContaRepository implements Serializable {
 				+ "	from conta_bancaria cb "
 				+ "	join fornecedor fd on fd.id = cb.fornecedor_id "
 				+ "	where cb.id = l.contarecebedor_id "
-				+ ") as razao_social_36 \n");
+				+ ") as razao_social_36, \n");
+		hql.append("case\n" +
+				"   when la.projetorubrica_id is not null then \n" +
+				"            (select proj.programa from projeto proj where proj.id =\n" +
+				"                (select projr.projeto_id from projeto_rubrica projr where projr.id = la.projetorubrica_id)\n" +
+				"            ) \n" +
+				"        else (select pp.programa from projeto pp where pp.id =\n" +
+				"            (select ac.projeto_id from acao ac where ac.id = la.acao_id)\n" +
+				"        )\n" +
+				"    end as projeto_gerencia_37,\n");
+		hql.append("case\n" +
+				"   when la.projetorubrica_id is not null then \n" +
+				"            (select \n" +
+				"            sp.nome\n" +
+				"            from projeto proj\n" +
+				"            join sub_programa sp on sp.id = proj.subprograma_id\n" +
+				"            where proj.id =\n" +
+				"                (select projr.projeto_id from projeto_rubrica projr where projr.id = la.projetorubrica_id)\n" +
+				"            ) \n" +
+				"   else (select \n" +
+				"        sp.nome\n" +
+				"        from projeto pp \n" +
+				"        join sub_programa sp on sp.id = pp.subprograma_id\n" +
+				"        where pp.id =\n" +
+				"            (select ac.projeto_id from acao ac where ac.id = la.acao_id)\n" +
+				"        )\n" +
+				"end as projeto_programa_38,");
+		hql.append("case\n" +
+				"    when la.projetorubrica_id is not null then \n" +
+				"            (select \n" +
+				"            qp.nome\n" +
+				"            from projeto proj\n" +
+				"            join qualificacao_projeto qp on qp.id = proj.qualificacaoprojeto_id\n" +
+				"            where proj.id =\n" +
+				"                (select projr.projeto_id from projeto_rubrica projr where projr.id = la.projetorubrica_id)\n" +
+				"            ) \n" +
+				"        else (select \n" +
+				"        qp.nome\n" +
+				"        from projeto pp \n" +
+				"        join qualificacao_projeto qp on qp.id = pp.qualificacaoprojeto_id\n" +
+				"        where pp.id =\n" +
+				"            (select ac.projeto_id from acao ac where ac.id = la.acao_id)\n" +
+				"        )\n" +
+				"    end as projeto_agenda_39\n");
 		hql.append("from pagamento_lancamento pl join lancamento_acao la \n");
 		hql.append("on pl.lancamentoacao_id = la.id \n");
 		hql.append("join lancamento l on l.id = la.lancamento_id \n");
 		hql.append("left join localidade loc on l.localidade_id = loc.id \n");
 		hql.append("where (pl.conta_id = :conta or pl.contarecebedor_id = :conta)");
-		hql.append("and pl.datapagamento between '" + sdf.format(filtro.getDataInicio()) + "' and '" + sdf.format(filtro.getDataFinal()) + "' ");
-		hql.append("and l.statuscompra != 'N_INCIADO' and l.statuscompra != 'CANCELADO' and la.status = 0 ");
+		hql.append("and pl.datapagamento between '" + sdf.format(filtro.getDataInicio()) + "' and '" + sdf.format(filtro.getDataFinal()) + "' \n");
+		hql.append("and CASE  when l.versionlancamento = 'MODE01' then\n");
+		hql.append("la.status = 0   else 1 = 1 end\n");
+		hql.append("and l.statuscompra = 'CONCLUIDO'");
 		hql.append("order by pl.datapagamento asc \n");
 	
 		Query query = manager.createNativeQuery(hql.toString());
@@ -1018,7 +1063,7 @@ public class ContaRepository implements Serializable {
 			rel.setRubrica(Util.getNullValue(object[21], ""));
 			rel.setComponente(Util.getNullValue(object[22], ""));
 			rel.setSubcomponente(Util.getNullValue(object[23], ""));
-			rel.setTipoDocumento(Util.getNullValue(object[24], ""));
+			rel.setTipoDocumento(Util.getNullValue(object[20], ""));
 
 			if (Long.valueOf(object[17].toString()).intValue() == filtro.getIdConta().intValue()) {
 				rel.setSaida(Double.valueOf(object[12].toString()));
@@ -1034,6 +1079,9 @@ public class ContaRepository implements Serializable {
 			rel.setCpfcnpj(Util.getNullValue(object[34], ""));
 			rel.setRazaoSocial(object[36] != null ? 
 					object[36].toString() : "");
+			rel.setGerencia(object[37] != null ? object[37].toString() : "");
+			rel.setPrograma(object[38] != null ? object[38].toString() : "");
+			rel.setAgenda(object[39] != null ? object[39].toString() : "");
 			relatorio.add(rel);
 
 		}
