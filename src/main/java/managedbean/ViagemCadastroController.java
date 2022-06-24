@@ -1333,14 +1333,15 @@ public class ViagemCadastroController implements Serializable {
 			tab = "Programação";
 			carregarProgramacao();
 			break;
-		case 3:
-			tab = "Programação";
-			carregarProgramacao();
-			break;
-		default:
+		case 4:
 			tab = "Despesas";
 			carregarDespesas();
 			carregarCategorias();
+			break;
+		default:
+//			tab = "Despesas";
+//			carregarDespesas();
+//			carregarCategorias();
 			break;
 
 		}
