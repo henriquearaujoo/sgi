@@ -21,7 +21,6 @@ import javax.inject.Named;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jboss.weld.context.RequestContext;
 import org.primefaces.PrimeFaces;
 import org.primefaces.component.tabview.TabView;
 
@@ -557,16 +556,15 @@ public class ViagemCadastroController implements Serializable {
 
 	public void salvarViagemOLD() {
 
-		// if (verificarCampoViagem()) {
-		// closeDialogConfirmacaoViagem();
-		// return;
-		// }
+//		 if (verificarCampoViagem()) {
+//		 closeDialogConfirmacaoViagem();
+//		 return;
+//		 }
 
 		if (viagem.getId() == null) {
 			viagem.setCodigo(gerarCodigo());
 			viagem.setSolicitante(usuarioSessao.getUsuario().getColaborador());
 			viagem.setDataEmissao(new Date());
-
 		}
 
 		viagem.setTipoGestao(buscarTipoGestao());
@@ -600,8 +598,8 @@ public class ViagemCadastroController implements Serializable {
 			viagem.setVersionLancamento("MODE01");
 			viagem.setDataEmissao(new Date());
 		}
-
-		viagem.setTipoGestao(buscarTipoGestao());
+		
+		//viagem.setTipoGestao(TipoGestao.COORD);
 		viagem = viagemService.salvar(viagem, "");
 
 		if (!showTabs) {

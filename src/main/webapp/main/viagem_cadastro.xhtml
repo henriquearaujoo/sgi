@@ -39,10 +39,10 @@
 					activeIndex="#{sv_cadastro_controller.stepIndex}"
 					styleClass="custom" style="margin-bottom:10px" readonly="false">
 					<p:menuitem value="Informações gerais" />
-					<p:menuitem value="Diárias" />
-					<p:menuitem value="Programação" />
-					<p:menuitem value="Despesas" />
-					<p:menuitem value="Confirmação" />
+					<p:menuitem value="Diárias" rendered="#{sv_cadastro_controller.viagem.id != null ? true : false}" />
+					<p:menuitem value="Programação" rendered="#{sv_cadastro_controller.viagem.id != null ? true : false}" />
+					<p:menuitem value="Despesas" rendered="#{sv_cadastro_controller.viagem.id != null ? true : false}" />
+					<p:menuitem value="Confirmação" rendered="#{sv_cadastro_controller.viagem.id != null ? true : false}" />
 				</p:steps>
 			</div>
 
@@ -146,12 +146,13 @@
 
 							<p:commandLink id="btn-back" styleClass="btn btn-primary"
 								update="step, btn-back, btn-next, btn-panel-p" value="Voltar"
-								process="@this"
+								process="@this" rendered="#{sv_cadastro_controller.viagem.id != null ? true : false}"
 								onclick="steping(#{sv_cadastro_controller.stepIndex - 1});start()"
 								oncomplete="stop()" onerror="stop()"
 								action="#{sv_cadastro_controller.steping('back')}"></p:commandLink>
 
 							<p:commandLink id="btn-next" styleClass="btn btn-primary"
+								rendered="#{sv_cadastro_controller.viagem.id != null ? true : false}"
 								update="step, btn-back, btn-next, btn-panel-p" value="Próximo"
 								onclick="steping(#{sv_cadastro_controller.stepIndex + 1});start()"
 								oncomplete="stop()" onerror="stop()" process="@this"
