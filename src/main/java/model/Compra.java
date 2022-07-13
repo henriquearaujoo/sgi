@@ -41,9 +41,9 @@ public class Compra extends Lancamento implements LancamentoIterface {
  	
 	public Compra(Long id,String nomeGestao, String nomeSolicitante, String nomeDestino, Date data, StatusCompra status, Boolean bootUrgencia, String categoria) {
 		super(id, data, status);
-		setId(id);
-		setDataEmissao(data);
-		setStatusCompra(status);
+		//setId(id);
+		//setDataEmissao(data);
+		//setStatusCompra(status);
 		setNomeGestao(nomeGestao);
 		setNomeSolicitante(nomeSolicitante);
 		setNomeDestino(nomeDestino);

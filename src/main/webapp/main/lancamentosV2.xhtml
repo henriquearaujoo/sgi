@@ -347,6 +347,35 @@ body .ui-fileupload .ui-fileupload-content {
 
 	<ui:define name="adicionais">
 	
+		<p:dialog header="Senha" widgetVar="dialogValid"
+			resizable="false" closable="false" modal="true" showEffect="clip"
+			hideEffect="clip">
+			<h:form id="form_valid" styleClass="default-style-form-filter">
+				<p:messages showDetail="true" closable="true" autoUpdate="true" />
+				<p:panelGrid columns="2" styleClass="ui-noborder">
+					<p:outputLabel for="senha" value="Senha:" />
+					<p:password id="senha" label="senha"
+						value="#{lancamentos_v2.aprouve.senha}" required="true" />
+
+				</p:panelGrid>
+
+				<p:separator />
+				<center>
+					<p:commandLink process="form_valid,senha"
+						update=":form-lancamento-pagamento" styleClass="btn btn-primary"
+						style="color:#ffffff;width:90px" onclick="start();PF('dialogValid').hide()"
+						oncomplete="stop()" onerror="stop()"
+						action="#{lancamentos_v2.validar()}" value="Enviar" />
+					<p:spacer width="3px" />
+					<p:commandLink update=":form-lancamento-pagamento" immediate="true"
+						styleClass="btn btn-danger" style="color:#ffffff;width:90px"
+						value="Cancelar" onclick="PF('dialogValid').hide()" />
+
+				</center>
+
+			</h:form>
+		</p:dialog>
+	
 		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help" header="Ajuda"
 			showEffect="clip" hideEffect="drop" draggable="false" maximizable="true" minimizable="true" 
 			resizable="true" blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()" >

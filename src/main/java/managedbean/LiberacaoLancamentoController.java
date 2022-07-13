@@ -8,10 +8,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
@@ -21,11 +19,12 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jboss.weld.context.RequestContext;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 
 import model.Acao;
+import model.Aprouve;
+import model.AprouveSigla;
 import model.ContaBancaria;
 import model.FontePagadora;
 import model.Fornecedor;
@@ -56,6 +55,7 @@ import util.DownloadUtil;
 import util.Filtro;
 import util.MakeMenu;
 import util.UsuarioSessao;
+import util.ValidarAcesso;
 
 @Named(value = "liberacao_lancamento_controller")
 @ViewScoped
@@ -110,6 +110,8 @@ public class LiberacaoLancamentoController implements Serializable {
 	private List<LancamentoAvulso> lancamentosAvulsos = new ArrayList<>();
 
 	private @Inject ArquivoLancamento arqAuxiliar;
+	
+	private Aprouve aprouve = new Aprouve();
 
 	public LiberacaoLancamentoController() {
 
@@ -283,6 +285,8 @@ public class LiberacaoLancamentoController implements Serializable {
 	private HomeService homeService;
 
 	public void init() throws IOException {
+
+		ValidarAcesso.checkEnterPage(usuarioSessao.getUsuario());
 
 		if (homeService.verificarSolicitacoes(usuarioSessao.getIdColadorador())) {
 			HttpServletResponse resp = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
@@ -596,21 +600,72 @@ public class LiberacaoLancamentoController implements Serializable {
 	}
 
 	public void validarLancamentos() {
-		service.validarLancamentos(lancamentosSelected);
-		carregarLancamentos();
+		if(ValidarAcesso.checkIfUserCanApprove(usuarioSessao.getUsuario(),
+											   AprouveSigla.VALIDACAO,
+											   service)) {
+			
+			executeScript("PF('dialogValid').show();");
+			
+		} else {
+			addMessage("Sem autorização:", 
+					"Você não tem autorização para Validar.",
+					FacesMessage.SEVERITY_ERROR);
+		}
+		
+	}
+	
+	public void cleanInput() {
+		aprouve = new Aprouve();
+	}
+	
+	public void validar() {
+		if(ValidarAcesso.checkPasswordAprouve(usuarioSessao.getUsuario(), 
+				  AprouveSigla.VALIDACAO, 
+				  aprouve, service)) {
+			service.validarLancamentos(lancamentosSelected);
+			carregarLancamentos();
+		} else {
+			addMessage("Erro de validação:", "Senha incorreta!", 
+					FacesMessage.SEVERITY_WARN);
+		}
 	}
 
 	public void invalidarLancamentos() {
-		for (LancamentoAuxiliar lancamento : lancamentosSelected) {
-			if (lancamento.getStatus().equals("EFETIVADO")) {
-				FacesContext.getCurrentInstance().addMessage("msg_lancamento",
-						new FacesMessage(FacesMessage.SEVERITY_WARN, "",
-								"Existem um ou mais Lançamentos Efetivados desmarque-os e tente novamente!"));
-				return;
+		if (ValidarAcesso.checkIfUserCanApprove(usuarioSessao.getUsuario(),
+												AprouveSigla.VALIDACAO, 
+												service)) {
+			for (LancamentoAuxiliar lancamento : lancamentosSelected) {
+				if (lancamento.getStatus().equals("EFETIVADO")) {
+					FacesContext.getCurrentInstance().addMessage("msg_lancamento",
+							new FacesMessage(FacesMessage.SEVERITY_WARN, "",
+									"Existem um ou mais Lançamentos Efetivados desmarque-os e tente novamente!"));
+					return;
+				}
 			}
+			
+			executeScript("PF('dialogValid').show()");
+			
+			if(ValidarAcesso.checkPasswordAprouve(usuarioSessao.getUsuario(), 
+												  AprouveSigla.VALIDACAO, 
+												  aprouve, service)) {
+				service.invalidarLancamentos(lancamentosSelected);
+				carregarLancamentos();	
+			} else {
+				addMessage("Erro de validação:", "Senha incorreta!",
+							FacesMessage.SEVERITY_WARN);
+			}
+			
+		}else {
+			addMessage("Sem autorização:", 
+					"Você não tem autorização para Estornar.",
+					FacesMessage.SEVERITY_ERROR);
 		}
-		service.invalidarLancamentos(lancamentosSelected);
-		carregarLancamentos();
+		
+	}
+	
+	public void executeScript(String script) {
+		PrimeFaces current = PrimeFaces.current();
+		current.executeScript(script);
 	}
 
 	@Inject
@@ -918,6 +973,14 @@ public class LiberacaoLancamentoController implements Serializable {
 
 	public void setLancamento(Lancamento lancamento) {
 		this.lancamento = lancamento;
+	}
+
+	public Aprouve getAprouve() {
+		return aprouve;
+	}
+
+	public void setAprouve(Aprouve aprouve) {
+		this.aprouve = aprouve;
 	}
 
 }

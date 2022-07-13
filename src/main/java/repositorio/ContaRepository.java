@@ -725,11 +725,12 @@ public class ContaRepository implements Serializable {
 				+ "(select proj_r.rubricaorcamento_id from projeto_rubrica proj_r  where proj_r.id = (select lla.projetorubrica_id from lancamento_acao lla where \n"
 				+ " lla.id = pl.lancamentoacao_id))))  else  \n"
 				+ "(select orc.titulo from orcamento orc  where orc.id =  (select rubric.orcamento_id from rubrica_orcamento rubric where rubric.id = \n"
-				+ "(select lla.rubricaorcamento_id from lancamento_acao lla where  lla.id = pl.lancamentoacao_id)))  end as orcamento_26 ");
-
+				+ "(select lla.rubricaorcamento_id from lancamento_acao lla where  lla.id = pl.lancamentoacao_id)))  end as orcamento_26, ");
+		hql.append("cf.nome as categoria_27 ");
 		hql.append("from pagamento_lancamento pl join lancamento_acao la \n");
 		hql.append("on pl.lancamentoacao_id = la.id \n");
 		hql.append("join lancamento l on l.id = la.lancamento_id \n");
+		hql.append("join categoria_financeira cf on cf.id = l.categoriafinanceira_id \n");
 		hql.append("left join localidade loc on l.localidade_id = loc.id \n");
 		hql.append("where (pl.conta_id = :conta or pl.contarecebedor_id = :conta) and \n");
 		hql.append(" CASE  when l.versionlancamento = 'MODE01' then \n");
@@ -756,9 +757,9 @@ public class ContaRepository implements Serializable {
 			rel.setEmissao(object[1] != null ? object[1].toString() : "");
 			rel.setNotaFiscal(object[2] != null ? object[2].toString() : "");
 			rel.setDoc(object[3] != null ? object[3].toString() : "");
-			// rel.setCategoriaDespesa(object[18] != null ?
-			// CategoriadeDespesa.valueOf(object[18].toString()).getNome() : "");
-			rel.setCategoriaDespesa("");
+			//rel.setCategoriaDespesa(object[18] != null ?
+			//CategoriadeDespesa.valueOf(object[18].toString()).getNome() : "");
+			rel.setCategoriaDespesa(object[27].toString());
 			rel.setNumeroLancamento(object[5] != null ? object[5].toString() : "");
 			rel.setPagador(object[6].toString());
 			rel.setRecebedor(object[7].toString());
@@ -800,92 +801,235 @@ public class ContaRepository implements Serializable {
 		hql.append("l.id as numero_lancamento_05, \n");
 		hql.append("(select cb.nome_conta from conta_bancaria cb where cb.id = pl.conta_id) as conta_pagador_06, \n ");
 		hql.append("(select cb.nome_conta from conta_bancaria cb where cb.id = pl.contarecebedor_id) as recebedor_conta_07, \n");
-		hql.append("case when la.descricao = '' or la.descricao is null then l.descricao \n ");
-		hql.append(" else la.descricao end as descricao_08, \n");
-		hql.append("CASE  when la.projetorubrica_id is not null then \n");
-		hql.append("(select f.nome from fonte_pagadora f where f.id = \n");
-		hql.append("(select orc.fonte_id from orcamento orc where orc.id = (select rubric.orcamento_id from rubrica_orcamento rubric where rubric.id = \n");
-		hql.append("(select proj_r.rubricaorcamento_id from projeto_rubrica proj_r  where proj_r.id = (select lla.projetorubrica_id from lancamento_acao lla where  \n");
-		hql.append(" lla.id = pl.lancamentoacao_id)))))  \n");
-		hql.append(" when la.rubricaorcamento_id is not null then \n");
-		hql.append(" (select f.nome from fonte_pagadora f where f.id = (select orc.fonte_id from orcamento orc where  orc.id = \n");
-		hql.append(" (select rubric.orcamento_id from rubrica_orcamento rubric where rubric.id = (select lla.rubricaorcamento_id from lancamento_acao lla where \n");
-		hql.append(" lla.id = pl.lancamentoacao_id)))) \n");
-		hql.append(" else (select fp.nome from fonte_pagadora fp where fp.id = la.fontepagadora_id) end as fonte_09, \n");
-		hql.append(" CASE when la.projetorubrica_id is not null \n");
-		hql.append(" then \n ");
-		hql.append(" (select proj.nome from projeto proj where proj.id = (select projr.projeto_id from projeto_rubrica projr where projr.id = la.projetorubrica_id)) \n");
-		hql.append(" else \n ");
-		hql.append(" (select pp.nome from projeto pp where pp.id = (select ac.projeto_id from acao ac where ac.id = la.acao_id)) \n");
-		hql.append(" end as projeto_10, \n");
-		hql.append(" pl.stt as status_11, pl.valor as valor_12, pl.id as id_pagamento_13,  pl.lancamento_id as codigo_lancamento_14, \n");
+		hql.append("case"
+				+ "		when la.descricao = '' or la.descricao is null then l.descricao "
+				+ "		else la.descricao "
+				+ "end as descricao_08, \n");
+		hql.append("case"
+				+ " 	when la.projetorubrica_id is not null then \n");
+		hql.append("		(select f.nome from fonte_pagadora f where f.id = \n");
+		hql.append("			(select orc.fonte_id from orcamento orc where orc.id = "
+				+ "					(select rubric.orcamento_id from rubrica_orcamento rubric where rubric.id = \n");
+		hql.append("					(select proj_r.rubricaorcamento_id from projeto_rubrica proj_r  where proj_r.id = "
+				+ "							(select lla.projetorubrica_id from lancamento_acao lla where lla.id = pl.lancamentoacao_id)"
+				+ "						)"
+				+ "					)"
+				+ "				)"
+				+ "			)  \n");
+		hql.append(" 	when la.rubricaorcamento_id is not null then \n");
+		hql.append(" 		(select f.nome from fonte_pagadora f where f.id = "
+				+ "				(select orc.fonte_id from orcamento orc where  orc.id = \n");
+		hql.append(" 				(select rubric.orcamento_id from rubrica_orcamento rubric where rubric.id = "
+				+ "						(select lla.rubricaorcamento_id from lancamento_acao lla where lla.id = pl.lancamentoacao_id)"
+				+ "					)"
+				+ "				)"
+				+ "			) \n");
+		hql.append(" 	else (select fp.nome from fonte_pagadora fp where fp.id = la.fontepagadora_id) \n");
+		hql.append("end as fonte_09, \n");
+		hql.append("case "
+				+ "		when la.projetorubrica_id is not null then \n");
+		hql.append(" 		(select proj.nome from projeto proj where proj.id = "
+				+ "				(select projr.projeto_id from projeto_rubrica projr where projr.id = la.projetorubrica_id)"
+				+ "			) \n");
+		hql.append(" 	else \n ");
+		hql.append(" 		(select pp.nome from projeto pp where pp.id = "
+				+ "				(select ac.projeto_id from acao ac where ac.id = la.acao_id)"
+				+ "			) \n");
+		hql.append("end as projeto_10, \n");
+		hql.append("pl.stt as status_11, "
+				+ "	pl.valor as valor_12, "
+				+ "	pl.id as id_pagamento_13,  "
+				+ "	pl.lancamento_id as codigo_lancamento_14, \n");
 		hql.append("pl.numerodaparcela || '/' || pl.quantidade_parcela as parcela_15, \n");
-		hql.append(" l.tipo  as tipo_lancamento_16, pl.conta_id as idcontapagador_17,  pl.contarecebedor_id as idcontarecebedor_18, \n");
-		hql.append(" (select ac.codigo from acao ac where ac.id = la.acao_id) as acao_19, \n");
+		hql.append("l.tipo  as tipo_lancamento_16, "
+				+ "	pl.conta_id as idcontapagador_17, "
+				+ "	pl.contarecebedor_id as idcontarecebedor_18, \n");
+		hql.append("(select ac.codigo from acao ac where ac.id = la.acao_id) as acao_19, \n");
 		hql.append("l.tipo as tipo_20, \n");
-		hql.append("CASE  when la.projetorubrica_id is not null then \n");
-		hql.append("(select rub.nome from rubrica rub where rub.id = (select rubric.rubrica_id from rubrica_orcamento rubric where rubric.id = \n");
-		hql.append("(select proj_r.rubricaorcamento_id from projeto_rubrica proj_r  where proj_r.id = (select lla.projetorubrica_id from lancamento_acao lla where  \n ");
-		hql.append("lla.id = pl.lancamentoacao_id))))  else \n ");
-		hql.append("(select rub.nome from rubrica rub where  rub.id =  (select rubric.rubrica_id from rubrica_orcamento rubric where rubric.id = \n");
-		hql.append("(select lla.rubricaorcamento_id from lancamento_acao lla where  lla.id = pl.lancamentoacao_id)))  end as linha_orcamentaria_21, \n");
-		hql.append("CASE  when la.projetorubrica_id is not null then \n");
-		hql.append("(select comp.nome from componente_class comp where comp.id = (select rubric.componente_id from rubrica_orcamento rubric where rubric.id = \n");
-		hql.append("(select proj_r.rubricaorcamento_id from projeto_rubrica proj_r  where proj_r.id = (select lla.projetorubrica_id from lancamento_acao lla where  \n ");
-		hql.append("lla.id = pl.lancamentoacao_id))))  else \n ");
-		hql.append("(select comp.nome from componente_class comp where comp.id =  (select rubric.componente_id from rubrica_orcamento rubric where rubric.id = \n");
-		hql.append("(select lla.rubricaorcamento_id from lancamento_acao lla where  lla.id = pl.lancamentoacao_id)))  end as componente_22, \n");
-		hql.append(" CASE  when la.projetorubrica_id is not null then \n");
-		hql.append("(select sub.nome from sub_componente sub where sub.id = (select rubric.subcomponente_id from rubrica_orcamento rubric where rubric.id = \n");
-		hql.append("(select proj_r.rubricaorcamento_id from projeto_rubrica proj_r  where proj_r.id = (select lla.projetorubrica_id from lancamento_acao lla where \n");
-		hql.append(" lla.id = pl.lancamentoacao_id))))  else  \n");
-		hql.append("(select sub.nome from sub_componente  sub where sub.id =  (select rubric.subcomponente_id from rubrica_orcamento rubric where rubric.id = \n");
-		hql.append("(select lla.rubricaorcamento_id from lancamento_acao lla where  lla.id = pl.lancamentoacao_id)))  end as sub_componente_23, \n");
+		hql.append("case "
+				+ "		when la.projetorubrica_id is not null then \n");
+		hql.append("		(select rub.nome from rubrica rub where rub.id = "
+				+ "				(select rubric.rubrica_id from rubrica_orcamento rubric where rubric.id = \n");
+		hql.append("				(select proj_r.rubricaorcamento_id from projeto_rubrica proj_r  where proj_r.id = "
+				+ "						(select lla.projetorubrica_id from lancamento_acao lla where lla.id = pl.lancamentoacao_id)"
+				+ "					)"
+				+ "				)"
+				+ "			)"
+				+ "		else \n ");
+		hql.append("		(select rub.nome from rubrica rub where  rub.id = "
+				+ "				(select rubric.rubrica_id from rubrica_orcamento rubric where rubric.id = \n");
+		hql.append("				(select lla.rubricaorcamento_id from lancamento_acao lla where lla.id = pl.lancamentoacao_id)"
+				+ "				)"
+				+ "			) "
+				+ "end as linha_orcamentaria_21, \n");
+		hql.append("case "
+				+ "		when la.projetorubrica_id is not null then \n");
+		hql.append("		(select comp.nome from componente_class comp where comp.id ="
+				+ "				(select rubric.componente_id from rubrica_orcamento rubric where rubric.id = \n");
+		hql.append("				(select proj_r.rubricaorcamento_id from projeto_rubrica proj_r  where proj_r.id = "
+				+ "						(select lla.projetorubrica_id from lancamento_acao lla where lla.id = pl.lancamentoacao_id)"
+				+ "					)"
+				+ "				)"
+				+ "			) "
+				+ "		else \n ");
+		hql.append("		(select comp.nome from componente_class comp where comp.id = "
+				+ "				(select rubric.componente_id from rubrica_orcamento rubric where rubric.id = \n");
+		hql.append("				(select lla.rubricaorcamento_id from lancamento_acao lla where lla.id = pl.lancamentoacao_id)"
+				+ "				)"
+				+ "			) "
+				+ "	end as componente_22, \n");
+		hql.append("case "
+				+ "		when la.projetorubrica_id is not null then \n");
+		hql.append("		(select sub.nome from sub_componente sub where sub.id = "
+				+ "				(select rubric.subcomponente_id from rubrica_orcamento rubric where rubric.id = \n");
+		hql.append("				(select proj_r.rubricaorcamento_id from projeto_rubrica proj_r  where proj_r.id = "
+				+ "						(select lla.projetorubrica_id from lancamento_acao lla where lla.id = pl.lancamentoacao_id)"
+				+ "					)"
+				+ "				)"
+				+ "			) "
+				+ "		else  \n");
+		hql.append("		(select sub.nome from sub_componente  sub where sub.id = "
+				+ "				(select rubric.subcomponente_id from rubrica_orcamento rubric where rubric.id = \n");
+		hql.append("				(select lla.rubricaorcamento_id from lancamento_acao lla where lla.id = pl.lancamentoacao_id)"
+				+ "				)"
+				+ "			) "
+				+ "end as sub_componente_23, \n");
 		hql.append("l.tipo_documento_fiscal as tipo_documento_24,  \n");
-		hql.append("CASE ");
-		hql.append("WHEN (l.tipo = 'SolicitacaoPagamento' and l.tipolancamento != 'ad') THEN 'SP' ");
-		hql.append("WHEN (l.tipo = 'SolicitacaoPagamento' and l.tipolancamento = 'ad') THEN 'SA' ");
-		hql.append("WHEN (l.tipo = 'Diaria') THEN 'SD' ");
-		hql.append("WHEN (l.tipo = 'custo_pessoal') THEN 'CP' ");
-		hql.append("WHEN (l.tipo = 'pedido') THEN 'PC' ");
-		hql.append("WHEN (l.tipo = 'baixa_aplicacao') THEN 'BA' ");
-		hql.append("WHEN (l.tipo = 'aplicacao_recurso') THEN 'AR' ");
-		hql.append("WHEN (l.tipo = 'doacao_efetiva') THEN 'DE' ");
-		hql.append("WHEN (l.tipo = 'tarifa_bancaria') THEN 'TF' ");
-		hql.append("WHEN (l.tipo = 'lanc_av' or l.tipo = 'lancamento_diversos') THEN 'LA'  ");
-		hql.append(" END as tipo_25, ");
-		hql.append("CASE  when la.projetorubrica_id is not null then \n"
-				+ "(select orc.titulo from orcamento orc where orc.id = (select rubric.orcamento_id from rubrica_orcamento rubric where rubric.id = \n"
-				+ "(select proj_r.rubricaorcamento_id from projeto_rubrica proj_r  where proj_r.id = (select lla.projetorubrica_id from lancamento_acao lla where \n"
-				+ " lla.id = pl.lancamentoacao_id))))  else  \n"
-				+ "(select orc.titulo from orcamento orc  where orc.id =  (select rubric.orcamento_id from rubrica_orcamento rubric where rubric.id = \n"
-				+ "(select lla.rubricaorcamento_id from lancamento_acao lla where  lla.id = pl.lancamentoacao_id)))  end as orcamento_26, ");
-		hql.append("case pl.tipoparcelamento when 'PARCELA_UNICA' then 'Parcela única/A vista'\n");
-		hql.append("when 'SEMANAL' then 'Semanal'\n");
-		hql.append("when 'QUINZENAL' then 'Quinzenal'\n");
-		hql.append("when 'MENSAL' then 'Mensal'\n");
-		hql.append("when 'BIMESTRE' then 'Bimestre'\n");
-		hql.append("when 'TRIMESTRE' then 'Trimestre'\n");
-		hql.append("when 'SEMESTRE' then 'Semestre'\n");
+		hql.append("case ");
+		hql.append("	WHEN (l.tipo = 'SolicitacaoPagamento' and l.tipolancamento != 'ad') THEN 'SP' ");
+		hql.append("	WHEN (l.tipo = 'SolicitacaoPagamento' and l.tipolancamento = 'ad') THEN 'SA' ");
+		hql.append("	WHEN (l.tipo = 'Diaria') THEN 'SD' ");
+		hql.append("	WHEN (l.tipo = 'custo_pessoal') THEN 'CP' ");
+		hql.append("	WHEN (l.tipo = 'pedido') THEN 'PC' ");
+		hql.append("	WHEN (l.tipo = 'baixa_aplicacao') THEN 'BA' ");
+		hql.append("	WHEN (l.tipo = 'aplicacao_recurso') THEN 'AR' ");
+		hql.append("	WHEN (l.tipo = 'doacao_efetiva') THEN 'DE' ");
+		hql.append("	WHEN (l.tipo = 'tarifa_bancaria') THEN 'TF' ");
+		hql.append("	WHEN (l.tipo = 'lanc_av' or l.tipo = 'lancamento_diversos') THEN 'LA'  ");
+		hql.append("END as tipo_25, ");
+		hql.append("CASE "
+				+ "		when la.projetorubrica_id is not null then \n"
+				+ "			(select orc.titulo from orcamento orc where orc.id = "
+				+ "				(select rubric.orcamento_id from rubrica_orcamento rubric where rubric.id = \n"
+				+ "					(select proj_r.rubricaorcamento_id from projeto_rubrica proj_r  where proj_r.id = "
+				+ "						(select lla.projetorubrica_id from lancamento_acao lla where lla.id = pl.lancamentoacao_id)"
+				+ "					)"
+				+ "				)"
+				+ "			)"
+				+ "		else  \n"
+				+ "			(select orc.titulo from orcamento orc  where orc.id = "
+				+ "				(select rubric.orcamento_id from rubrica_orcamento rubric where rubric.id = \n"
+				+ "					(select lla.rubricaorcamento_id from lancamento_acao lla where lla.id = pl.lancamentoacao_id)"
+				+ "				)"
+				+ "			) "
+				+ "end as orcamento_26, ");
+		hql.append("case pl.tipoparcelamento "
+				+ "		when 'PARCELA_UNICA' then 'Parcela única/A vista'\n");
+		hql.append("	when 'SEMANAL' then 'Semanal'\n");
+		hql.append("	when 'QUINZENAL' then 'Quinzenal'\n");
+		hql.append("	when 'MENSAL' then 'Mensal'\n");
+		hql.append("	when 'BIMESTRE' then 'Bimestre'\n");
+		hql.append("	when 'TRIMESTRE' then 'Trimestre'\n");
+		hql.append("	when 'SEMESTRE' then 'Semestre'\n");
 		hql.append("end as condicao_pagamento_27, \n");
 		hql.append("(select nome from gestao where id = l.gestao_id) as gestao_28,\n");
-		hql.append("CASE when la.projetorubrica_id is not null\n");
-		hql.append("then\n");
-		hql.append("(select proj.programa from projeto proj where proj.id = (select projr.projeto_id from projeto_rubrica projr where projr.id = la.projetorubrica_id)) \n");
-		hql.append("else\n");
-		hql.append("(select pp.programa from projeto pp where pp.id = (select ac.projeto_id from acao ac where ac.id = la.acao_id))\n");
+		hql.append("CASE "
+				+ "		when la.projetorubrica_id is not null then\n");
+		hql.append("		(select proj.programa from projeto proj where proj.id = "
+				+ "				(select projr.projeto_id from projeto_rubrica projr where projr.id = la.projetorubrica_id)"
+				+ "			) \n");
+		hql.append("	else\n");
+		hql.append("		(select pp.programa from projeto pp where pp.id = "
+				+ "				(select ac.projeto_id from acao ac where ac.id = la.acao_id)"
+				+ "			)\n");
 		hql.append("end as programa_29,\n");
-		hql.append("case when pl.conta_id = :conta then 'Despesa' else 'Receita' end as tipotransferencia_30,\n");
+		hql.append("case "
+				+ "		when pl.conta_id = :conta then 'Despesa' "
+				+ "		else 'Receita' "
+				+ "end as tipotransferencia_30,\n");
 		hql.append("l.compra_id as sc_31,\n");
 		hql.append("l.sv_id as sv_32,\n");
-		hql.append("(select case trim(tipo) when 'fisica' then cpf when 'juridica' then cnpj end as cpfcnpj from fornecedor\n");
-		hql.append("where id = (select fornecedor_id from conta_bancaria where id = :conta)) as cpfcnpj_33\n");
+		hql.append("(select "
+				+ "		case trim(tipo) "
+				+ "			when 'fisica' then cpf "
+				+ "			when 'juridica' then cnpj "
+				+ "		end as cpfcnpj "
+				+ "	from fornecedor where id = (select fornecedor_id from conta_bancaria where id = :conta)"
+				+ "	) as cpfcnpj_33, \n");
+		hql.append("(select "
+				+ "		case trim(fd.tipo) "
+				+ "			when 'fisica' then fd.cpf "
+				+ "			else fd.cnpj "
+				+ "		end as cpf_cnpj "
+				+ "	from conta_bancaria cb "
+				+ "	join fornecedor fd on fd.id = cb.fornecedor_id "
+				+ " where cb.id = l.contarecebedor_id) as cpf_cnpj_34, \n");
+		hql.append("CASE "
+				+ "		WHEN (l.tipo = 'pedido') THEN "
+				+ "			(SELECT cd.nome FROM categoria_despesa cd WHERE cd.id = "
+				+ "				(SELECT l2.categoriadespesaclass_id FROM lancamento l2 WHERE l2.id = l.compra_id)"
+				+ "			) \n"
+				+ "		ELSE"
+				+ "			(select cf.nome from categoria_financeira cf where cf.id = l.categoriafinanceira_id) "
+				+ "	END AS categoria_despesa_35, \n");
+		hql.append("(select "
+				+ "		fd.razao_social "
+				+ "	from conta_bancaria cb "
+				+ "	join fornecedor fd on fd.id = cb.fornecedor_id "
+				+ "	where cb.id = l.contarecebedor_id "
+				+ ") as razao_social_36, \n");
+		hql.append("case\n" +
+				"   when la.projetorubrica_id is not null then \n" +
+				"            (select proj.programa from projeto proj where proj.id =\n" +
+				"                (select projr.projeto_id from projeto_rubrica projr where projr.id = la.projetorubrica_id)\n" +
+				"            ) \n" +
+				"        else (select pp.programa from projeto pp where pp.id =\n" +
+				"            (select ac.projeto_id from acao ac where ac.id = la.acao_id)\n" +
+				"        )\n" +
+				"    end as projeto_gerencia_37,\n");
+		hql.append("case\n" +
+				"   when la.projetorubrica_id is not null then \n" +
+				"            (select \n" +
+				"            sp.nome\n" +
+				"            from projeto proj\n" +
+				"            join sub_programa sp on sp.id = proj.subprograma_id\n" +
+				"            where proj.id =\n" +
+				"                (select projr.projeto_id from projeto_rubrica projr where projr.id = la.projetorubrica_id)\n" +
+				"            ) \n" +
+				"   else (select \n" +
+				"        sp.nome\n" +
+				"        from projeto pp \n" +
+				"        join sub_programa sp on sp.id = pp.subprograma_id\n" +
+				"        where pp.id =\n" +
+				"            (select ac.projeto_id from acao ac where ac.id = la.acao_id)\n" +
+				"        )\n" +
+				"end as projeto_programa_38,");
+		hql.append("case\n" +
+				"    when la.projetorubrica_id is not null then \n" +
+				"            (select \n" +
+				"            qp.nome\n" +
+				"            from projeto proj\n" +
+				"            join qualificacao_projeto qp on qp.id = proj.qualificacaoprojeto_id\n" +
+				"            where proj.id =\n" +
+				"                (select projr.projeto_id from projeto_rubrica projr where projr.id = la.projetorubrica_id)\n" +
+				"            ) \n" +
+				"        else (select \n" +
+				"        qp.nome\n" +
+				"        from projeto pp \n" +
+				"        join qualificacao_projeto qp on qp.id = pp.qualificacaoprojeto_id\n" +
+				"        where pp.id =\n" +
+				"            (select ac.projeto_id from acao ac where ac.id = la.acao_id)\n" +
+				"        )\n" +
+				"    end as projeto_agenda_39\n");
 		hql.append("from pagamento_lancamento pl join lancamento_acao la \n");
 		hql.append("on pl.lancamentoacao_id = la.id \n");
 		hql.append("join lancamento l on l.id = la.lancamento_id \n");
 		hql.append("left join localidade loc on l.localidade_id = loc.id \n");
 		hql.append("where (pl.conta_id = :conta or pl.contarecebedor_id = :conta)");
-		hql.append("and pl.datapagamento between '" + sdf.format(filtro.getDataInicio()) + "' and '" + sdf.format(filtro.getDataFinal()) + "' ");
+		hql.append("and pl.datapagamento between '" + sdf.format(filtro.getDataInicio()) + "' and '" + sdf.format(filtro.getDataFinal()) + "' \n");
+		hql.append("and CASE  when l.versionlancamento = 'MODE01' then\n");
+		hql.append("la.status = 0   else 1 = 1 end\n");
+		hql.append("and l.statuscompra = 'CONCLUIDO'");
 		hql.append("order by pl.datapagamento asc \n");
 	
 		Query query = manager.createNativeQuery(hql.toString());
@@ -903,7 +1047,8 @@ public class ContaRepository implements Serializable {
 			rel.setEmissao(object[1] != null ? object[1].toString() : "");
 			rel.setNotaFiscal(object[2] != null ? object[2].toString() : "");
 			rel.setDoc(object[3] != null ? object[3].toString() : "");
-			rel.setCategoriaDespesa("");
+			rel.setCategoriaDespesa(object[35] != null ? 
+					object[35].toString() : "");
 			rel.setNumeroLancamento(object[5] != null ? object[5].toString() : "");
 			rel.setPagador(object[6].toString());
 			rel.setRecebedor(object[7].toString());
@@ -918,7 +1063,7 @@ public class ContaRepository implements Serializable {
 			rel.setRubrica(Util.getNullValue(object[21], ""));
 			rel.setComponente(Util.getNullValue(object[22], ""));
 			rel.setSubcomponente(Util.getNullValue(object[23], ""));
-			rel.setTipoDocumento(Util.getNullValue(object[24], ""));
+			rel.setTipoDocumento(Util.getNullValue(object[20], ""));
 
 			if (Long.valueOf(object[17].toString()).intValue() == filtro.getIdConta().intValue()) {
 				rel.setSaida(Double.valueOf(object[12].toString()));
@@ -931,7 +1076,12 @@ public class ContaRepository implements Serializable {
 			rel.setDespesaReceita(Util.getNullValue(object[30], ""));
 			rel.setSc(Util.getNullValue(object[31], ""));
 			rel.setSv(Util.getNullValue(object[32], ""));
-			rel.setCpfcnpj(Util.getNullValue(object[33], ""));
+			rel.setCpfcnpj(Util.getNullValue(object[34], ""));
+			rel.setRazaoSocial(object[36] != null ? 
+					object[36].toString() : "");
+			rel.setGerencia(object[37] != null ? object[37].toString() : "");
+			rel.setPrograma(object[38] != null ? object[38].toString() : "");
+			rel.setAgenda(object[39] != null ? object[39].toString() : "");
 			relatorio.add(rel);
 
 		}

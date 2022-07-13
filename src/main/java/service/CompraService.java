@@ -300,25 +300,27 @@ public class CompraService implements Serializable {
 
 	@Transactional
 	public boolean salvar(Compra compra, User usuario, List<Municipio> municipios, Integer type) {
+		List<CompraMunicipio> store = new ArrayList<CompraMunicipio>();
+		//compra.setListCompraMunicipio(new ArrayList<CompraMunicipio>());
+		for (Municipio municipio : municipios) {
+			CompraMunicipio compraMunicipio = new CompraMunicipio(municipio, compra);
+			store.add(compraMunicipio);
+		}
+		compra.setListCompraMunicipio(store);
+
+		compra.setCategoriaDespesaClass(compra.getItens().get(0).getProduto().getCategoriaDespesa());
+		if (compra.getCategoriaDespesaClass().getNome().equals("FRETE SEDEX")
+				|| compra.getCategoriaDespesaClass().getNome().equals("FRETE PAC")) {
+			if (compra.getItens().size() > 1)
+				compra.setCategoriaDespesaClass(compra.getItens().get(1).getProduto().getCategoriaDespesa());
+		}
+		
+		if (compra.getId() == null) {
+			compra.setDataEmissao(new Date());
+		}
+
 		try {
-
-			compra.setListCompraMunicipio(new ArrayList<>());
-			for (Municipio municipio : municipios) {
-				CompraMunicipio compraMunicipio = new CompraMunicipio(municipio, compra);
-				compra.getListCompraMunicipio().add(compraMunicipio);
-			}
-
-			compra.setCategoriaDespesaClass(compra.getItens().get(0).getProduto().getCategoriaDespesa());
-			if (compra.getCategoriaDespesaClass().getNome().equals("FRETE SEDEX")
-					|| compra.getCategoriaDespesaClass().getNome().equals("FRETE PAC")) {
-				if (compra.getItens().size() > 1)
-					compra.setCategoriaDespesaClass(compra.getItens().get(1).getProduto().getCategoriaDespesa());
-			}
-
-			if (compra.getId() == null) {
-				compra.setDataEmissao(new Date());
-			}
-
+			
 			if (type == 1) {
 				compra.setStatusCompra(StatusCompra.PENDENTE_APROVACAO);
 				compra = repositorio.salvarCompra(compra, usuario);

@@ -49,7 +49,14 @@ public class LocalRepositorio implements Serializable {
 	public Estado findEstadoBydId(Long id) {
 		return this.manager.find(Estado.class, id);
 	}
-	
+
+	public Estado getEstadosByUf(String uf) {
+		String jpql = "from Estado where lower(uf) = lower(:uf)";
+
+		Query query = manager.createQuery(jpql);
+		query.setParameter("uf", uf);
+		return (Estado) query.getResultList().get(0);
+	}
 	
 	public List<Localidade> findCidadeByEstado(Long estado) {
 		StringBuilder jpql = new StringBuilder(
@@ -113,6 +120,14 @@ public class LocalRepositorio implements Serializable {
 		query.setParameter("estado", new Long(4));
 		query.setParameter("param", true);
 		return query.getResultList().size() > 0 ? query.getResultList() : (List) new ArrayList<Projeto>();
+	}
+
+	public Localidade getCidadeByEstado(Long id, String cidade) {
+		String jpql = "from Municipio m where m.estado.id = :id and lower(m.nome) = lower(:cidade) ";
+		Query query = manager.createQuery(jpql);
+		query.setParameter("id", id);
+		query.setParameter("cidade", cidade);
+		return (Localidade) query.getResultList().get(0);
 	}
 
 	public List<Localidade> getMunicipioByEstado(Long id) {

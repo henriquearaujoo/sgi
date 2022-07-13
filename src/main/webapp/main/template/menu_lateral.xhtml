@@ -52,7 +52,7 @@
 					<p:menuitem value="Logística" url="controle_expedicao.xhtml" />
 				</p:submenu>
 
-				<p:submenu label="Financeiro" rendered="true">
+				<p:submenu label="Financeiro" rendered="#{liberacao_lancamento_controller.checkEnterPageValidation()}">
 					<p:menuitem value="Custo pessoal" url="custo_pessoal.xhtml"
 						rendered="false" />
 					<p:menuitem value="Lançamentos OLD" url="lancamentos.xhtml"

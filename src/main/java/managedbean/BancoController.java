@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,8 +22,7 @@ public class BancoController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	@Inject
-	private Banco banco;
+	private Banco banco = new Banco();
 	
 	private MenuLateral menu = new MenuLateral();
 	
@@ -52,11 +53,27 @@ public class BancoController implements Serializable {
 		bancoService.salvarBanco(banco);	
 		return "bancos?faces-redirect=true";
 	}
+
+	public void createNewBank() {
+		if (banco.getNomeBanco().isEmpty() || banco.getNomeBanco() == null
+				|| banco.getNumeroBanco().isEmpty() || banco.getNumeroBanco() == null) {
+			FacesContext.getCurrentInstance()
+					.addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção!","Preencha todos os campos"));
+		}
+		bancoService.salvarBanco(banco);
+		getAllBanks();
+		banco = new Banco();
+	}
 	
 	
 	public void removerBanco(){
 		bancoService.removerBanco(banco);
 		bancos = bancoService.getTodosBancos(filtro);
+	}
+
+	public void getAllBanks() {
+		bancos = bancoService.getTodosBancos();
 	}
 
 	public void carregarListaDeBanco(){

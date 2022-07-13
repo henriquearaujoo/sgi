@@ -1,10 +1,6 @@
 package managedbean;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,20 +18,15 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import model.*;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 
-import model.Banco;
-import model.CategoriaDespesaClass;
-import model.ClassificacaoConta;
-import model.ClassificacaoFornecedor;
-import model.ContaBancaria;
-import model.Estado;
-import model.Fornecedor;
-import model.LancamentoAuxiliar;
-import model.Localidade;
-import model.MenuLateral;
-import model.TipoArquivo;
-import model.TipoPagamento;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
@@ -46,13 +37,7 @@ import service.BancoService;
 import service.FornecedorService;
 import service.PagamentoService;
 import service.UsuarioService;
-import util.ArquivoFornecedor;
-import util.DiretorioUtil;
-import util.DownloadUtil;
-import util.Filtro;
-import util.MakeMenu;
-import util.ReportUtil;
-import util.UsuarioSessao;
+import util.*;
 
 @Named(value = "fornecedor_controller")
 @ViewScoped
@@ -82,6 +67,8 @@ public class FornecedorController implements Serializable {
 
     @Inject
     private UsuarioSessao usuarioSessao;
+
+	private Util util = new Util();
 
     private List<Fornecedor> listaFiltroFornecedores;
 
@@ -117,9 +104,16 @@ public class FornecedorController implements Serializable {
     @Inject
     private BancoService bancoService;
 
-    public String mandaPronovo() {
+	private boolean selectCNPJ = true;
 
-	return "fornecedores_cadastro?faces-redirect=true";
+	private boolean containsAgencyDigit = true;
+
+	private boolean containsAccountDigit = true;
+
+	private boolean selectFornecedor = true;
+
+    public String mandaPronovo() {
+		return "fornecedores_cadastro?faces-redirect=true";
     }
 
     public List<Localidade> completeLocalidade(String s) {
@@ -146,6 +140,10 @@ public class FornecedorController implements Serializable {
 	    panelBloqueio = true;
 	}
     }
+
+	public void loadCity() {
+		listaLocalidade = fornecedorService.getCidades();
+	}
 
     public String voltarTelaDeListagem() {
 	return "fornecedores?faces-redirect=true";
@@ -175,18 +173,28 @@ public class FornecedorController implements Serializable {
 	}
     }
 
-    public void carregarUltimoFornecimento() {
-	if (fornecedor.getId() != null) {
-	    carregarCidades();
-	    existeFornecimento = fornecedorService.verificarExisteFornecimento(fornecedor.getId());
-	    if (existeFornecimento) {
-		lancamento = fornecedorService.buscarUltimoFornecimento(fornecedor.getId());
-	    }
-	} else {
-	    existeFornecimento = false;
-	    fornecedor.setAtivo(true);
+	public void validateCNPJ() {
+		if (filtro.getCnpjcpf().equals("")) {
+			return;
+		} else if (util.isCNPJ(filtro.getCnpjcpf())) {
+			return;
+		} else {
+			PrimeFaces.current().executeScript("alert('Invalido')");
+		}
 	}
 
+    public void carregarUltimoFornecimento() {
+		loadCity();
+		if (fornecedor.getId() != null) {
+			carregarCidades();
+			existeFornecimento = fornecedorService.verificarExisteFornecimento(fornecedor.getId());
+			if (existeFornecimento) {
+			lancamento = fornecedorService.buscarUltimoFornecimento(fornecedor.getId());
+			}
+		} else {
+			existeFornecimento = false;
+			fornecedor.setAtivo(true);
+		}
     }
 
     public void removerFornecedor() {
@@ -211,7 +219,9 @@ public class FornecedorController implements Serializable {
     }
 
     public void limparFiltro() {
-	filtro = new Filtro();
+		filtro = new Filtro();
+		filtro.setAtivo(true);
+		carregarFornecedores();
     }
 
     public List<MenuLateral> getMenus() {
@@ -277,52 +287,52 @@ public class FornecedorController implements Serializable {
 
     }
 
-    public String salvarConta() {
+    public void salvarConta() {
 
-	try {
+		try {
 
-	    contaBancaria.setCnpj(fornecedor.getCnpj() != null ? fornecedor.getCnpj() : "");
-	    contaBancaria.setCpf(fornecedor.getCpf() != null ? fornecedor.getCpf() : "");
-	    contaBancaria.setEmail(fornecedor.getEmail() != null ? fornecedor.getEmail() : "");
-	    contaBancaria.setPIS(fornecedor.getPis() != null ? fornecedor.getPis() : "");
-	    contaBancaria.setRazaoSocial(fornecedor.getRazaoSocial() != null ? fornecedor.getRazaoSocial() : "");
-	    contaBancaria.setNomeConta(fornecedor.getNomeFantasia() != null ? fornecedor.getNomeFantasia() : "");
-	    contaBancaria.setSaldoInicial(new BigDecimal("0"));
-	    contaBancaria.setSaldoAtual(new BigDecimal("0"));
-	    contaBancaria.setTipo("CF");
-	    contaBancaria.setTipoJuridico(fornecedor.getTipo());
-	    contaBancaria.setFornecedor(fornecedor);
-	    contaBancaria.setDigitoAgencia(contaBancaria.getDigitoAgencia().toUpperCase());
-	    contaBancaria.setDigitoConta(contaBancaria.getDigitoConta().toUpperCase());
+			contaBancaria.setCnpj(fornecedor.getCnpj() != null ? fornecedor.getCnpj() : "");
+			contaBancaria.setCpf(fornecedor.getCpf() != null ? fornecedor.getCpf() : "");
+			contaBancaria.setEmail(fornecedor.getEmail() != null ? fornecedor.getEmail() : "");
+			contaBancaria.setPIS(fornecedor.getPis() != null ? fornecedor.getPis() : "");
+			contaBancaria.setRazaoSocial(fornecedor.getRazaoSocial() != null ? fornecedor.getRazaoSocial() : "");
+			contaBancaria.setNomeConta(fornecedor.getNomeFantasia() != null ? fornecedor.getNomeFantasia() : "");
+			contaBancaria.setSaldoInicial(new BigDecimal("0"));
+			contaBancaria.setSaldoAtual(new BigDecimal("0"));
+			contaBancaria.setTipo("CF");
+			contaBancaria.setTipoJuridico(fornecedor.getTipo());
+			contaBancaria.setFornecedor(fornecedor);
+			if (contaBancaria.getDigitoAgencia() != null) {
+				contaBancaria.setDigitoAgencia(contaBancaria.getDigitoAgencia().toUpperCase());
+			}
+			contaBancaria.setDigitoConta(contaBancaria.getDigitoConta().toUpperCase());
 
-	    if (fornecedor.getContasBancarias() == null)
-		fornecedor.setContasBancarias(new ArrayList<>());
+			if (fornecedor.getContasBancarias() == null)
+				fornecedor.setContasBancarias(new ArrayList<>());
 
-	    if (!editandoConta) {
-		for (ContaBancaria contaBancaria : fornecedor.getContasBancarias()) {
-		    if (this.contaBancaria.getClassificacaoConta().equals("PRINCIPAL")
-			    && contaBancaria.getClassificacaoConta().equals("PRINCIPAL"))
-			throw new Exception("Já existe uma conta principal");
+			if (!editandoConta) {
+				for (ContaBancaria contaBancaria : fornecedor.getContasBancarias()) {
+					if (this.contaBancaria.getClassificacaoConta().equals("PRINCIPAL")
+						&& contaBancaria.getClassificacaoConta().equals("PRINCIPAL"))
+					throw new Exception("Já existe uma conta principal");
+				}
+			}
+
+			if (editandoConta) {
+				fornecedor.getContasBancarias().remove(contaBancaria);
+				fornecedor.getContasBancarias().add(indexConta, contaBancaria);
+			} else {
+				fornecedor.getContasBancarias().add(contaBancaria);
+			}
+
+			contaBancaria = new ContaBancaria();
+			editandoConta = false;
+
+			addMessage("", "Conta salva com sucesso", FacesMessage.SEVERITY_INFO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			addMessage("", e.getMessage(), FacesMessage.SEVERITY_ERROR);
 		}
-	    }
-
-	    if (editandoConta) {
-		fornecedor.getContasBancarias().remove(contaBancaria);
-		fornecedor.getContasBancarias().add(indexConta, contaBancaria);
-	    } else {
-		fornecedor.getContasBancarias().add(contaBancaria);
-	    }
-
-	    contaBancaria = new ContaBancaria();
-	    editandoConta = false;
-
-	    addMessage("", "Conta salva com sucesso", FacesMessage.SEVERITY_INFO);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    addMessage("", e.getMessage(), FacesMessage.SEVERITY_ERROR);
-	}
-
-	return "";
     }
 
     public Boolean existeConta(ContaBancaria conta) {
@@ -335,6 +345,81 @@ public class FornecedorController implements Serializable {
 
 	return false;
     }
+
+	// TODO: Consultar API externa para autocompletar os campos de endereço (https://viacep.com.br/)
+	public void autoCompleteAddress() throws IOException {
+		if (fornecedor.getCep().isEmpty()) {
+			fornecedor.setBairro("");
+			return;
+		}
+		String cep = fornecedor.getCep().replaceAll("\\p{Punct}", "");
+
+		EstadoUtil estadoUtil = consultarCEP(cep, EstadoUtil.class);
+
+		selectState(estadoUtil, fornecedor);
+	}
+
+	public void preencherFornecedor(Fornecedor forn, EstadoUtil estadoUtil) {
+		Estado estado = fornecedorService.getEstadoByUf(estadoUtil.getUf());
+
+		Localidade cidade = fornecedorService.getCidadeByEstado(estado, estadoUtil.getLocalidade());
+
+		forn.setEstado(estado);
+		forn.setCidade(cidade);
+		forn.setCep(estadoUtil.getCep());
+		forn.setBairro(estadoUtil.getBairro());
+		forn.setEndereco(estadoUtil.getLogradouro());
+	}
+
+	public void selectState(EstadoUtil estadoUtil, Fornecedor forn) {
+
+		switch (estadoUtil.getUf()) {
+			case "AC":
+			case "AL":
+			case "TO":
+			case "SE":
+			case "SP":
+			case "SC":
+			case "RR":
+			case "RO":
+			case "RS":
+			case "RN":
+			case "RJ":
+			case "PI":
+			case "AP":
+			case "AM":
+			case "BA":
+			case "CE":
+			case "DF":
+			case "ES":
+			case "GO":
+			case "MA":
+			case "MT":
+			case "MS":
+			case "MG":
+			case "PA":
+			case "PB":
+			case "PR":
+			case "PE":
+				preencherFornecedor(forn, estadoUtil);
+				break;
+		}
+	}
+
+	public <T> T consultarCEP(String cep, Class<T> tClass) throws IOException {
+		String cepRequest = "https://viacep.com.br/ws/" + cep + "/json/";
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+		OkHttpClient client = new OkHttpClient();
+
+		Request request = new Request.Builder()
+				.url(cepRequest).build();
+
+		Response response = client.newCall(request).execute();
+
+		return mapper.readValue(response.body().byteStream(), tClass);
+	}
 
     public void removerConta(ContaBancaria contaBancaria) {
 	if (fornecedor.getContasBancarias() != null)
@@ -363,92 +448,92 @@ public class FornecedorController implements Serializable {
 
     public String insert() {
 
-	if (fornecedor.getTipoPagamento().compareTo(TipoPagamento.DEP_CONTA) == 0) {
-	    if (!(fornecedor.getContasBancarias().size() > 0)) {
-		addMessage("", "É necessário ao menos 1 conta para cadastros de depósitos em conta",
-			FacesMessage.SEVERITY_ERROR);
-		return "";
-	    } else {
-		contaBancaria = fornecedorService.buscarContaFleg(fornecedor.getId());
-		if (contaBancaria != null) {
-		    fornecedor.getContasBancarias().add(contaBancaria);
+		if (fornecedor.getTipoPagamento().compareTo(TipoPagamento.DEP_CONTA) == 0) {
+			if (!(fornecedor.getContasBancarias().size() > 0)) {
+				addMessage("", "É necessário ao menos 1 conta para cadastros de depósitos em conta",
+					FacesMessage.SEVERITY_ERROR);
+				return "";
+			} else {
+				contaBancaria = fornecedorService.buscarContaFleg(fornecedor.getId());
+			if (contaBancaria != null) {
+				fornecedor.getContasBancarias().add(contaBancaria);
+			}
+
+				contaBancaria = new ContaBancaria();
+			}
+		} else if (fornecedor.getTipoPagamento().compareTo(TipoPagamento.BOLETO) == 0) {
+
+			contaBancaria = fornecedorService.buscarContaFleg(fornecedor.getId());
+
+			if (contaBancaria != null) {
+				fornecedor.getContasBancarias().add(contaBancaria);
+			} else {
+				criarContaFleg();
+			}
+
+			contaBancaria = new ContaBancaria();
 		}
 
-		contaBancaria = new ContaBancaria();
-	    }
-	} else if (fornecedor.getTipoPagamento().compareTo(TipoPagamento.BOLETO) == 0) {
+		if (fornecedor.getTipo().equals("fisica") || fornecedor.getTipo().equals("int")) {
+			fornecedor.setNomeFantasia(fornecedor.getRazaoSocial() != null ? fornecedor.getRazaoSocial() : "");
+		}
 
-	    contaBancaria = fornecedorService.buscarContaFleg(fornecedor.getId());
+		if (fornecedor.getAtivo() == null) {
+			fornecedor.setAtivo(true);
+		}
 
-	    if (contaBancaria != null) {
-		fornecedor.getContasBancarias().add(contaBancaria);
-	    } else {
-		criarContaFleg();
-	    }
+		if (fornecedor.getCategoriaFornecedor1() == null
+				|| fornecedor.getCategoriaFornecedor1().getId().longValue() == 0) {
+			addMessage("", "É necessário ao menos selecionar a primeira categoria do fornecedor.",
+				FacesMessage.SEVERITY_ERROR);
+			return "";
+		}
 
-	    contaBancaria = new ContaBancaria();
-	}
+		if (fornecedor.getCategoriaFornecedor1() != null) {
+			fornecedor.setCategoria1(fornecedor.getCategoriaFornecedor1().getNome());
+		}
 
-	if (fornecedor.getTipo().equals("fisica") || fornecedor.getTipo().equals("int")) {
-	    fornecedor.setNomeFantasia(fornecedor.getRazaoSocial() != null ? fornecedor.getRazaoSocial() : "");
-	}
+	//		if (fornecedor.getCategoriaFornecedor2() != null) {
+	//			fornecedor.setCategoria2(fornecedor.getCategoriaFornecedor2().getNome());
+	//		}
+	//
+	//		if (fornecedor.getCategoriaFornecedor3() != null) {
+	//			fornecedor.setCategoria2(fornecedor.getCategoriaFornecedor2().getNome());
+	//		}
 
-	if (fornecedor.getAtivo() == null) {
-	    fornecedor.setAtivo(true);
-	}
+		fornecedor.setClassificacao(ClassificacaoFornecedor.FORNECEDOR);
 
-	if (fornecedor.getCategoriaFornecedor1() == null
-		|| fornecedor.getCategoriaFornecedor1().getId().longValue() == 0) {
-	    addMessage("", "É necessário ao menos selecionar a primeira categoria do fornecedor.",
-		    FacesMessage.SEVERITY_ERROR);
-	    return "";
-	}
+		if (fornecedor.getNomeFantasia() != null)
+			fornecedor.setNomeFantasia(fornecedor.getNomeFantasia().toUpperCase());
 
-	if (fornecedor.getCategoriaFornecedor1() != null) {
-	    fornecedor.setCategoria1(fornecedor.getCategoriaFornecedor1().getNome());
-	}
+		if (fornecedor.getRazaoSocial() != null)
+			fornecedor.setRazaoSocial(fornecedor.getRazaoSocial().toUpperCase());
 
-//		if (fornecedor.getCategoriaFornecedor2() != null) {
-//			fornecedor.setCategoria2(fornecedor.getCategoriaFornecedor2().getNome());
-//		}
-//
-//		if (fornecedor.getCategoriaFornecedor3() != null) {
-//			fornecedor.setCategoria2(fornecedor.getCategoriaFornecedor2().getNome());
-//		}
+		if (fornecedor.getEndereco() != null)
+			fornecedor.setEndereco(fornecedor.getEndereco().toUpperCase());
 
-	fornecedor.setClassificacao(ClassificacaoFornecedor.FORNECEDOR);
+		if (fornecedor.getBanco() != null)
+			fornecedor.setBairro(fornecedor.getBairro().toUpperCase());
 
-	if (fornecedor.getNomeFantasia() != null)
-	    fornecedor.setNomeFantasia(fornecedor.getNomeFantasia().toUpperCase());
+		if (fornecedor.getContato() != null)
+			fornecedor.setContato(fornecedor.getContato().toUpperCase());
 
-	if (fornecedor.getRazaoSocial() != null)
-	    fornecedor.setRazaoSocial(fornecedor.getRazaoSocial().toUpperCase());
+		if (fornecedor.getEmail() != null)
+			fornecedor.setEmail(fornecedor.getEmail().toUpperCase());
 
-	if (fornecedor.getEndereco() != null)
-	    fornecedor.setEndereco(fornecedor.getEndereco().toUpperCase());
+		if (fornecedor.getEmailSecundario() != null)
+			fornecedor.setEmailSecundario(fornecedor.getEmailSecundario().toUpperCase());
 
-	if (fornecedor.getBanco() != null)
-	    fornecedor.setBairro(fornecedor.getBairro().toUpperCase());
+		fornecedorService.insert(fornecedor);
+		addMessage("", "Salvo com sucesso!", FacesMessage.SEVERITY_INFO);
 
-	if (fornecedor.getContato() != null)
-	    fornecedor.setContato(fornecedor.getContato().toUpperCase());
-
-	if (fornecedor.getEmail() != null)
-	    fornecedor.setEmail(fornecedor.getEmail().toUpperCase());
-
-	if (fornecedor.getEmailSecundario() != null)
-	    fornecedor.setEmailSecundario(fornecedor.getEmailSecundario().toUpperCase());
-
-	fornecedorService.insert(fornecedor);
-	addMessage("", "Salvo com sucesso!", FacesMessage.SEVERITY_INFO);
-
-	if (cadastroConitnuo) {
-	    fornecedor = new Fornecedor();
-	    contaBancaria = new ContaBancaria();
-	    return "";
-	} else {
-	    return "fornecedores?faces-redirect=true";
-	}
+		if (cadastroConitnuo) {
+			fornecedor = new Fornecedor();
+			contaBancaria = new ContaBancaria();
+			return "";
+		} else {
+			return "fornecedores?faces-redirect=true";
+		}
 
     }
 
@@ -610,44 +695,44 @@ public class FornecedorController implements Serializable {
     }
 
     public void handleFileUpload(FileUploadEvent event) throws IOException {
-	String pathFinal = DiretorioUtil.DIRECTORY_UPLOAD + File.separator + fornecedor.getId() + "_"
-		+ event.getFile().getFileName();
-	arquivo.setConteudo(event.getFile().getContents());
-	arquivo.setPath(pathFinal);
-	arquivo.setNome(event.getFile().getFileName());
-	arquivo.setTipo(TipoArquivo.PROCESSO);
-	arquivo.setData(new Date());
+		String pathFinal = DiretorioUtil.DIRECTORY_UPLOAD_WINDOWS + File.separator + fornecedor.getId() + "_"
+			+ event.getFile().getFileName();
+		arquivo.setConteudo(event.getFile().getContents());
+		arquivo.setPath(pathFinal);
+		arquivo.setNome(event.getFile().getFileName());
+		arquivo.setTipo(TipoArquivo.PROCESSO);
+		arquivo.setData(new Date());
     }
 
     public void adicionarArquivo() {
 
-	try {
-	    arquivo.setUsuario(usuarioSessao.getUsuario());
+		try {
+			arquivo.setUsuario(usuarioSessao.getUsuario());
 
-	    File file = new File(arquivo.getNome());
+			File file = new File(arquivo.getNome());
 
-	    if (!file.exists()) {
-		file.createNewFile();
-	    }
+			if (!file.exists()) {
+				file.createNewFile();
+			}
 
-	    FileOutputStream fot = new FileOutputStream(file);
+			FileOutputStream fot = new FileOutputStream(file);
 
-	    fot.write(arquivo.getConteudo());
-	    fot.close();
-	} catch (FileNotFoundException e) {
+			fot.write(arquivo.getConteudo());
+			fot.close();
+		} catch (FileNotFoundException e) {
 
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-	arquivo.setFornecedor(fornecedor);
-	if (fornecedor.getArquivos() == null) {
-	    fornecedor.setArquivos(new ArrayList<>());
-	}
+		arquivo.setFornecedor(fornecedor);
+		if (fornecedor.getArquivos() == null) {
+			fornecedor.setArquivos(new ArrayList<>());
+		}
 
-	fornecedor.getArquivos().add(arquivo);
+		fornecedor.getArquivos().add(arquivo);
 
-	arquivo = new ArquivoFornecedor();
+		arquivo = new ArquivoFornecedor();
 
     }
 
@@ -809,4 +894,44 @@ public class FornecedorController implements Serializable {
     public void setListaLocalidade(List<Localidade> listaLocalidade) {
 	this.listaLocalidade = listaLocalidade;
     }
+
+	public boolean isSelectCNPJ() {
+		return selectCNPJ;
+	}
+
+	public void setSelectCNPJ(boolean selectCNPJ) {
+		this.selectCNPJ = selectCNPJ;
+	}
+
+	public boolean isSelectFornecedor() {
+		return selectFornecedor;
+	}
+
+	public void setSelectFornecedor(boolean selectFornecedor) {
+		this.selectFornecedor = selectFornecedor;
+	}
+
+	public Util getUtil() {
+		return util;
+	}
+
+	public void setUtil(Util util) {
+		this.util = util;
+	}
+
+	public boolean isContainsAgencyDigit() {
+		return containsAgencyDigit;
+	}
+
+	public void setContainsAgencyDigit(boolean containsAgencyDigit) {
+		this.containsAgencyDigit = containsAgencyDigit;
+	}
+
+	public boolean isContainsAccountDigit() {
+		return containsAccountDigit;
+	}
+
+	public void setContainsAccountDigit(boolean containsAccountDigit) {
+		this.containsAccountDigit = containsAccountDigit;
+	}
 }

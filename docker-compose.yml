@@ -15,26 +15,23 @@ services:
       - ${PORT}:8080
     networks:
       - nwfas
-#    depends_on:
-#      - database
-#    links:
-#      - database
-#
-#  database:
-#    image: fas_database:v1
-#    build:
-#      context: .
-#      dockerfile: docker/database.dockerfile
-#    container_name: fas_database
-#    environment:
-#      POSTGRES_PASSWORD: 123456
-#      POSTGRES_DB: ${DATABASE:-fas}
-#    networks:
-#      - nwfas
-#    volumes:
-#      - backup:/var/lib/postgresql/data
-#    ports:
-#      - 5432:5432
+    depends_on:
+      - database
+    links:
+      - database
+
+  database:
+    image: fas_database_test:v1
+    build:
+      context: .
+      dockerfile: docker/database.dockerfile
+    container_name: fas_database_test
+    networks:
+      - nwfas
+    volumes:
+      - backup:/var/lib/postgresql/data
+    ports:
+      - 5430:5432
 
 networks:
   nwfas:

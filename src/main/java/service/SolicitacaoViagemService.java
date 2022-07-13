@@ -40,6 +40,7 @@ import model.StatusCompra;
 import model.StatusPagamento;
 import model.StatusPagamentoLancamento;
 import model.TipoDespesa;
+import model.TipoGestao;
 import model.TipoParcelamento;
 import model.TipoViagem;
 import model.Trecho;
@@ -210,14 +211,16 @@ public class SolicitacaoViagemService implements Serializable {
 			if (viagem.getGestao() == null) {
 				addMessage("", "Campo Tipo de gestao é obrigatorio.", FacesMessage.SEVERITY_ERROR);
 				return viagem;
-			} else {
-				if (viagem.getId() == null) {
-					viagem.setDataEmissao(new Date());
-				}
-				return repositorio.salvar(viagem, args);
 			}
+			if (viagem.getId() == null) {
+				viagem.setDataEmissao(new Date());
+			}
+			
+			//viagem.setTipoGestao(viagem.getGestao().);
+			return repositorio.salvar(viagem, args);
 		} catch (Exception e) {
 			addMessage("", "Erro ao salvar", FacesMessage.SEVERITY_ERROR);
+			e.printStackTrace();
 			return viagem;
 		}
 

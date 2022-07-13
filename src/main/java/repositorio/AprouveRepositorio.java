@@ -10,6 +10,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import anotacoes.Transactional;
 import model.Aprouve;
@@ -36,6 +37,14 @@ public class AprouveRepositorio implements Serializable {
 	@Transactional
 	public void remover(Aprouve aprouve) {
 		this.manager.remove(this.manager.find(Aprouve.class, aprouve.getId()));
+	}
+
+	public List<Aprouve> findAprouve(User user) {
+		String jpql = "from Aprouve a where a.usuario = :user";
+
+		TypedQuery<Aprouve> query = this.manager.createQuery(jpql, Aprouve.class);
+		query.setParameter("user", user);
+		return query.getResultList().size() > 0 ? query.getResultList() : null;
 	}
 
 	public Boolean findAprouve(Aprouve aprouve) {

@@ -167,7 +167,9 @@ public class FornecedorRepositorio implements Serializable {
 
 	public List<Fornecedor> getFornecedores(Filtro filtro) {
 		StringBuilder jpql = new StringBuilder(
-				"select new Fornecedor(f.id,f.razaoSocial,f.atividade,f.nomeFantasia,f.endereco,f.bairro,f.cep,f.cnpj,f.cpf,f.inscricaoEstadual,f.inscricaoMunicipal,f.rg,f.telefone,f.pis,f.email,f.tipo,f.observacao,f.ativo,f.taxiid,f.status,f.ativoReceita) from  Fornecedor f where 1 = 1 ");
+				"select new Fornecedor(f.id,f.razaoSocial,f.atividade,f.nomeFantasia,f.endereco,f.bairro,f.cep,f.cnpj," +
+						"f.cpf,f.inscricaoEstadual,f.inscricaoMunicipal,f.rg,f.telefone,f.pis,f.email,f.tipo," +
+						"f.observacao,f.ativo,f.taxiid,f.status,f.ativoReceita) from  Fornecedor f where 1 = 1 ");
 
 		// jpql.append(" and f.classificacao = :classificacao ");
 

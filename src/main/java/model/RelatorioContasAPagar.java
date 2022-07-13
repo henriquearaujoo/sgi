@@ -59,6 +59,28 @@ public class RelatorioContasAPagar {
 	private String sc = "";
 
 	private String cpfcnpj = "";
+	
+	private String razaoSocial = "";
+
+	private String gerencia = "";
+
+	private String agenda = "";
+
+	public String getGerencia() {
+		return gerencia;
+	}
+
+	public void setGerencia(String subPrograma) {
+		this.gerencia = subPrograma;
+	}
+
+	public String getAgenda() {
+		return agenda;
+	}
+
+	public void setAgenda(String agenda) {
+		this.agenda = agenda;
+	}
 
 	public RelatorioContasAPagar() {
 	}
@@ -123,6 +145,14 @@ public class RelatorioContasAPagar {
 	}
 	
 	
+
+	public String getRazaoSocial() {
+		return razaoSocial;
+	}
+
+	public void setRazaoSocial(String razaoSocial) {
+		this.razaoSocial = razaoSocial;
+	}
 
 	public String getDoacao() {
 		return Doacao;

@@ -32,11 +32,11 @@
 
 		<div class="container-fluid mb-3">
 			<p:panel rendered="#{fornecedor_controller.panelBloqueio}"
-				style="width:100%;margin-auto">
+				style="width:100%;">
 				<h3>Você não tem autorização para acessar essa página.</h3>
 			</p:panel>
 
-			<h:form id="formFornecedores"
+			<h:form id="formFornecedores" styleClass="default-style-form-filter"
 				rendered="#{!fornecedor_controller.panelBloqueio}">
 
 				<br />
@@ -50,15 +50,49 @@
 				<p:panel header="Fornecedores">
 					<div class="ui-g ui-fluid">
 						<div class="ui-g-4 ">
-							<h:outputText value="Nome Fantasia/Razão Social:" />
-							<p:inputText
-								value="#{fornecedor_controller.filtro.nomeFornecedor}" />
+							<p:outputPanel id="nome_fantasia_razao_social">
+								<p:outputPanel id="nome_fantasia" rendered="#{fornecedor_controller.selectFornecedor}">
+									<h:outputText value="Nome Fantasia:" />
+									<p:inputText
+										value="#{fornecedor_controller.filtro.nomeFornecedor}" />
+								</p:outputPanel>
+								<p:outputPanel id="razao_social" rendered="#{!fornecedor_controller.selectFornecedor}">
+									<h:outputText value="Razão Social:" />
+									<p:inputText
+											value="#{fornecedor_controller.filtro.nomeFornecedor}" />
+								</p:outputPanel>
+
+								<p:selectOneButton value="#{fornecedor_controller.selectFornecedor}">
+									<p:ajax update="nome_fantasia_razao_social" />
+									<f:selectItem itemLabel="Nome Fantasia" itemValue="#{true}" />
+									<f:selectItem itemLabel="Razão Social" itemValue="#{false}" />
+								</p:selectOneButton>
+
+							</p:outputPanel>
 						</div>
 
 						<div class="ui-g-4 ">
-							<h:outputText value="CNPJ/CPF:" />
-							<p:inputMask mask="99.999.999/9999-99" autoClear="false"
-								value="#{fornecedor_controller.filtro.cnpjcpf}" />
+							<p:outputPanel class="cpf-cnpj" id="cpf_cnpj">
+								<p:outputPanel class="cnpj" id="forn_cnpj" rendered="#{fornecedor_controller.selectCNPJ}">
+									<h:outputText value="CNPJ:" />
+									<p:inputMask mask="99.999.999/9999-99" autoClear="false"
+												 value="#{fornecedor_controller.filtro.cnpjcpf}">
+										<p:ajax event="blur" update="forn_cnpj" listener="#{fornecedor_controller.validateCNPJ()}" />
+									</p:inputMask>
+								</p:outputPanel>
+								<p:outputPanel class="cpf" rendered="#{!fornecedor_controller.selectCNPJ}">
+									<h:outputText value="CPF:" />
+									<p:inputMask mask="999.999.999-99" autoClear="false"
+												 value="#{fornecedor_controller.filtro.cnpjcpf}" />
+								</p:outputPanel>
+
+								<p:selectOneButton value="#{fornecedor_controller.selectCNPJ}">
+									<p:ajax update="cpf_cnpj" />
+									<f:selectItem itemLabel="CNPJ" noSelectionOption="false" itemValue="#{true}" />
+									<f:selectItem itemLabel="CPF" itemValue="#{false}" />
+								</p:selectOneButton>
+							</p:outputPanel>
+
 						</div>
 
 						<div class="ui-g-4">
@@ -73,11 +107,11 @@
 					<div class="ui-g ui-fluid">
 						<div class="ui-g-1 ui-lg-12 " style="text-align: right">
 							<p:commandLink title="Exportar para excel"
-								style="margin-right:10px"
+								style="margin-right:10px" rendered="false"
 								action="#{fornecedor_controller.exportarExcel}" ajax="false">
 								<p:graphicImage library="image" name="excel.png" width="24" />
 							</p:commandLink>
-							<p:commandLink title="Exportar para PDF"
+							<p:commandLink title="Exportar para PDF" rendered="false"
 								style="margin-right:20px"
 								action="#{fornecedor_controller.exportarPDF}" ajax="false">
 								<p:graphicImage library="image" name="pdf.png" width="24" />
