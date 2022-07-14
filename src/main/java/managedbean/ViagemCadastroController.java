@@ -21,6 +21,7 @@ import javax.inject.Named;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sun.xml.internal.ws.client.RequestContext;
 import org.primefaces.PrimeFaces;
 import org.primefaces.component.tabview.TabView;
 
@@ -598,8 +599,10 @@ public class ViagemCadastroController implements Serializable {
 			viagem.setVersionLancamento("MODE01");
 			viagem.setDataEmissao(new Date());
 		}
-		
+
+		// TODO: Tentar salvar o tipo da gestão da viagem
 		//viagem.setTipoGestao(TipoGestao.COORD);
+
 		viagem = viagemService.salvar(viagem, "");
 
 		if (!showTabs) {
@@ -851,7 +854,8 @@ public class ViagemCadastroController implements Serializable {
 
 		carregarDiarias();
 		diaria = new Diaria();
-		closeDialogLoading();
+
+		Util.closeDialog("dlg-nova-diaria");
 		addMessage("", "Salvo com sucesso!", FacesMessage.SEVERITY_INFO);
 	}
 
