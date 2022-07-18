@@ -127,12 +127,12 @@
 
 				<p:column colspan="2">
 
-<!--				TODO: Configurar para abrir o dialog de nova diária com os dados preenchidos-->
 					<p:commandLink
 						rendered="#{!diaria.statusCompra.nome.equals('Concluído') or sv_cadastro_controller.podeEditar}"
 						action="#{sv_cadastro_controller.prepararEdicaoDiaria()}"
-						styleClass="btn btn-default btn-xs" process="@this"
-						onclick="start()" onerror="stop()" onsuccess="stop()">
+						styleClass="btn btn-default btn-xs" process="@this" update="form-dialog-diaria"
+						onclick="start()"
+						onerror="stop()" onsuccess="PF('dlg-nova-diaria').show();stop()">
 						<span class="fa fa-pencil"></span>
 						<f:setPropertyActionListener value="#{diaria}"
 							target="#{sv_cadastro_controller.diaria}" />
