@@ -329,27 +329,25 @@
 
 
 					</p:panelGrid>
-					<center>
-						<div class="botao_central" align="left">
-							<p:commandLink styleClass="btn btn-primary btn-sm"
-								update=":form-cadastro-viagem"
-								action="#{sv_cadastro_controller.mudarStatusLancamento()}"
-								onclick="start()" onsuccess="stop()" onerror="stop()"
-								oncomplete="PF('dialogAlterarStatus').hide()"
-								style="color:#fff; margin: 8px 2px;">
-								
-								Salvar
-							</p:commandLink>
+					<div class="botao_central" style="display: flex; justify-content: center">
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							update="actions-diaria"
+							action="#{sv_cadastro_controller.mudarStatusLancamento()}"
+							onclick="start()" onsuccess="stop()" onerror="stop()"
+							oncomplete="PF('dialogAlterarStatus').hide()"
+							style="color:#fff; margin: 8px 2px;">
 
-							<p:commandLink styleClass="btn btn-primary btn-sm"
-								action="#{sv_cadastro_controller.carregarDiarias()}"
-								onclick="PF('dialogAlterarStatus').hide()" ajax="false"
-								process="@this" style="color:#fff; margin: 8px 2px;">
-							Cancelar
-							</p:commandLink>
+							Salvar
+						</p:commandLink>
 
-						</div>
-					</center>
+						<p:commandLink styleClass="btn btn-primary btn-sm"
+							action="#{sv_cadastro_controller.carregarDiarias()}"
+							onclick="PF('dialogAlterarStatus').hide()" ajax="false"
+							process="@this" style="color:#fff; margin: 8px 2px;">
+						Cancelar
+						</p:commandLink>
+
+					</div>
 				</h:form>
 			</div>
 		</p:dialog>

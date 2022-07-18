@@ -162,8 +162,7 @@
 							target="#{sv_cadastro_controller.diaria}" />
 					</p:commandLink>
 
-<!--				TODO: mudar status da diária e atualizar a tabela automaticamente	-->
-					<p:commandLink title="Mudar Status" style="margin-left:9px;"
+					<p:commandLink title="Mudar Status" style="margin-left:9px;" process="@this"
 						rendered="#{sv_cadastro_controller.usuarioSessao.usuario.perfil.descricao == 'admin'}"
 						oncomplete="PF('dialogAlterarStatus').show()">
 						<span class="fa fa-cog"></span>

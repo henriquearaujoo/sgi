@@ -21,7 +21,6 @@ import javax.inject.Named;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sun.xml.internal.ws.client.RequestContext;
 import org.primefaces.PrimeFaces;
 import org.primefaces.component.tabview.TabView;
 
