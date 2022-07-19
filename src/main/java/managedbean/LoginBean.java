@@ -156,10 +156,46 @@ public class LoginBean implements Serializable {
 		}
 		return null;
 	}
-	
-	public void redirecionaPage(String page) throws IOException {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		facesContext.getExternalContext().redirect(page+"_new.xhtml");
+
+	public String redirecionaPage(final String refencia) {
+		if (!refencia.equals("pagamento") && !refencia.equals("projetos") && this.sessao.getUsuario().getPerfil().getDescricao().equals("contabil")) {
+			return "page_bloqueio?faces-redirect=true";
+		}
+		switch (refencia) {
+			case "logistica": {
+				return "controle_expedicao?faces-redirect=true";
+			}
+			case "config": {
+				return "cadastro_usuarios_att?faces-redirect=true";
+			}
+			case "rh": {
+				return "cadastro_colaborador?faces-redirect=true";
+			}
+			case "pbf": {
+				return "cadastro_familiar?faces-redirect=true";
+			}
+			case "home": {
+				return "home_new?faces-redirect=true";
+			}
+			case "tuto": {
+				return "tutorial?faces-redirect=true";
+			}
+			case "liberar": {
+				return "liberar_projeto?faces-redirect=true";
+			}
+			case "pagamento": {
+				if (this.sessao.getUsuario().getPerfil().getDescricao().equals("contabil")) {
+					return "gerenciamentoLancamento?faces-redirect=true";
+				}
+				return "pagamento?faces-redirect=true";
+			}
+			case "compras": {
+				return "compras?faces-redirect=true";
+			}
+			default:
+				break;
+		}
+		return "projetos?faces-redirect=true";
 	}
 
 	// Trabalhando com dialog do gestao//

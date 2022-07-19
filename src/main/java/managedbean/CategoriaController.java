@@ -89,7 +89,7 @@ public class CategoriaController implements Serializable{
 	
 	
 	public List<MenuLateral> getMenus() {
-		return MakeMenu.getMenuConfigurações();
+		return MakeMenu.getMenuConfiguracoes();
 	}
 	
 	

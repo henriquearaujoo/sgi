@@ -1,0 +1,205 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:f="http://xmlns.jcp.org/jsf/core"
+             xmlns:h="http://xmlns.jcp.org/jsf/html"
+             xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+             xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <p:dialog widgetVar="dlg-nova-diaria" modal="true" width="100%"
+              height="100%" closable="true" closeOnEscape="true" showHeader="true"
+              header="Inclusão de diária" showEffect="clip" hideEffect="clip">
+
+        <h:form id="form-dialog-diaria" styleClass="default-style-form-filter" prependId="false">
+
+            <p:panel id="panel-form-nova-diaria">
+
+                <div class="ui-g ui-fluid">
+
+                    <div class="ui-g-12">
+                        <p:messages showSummary="false" showDetail="true" closable="true"
+                                    escape="true">
+                            <p:autoUpdate></p:autoUpdate>
+                        </p:messages>
+                    </div>
+
+
+                    <div class="ui-g-3 form-group focused">
+
+                        <p:outputLabel value="Profissional:" for="fornecedor_diaria" />
+                        <p:autoComplete id="fornecedor_diaria" required="true"
+                                        value="#{sv_cadastro_controller.diaria.contaRecebedor}"
+                                        completeMethod="#{sv_cadastro_controller.completeContaColaborador}"
+                                        var="fornecedor" itemLabel="#{fornecedor.nomeConta}"
+                                        itemValue="#{fornecedor}" converter="contaConverter"
+                                        forceSelection="true" />
+
+                    </div>
+
+                    <div class="ui-g-3 form-group focused">
+
+                        <p:outputLabel value="Data de pagamento:"
+                                       for="dt_pagamento_diaria" />
+                        <p:calendar id="dt_pagamento_diaria" required="true"
+                                    value="#{sv_cadastro_controller.diaria.dataVencimento}"
+                                    size="10" style="font-size:12px" timeZone="America/Manaus"
+                                    navigator="true" pattern="dd/MM/yyyy" />
+
+                    </div>
+
+                    <div class="ui-g-3 form-group focused">
+
+                        <p:outputLabel value="Dias em campo" for="dias-campo"/>
+                        <p:inputText id="dias-campo" value="#{sv_cadastro_controller.diaria.diasnocampo}"
+                                     style="font-size:12px;width:30px" required="true" />
+
+                    </div>
+
+                    <div class="ui-g-3">
+                        <h:outputText value="Hospedagem Custeada pela FAS ?"
+                                      style="font-size:12px" for="hospedagem" />
+                        <p:selectOneRadio id="hospedagem" required="true"
+                                          value="#{sv_cadastro_controller.diaria.hospedagem}">
+                            <f:selectItem itemLabel="Sim" itemValue="true" />
+                            <f:selectItem itemLabel="Não" itemValue="false" />
+                            <p:ajax update="diaria-inteira-form" event="click"
+                                    listener="#{sv_cadastro_controller.limpaValoresDiaria()}" />
+                        </p:selectOneRadio>
+
+                    </div>
+
+
+                    <div class="ui-g-12 form-group focused">
+                        <p:outputLabel value="DIÁRIA INTEIRA:" style="font-weight:bold" />
+                    </div>
+
+                    <h:form id="diaria-inteira-form" styleClass="w-100">
+
+                        <div class="ui-g-4 form-group focused" id="diaria-inteira">
+                            <p:outputLabel value="Quantidade:" for="qtd_integral" />
+                            <p:inputText id="qtd_integral" required="true"
+                                         disabled="#{sv_cadastro_controller.diaria.hospedagem}"
+                                         value="#{sv_cadastro_controller.diaria.quantidadeIntegral}">
+                                <f:convertNumber minFractionDigits="0" />
+                                <f:ajax event="blur"
+                                        listener="#{sv_cadastro_controller.atualizaTotalIntegral()}"
+                                        render="totalIntegral" />
+                            </p:inputText>
+
+                        </div>
+
+
+                        <div class="ui-g-4 form-group focused">
+                            <p:outputLabel value="Valor" for="vl_integral" />
+                            <p:inputText id="vl_integral"
+                                         disabled="#{sv_cadastro_controller.diaria.hospedagem}"
+                                         value="#{sv_cadastro_controller.diaria.valorIntegral1}"
+                                         onkeydown="mascaraMoeda(this,moeda);">
+                                <f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+                                                 locale="pt_BR" />
+                                <f:ajax event="blur"
+                                        listener="#{sv_cadastro_controller.atualizaTotalIntegral()}"
+                                        render="totalIntegral" />
+                            </p:inputText>
+
+                        </div>
+
+
+                        <div class="ui-g-4 form-group focused">
+                            <p:outputLabel value="Total: R$" for="totalIntegral" />
+                            <p:inputText id="totalIntegral"
+                                         onkeydown="mascaraMoeda(this,moeda);"
+                                         disabled="#{sv_cadastro_controller.diaria.hospedagem}"
+                                         value="#{sv_cadastro_controller.diaria.totalIntegral1}">
+                                <f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+                                                 locale="pt_BR" />
+
+                            </p:inputText>
+                        </div>
+
+                    </h:form>
+
+
+                    <div class="ui-g-12">
+                        <p:outputLabel value="MEIA DIÁRIA:" style="font-weight:bold" />
+                    </div>
+
+                    <div class="ui-g-4 form-group focused">
+                        <p:outputLabel value="Quantidade" for="qtd_meia" />
+                        <p:inputText id="qtd_meia"
+                                     value="#{sv_cadastro_controller.diaria.quantidadeParcial}">
+                            <f:convertNumber minFractionDigits="0" />
+                            <f:ajax event="blur"
+                                    listener="#{sv_cadastro_controller.atualizaTotalParcial()}"
+                                    render="totalParcial" />
+                        </p:inputText>
+                    </div>
+
+
+
+                    <div class="ui-g-4 form-group focused">
+                        <p:outputLabel value="Valor: R$" for="vl_parcial" />
+                        <p:inputText id="vl_parcial"
+                                     value="#{sv_cadastro_controller.diaria.valorParcial1}"
+                                     onkeydown="mascaraMoeda(this,moeda);">
+                            <f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+                                             locale="pt_BR" />
+                            <f:ajax event="blur"
+                                    listener="#{sv_cadastro_controller.atualizaTotalParcial()}"
+                                    render="totalParcial" />
+                        </p:inputText>
+
+                    </div>
+
+
+                    <div class="ui-g-4 form-group focused">
+                        <p:outputLabel value="Total: R$" for="totalParcial" />
+                        <p:inputText id="totalParcial" style="font-size:12px;width:85px"
+                                     onkeydown="mascaraMoeda(this,moeda);"
+                                     value="#{sv_cadastro_controller.diaria.totalParcial1}">
+                            <f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+                                             locale="pt_BR" />
+
+                        </p:inputText>
+
+                    </div>
+
+
+
+                    <div class="ui-g-12 form-group focused">
+                        <h:outputText value="Motivo/Descrição: " />
+                        <p:inputText value="#{sv_cadastro_controller.diaria.descricao}" />
+                    </div>
+
+                    <div class="ui-g-12 form-group focused">
+                        <p:commandLink styleClass="btn btn-success btn-sm" type="button"
+                                       action="#{sv_cadastro_controller.salvarDiaria()}"
+                                       onclick="start()" onsuccess="stop();"
+                                       onerror="stop()"
+                                       rendered="#{sv_cadastro_controller.podeEditar}" update="actions-diaria"
+                                       style="color:#fff; margin: 2px 2px;">
+                            <span class="fa fa-plus"></span>
+                            <span style="margin: 3px;">Salvar</span>
+                        </p:commandLink>
+
+                        <p:commandLink style="color:#fff; margin: 2px 2px;"
+                                       rendered="#{sv_cadastro_controller.usuarioSessao.usuario.perfil.id == 1 or sv_cadastro_controller.usuarioSessao.usuario.perfil.id == 5}"
+                                       onclick="PF('dlg_trechos').show();start()" onsuccess="stop()" onerror="stop()"
+                                       title="Trechos" update="panel-form-recurso"
+                                       process="@this"
+                                       styleClass="btn btn-primary btn-sm fa">
+                            <i class="fa fa-plane"></i>
+                            <span>Trechos</span>
+                        </p:commandLink>
+
+
+                    </div>
+
+                </div>
+
+            </p:panel>
+        </h:form>
+
+    </p:dialog>
+
+</ui:fragment>

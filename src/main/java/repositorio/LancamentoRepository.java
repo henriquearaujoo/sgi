@@ -52,6 +52,10 @@ public class LancamentoRepository implements Serializable {
 		return new ArrayList<>();
 	}
 
+	public void salvarDiaria(Lancamento diaria) {
+		this.manager.merge(diaria);
+	}
+
 	public void deletarTodosPagamentos(Long id) {
 		this.manager
 				.createNativeQuery(" delete \n" + "from pagamento_lancamento \n"

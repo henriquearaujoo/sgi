@@ -617,7 +617,7 @@ public class SolicitacaoViagemService implements Serializable {
 
 	@Transactional
 	public Diaria salvarDiaria(Diaria diaria) {
-		return diariaRepositorio.salvar(diaria);
+		return (Diaria) diariaRepositorio.salvar(diaria);
 	}
 
 	@Transactional

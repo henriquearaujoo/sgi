@@ -225,7 +225,7 @@ public class FornecedorController implements Serializable {
     }
 
     public List<MenuLateral> getMenus() {
-	return MakeMenu.getMenuConfigurações();
+	return MakeMenu.getMenuConfiguracoes();
     }
 
     public List<Fornecedor> getListaFornecedor() {

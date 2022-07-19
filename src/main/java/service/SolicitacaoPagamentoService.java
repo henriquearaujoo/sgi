@@ -182,6 +182,35 @@ public class SolicitacaoPagamentoService implements Serializable {
 		return repositorio.getLancamentoById(id);
 	}
 
+	public SolicitacaoPagamento getLancamentoByNF(final String nf, final Long id, final Long idConta) {
+		return this.pagtoRepositorio.getSolicitacaoPagamentoByNotaFiscal(nf, id, idConta);
+	}
+	@Transactional
+	public Boolean salvar(final SolicitacaoPagamento solicitacaoPagamento, final User usuario) {
+		try {
+			if (solicitacaoPagamento.getGestao() == null) {
+				this.addMessage("", "Campo Tipo de gestao \u00e9 obrigatorio.", FacesMessage.SEVERITY_ERROR);
+				return false;
+			}
+			if (solicitacaoPagamento.getLocalidade() == null) {
+				this.addMessage("", "Campo Tipo de Destino/Localizacao \u00e9 obrigatorio.", FacesMessage.SEVERITY_ERROR);
+				return false;
+			}
+			if (solicitacaoPagamento.getId() == null) {
+				solicitacaoPagamento.setDataEmissao(new Date());
+			}
+			solicitacaoPagamento.setStatusCompra(StatusCompra.N_INCIADO);
+			this.repositorio.salvarSolicitacaoPagamento((Lancamento)solicitacaoPagamento, usuario);
+			this.addMessage("", "Salvo Com Sucesso", FacesMessage.SEVERITY_INFO);
+			return true;
+		}
+		catch (Exception e) {
+			this.addMessage("", "Erro ao salvar", FacesMessage.SEVERITY_ERROR);
+			return false;
+		}
+	}
+
+
 	@Transactional
 	public SolicitacaoPagamento salvar(SolicitacaoPagamento pagamento, User usuario, Integer type) {
 

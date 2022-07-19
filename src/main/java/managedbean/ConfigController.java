@@ -126,7 +126,7 @@ public class ConfigController implements Serializable {
 		menu = new MenuLateral("Ações", "produtos", "fa fa-database");
 		lista.add(menu);
 		
-		return MakeMenu.getMenuConfigurações();
+		return MakeMenu.getMenuConfiguracoes();
 	}
 	
 	

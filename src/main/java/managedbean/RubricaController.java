@@ -63,7 +63,7 @@ public class RubricaController implements Serializable {
 	}
 
 	public List<MenuLateral> getMenus() {
-		return MakeMenu.getMenuConfigurações();
+		return MakeMenu.getMenuConfiguracoes();
 	}
 
 	public MenuLateral getMenu() {

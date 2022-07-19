@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:f="http://xmlns.jcp.org/jsf/core"
+             xmlns:h="http://xmlns.jcp.org/jsf/html"
+             xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+             xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <p:dialog widgetVar="dlg_trechos" modal="true" width="65%"
+              header="Trechos" closable="true" closeOnEscape="true"
+              showHeader="true" showEffect="clip" hideEffect="clip">
+        <h:form id="cadastro_trecho" styleClass="default-style-form-filter">
+            <p:panelGrid columns="2">
+
+                <h:outputText value="Origem:" style="font-size:12px" />
+                <p:autoComplete styleClass="font12-vi" size="45"
+                                panelStyle="width:180px" placeholder="Origem"
+                                value="#{sv_cadastro_controller.trecho.origem}"
+                                completeMethod="#{sv_cadastro_controller.completeLocalidade}"
+                                var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+                                converter="localConverterVI" minQueryLength="3" />
+
+                <h:outputText value="Destino: " style="font-size:12px" />
+                <p:autoComplete styleClass="font12-vi" size="45"
+                                panelStyle="width:180px" placeholder="Destino"
+                                value="#{sv_cadastro_controller.trecho.destino}"
+                                completeMethod="#{sv_cadastro_controller.completeLocalidade}"
+                                var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}"
+                                converter="localConverterVI" minQueryLength="3" />
+
+                <h:outputText value="Data de partida: " style="font-size:12px" />
+                <p:calendar id="datetime"
+                            value="#{sv_cadastro_controller.trecho.data}"
+                            imeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy"
+                            style="font-size:12px" />
+
+
+                <h:outputText value="Fornecedor do transporte: "
+                              style="font-size:12px" />
+                <p:autoComplete id="empresa" required="true" style="font-size:12px"
+                                placeholder="Fornecedor"
+                                requiredMessage="Preencha o campo Fornecedor" size="40"
+                                value="#{sv_cadastro_controller.trecho.empresa}"
+                                completeMethod="#{sv_cadastro_controller.completeFornecedor}"
+                                var="fornecedor" itemLabel="#{fornecedor.nomeFantasia}"
+                                itemValue="#{fornecedor}" converter="fornecedorConverter"
+                                forceSelection="true" />
+
+                <p:commandLink update="cadastro_trecho"
+                               action="#{sv_cadastro_controller.limparTrecho()}" process="@this"
+                               styleClass="btn btn-sm btn-danger">
+                    <i class="fa fa-trash"></i>
+                    <span>Limpar</span>
+                </p:commandLink>
+
+                <p:commandLink styleClass="btn btn-sm btn-success" process="cadastro_trecho"
+                               update="cadastro_trecho"
+                               action="#{sv_cadastro_controller.addTrecho()}">
+                    <i class="fa fa-plus"></i>
+                    <span>Adicionar</span>
+                </p:commandLink>
+
+            </p:panelGrid>
+
+            <p:dataTable id="table-trechos"
+                         value="#{sv_cadastro_controller.diaria.trecho}" var="trecho"
+                         rowIndexVar="indexRow">
+
+                <p:column headerText="Data" style="width:90px;font-size:12px">
+                    <h:outputText value="#{trecho.data}" style="font-size:12px">
+                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Empresa" style="width:30%;font-size:12px">
+                    <h:outputText value="#{trecho.empresa.nomeFantasia}" />
+                </p:column>
+
+                <p:column headerText="Origem" style="width:30%;font-size:12px">
+                    <h:outputText value="#{trecho.origem.mascara}"
+                                  style="font-size:12px" />
+                </p:column>
+
+                <p:column headerText="Destino:" style="width:30%;font-size:12px">
+                    <h:outputText value="#{trecho.destino.mascara}"
+                                  style="font-size:12px" />
+                </p:column>
+
+
+                <p:column style="width:110px">
+
+                    <p:commandLink process="@this" update="cadastro_trecho"
+                                   action="#{sv_cadastro_controller.prepararEdicaoTrecho(indexRow)}">
+							<span style="margin-right: 3px; font-size: 12px"
+                                  class="fa fa-pencil"></span>editar
+                        <f:setPropertyActionListener value="#{trecho}"
+                                                     target="#{sv_cadastro_controller.trecho}" />
+                    </p:commandLink>
+
+                </p:column>
+
+                <p:column style="width:110px">
+                    <p:commandLink
+                            action="#{sv_cadastro_controller.removerTrecho(indexRow)}"
+                            process="@this" update="table-trechos"
+                            onclick="PrimeFaces.monitorDownload(start, stop);">
+                        <span style="margin-right: 3px" class="fa fa-times"></span>excluir
+                    </p:commandLink>
+                </p:column>
+
+            </p:dataTable>
+
+        </h:form>
+
+    </p:dialog>
+
+</ui:fragment>

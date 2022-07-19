@@ -182,7 +182,6 @@ public class ViagemRepositorio {
 	}
 
 	public SolicitacaoViagem salvar(SolicitacaoViagem viagem, String args){
-		System.out.println("Passou por aqui");
 		return this.manager.merge(viagem);
 	}
 

@@ -2,7 +2,6 @@ package managedbean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -12,9 +11,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
-import javax.servlet.http.HttpServletRequest;
-
-import org.primefaces.PrimeFaces;
 
 import model.Colaborador;
 import model.Gestao;
@@ -144,6 +140,10 @@ public class UsuarioControllerAtt implements Serializable {
 		return false;
 	}
 
+	public List<MenuLateral> getMenus() {
+		return (List<MenuLateral>)MakeMenu.getMenuConfiguracoes();
+	}
+
 	public void carregarUsuarios() {
 		if (usuarioSessao.getUsuario().getNomeUsuario().equals("admin")) {
 			this.usuarios = usuarioService.getUsuarios();
@@ -166,10 +166,6 @@ public class UsuarioControllerAtt implements Serializable {
 		return "cadastro_usuarios_att?faces-redirect=true";
 	}
 
-	public List<MenuLateral> getMenus() {
-		return MakeMenu.getMenuConfigurações();
-	}
-	
 	private String senha;
 	
 	public String getSenha() {

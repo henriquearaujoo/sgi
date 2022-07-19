@@ -7,10 +7,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import model.Diaria;
-import model.SolicitacaoPagamento;
-import model.SolicitacaoViagem;
-import model.Trecho;
+import model.*;
 import util.Filtro;
 
 public class DiariaRepositorio {

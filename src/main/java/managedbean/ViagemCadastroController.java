@@ -598,8 +598,10 @@ public class ViagemCadastroController implements Serializable {
 			viagem.setVersionLancamento("MODE01");
 			viagem.setDataEmissao(new Date());
 		}
-		
+
+		// TODO: Tentar salvar o tipo da gestão da viagem
 		//viagem.setTipoGestao(TipoGestao.COORD);
+
 		viagem = viagemService.salvar(viagem, "");
 
 		if (!showTabs) {
@@ -851,7 +853,8 @@ public class ViagemCadastroController implements Serializable {
 
 		carregarDiarias();
 		diaria = new Diaria();
-		closeDialogLoading();
+
+		Util.closeDialog("dlg-nova-diaria");
 		addMessage("", "Salvo com sucesso!", FacesMessage.SEVERITY_INFO);
 	}
 

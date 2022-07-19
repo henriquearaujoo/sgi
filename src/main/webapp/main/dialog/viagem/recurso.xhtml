@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:f="http://xmlns.jcp.org/jsf/core"
+             xmlns:h="http://xmlns.jcp.org/jsf/html"
+             xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+             xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <p:dialog widgetVar="dlg_lanc_acao" modal="true" width="65%" header="Recurso"
+              closable="true" closeOnEscape="true" showHeader="true"
+              showEffect="clip" hideEffect="clip">
+
+        <p:ajax event="close" update="actions-diaria" />
+
+        <h:form id="form_lanc_acao" styleClass="default-style-form-filter">
+            <p:outputPanel id="lancamento_acao" style="width:100%">
+                <p:messages id="msg_lancamento_acao" showDetail="true"
+                            showSummary="false" closable="true" />
+
+                <p:panelGrid columns="2">
+                    <p:panelGrid id="recursoLinha" columns="2">
+
+                        <h:outputText value="Projetos:" />
+                        <p:selectOneMenu value="#{sv_cadastro_controller.projetoAux}"
+                                         style="width:180px" filter="true" filterMatchMode="contains"
+                                         converter="projetoConverter">
+                            <f:selectItem noSelectionOption="true" />
+                            <f:selectItems value="#{sv_cadastro_controller.listaProjeto}"
+                                           var="projeto" itemLabel="#{projeto.nome}"
+                                           itemValue="#{projeto}" />
+                            <p:ajax update="recursoLinha" onstart="start()" onerror="stop()"
+                                    onsuccess="stop()"
+                                    listener="#{sv_cadastro_controller.listaRubricasAndAtividades()}" />
+                        </p:selectOneMenu>
+
+                        <h:outputText value="Linha orçamentária:" />
+
+                        <p:selectOneMenu id="cate_compra" style="width:180px"
+                                         placeholder="Entre com o código/nome do projeto." size="25"
+                                         value="#{sv_cadastro_controller.lancamentoAcao.projetoRubrica}"
+                                         filter="true" filterMatchMode="contains" var="categoria"
+                                         converter="projetoRubricaConverter">
+
+                            <f:selectItems
+                                    value="#{sv_cadastro_controller.listaDeRubricasProjeto}"
+                                    var="ru" itemLabel="#{ru.nomeCategoria}" itemValue="#{ru}" />
+
+
+                            <p:column headerText="Código">
+                                <h:outputText value="#{categoria.codigo}" />
+                            </p:column>
+
+                            <p:column headerText="Fonte">
+                                <h:outputText value="#{categoria.nomeFonte}" />
+                            </p:column>
+
+                            <p:column headerText="Projeto">
+                                <h:outputText value="#{categoria.nomeProjeto}" />
+                            </p:column>
+
+                            <p:column headerText="Componente">
+                                <h:outputText value="#{categoria.nomeComponente}" />
+                            </p:column>
+
+                            <p:column headerText="SubComponente">
+                                <h:outputText value="#{categoria.nomeSubComponente}" />
+                            </p:column>
+
+                            <p:column headerText="Linha orçamentária">
+                                <h:outputText value="#{categoria.nomeCategoria}" />
+                            </p:column>
+
+                            <p:column headerText="Saldo">
+                                <h:outputText value="#{categoria.valorSaldo}">
+                                    <f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+                                                     maxFractionDigits="2" locale="pt_BR" />
+                                </h:outputText>
+                            </p:column>
+
+
+                        </p:selectOneMenu>
+
+                        <h:outputText value="Atividades:  " rendered="false" />
+
+                        <p:selectOneMenu id="listaAtividades" style="width:180px"
+                                         rendered="false" size="25" converter="atividadeProjetoConverter"
+                                         value="#{sv_cadastro_controller.lancamentoAcao.atividade}"
+                                         filter="true" filterMatchMode="contains" var="atividade">
+
+                            <f:selectItems value="#{sv_cadastro_controller.listaAtividades}"
+                                           var="at" itemLabel="#{at.nome}" itemValue="#{at}" />
+
+
+                            <p:column headerText="Nome">
+                                <p:outputLabel value="#{atividade.nome}" />
+                            </p:column>
+
+                            <p:column headerText="Total">
+                                <p:outputLabel value="#{atividade.valor}">
+                                    <f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+                                                     maxFractionDigits="2" locale="pt_BR" />
+                                </p:outputLabel>
+                            </p:column>
+
+                            <p:column headerText="Saldo">
+                                <p:outputLabel value="#{atividade.saldo}">
+                                    <f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+                                                     maxFractionDigits="2" locale="pt_BR" />
+                                </p:outputLabel>
+                            </p:column>
+
+
+
+                        </p:selectOneMenu>
+
+
+
+                        <h:outputText value="Valor:" />
+                        <p:inputText onkeypress="return formatarNumero(this,event,19,2);"
+                                     placeholder="valor"
+                                     value="#{sv_cadastro_controller.lancamentoAcao.valor}">
+                            <f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+                                             locale="pt_BR" />
+
+                        </p:inputText>
+
+
+                        <h:outputText value="::" />
+                        <p:commandLink styleClass="btn btn-primary btn-sm"
+                                       onclick="start()" onerror="stop()" oncomplete="stop()"
+                                       process=":form_lanc_acao" update=":form_lanc_acao"
+                                       action="#{sv_cadastro_controller.adicionarNovaAcao()}"
+                                       style="color:#fff; margin: 2px 2px;" value="Adicionar">
+                        </p:commandLink>
+
+
+                    </p:panelGrid>
+
+
+                    <p:panelGrid columns="2">
+
+                        <h:outputText value="Total da diária:" />
+                        <p:outputLabel value="#{sv_cadastro_controller.totalDeDiarias}">
+                            <f:convertNumber locale="pt_BR" type="currency" />
+                        </p:outputLabel>
+                    </p:panelGrid>
+
+                </p:panelGrid>
+
+            </p:outputPanel>
+
+
+            <p:dataTable id="tab_lanc_acao" var="lac_acao" paginator="true"
+                         rows="2" rowIndexVar="indexRow"
+                         value="#{sv_cadastro_controller.diaria.lancamentosAcoes}">
+
+                <p:column headerText="Código">
+                    <h:outputText value="#{lac_acao.projetoRubrica.projeto.codigo}" />
+                </p:column>
+
+                <p:column headerText="Projeto">
+                    <h:outputText value="#{lac_acao.projetoRubrica.projeto.nome}" />
+                </p:column>
+
+                <p:column headerText="Doação">
+                    <h:outputText
+                            value="#{lac_acao.projetoRubrica.rubricaOrcamento.orcamento.titulo}" />
+                </p:column>
+
+                <p:column headerText="Categoria">
+                    <h:outputText
+                            value="#{lac_acao.projetoRubrica.rubricaOrcamento.rubrica.nome}" />
+                </p:column>
+
+                <p:column headerText="Atividade">
+                    <h:outputText value="#{lac_acao.atividade.nome}" />
+                </p:column>
+
+
+
+                <p:column headerText="Valor" style="width:100px">
+                    <h:outputText value="#{lac_acao.valor}">
+                        <f:convertNumber type="currency" maxFractionDigits="2"
+                                         currencySymbol="R$" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column style="width:50px;">
+                    <p:commandLink style="color:#FFF"
+                                   styleClass="btn btn-danger btn-xs"
+                                   action="#{sv_cadastro_controller.removerAcao(lac_acao)}"
+                                   rendered="#{pagamentoController.poderEditar()}"
+                                   update="tab_lanc_acao">
+                        <span class=" glyphicon glyphicon-remove-circle"></span>
+                    </p:commandLink>
+                </p:column>
+
+                <p:columnGroup type="footer">
+                    <p:row>
+                        <p:column colspan="5" footerText="TOTAL DE RECURSO: "
+                                  style="text-align:right" />
+                        <p:column style="text-align:right"
+                                  footerText="#{sv_cadastro_controller.buscarValorTotalRecurso()}" />
+                        <p:column></p:column>
+                    </p:row>
+                </p:columnGroup>
+
+            </p:dataTable>
+
+        </h:form>
+    </p:dialog>
+
+</ui:fragment>

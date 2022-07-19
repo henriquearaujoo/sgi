@@ -4,10 +4,9 @@
 	top: 0;
 	right: 0;
 	left: 0;
-	min-height: 63px;
-	z-index: 999;
-	background-color: #30383c;
-	padding-top: 4px;
+	min-height: 50px;
+	z-index: 1002;
+	background-color: #849A39;
 }
 
 .aw-topbar > img {
@@ -37,7 +36,7 @@
 	display: inline-block;
 	color: #fff;
 	text-decoration: none;
-	border-bottom:1px solid #1f8214;
+	border-bottom:3px solid #849A39;
 
 }
 
@@ -55,15 +54,15 @@
 /* SIDEBAR */
 .aw-sidebar {
 	position: fixed;
-	top: 67px;
+	top: 50px;
 	bottom: 0;
 	left: 0;
-	width: 280px; /* Define a largura do menu lateral */
+	width: 280px;
 	margin-left: -211px;
 	z-index: 1001;
-	transition: margin-left 0.8s;
+	transition: margin-left 0.5s;
 	overflow-y: auto;
-	background-color: #fff;
+	background-color: #f6f6f6;
 	border-right: 1px solid #eaeaea;
 }
 
@@ -78,32 +77,28 @@
 	
 	.aw-sidebar.is-toggled {
 		margin-left: -280px;
-		/* Definie o quanto o menu lateral fica escondido */
-		
 	}
 }
 
 /* CONTENT */
 .aw-content {
-	padding: 0 5px;
+	padding: 0 15px;
 	margin-top: 50px;
-	transition: margin-left 0.8s;
+	transition: margin-left 0.5s;
 }
 
 .all-content {
 	padding: 0 15px;
 	margin-top: 50px;
-	transition: margin-left 0.8s;
+	transition: margin-left 0.5s;
 }
 
 @media (min-width: 960px) {
 	.aw-content {
-		margin-left: 0px;
-		/* padding: 0 15px; */
+		margin-left: 265px;
 	}
 	
 	.aw-content.is-toggled {
-		margin-left: 280px;	
-		/* Aumenta ou diminuir tamanho do conte�do principal */
+		margin-left: 0;
 	}
 }

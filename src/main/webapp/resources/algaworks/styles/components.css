@@ -1,55 +1,23 @@
 /* TOGGLE */
 .aw-toggle {
 	float: left;
-	line-height: 55px;
+	line-height: 50px;
 	margin-left: 20px;
 	margin-right:2px;
 	color: #fff;
-	transition: margin-left 0.8s;	
-}
-
-.aw-toggle:hover {
-	color: #d5bb2bbd;
-	
-}
-
-#link-bar:hover{
-	/*transition: transform 0.5s;
-	transform: rotate(180deg);*/
-}
-
-.aw-toggle:active {
-	color: #ffffff;
-}
-
-.aw-toggle:after {
-	color: #ffffff;
 }
 
 .aw-toggle-logout {
     float: right;
     line-height: 48px;
+    margin-left: 20px;
+    margin-right: 12px; 
     color: #fff;
     padding-left: 25px;
     padding-right: 25px;
 }
 
 .aw-toggle-logout:hover {
-  
-    background-color:#D6D6D6;
-	color: #6D6D6D;
-	border-bottom:3px solid #FFF;
-}
-
-.aw-toggle-config {
-    float: right;
-    line-height: 48px;
-    color: #fff;
-    padding-left: 25px;
-    padding-right: 25px;
-}
-
-.aw-toggle-config:hover {
   
     background-color:#D6D6D6;
 	color: #6D6D6D;

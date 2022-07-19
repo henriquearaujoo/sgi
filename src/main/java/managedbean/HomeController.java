@@ -14,6 +14,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.*;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.ScheduleEntryMoveEvent;
 import org.primefaces.event.ScheduleEntryResizeEvent;
@@ -26,12 +27,6 @@ import org.primefaces.model.ScheduleModel;
 import org.primefaces.model.timeline.TimelineEvent;
 import org.primefaces.model.timeline.TimelineModel;
 
-import model.ColaboradorVI;
-import model.Evento;
-import model.Post;
-import model.TimeLineEx;
-import model.User;
-import model.Utilidade;
 import service.ColaboradorVIService;
 import service.EventoService;
 import service.HomeService;
@@ -74,7 +69,11 @@ public class HomeController implements Serializable {
 	private List<Post> posts;
 	private List<Utilidade> utilidades;
 	private List<ColaboradorVI> colaboradores;
-
+	private List<MenuLateral> menus;
+	private String classMenu1;
+	private String classMenu2;
+	private String classMenu3;
+	private String classMenu4;
 	private Boolean showCalendar = true;
 
 	@Inject
@@ -114,6 +113,12 @@ public class HomeController implements Serializable {
 	private Date endDateTimeLine;
 
 	public HomeController() {
+		this.menus = new ArrayList<MenuLateral>();
+		this.paramBusca = "";
+		this.classMenu1 = "enable";
+		this.classMenu2 = "disable";
+		this.classMenu3 = "disable";
+		this.classMenu4 = "disable";
 	}
 
 	public void init() throws IOException {
@@ -149,6 +154,39 @@ public class HomeController implements Serializable {
 		usuario = sessao.getUsuario();
 		usuarioService.updateSenha(usuario, novaSenha);
 		current.executeScript("PF('trocasenha').hide(); stop();");
+	}
+
+	public void mudarClasse(final Integer index) {
+		switch (index) {
+			case 1: {
+				this.classMenu1 = "enable";
+				this.classMenu2 = "disable";
+				this.classMenu3 = "disable";
+				this.classMenu4 = "disable";
+				break;
+			}
+			case 2: {
+				this.classMenu1 = "disable";
+				this.classMenu2 = "enable";
+				this.classMenu3 = "disable";
+				this.classMenu4 = "disable";
+				break;
+			}
+			case 3: {
+				this.classMenu1 = "disable";
+				this.classMenu2 = "disable";
+				this.classMenu3 = "enable";
+				this.classMenu4 = "disable";
+				break;
+			}
+			default: {
+				this.classMenu1 = "disable";
+				this.classMenu2 = "disable";
+				this.classMenu3 = "disable";
+				this.classMenu4 = "enable";
+				break;
+			}
+		}
 	}
 
 	public void cancelarTrocaDeSenha() {
@@ -211,6 +249,194 @@ public class HomeController implements Serializable {
 			eventModel.addEvent(event);
 		}
 	}
+	public List<MenuLateral> carregarMenus() {
+		this.menus = new ArrayList<MenuLateral>();
+		MenuLateral menu = new MenuLateral();
+		menu = new MenuLateral();
+		menu.setNome("Solicita\u00e7\u00e3o de pagamento");
+		menu.setIcon("check-signing.svg");
+		menu.setEndereco("pagamento.xhtml");
+		menu.setDescricao("Tela de solicita\u00e7\u00e3o de pagamento. Para ir a tela de Solicita\u00e7\u00e3o de pagamento");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Solicita\u00e7\u00e3o de viagem");
+		menu.setIcon("road-with-two-placeholders.svg");
+		menu.setEndereco("SolicitacaoViagem.xhtml");
+		menu.setDescricao("Tela de solicita\u00e7\u00e3o de viagens. Para ir a tela Solicita\u00e7\u00e3o de viagem");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Compras");
+		menu.setIcon("shopping-cart-moving-symbol.svg");
+		menu.setEndereco("compras.xhtml");
+		menu.setDescricao("Tela de solicita\u00e7\u00e3o de compras. Para ir a tela Compras");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Presta\u00e7\u00e3o de contas");
+		menu.setIcon("prest_conta.svg");
+		menu.setEndereco("prestacaodecontas.xhtml");
+		menu.setDescricao("Tela de presta\u00e7\u00e3o de contas. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Log\u00edstica");
+		menu.setIcon("log.svg");
+		menu.setEndereco("controle_expedicao.xhtml");
+		menu.setDescricao("Tela de controle de expedi\u00e7\u00e3o de pedidos de compra. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Termos");
+		menu.setIcon("termo.svg");
+		menu.setEndereco("termo_expedicao.xhtml");
+		menu.setDescricao("Tela de termos de expedi\u00e7\u00e3o de pedidos de compra. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Concilia\u00e7\u00e3o Financeira");
+		menu.setIcon("lancamentos.svg");
+		menu.setEndereco("lancamentosV2.xhtml");
+		menu.setDescricao("Lan\u00e7amentos v\u00e1lidados e provisionados para contas a paga/receber. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Valida\u00e7\u00e3o de lan\u00e7amentos");
+		menu.setIcon("liberacao_lancamento.svg");
+		menu.setEndereco("liberacao_lancamento.xhtml");
+		menu.setDescricao("Tela de valida\u00e7\u00e3o de lan\u00e7amentos. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Relat\u00f3rios");
+		menu.setIcon("relatorio.svg");
+		menu.setEndereco("relatorios_fin.xhtml");
+		menu.setDescricao("Tela de relat\u00f3rios. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Doa\u00e7\u00f5es");
+		menu.setIcon("give-money.svg");
+		menu.setEndereco("orcamentos.xhtml");
+		menu.setDescricao("Tela de cadastro e acompanhamento financeiro de doa\u00e7\u00f5es. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Projetos");
+		menu.setIcon("businessmen-communication.svg");
+		menu.setEndereco("projetos.xhtml");
+		menu.setDescricao("Tela de cadastro de Projetos. Para ir a tela de projetos");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Plano de trabalho");
+		menu.setIcon("plano_trabalho.svg");
+		menu.setEndereco("planos.xhtml");
+		menu.setDescricao("Tela de planos de trabalho. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Custo de pessoal");
+		menu.setIcon("users-group.svg");
+		menu.setEndereco("custo_pessoal.xhtml");
+		menu.setDescricao("Tela de custo de pessoal. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Contas");
+		menu.setIcon("conta_bancaria.svg");
+		menu.setEndereco("contas.xhtml");
+		menu.setDescricao("Tela de cadastro de contas. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Bancos");
+		menu.setIcon("banco.svg");
+		menu.setEndereco("bancos.xhtml");
+		menu.setDescricao("Tela de cadastro de bancos. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Lan\u00e7amentos OLD");
+		menu.setIcon("lancamentos.svg");
+		menu.setEndereco("lancamentos.xhtml");
+		menu.setDescricao("Lan\u00e7amentos no formato de a\u00e7\u00e3o e fontes. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Lan\u00e7amentos diversos");
+		menu.setIcon("lancamentos.svg");
+		menu.setEndereco("lancamentos_diversos.xhtml");
+		menu.setDescricao("Lan\u00e7amentos diversos. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Solicita\u00e7\u00e3o de adiantamentos");
+		menu.setIcon("lancamentos.svg");
+		menu.setEndereco("adiantamentos.xhtml");
+		menu.setDescricao("Solicita\u00e7\u00e3o de adiantamentos. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Reclassifica\u00e7\u00e3o");
+		menu.setIcon("lancamentos.svg");
+		menu.setEndereco("reclassificacao.xhtml");
+		menu.setDescricao("Reclassifica\u00e7\u00e3o de lan\u00e7amentos. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Controladoria");
+		menu.setIcon("lancamentos.svg");
+		menu.setEndereco("recursos_projetos.xhtml");
+		menu.setDescricao("Tela de Controladoria de recursos. Para ir a tela ");
+		this.menus.add(menu);
+		menu = new MenuLateral();
+		menu.setNome("Produtos");
+		menu.setIcon("lancamentos.svg");
+		menu.setEndereco("produtos.xhtml");
+		menu.setDescricao("Tela de Produtos. Para ir a tela ");
+		this.menus.add(menu);
+		return this.menus;
+	}
+	public void buscarMenu() {
+		final List<MenuLateral> listaAuxiliar = new ArrayList<MenuLateral>();
+		final MenuLateral auxMenu = new MenuLateral();
+		if (this.menus.isEmpty()) {
+			this.carregarMenus();
+		}
+		for (final MenuLateral menuLateral : this.menus) {
+			if (menuLateral.getNome().toLowerCase().contains(this.paramBusca.toLowerCase())) {
+				listaAuxiliar.add(menuLateral);
+			}
+		}
+		(this.menus = new ArrayList<MenuLateral>()).addAll(listaAuxiliar);
+		if (this.paramBusca == null || this.paramBusca.equals("")) {
+			this.carregarMenus();
+		}
+	}
+
+	public List<MenuLateral> getMenus() {
+		return this.menus;
+	}
+
+	public void setMenus(final List<MenuLateral> menus) {
+		this.menus = menus;
+	}
+
+	public String getClassMenu1() {
+		return this.classMenu1;
+	}
+
+	public void setClassMenu1(final String classMenu1) {
+		this.classMenu1 = classMenu1;
+	}
+
+	public String getClassMenu2() {
+		return this.classMenu2;
+	}
+
+	public void setClassMenu2(final String classMenu2) {
+		this.classMenu2 = classMenu2;
+	}
+
+	public String getClassMenu3() {
+		return this.classMenu3;
+	}
+
+	public void setClassMenu3(final String classMenu3) {
+		this.classMenu3 = classMenu3;
+	}
+
+	public String getClassMenu4() {
+		return this.classMenu4;
+	}
+
+	public void setClassMenu4(final String classMenu4) {
+		this.classMenu4 = classMenu4;
+	}
+
 
 	private ScheduleEvent event = new DefaultScheduleEvent();
 

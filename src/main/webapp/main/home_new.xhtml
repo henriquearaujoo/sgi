@@ -1,218 +1,272 @@
 <!DOCTYPE html>
 <ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+				xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
 
 
 
 	<ui:define name="content">
 
+
 		<style type="text/css">
-.panel_menu {
-	background-color: white;
-	padding: 5px;
-	border-radius: 4px;
-	border: 1px solid rgba(212, 125, 0, 0.5)
-}
+			.panel_menu {
+				background-color: white;
+				padding: 5px;
+				border-radius: 4px;
+				border: 1px solid rgba(212, 125, 0, 0.5)
+			}
 
-body .ui-panel .ui-panel-titlebar {
-	border: 1px solid #00000036 !important;
-	background-color: #ffffff !important;
-	color: #000;
-}
+			.ui-panel .ui-panel-title {
+				margin: 0.1em 16px 0.2em 0;
+				font-size: 16px;
+			}
 
-body #form-home .ui-panel .ui-panel-content {
-	border: 0px solid #c8c8c8;
-	background-color: #fff;
-	color: #333;
-	padding: .571em 1em;
-	border-top: 0 none;
-	line-height: 1.5;
-}
+			.ui-dock-bottom img {
+				border: none;
+				margin: 5px 10px 0px;
+				width: 100%;
+			}
 
-div[id="form-layout:perfil_dialog_content"] {
-	background-color: #32be8f;
-	border: 1px solid #32be8f;
-}
-</style>
+			.ui-dock-bottom span {
+				display: none;
+				padding-left: 20px;
+				font-size: 14px
+			}
+
+			body .ui-steps .ui-steps-item {
+
+			}
+
+			body .ui-steps .ui-steps-item {
+				background-color: transparent;
+				text-align: center;
+				width: 25%;
+				opacity: 1;
+				filter: alpha(opacity=100);
+			}
+
+			body .ui-state-highlight {
+				text-shadow: none !important;
+			}
+
+			body .ui-steps.custom {
+				margin-bottom: 30px;
+			}
+
+			body .ui-steps.custom .ui-steps-item .ui-menuitem-link {
+				height: 10px;
+				padding: 0 1em;
+				overflow: visible;
+				border: 0px solid #c8c8c8;
+				display: block;
+				background-color: #FFFFFF;
+			}
+
+
+			body .ui-steps.custom-no-select .ui-steps-item .ui-menuitem-link .ui-steps-number {
+				-moz-border-radius: 50%;
+				-webkit-border-radius: 50%;
+				border-radius: 50%;
+				display: inline-block;
+				color: #333333;
+				background-color: #ffffff;
+				border: 1px solid #c8c8c8;
+				position: relative;
+				top: 14px;
+				margin-bottom: 14px;
+				width: 2em;
+				height: 2em;
+				font-size: 16px;
+				padding-top: .25em;
+				text-align: center;
+				background-color: #FFF;
+				color: #000;
+			}
+
+
+			#stepsgi .enable .ui-steps-number{
+				-moz-border-radius: 50%;
+				-webkit-border-radius: 50%;
+				border-radius: 50%;
+				display: inline-block;
+				color: #333333;
+				font-weight:normal;
+				border: 1px solid #c8c8c8;
+				position: relative;
+				top: 14px;
+				margin-bottom: 14px;
+				width: 2em;
+				height: 2em;
+				font-size: 18px;
+				padding-top: .25em;
+				text-align: center;
+				background-color: #0081c2;
+				color: #FFF;
+			}
+
+
+
+
+			#stepsgi .disable .ui-steps-number{
+				-moz-border-radius: 50%;
+				-webkit-border-radius: 50%;
+				border-radius: 50%;
+				display: inline-block;
+				font-weight:normal;
+				background-color: #ffffff;
+				border: 1px solid #c8c8c8;
+				position: relative;
+				top: 14px;
+				margin-bottom: 14px;
+				width: 2em;
+				height: 2em;
+				font-size: 18px;
+				padding-top: .25em;
+				text-align: center;
+				background-color: #FFF;
+				color: #000;
+				opacity: 15
+			}
+
+
+
+
+
+			body .ui-steps.custom .ui-steps-item .ui-menuitem-link .ui-steps-title {
+				margin-top: -6px;
+			}
+
+			body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-steps-title
+			{
+				color: #555;
+			}
+
+			body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-steps-title {
+				font-weight: 700;
+				color: #333333;
+			}
+
+			body .ui-steps.custom .ui-steps-item .ui-menuitem-link .ui-steps-title {
+				display: block;
+				margin-top: 6px;
+				color: #737373;
+			}
+
+			body .ui-steps.custom .ui-steps-item.ui-state-highlight .ui-steps-number {
+				background: #007ad9 !important;
+				color: #ffffff !important;;
+			}
+
+			body .ui-steps:before {
+				content: ' ';
+				border-top: 1px solid #c8c8c8;
+				width: 100%;
+				top:25%;
+				left:0;
+				display: none;
+				position: absolute;
+			}
+
+			.ui-helper-clearfix:before, .ui-helper-clearfix:after {
+				content: "";
+				display: table;
+				border-collapse: collapse;
+			}
+
+			#stepsgi .ui-state-default, .ui-widget-content .ui-state-default,
+			.ui-widget-header .ui-state-default {
+				border: none !important;
+			}
+
+
+
+
+
+		</style>
 
 		<f:metadata>
-			<f:viewAction action="#{home_controller.init()}" />
+			<f:viewAction action="#{home_controller.carregarMenus()}" />
 		</f:metadata>
 
-		<h:form id="form-home" prependId="false">
+		<h:form id="form_busc"
+				style="width:100%;text-align:left;margin-bottom:5px">
+			<p:inputText placeholder="Buscar" style="width:350px"
+						 value="#{home_controller.paramBusca}">
+				<p:ajax event="keyup" listener="#{home_controller.buscarMenu()}"
+						update=":form_menu" />
+			</p:inputText>
+		</h:form>
+		<h:form id="form_menu">
 
-			<p:growl id="growl" showDetail="true" sticky="true" />
+			<div id="stepsgi">
+				<p:steps rendered="false" id="step" activeIndex="4" styleClass="custom"  style="margin-bottom:10px" readonly="false">
+					<p:menuitem styleClass="#{home_controller.classMenu1}" action="#{home_controller.mudarClasse(1)}"  update=":form_menu:step" value="Teste"/>
+					<p:menuitem styleClass="#{home_controller.classMenu2}" action="#{home_controller.mudarClasse(2)}"  update=":form_menu:step" value="Seat Selection"/>
+					<p:menuitem styleClass="#{home_controller.classMenu3}"  action="#{home_controller.mudarClasse(3)}" update=":form_menu:step" value="Payment"/>
+					<p:menuitem styleClass="#{home_controller.classMenu4}" action="#{home_controller.mudarClasse(4)}"  update=":form_menu:step" value="Confirmation"/>
+				</p:steps>
+			</div>
 
-			<p:tabView prependId="false"
-				style="margin-top:10px;margin-right:auto;margin-left:auto; width:98%">
-				<p:tab id="tab-post" title="#{message['HOME_INFORM']}"
-					rendered="false">
-					<ui:include src="/main/home/post.xhtml" />
-				</p:tab>
-				<p:tab id="tab-evento" title="#{message['HOME_EVENT']}">
-					<ui:include src="/main/home/timeline.xhtml" />
-				</p:tab>
-				<p:tab id="tab-conduta" title="#{message['HOME_CONDUCT']}"
-					rendered="true">
-					<ui:include src="/main/home/codigo_conduta.xhtml" />
-				</p:tab>
-				<p:tab id="tab-remoto" title="#{message['HOME_UTIL']}"
-					rendered="false">
-					<ui:include src="/main/home/utilidades.xhtml" />
-				</p:tab>
-				<p:tab id="tab-colaborador" title="#{message['HOME_COL']}"
-					rendered="false">
-					<ui:include src="/main/home/colaborador_vi.xhtml" />
-				</p:tab>
-			</p:tabView>
+			<p:separator rendered="false" style="margin-bottom:50px"></p:separator>
+
+			<p:dataGrid rendered="true" var="menu"
+						value="#{home_controller.menus}" columns="3" rows="12"
+						paginator="true" id="cars"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink}
+				{PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="9,12,15,25,50">
+
+				<p:panel header="#{menu.nome}" style="margin-bottom:20px">
+					<h:panelGrid columns="2">
+						<p:link outcome="#{menu.endereco}">
+							<p:graphicImage styleClass="panel_menu" library="image"
+											width="50" height="50" name="#{menu.icon}" />
+						</p:link>
+						<p style="margin-left: 5px; font-size: 13px">
+							#{menu.descricao} <a href="#{menu.endereco}">clique aqui.</a>
+						</p>
+					</h:panelGrid>
+				</p:panel>
+
+			</p:dataGrid>
+
+			<p:panelGrid columns="1" rendered="false">
+				<iframe width="800" height="600"
+						src="https://app.powerbi.com/view?r=eyJrIjoiZjUxNWVkMzgtODI1Ny00NTA0LTkyMzItOWMzY2JlNWFjMjk5IiwidCI6ImNjZTUzYmM5LTUxN2MtNDQ5Ni04NzY0LTkwOWE5OWI2YzU2YSJ9"></iframe>
+			</p:panelGrid>
+
+			<p:dock position="bottom" id="dock" rendered="false">
+
+
+				<p:menuitem value="Pagamentos"
+							icon="/resources/image/check-signing.svg" outcome="/main/pagamento"></p:menuitem>
+				<p:menuitem value="Pagamentos" icon="/resources/image/log.svg"
+							style="margin-left:10px" outcome="/main/pagamento"></p:menuitem>
+				<p:menuitem value="Pagamentos" icon="/resources/image/log.svg"
+							style="margin-left:10px" outcome="/main/pagamento"></p:menuitem>
+				<p:menuitem value="Pagamentos" icon="/resources/image/log.svg"
+							style="margin-left:10px" outcome="/main/pagamento"></p:menuitem>
+				<p:menuitem value="Pagamentos" icon="/resources/image/log.svg"
+							style="margin-left:10px" outcome="/main/pagamento"></p:menuitem>
+				<p:menuitem value="Pagamentos" icon="/resources/image/log.svg"
+							style="margin-left:10px" outcome="/main/pagamento"></p:menuitem>
+			</p:dock>
+
+
 
 		</h:form>
-
 
 	</ui:define>
 
 	<ui:define name="adicionais">
 
-		<p:dialog header="Trocar de senha" widgetVar="trocasenha"
-			resizable="false" modal="true" width="40%" height="40%">
-			<h:form id="form-troca-senha">
-				<div class="ui-g ui-fluid">
-
-					<div class="ui-g-12">
-						<p class="font-weight-light">É altamente recomendado que você
-							troque a senha após geração automática</p>
-					</div>
-
-					<div class="ui-g-12 form-group"
-						style="margin-left: auto; margin-right: auto">
-						<p:messages id="message" showDetail="true" showSummary="false"
-							closable="true">
-							<p:autoUpdate></p:autoUpdate>
-						</p:messages>
-					</div>
-					<div class="ui-g-12 form-group">
-						<p:outputLabel styleClass="form-label" value="Nova senha"
-							for="senha" />
-						<p:password id="senha" requiredMessage="Informe a senha"
-							feedback="true" inline="true"
-							value="#{home_controller.novaSenha}"
-							validatorMessage="As senhas não conferem" type="password"
-							name="senha" required="true" match="novaSenha" />
-
-					</div>
-					<div class="ui-g-12 form-group">
-						<p:outputLabel styleClass="form-label" value="Repetir senha"
-							for="novaSenha" />
-						<p:password id="novaSenha" requiredMessage="Informe uma senha"
-							value="#{home_controller.novaSenha}" type="password"
-							feedback="true" inline="true" name="novaSenha" required="true" />
-					</div>
-
-					<div class="ui-g-12 form-group">
-						<p:selectBooleanCheckbox id="check"
-							value="#{home_controller.checado}"
-							itemLabel="Não mostrar mais essa tela" />
-					</div>
-
-				</div>
-
-				<div class="ui-g-12">
-					<div class="ui-g-6">
-						<p:commandLink styleClass="btn btn-primary btn-block btn-sm"
-							value="Salvar" oncomplete="stop();" onclick="start();"
-							update="form-troca-senha" onerror="stop();"
-							action="#{home_controller.salvarNovaSenha()}" />
-					</div>
-
-					<div class="ui-g-6">
-						<p:commandLink process="@this, check"
-							styleClass="btn btn-danger btn-block btn-sm" value="Cancelar"
-							oncomplete="PF('trocasenha').hide(); stop();" onclick="start()"
-							onerror="stop();"
-							action="#{home_controller.cancelarTrocaDeSenha()}" />
-					</div>
-				</div>
-			</h:form>
-		</p:dialog>
-
-		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
-			showHeader="false" draggable="false" closable="false"
-			resizable="false">
-			<p:graphicImage library="image" name="aguarde.gif" />
-			<p:graphicImage style="width:120px;height:70px" library="image"
-				name="logofas.png" />
-		</p:dialog>
-		
-		<p:dialog id="perfil_dialog" header="" widgetVar="dialog_perfil"
-			hideEffect="clip" closeOnEscape="true" showEffect="clip" width="30%"
-			draggable="false" modal="true">
-			<ui:include src="/main/home/usuario.xhtml"></ui:include>
-		</p:dialog>
-
-		<p:dialog id="config_dialog" header="Configurações"
-			widgetVar="dialog_config" hideEffect="clip" closeOnEscape="true"
-			showEffect="clip" draggable="true">
-			<h:form id="form-configuracao" style="margin-top: 12px">
-				<p:growl id="msgs" showDetail="true" />
-				<div>
-				
-					<div class="ui-g ui-fluid default-style-form-filter" >
-						<div class="ui-g-12 ui-md-12 ui-lg-12">
-							<h4>Parâmetros para bloqueio de compras em projetos</h4><br />
-						</div>
-						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group focused">
-							<p:outputLabel value="Solicitação de Compra" for="slc-compra"
-								styleClass="form-label" />
-							<p:inputNumber id="slc-compra" 
-								value="#{configuracaoController.filtro.config.tempoSC}" />
-						</div>
-	
-						<div class="ui-g-12 ui-md-6 ui-lg-3 form-group focused">
-							<p:outputLabel value="Solicitação de Pagamento" style="margin-left:5px"
-								for="slc-pagamento" styleClass="form-label" />
-							<p:inputNumber value="#{configuracaoController.filtro.config.tempoSP}"
-								id="slc-pagamento" style="margin-left:5px" />
-	
-						</div>
-	
-						<div class="ui-g-12 ui-lg-6 form-group focused">
-							<p:outputLabel value="Solicitação de Diária" style="margin-left:4px"
-								for="slc-diaria" styleClass="form-label" />
-							<p:inputNumber id="slc-diaria" value="#{configuracaoController.filtro.config.tempoSD}" />
-	
-						</div>
-						<div class="ui-g-12 ui-md-12 ui-lg-12">
-							<h4>Configuração Financeira</h4><br />
-						</div>
-						<div class="ui-g-12 ui-lg-6 form-group focused">
-							<p:outputLabel value="Valor de tarifa" style="margin-left:4px"
-								for="tarifa" styleClass="form-label" />
-							<p:inputNumber symbol="R$" value="#{configuracaoController.filtro.config.valorTarifaBancaria}"
-								id="tarifa" />
-	
-						</div>
-						
-						<div class="ui-g-12 ui-lg-6 form-group focused">
-							<p:commandLink styleClass="btn btn-primary btn-sm"
-								action="#{configuracaoController.salvarV2(configuracaoController.filtro)}" onclick="start()"
-								onsuccess="stop()" onerror="stop()" update="@this" process="@this"
-								style="color:#fff; margin: 8px 2px;">
-								<span class="fa fa-fw fa-check"></span>
-								<span>Salvar</span>
-							</p:commandLink>
-						</div>
-						
-					</div>
-				</div>
-			</h:form>
-		</p:dialog>
 
 	</ui:define>
+
 
 </ui:composition>

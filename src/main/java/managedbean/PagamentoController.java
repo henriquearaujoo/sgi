@@ -29,44 +29,13 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.*;
 import org.jboss.weld.context.RequestContext;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 import exception.NegocioException;
-import model.Acao;
-import model.Aprouve;
-import model.AtividadeProjeto;
-import model.CategoriaDespesaClass;
-import model.CategoriaFinanceira;
-import model.CategoriaProjeto;
-import model.CategoriadeDespesa;
-import model.CondicaoPagamento;
-import model.ContaBancaria;
-import model.DespesaReceita;
-import model.Estado;
-import model.FontePagadora;
-import model.Fornecedor;
-import model.Gestao;
-import model.Lancamento;
-import model.LancamentoAcao;
-import model.LancamentoAuxiliar;
-import model.Localidade;
-import model.LogStatus;
-import model.MenuLateral;
-import model.Municipio;
-import model.OrcamentoProjeto;
-import model.Projeto;
-import model.ProjetoRubrica;
-import model.Rubrica;
-import model.SolicitacaoPagamento;
-import model.StatusAdiantamento;
-import model.StatusCompra;
-import model.TipoDeDocumentoFiscal;
-import model.TipoGestao;
-import model.TipoLocalidade;
-import model.TipoParcelamento;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
@@ -222,6 +191,45 @@ public class PagamentoController implements Serializable {
 
 	public void setListaProjeto(List<Projeto> listaProjeto) {
 		this.listaProjeto = listaProjeto;
+	}
+
+
+
+	public String salvarPagamentoMODE01() throws NegocioException {
+		if (this.pagamento.getLancamentosAcoes().size() < 1) {
+			this.addMessage("", "Voc\u00ea deve adicionar ao menos 1(uma) linha Or\u00e7ament\u00e1ria/a\u00e7\u00e3o ao lan\u00e7amento para que o armazenamento seja conclu\u00eddo.", FacesMessage.SEVERITY_WARN);
+			return "";
+		}
+		if (this.pagamento.getTipoLancamento() != null && this.pagamento.getTipoLancamento().equals("ad")) {
+			this.pagamento.setStatusAdiantamento(StatusAdiantamento.EM_ABERTO);
+			if (this.pagamento.getLancamentosAcoes().size() > 1) {
+				this.addMessage("", "N\u00e3o \u00e9 poss\u00edvel solicitar um adiantamento de dois or\u00e7amentos diferente, por favor selecione somente.", FacesMessage.SEVERITY_WARN);
+				return "";
+			}
+		}
+		if (this.pagamento.getId() == null) {
+			this.pagamento.setCodigo(this.gerarCodigo());
+			this.pagamento.setSolicitante(this.usuarioSessao.getUsuario().getColaborador());
+			this.pagamento.setDepesaReceita(DespesaReceita.DESPESA);
+		}
+		SolicitacaoPagamento p = new SolicitacaoPagamento();
+		if (this.pagamento.getNotaFiscal().length() > 1) {
+			p = this.pagamentoService.getLancamentoByNF(this.pagamento.getNotaFiscal(), (this.pagamento.getId() != null) ? this.pagamento.getId() : new Long(0L), this.pagamento.getContaRecebedor().getId());
+		}
+		if (p != null && p.getId() != null) {
+			this.addMessage("", "Nota fiscal j\u00e1 foi paga no lan\u00e7amento de n\u00famero: " + p.getId(), FacesMessage.SEVERITY_WARN);
+			p = null;
+			return "";
+		}
+		this.pagamento.setCategoriaDespesaClass((CategoriaDespesaClass)null);
+		this.pagamento.setTipoGestao(this.buscarTipoGestao());
+		this.pagamento.setTipoLocalidade(this.buscarTipoLocalidade());
+		this.pagamento.setVersionLancamento("MODE01");
+		if (this.pagamentoService.salvar(this.pagamento, this.usuarioSessao.getUsuario())) {
+			this.limpar();
+			return "pagamento?faces-redirect=true";
+		}
+		return "";
 	}
 
 	public List<Projeto> carregarProjetos() {
@@ -586,14 +594,14 @@ public class PagamentoController implements Serializable {
 		Aprouve ap = new Aprouve();
 		ap.setSigla("SSP");
 		ap.setUsuario(usuarioSessao.getUsuario());
-		return pagamentoService.findAprouve(ap);
+		return pagamentoService.findAprouve(ap) || usuarioSessao.getUsuario().getPerfil().getId() == 1;
 	}
 
 	public boolean verificarPrivilegioAprovacao() {
 		Aprouve ap = new Aprouve();
 		ap.setSigla("ASP");
 		ap.setUsuario(usuarioSessao.getUsuario());
-		return pagamentoService.findAprouve(ap);
+		return pagamentoService.findAprouve(ap) || usuarioSessao.getUsuario().getPerfil().getId() == 1;
 	}
 
 	public void adicionarNovaAcao() {

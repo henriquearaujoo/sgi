@@ -12,6 +12,7 @@ import model.Coordenadoria;
 import model.Gestao;
 import model.Lancamento;
 import model.UnidadeConservacao;
+import org.primefaces.PrimeFaces;
 import service.CompraService;
 import service.HomeService;
 import service.SolicitacaoPagamentoService;
@@ -27,8 +28,11 @@ public class Util implements Serializable{
 	private static HomeService homeService;
 	
 	public Util(){}
-	
-	
+
+	public static void closeDialog(String dialogName) {
+		PrimeFaces.current().executeScript("PF(" + dialogName + ").hide()");
+	}
+
 	public static String nullEmptyObjectUtil(Object obj){
 		return obj == null ? "" : obj.toString();
 	}

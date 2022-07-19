@@ -7,27 +7,36 @@
 	xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 
+	<h:form id="actions-diaria" class="ui-g ui-fluid">
 
-
-	<div class="ui-g ui-fluid">
-
-		<div class="ui-g-12">
+		<div class="ui-g-12" >
 			<p:commandLink styleClass="btn btn-primary btn-sm"
 				onclick="setarWidthHeight('form-dialog-diaria');start()"
-				onerror="stop()" style="margin-left:5px" title="Incluir nova linha"
+				onerror="stop()" style="margin-left:5px; text-align: center" title="Incluir nova linha"
 				update="panel-form-nova-diaria" process="@this"
 				oncomplete="PF('dlg-nova-diaria').show();stop()">
-				<i class="pi pi-check"></i>
-				<span style="margin: 3px;">Incluir nova diária</span>
+				<i class="pi pi-plus"></i>
+				<span>Incluir nova diária</span>
 			</p:commandLink>
 
-			<p:commandLink style="color:#fff; margin: 2px 2px;" value="Autorizar"
+			<p:commandLink style="color:#fff; margin: 2px 2px;"
 				rendered="#{sv_cadastro_controller.usuarioSessao.usuario.perfil.id == 1 or sv_cadastro_controller.usuarioSessao.usuario.perfil.id == 5}"
 				onclick="start()" onsuccess="stop()" onerror="stop()"
 				styleClass="btn  btn-success btn-sm fa "
 				action="#{sv_cadastro_controller.autorizarDiaria()}">
+				<i class="pi pi-check"></i>
+				<span>Autorizar Diária</span>
 				<p:confirm header="Confirmação" message="Autorizar diária?"
 					icon="ui-icon-alert" />
+			</p:commandLink>
+
+			<p:commandLink styleClass="btn btn-success btn-sm"
+						   onclick="setarWidthHeight('form-dialog-recurso');start()"
+						   onerror="stop()" style="margin-left:5px"
+						   title="Recurso R$" update="panel-form-recurso"
+						   process="@this" oncomplete="PF('dlg_lanc_acao').show();stop()">
+				<i class="fa fa-usd" aria-hidden="true"></i>
+				<span style="margin: 3px;">Recursos</span>
 			</p:commandLink>
 
 		</div>
@@ -119,11 +128,12 @@
 				<p:column colspan="2">
 
 					<p:commandLink
-						rendered="#{!diaria.statusCompra.nome.equals('Concluído') or sv_cadastro_controller.podeEditar }"
+						rendered="#{!diaria.statusCompra.nome.equals('Concluído') or sv_cadastro_controller.podeEditar}"
 						action="#{sv_cadastro_controller.prepararEdicaoDiaria()}"
-						styleClass="btn btn-default btn-xs" process="@this"
-						onclick="start()" onerror="stop()" onsuccess="stop()">
-						<span class=" glyphicon glyphicon-edit"></span>
+						styleClass="btn btn-default btn-xs" process="@this" update="form-dialog-diaria"
+						onclick="start()"
+						onerror="stop()" onsuccess="PF('dlg-nova-diaria').show();stop()">
+						<span class="fa fa-pencil"></span>
 						<f:setPropertyActionListener value="#{diaria}"
 							target="#{sv_cadastro_controller.diaria}" />
 					</p:commandLink>
@@ -131,29 +141,31 @@
 					<p:commandLink title="Excluir" onclick="start()" onsuccess="stop()"
 						onerror="stop()"
 						rendered="#{!diaria.statusCompra.nome.equals('Concluído') or sv_cadastro_controller.podeEditar }"
-						styleClass="btn btn-danger btn-xs"
+						styleClass="btn btn-default btn-xs"
 						style="color:#fff;margin-left:9px"
 						action="#{sv_cadastro_controller.removerDiaria()}" process="@this">
-						<span class=" glyphicon glyphicon-remove-circle"></span>
+						<span class="fa fa-times text-danger"></span>
 						<p:confirm header="Confirmação" message="Excluir diária?"
 							icon="ui-icon-alert" />
 						<f:setPropertyActionListener value="#{diaria}"
 							target="#{sv_cadastro_controller.diaria}" />
 					</p:commandLink>
 
+
+<!--				TODO: abrir pdf da DIÁRIA	-->
 					<p:commandLink title="Imprimir" styleClass="btn btn-default btn-xs"
 						target="_blank" ajax="false" process="@this"
 						style="margin-left:9px;color:#000"
 						action="#{sv_cadastro_controller.geraRelatorioDiaria()}">
-						<span class=" glyphicon glyphicon-print"></span>
+						<span class="fa fa-print"></span>
 						<f:setPropertyActionListener value="#{diaria}"
 							target="#{sv_cadastro_controller.diaria}" />
 					</p:commandLink>
 
-					<p:commandLink title="Mudar Status" style="margin-left:9px;"
+					<p:commandLink title="Mudar Status" style="margin-left:9px;" process="@this"
 						rendered="#{sv_cadastro_controller.usuarioSessao.usuario.perfil.descricao == 'admin'}"
 						oncomplete="PF('dialogAlterarStatus').show()">
-						<span class="glyphicon glyphicon-cog"></span>
+						<span class="fa fa-cog"></span>
 						<f:setPropertyActionListener value="#{diaria}"
 							target="#{sv_cadastro_controller.diaria}" />
 					</p:commandLink>
@@ -183,7 +195,7 @@
 			</p:dataTable>
 		</div>
 
-	</div>
+	</h:form>
 
 	<style type="text/css">
 .fonte_sv {

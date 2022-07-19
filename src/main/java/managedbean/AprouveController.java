@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.primefaces.PrimeFaces;
-import org.primefaces.context.PrimeFacesContext;
 
 import model.Aprouve;
 import model.MenuLateral;
@@ -131,7 +130,7 @@ public class AprouveController implements Serializable{
 	}
 	
 	public List<MenuLateral> getMenus() {		
-		return MakeMenu.getMenuConfigurações();
+		return MakeMenu.getMenuConfiguracoes();
 	}
 	
 	public String redirecionar() {

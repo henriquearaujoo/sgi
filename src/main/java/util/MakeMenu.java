@@ -109,7 +109,7 @@ public class MakeMenu {
 	
 	
 	
-	public static List<MenuLateral> getMenuConfigurações(){
+	public static List<MenuLateral> getMenuConfiguracoes(){
 		List<MenuLateral> lista = new ArrayList<>();
 		MenuLateral menu = new MenuLateral("Usuarios", "cadastro_usuarios_att", "fa fa-user-plus");
 		lista.add(menu);

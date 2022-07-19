@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import model.Aprouve;
-import model.CategoriaDespesaClass;
 import model.Colaborador;
 import model.Coordenadoria;
 import model.Gestao;
@@ -53,7 +52,7 @@ public class GestaoController implements Serializable {
 	private AprouveRepositorio aprouveRepositorio;
 
 	public List<MenuLateral> getMenus() {
-		return MakeMenu.getMenuConfigurações();
+		return MakeMenu.getMenuConfiguracoes();
 	}
 
 	public String salvar() {
