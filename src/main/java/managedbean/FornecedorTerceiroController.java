@@ -3,7 +3,6 @@ package managedbean;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -228,7 +227,7 @@ public class FornecedorTerceiroController implements Serializable {
 	}
 
 	public List<MenuLateral> getMenus() {
-		return MakeMenu.getMenuConfigurações();
+		return MakeMenu.getMenuConfiguracoes();
 	}
 
 	public List<Fornecedor> getListaFornecedor() {

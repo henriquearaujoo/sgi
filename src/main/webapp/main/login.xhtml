@@ -17,9 +17,9 @@
     <script src="https://kit.fontawesome.com/a81368914c.js" />
 
     <link rel="stylesheet" href="../resources/css/login.css" />
-    
+
     <h:outputScript library="js" name="app.js" target="body" />
-    
+
   </h:head>
   <h:body>
   <p:dialog
@@ -91,7 +91,7 @@
 
       <h:panelGroup layout="block" class="forgot-content">
         <h:form>
-          
+
           <h2>Recuperação de senha</h2>
           <h:panelGroup layout="block" class="input-div one">
             <h:panelGroup layout="block" class="i">
@@ -102,9 +102,9 @@
               <h:inputText id="email" class="input" autocomplete= "off" value="#{loginBean.toEmail}" required="true" requiredMessage="Insira um email válido"/>
             </h:panelGroup>
           </h:panelGroup>
-          <h:commandButton type="submit" 
-          				   class="btn" 
-          				   value="Recuperar senha" 
+          <h:commandButton type="submit"
+          				   class="btn"
+          				   value="Recuperar senha"
           				   onclick="start();"
                     	   onerror="stop();"
                     	   oncomplete="stop();"

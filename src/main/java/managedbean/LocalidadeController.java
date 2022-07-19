@@ -143,7 +143,7 @@ public class LocalidadeController implements Serializable {
 	}
 
 	public List<MenuLateral> getMenus() {
-		return MakeMenu.getMenuConfigurações();
+		return MakeMenu.getMenuConfiguracoes();
 	}
 
 	public List<Localidade> getList() {

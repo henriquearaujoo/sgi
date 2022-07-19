@@ -80,7 +80,7 @@ public class ConfiguracaoController implements Serializable{
 	}
 	
 	public List<MenuLateral> getMenus() {
-		return MakeMenu.getMenuConfigurações();
+		return MakeMenu.getMenuConfiguracoes();
 	}
 
 	public List<Configuracao> getList() {

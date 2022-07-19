@@ -82,7 +82,7 @@ public class UsuarioController implements Serializable {
 	}
 	
 	public List<MenuLateral> getMenus() {
-		return MakeMenu.getMenuConfigurações();
+		return MakeMenu.getMenuConfiguracoes();
 	}
 	
 	//and medotos de listagem
