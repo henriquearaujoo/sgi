@@ -325,67 +325,67 @@ public class SolicitacaoViagemService implements Serializable {
 		repositorio.mudarStatus(id, statusViagem);
 		repositorio.salvarLog(log);
 
-		// List<Diaria> diarias = repositorio.findDiariasbyViagem(id);
-		//
-		// for (Diaria diaria : diarias) {
-		//
-		// diaria.setStatusCompra(StatusCompra.CONCLUIDO);
-		// repositorio.salvarDiaria(diaria);
-		// List<LancamentoAcao> lancamentos = new ArrayList<>();
-		// lancamentos = lancRepositorio.getLancamentosAcoes(diaria.getId());
-		// lancRepositorio.deletarTodosPagamentos(diaria.getId());
-		// // Diaria diaria = (diaria.getId());
-		// for (LancamentoAcao lc : lancamentos) {
-		//
-		// lc.setDespesaReceita(diaria.getDepesaReceita());
-		// lc.setTipoLancamento(diaria.getTipoLancamento());
-		// lc.setStatus(StatusPagamento.N_VALIDADO);
-		// lc = lancRepositorio.salvarLancamentoAcaoReturn(lc);
-		//
-		// PagamentoLancamento pl = new PagamentoLancamento();
-		// pl.setConta(lc.getProjetoRubrica().getRubricaOrcamento().getOrcamento().getContaBancaria());
-		// pl.setContaRecebedor(diaria.getContaRecebedor());
-		// pl.setDataEmissao(diaria.getDataEmissao());
-		// pl.setDataPagamento(diaria.getDataPagamento());
-		// pl.setLancamento(diaria);
-		// pl.setLancamentoAcao(lc);
-		// pl.setQuantidadeParcela(diaria.getQuantidadeParcela());
-		// pl.setStt(StatusPagamentoLancamento.PROVISIONADO);
-		// pl.setTipoParcelamento(diaria.getTipoParcelamento());
-		// pl.setValor(lc.getValor());
-		// pl.setTipoLancamento(diaria.getTipoLancamento());
-		// pl.setDespesaReceita(diaria.getDepesaReceita());
-		//
-		// if (pl.getTipoParcelamento().compareTo(TipoParcelamento.PARCELA_UNICA) == 0)
-		// {
-		// pl.setQuantidadeParcela(1);
-		// }
-		//
-		// Date dataBase = pl.getDataPagamento();
-		// tipoParcelamento = pl.getTipoParcelamento();
-		// BigDecimal totalParcelado = BigDecimal.ZERO;
-		//
-		// for (int i = 1; i <= pl.getQuantidadeParcela(); i++) {
-		// PagamentoLancamento pagto = new PagamentoLancamento(pl, i);
-		//
-		// if (i == 1) {
-		// pagto.setDataPagamento(pl.getDataPagamento());
-		// } else {
-		// pagto.setDataPagamento(DataUtil.setarData(dataBase, tipoParcelamento));
-		//
-		// if (i == pl.getQuantidadeParcela()) {
-		// BigDecimal total = pl.getValor();
-		// BigDecimal resto = total.subtract(totalParcelado);
-		// pagto.setValor(resto);
-		// }
-		// }
-		//
-		// totalParcelado = totalParcelado.add(pagto.getValor());
-		// lancRepositorio.salvarPagamento(pagto);
-		// dataBase = pagto.getDataPagamento();
-		// }
-		// }
-		// }
+		 List<Diaria> diarias = repositorio.findDiariasbyViagem(id);
+
+		 for (Diaria diaria : diarias) {
+
+		 diaria.setStatusCompra(StatusCompra.CONCLUIDO);
+		 repositorio.salvarDiaria(diaria);
+		 List<LancamentoAcao> lancamentos = new ArrayList<>();
+		 lancamentos = lancRepositorio.getLancamentosAcoes(diaria.getId());
+		 lancRepositorio.deletarTodosPagamentos(diaria.getId());
+		 // Diaria diaria = (diaria.getId());
+		 for (LancamentoAcao lc : lancamentos) {
+
+		 lc.setDespesaReceita(diaria.getDepesaReceita());
+		 lc.setTipoLancamento(diaria.getTipoLancamento());
+		 lc.setStatus(StatusPagamento.N_VALIDADO);
+		 lc = lancRepositorio.salvarLancamentoAcaoReturn(lc);
+
+		 PagamentoLancamento pl = new PagamentoLancamento();
+		 pl.setConta(lc.getProjetoRubrica().getRubricaOrcamento().getOrcamento().getContaBancaria());
+		 pl.setContaRecebedor(diaria.getContaRecebedor());
+		 pl.setDataEmissao(diaria.getDataEmissao());
+		 pl.setDataPagamento(diaria.getDataPagamento());
+		 //pl.setLancamento(diaria);
+		 pl.setLancamentoAcao(lc);
+		 pl.setQuantidadeParcela(diaria.getQuantidadeParcela());
+		 pl.setStt(StatusPagamentoLancamento.PROVISIONADO);
+		 pl.setTipoParcelamento(diaria.getTipoParcelamento());
+		 pl.setValor(lc.getValor());
+		 pl.setTipoLancamento(diaria.getTipoLancamento());
+		 pl.setDespesaReceita(diaria.getDepesaReceita());
+
+		 if (pl.getTipoParcelamento().compareTo(TipoParcelamento.PARCELA_UNICA) == 0)
+		 {
+		 pl.setQuantidadeParcela(1);
+		 }
+
+		 Date dataBase = pl.getDataPagamento();
+		 tipoParcelamento = pl.getTipoParcelamento();
+		 BigDecimal totalParcelado = BigDecimal.ZERO;
+
+		 for (int i = 1; i <= pl.getQuantidadeParcela(); i++) {
+		 PagamentoLancamento pagto = new PagamentoLancamento(pl, i);
+
+		 if (i == 1) {
+		 pagto.setDataPagamento(pl.getDataPagamento());
+		 } else {
+		 pagto.setDataPagamento(DataUtil.setarData(dataBase, tipoParcelamento));
+
+		 if (i == pl.getQuantidadeParcela()) {
+		 BigDecimal total = pl.getValor();
+		 BigDecimal resto = total.subtract(totalParcelado);
+		 pagto.setValor(resto);
+		 }
+		 }
+
+		 totalParcelado = totalParcelado.add(pagto.getValor());
+		 lancRepositorio.salvarPagamento(pagto);
+		 dataBase = pagto.getDataPagamento();
+		 }
+		 }
+		 }
 	}
 
 	@Inject

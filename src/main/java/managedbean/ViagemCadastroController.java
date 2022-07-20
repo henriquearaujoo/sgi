@@ -205,6 +205,35 @@ public class ViagemCadastroController implements Serializable {
 
 	}
 
+	public void definirTab() {
+		int index = 0;
+		if (this.tabview != null) {
+			index = this.tabview.getActiveIndex();
+		}
+		switch (index) {
+			case 0: {
+				this.tab = "Informa\u00e7\u00f5es gerais";
+				break;
+			}
+			case 1: {
+				this.tab = "Di\u00e1rias";
+				this.carregarDiarias();
+				break;
+			}
+			case 2: {
+				this.tab = "Programa\u00e7\u00e3o";
+				this.carregarProgramacao();
+				break;
+			}
+			default: {
+				this.tab = "Despesas";
+				this.carregarDespesas();
+				this.carregarCategorias();
+				break;
+			}
+		}
+	}
+
 	// TODO: Criar método útil para reutilização do código, adicionar menor e maior
 	// número como parâmetros
 	public void steping(String modo) {
@@ -330,21 +359,22 @@ public class ViagemCadastroController implements Serializable {
 	}
 
 	public void autorizar() {
-		if (verificarPrivilegioAprovacao()) {
-			LogViagem log = new LogViagem();
-			log.setUsuario(usuarioSessao.getUsuario());
-			log.setViagem(viagem);
+		if (this.verificarPrivilegioAprovacao()) {
+			final LogViagem log = new LogViagem();
+			log.setUsuario(this.usuarioSessao.getUsuario());
+			log.setViagem(this.viagem);
 			log.setData(new Date());
 			log.setStatusLog(StatusCompra.CONCLUIDO);
-			log.setSigla(viagem.getGestao().getSigla());
+			log.setSigla(this.viagem.getGestao().getSigla());
 			log.setSiglaPrivilegio("ASV");
-			viagemService.autorizar(viagem.getId(), StatusCompra.CONCLUIDO, log);
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "Autorizado");
+			this.viagemService.autorizar(this.viagem.getId(), StatusCompra.CONCLUIDO, log);
+			final FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "Autorizado");
 			FacesContext.getCurrentInstance().addMessage(null, message);
-
-		} else {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção",
-					"Você não tem privilégios para esse tipo de ação, por favor contate o administrador do sistema!");
+//			RequestContext.getCurrentInstance().showMessageInDialog(message);
+		}
+		else {
+			final FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Aten\u00e7\u00e3o", "Voc\u00ea n\u00e3o tem privil\u00e9gios para esse tipo de a\u00e7\u00e3o, por favor contate o administrador do sistema!");
+//			RequestContext.getCurrentInstance().showMessageInDialog(message2);
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
 	}
@@ -390,14 +420,14 @@ public class ViagemCadastroController implements Serializable {
 		Aprouve ap = new Aprouve();
 		ap.setSigla("ASV");
 		ap.setUsuario(usuarioSessao.getUsuario());
-		return viagemService.findAprouve(ap);
+		return viagemService.findAprouve(ap) || usuarioSessao.getUsuario().getPerfil().getId() == 1;
 	}
 
 	public boolean verificarPrivilegioAprovacaoDiaria() {
 		Aprouve ap = new Aprouve();
 		ap.setSigla("ASD");
 		ap.setUsuario(usuarioSessao.getUsuario());
-		return viagemService.findAprouve(ap);
+		return viagemService.findAprouve(ap) || usuarioSessao.getUsuario().getPerfil().getId() == 1;
 	}
 
 	public void calcularValorDiarias() {
@@ -555,67 +585,34 @@ public class ViagemCadastroController implements Serializable {
 	}
 
 	public void salvarViagemOLD() {
-
-//		 if (verificarCampoViagem()) {
-//		 closeDialogConfirmacaoViagem();
-//		 return;
-//		 }
-
-		if (viagem.getId() == null) {
-			viagem.setCodigo(gerarCodigo());
-			viagem.setSolicitante(usuarioSessao.getUsuario().getColaborador());
-			viagem.setDataEmissao(new Date());
+		if (this.viagem.getId() == null) {
+			this.viagem.setCodigo(this.gerarCodigo());
+			this.viagem.setSolicitante(this.usuarioSessao.getUsuario().getColaborador());
+			this.viagem.setDataEmissao(new Date());
 		}
-
-		viagem.setTipoGestao(buscarTipoGestao());
-
-		viagem = viagemService.salvar(viagem, "");
-
-		if (!showTabs) {
-			showTabs = true;
+		this.viagem.setTipoGestao(this.buscarTipoGestao());
+		this.viagem = this.viagemService.salvar(this.viagem, "");
+		if (!this.showTabs) {
+			this.showTabs = true;
 		}
-
-		addMessage("", "Salvo com sucesso!", FacesMessage.SEVERITY_INFO);
-		closeDialogLoading();
-		//
-
-		// Outro usuário não pode ver o botão salvar, salvo de ser seu
-		// coordenador
-		// ou administrador do sistema através de pedido autorizado.
-
+		this.addMessage("", "Salvo com sucesso!", FacesMessage.SEVERITY_INFO);
+		this.closeDialogLoading();
 	}
 
 	public void salvarViagemMODE01() {
-
-		// if (verificarCampoViagem()) {
-		// closeDialogConfirmacaoViagem();
-		// return;
-		// }
-
-		if (viagem.getId() == null) {
-			viagem.setCodigo(gerarCodigo());
-			viagem.setSolicitante(usuarioSessao.getUsuario().getColaborador());
-			viagem.setVersionLancamento("MODE01");
-			viagem.setDataEmissao(new Date());
+		if (this.viagem.getId() == null) {
+			this.viagem.setCodigo(this.gerarCodigo());
+			this.viagem.setSolicitante(this.usuarioSessao.getUsuario().getColaborador());
+			this.viagem.setVersionLancamento("MODE01");
+			this.viagem.setDataEmissao(new Date());
 		}
-
-		// TODO: Tentar salvar o tipo da gestão da viagem
-		//viagem.setTipoGestao(TipoGestao.COORD);
-
-		viagem = viagemService.salvar(viagem, "");
-
-		if (!showTabs) {
-			showTabs = true;
+		this.viagem.setTipoGestao(this.buscarTipoGestao());
+		this.viagem = this.viagemService.salvar(this.viagem, "");
+		if (!this.showTabs) {
+			this.showTabs = true;
 		}
-
-		addMessage("", "Salvo com sucesso!", FacesMessage.SEVERITY_INFO);
-		closeDialogLoading();
-		//
-
-		// Outro usuário não pode ver o botão salvar, salvo de ser seu
-		// coordenador
-		// ou administrador do sistema através de pedido autorizado.
-
+		this.addMessage("", "Salvo com sucesso!", FacesMessage.SEVERITY_INFO);
+		this.closeDialogLoading();
 	}
 
 	public Boolean verificarCampoViagem() {
@@ -1629,32 +1626,20 @@ public class ViagemCadastroController implements Serializable {
 		this.podeEditar = podeEditar;
 	}
 
-	public void poderEditar() {
-		if (viagem.getId() != null) {
-
-			SolicitacaoViagem viagem = viagemService.getViagemById(this.viagem.getId());
-
-			if (viagem.getStatusViagem() == null || viagem.getStatusViagem().getNome().equals("Não iniciado/Solicitado")
-					|| viagem.getStatusViagem().getNome().equals("Em cotação")
-					|| usuarioSessao.getUsuario().getPerfil().getDescricao().equals("admin")) {
-				podeEditar = true;
-			} else {
-				Long idUser = usuarioSessao.getUsuario().getColaborador().getId().longValue();
-				Long idSolicintante = viagem.getSolicitante().getId().longValue();
-
-				Long idGestor = viagem.getGestao().getColaborador().getId();
-
-				if (idUser.longValue() == idSolicintante.longValue() || idUser.longValue() == idGestor.longValue()) {
-					podeEditar = true;
-				} else {
-					podeEditar = false;
-				}
-
-			}
-
-		} else {
-			podeEditar = true;
+	public boolean poderEditar() {
+		if (this.viagem.getId() == null) {
+			return true;
 		}
+		if (this.viagem.getStatusViagem() == null
+				|| this.viagem.getStatusViagem().getNome().equals("N\u00e3o iniciado/Solicitado")
+				|| this.viagem.getStatusViagem().getNome().equals("Em cota\u00e7\u00e3o")
+				|| this.usuarioSessao.getUsuario().getPerfil().getDescricao().equals("admin")) {
+			return true;
+		}
+		final Long idUser = this.usuarioSessao.getUsuario().getColaborador().getId();
+		final Long idSolicintante = this.viagem.getSolicitante().getId();
+		final Long idGestor = this.viagem.getGestao().getColaborador().getId();
+		return idUser == (long)idSolicintante || idUser == (long)idGestor;
 	}
 
 	//
