@@ -1,13 +1,13 @@
 
 <!DOCTYPE html>
 <ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+				xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
 
 	<ui:define name="content">
 
@@ -17,509 +17,497 @@
 		</f:metadata>
 
 		<p:ajaxStatus onstart="PF('statusDialog').show()"
-			onsuccess="PF('statusDialog').hide()" />
+					  onsuccess="PF('statusDialog').hide()" />
 
 		<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
-			closable="false" resizable="false" showHeader="false"
-			style="background-color:#FFFFFF; z-index:1009">
+				  closable="false" resizable="false" showHeader="false"
+				  style="background-color:#FFFFFF; z-index:1009">
 			<p:graphicImage library="image" name="aguarde.gif" />
 		</p:dialog>
-
-
 		<f:view>
 
+			<style type="text/css">
+				.ui-widget {
+					font-size: 85%;
+				}
+			</style>
 
-<script>
-		function goBack() {
-		    window.history.back();
-		}
-	
-		function start() {
-		    PF('statusDialog').show();
-		}
-		 
-		function stop() {
-		    PF('statusDialog').hide();
-		}
-</script>
+			<script>
+				function goBack() {
+					window.history.back();
+				}
 
+				function start() {
+					PF('statusDialog').show();
+				}
 
-			<h:panelGroup id="panel-content">
+				function stop() {
+					PF('statusDialog').hide();
+				}
+			</script>
 
+			<h:form id="form-cotacao-escolha">
 
-				<h:form id="form-cotacao-escolha">
+				<div style="border: #dedede 1px solid">
+					<p:commandLink type="button"
+								   style="color:#000; margin: 2px 2px;font-size:15px"
+								   title="Voltar para página anterior" onclick="goBack();">
+						<i class="fa fa-mail-reply-all" />
+					</p:commandLink>
+				</div>
 
-					<p:messages id="msg-cotacao" showSummary="false"
-						style="margin-top:10px" showDetail="true" closable="true"
-						showIcon="true" />
+				<p:panel id="horizontal" header="Menor preço global"
+						 style="margin-top:5px;" toggleable="true"
+						 toggleOrientation="horizontal">
 
-					<p:breadCrumb class="breadcrumb-container">
+					<p:dataTable rowStyleClass="#{escolhaCotacao.getColorRank()}"
+								 binding="#{escolhaCotacao.tableRank}" rowIndexVar="indexRow"
+								 value="#{escolhaCotacao.cotacoesAuxiliares}" var="fornecedoress">
 
+						<f:facet name="header">
+							<p:outputLabel value="RANKING MENOR PREÇO GLOBAL" />
+						</f:facet>
 
-						<p:menuitem value="Categories" url="home_new.xhtml" />
-						<p:menuitem value="Solicitações de Compras" url="compras.xhtml" />
-						<p:menuitem value="Escolha da Cotação" />
-					</p:breadCrumb>
-					<br />
+						<p:column headerText="#" style="width:38px">
+							<h:outputText styleClass="#{escolhaCotacao.colorRankColumn}"
+										  value="#{indexRow + 1}º" />
+						</p:column>
 
+						<p:column headerText="Nome fantasia">
+							<h:outputText styleClass="#{escolhaCotacao.colorRankColumn}"
+										  value="#{fornecedoress.fornecedor}" />
+						</p:column>
 
-					<p:fieldset legend="Solicitção de Compra" toggleable="true">
-						<p:panelGrid columns="7" styleClass="ui-noborder">
+						<p:column style="width:186px" headerText="Valor total">
+							<h:outputText styleClass="#{escolhaCotacao.colorRankColumn}"
+										  style="" value="#{fornecedoress.totalValor}">
+								<f:convertNumber type="currency" maxFractionDigits="2"
+												 currencySymbol="R$" />
+							</h:outputText>
+						</p:column>
 
-							<p:panelGrid columns="2" styleClass="ui-noborder">
-								<h:outputText value="Código da SC:" />
-								<p:outputLabel value="#{escolhaCotacao.compra.id}" />
-							</p:panelGrid>
+						<p:column style="width:186px" headerText="Valor total c/ desconto">
+							<h:outputText styleClass="#{escolhaCotacao.colorRankColumn}"
+										  value="#{fornecedoress.totalDesconto}">
+								<f:convertNumber type="currency" maxFractionDigits="2"
+												 currencySymbol="R$" />
+							</h:outputText>
+						</p:column>
 
-							<p:panelGrid columns="2" styleClass="ui-noborder">
-								<h:outputText value="Data de emissão:" />
-								<p:outputLabel value="#{escolhaCotacao.compra.dataEmissao}">
-									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss "
-										timeZone="America/Manaus" />
-								</p:outputLabel>
-							</p:panelGrid>
+					</p:dataTable>
 
-							<p:panelGrid columns="2" styleClass="ui-noborder">
-								<h:outputText value="Solicitante:" />
-								<p:outputLabel value="#{escolhaCotacao.compra.solicitante.nome}">
-								</p:outputLabel>
-							</p:panelGrid>
-
-							<p:panelGrid columns="2" styleClass="ui-noborder">
-								<h:outputText value="Status:" />
-								<h:outputText value="#{escolhaCotacao.compra.statusCompra.nome}"
-									rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Não iniciado/Solicitado')}" />
-
-								<h:outputText styleClass="tamanho-status status-amarelo"
-									value="#{escolhaCotacao.compra.statusCompra.nome}"
-									rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Em cotação')}" />
-
-								<h:outputText styleClass="tamanho-status status-azul"
-									value="#{escolhaCotacao.compra.statusCompra.nome}"
-									rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Autorizado')}" />
-
-								<h:outputText styleClass="tamanho-status status-vermelho"
-									value="#{escolhaCotacao.compra.statusCompra.nome}"
-									rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Suspenso')}" />
-
-								<h:outputText styleClass="tamanho-status status-vermelho"
-									value="#{escolhaCotacao.compra.statusCompra.nome}"
-									rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Cancelado')}" />
+				</p:panel>
 
 
-								<h:outputText styleClass="tamanho-status status-verde"
-									value="#{escolhaCotacao.compra.statusCompra.nome}"
-									rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Parcialmente Concluído')}" />
+				<div style="border: #dedede 1px solid">
+					<p:panelGrid style="width:100%" columns="7">
+						<f:facet name="header">
+							<p:row>
+								<p:column colspan="7">Dados referente a SC</p:column>
+							</p:row>
+						</f:facet>
 
-								<h:outputText styleClass="tamanho-status status-verde"
-									value="#{escolhaCotacao.compra.statusCompra.nome}"
-									rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Concluído')}" />
-
-								<h:outputText styleClass="tamanho-status status-verde"
-									value="#{escolhaCotacao.compra.statusCompra.nome}"
-									rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Logística')}" />
-
-							</p:panelGrid>
+						<p:panelGrid columns="2">
+							<h:outputText value="Código da SC:" />
+							<p:outputLabel value="#{escolhaCotacao.compra.id}" />
 						</p:panelGrid>
-					</p:fieldset>
 
-					<p:separator></p:separator>
+						<p:panelGrid columns="2">
+							<h:outputText value="Data de emissão:" />
+							<p:outputLabel value="#{escolhaCotacao.compra.dataEmissao}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss "
+												   timeZone="America/Manaus" />
+							</p:outputLabel>
+						</p:panelGrid>
 
-					<p:fieldset id="horizontal" legend="Ranking de Preço"
-						toggleable="true">
+						<p:panelGrid columns="2">
+							<h:outputText value="Solicitante:" />
+							<p:outputLabel value="#{escolhaCotacao.compra.solicitante.nome}">
+							</p:outputLabel>
+						</p:panelGrid>
 
-						<p:dataTable binding="#{escolhaCotacao.tableRank}"
-							rowIndexVar="indexRow"
-							value="#{escolhaCotacao.cotacoesAuxiliares}" var="fornecedoress">
+						<p:panelGrid columns="2">
+							<h:outputText value="Status:" />
+							<h:outputText value="#{escolhaCotacao.compra.statusCompra.nome}"
+										  rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Não iniciado/Solicitado')}" />
 
+							<h:outputText styleClass="tamanho-status status-amarelo"
+										  value="#{escolhaCotacao.compra.statusCompra.nome}"
+										  rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Em cotação')}" />
 
-							<p:column headerText="#" style="width:38px">
-								<h:outputText value="#{indexRow + 1}º" />
-							</p:column>
+							<h:outputText styleClass="tamanho-status status-azul"
+										  value="#{escolhaCotacao.compra.statusCompra.nome}"
+										  rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Autorizado')}" />
 
-							<p:column headerText="Fornecedor">
-								<h:outputText value="#{fornecedoress.fornecedor}" />
-							</p:column>
+							<h:outputText styleClass="tamanho-status status-vermelho"
+										  value="#{escolhaCotacao.compra.statusCompra.nome}"
+										  rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Suspenso')}" />
 
-							<p:column style="width:186px" headerText="Valor total">
-								<h:outputText style="" value="#{fornecedoress.totalValor}">
-									<f:convertNumber type="currency" maxFractionDigits="2"
-										currencySymbol="R$" />
-								</h:outputText>
-							</p:column>
-
-							<p:column style="width:186px"
-								headerText="Valor total c/ desconto">
-								<h:outputText value="#{fornecedoress.totalDesconto}">
-									<f:convertNumber type="currency" maxFractionDigits="2"
-										currencySymbol="R$" />
-								</h:outputText>
-							</p:column>
-
-						</p:dataTable>
-
-					</p:fieldset>
+							<h:outputText styleClass="tamanho-status status-vermelho"
+										  value="#{escolhaCotacao.compra.statusCompra.nome}"
+										  rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Cancelado')}" />
 
 
+							<h:outputText styleClass="tamanho-status status-verde"
+										  value="#{escolhaCotacao.compra.statusCompra.nome}"
+										  rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Parcialmente Concluído')}" />
+
+							<h:outputText styleClass="tamanho-status status-verde"
+										  value="#{escolhaCotacao.compra.statusCompra.nome}"
+										  rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Concluído')}" />
+
+							<h:outputText styleClass="tamanho-status status-verde"
+										  value="#{escolhaCotacao.compra.statusCompra.nome}"
+										  rendered="#{escolhaCotacao.compra.statusCompra.nome.equals('Logística')}" />
+
+						</p:panelGrid>
+
+					</p:panelGrid>
 
 
+				</div>
+
+				<p:separator></p:separator>
+
+				<p:fieldset legend="MC" toggleable="true" collapsed="false"
+							toggleSpeed="500">
+					<p:dataTable id="table-mapa-comparativo" var="item"
+								 selection="#{escolhaCotacao.listaItensDeCompraAuxiliar}"
+								 rowKey="#{item.id}" value="#{escolhaCotacao.itens}">
+						<f:facet name="header">
+							<p:messages id="msg_escolha" autoUpdate="true"
+										showSummary="false" closable="true" showDetail="true"
+										showIcon="true" />
+							<p:panelGrid columns="3">
+								<p:selectOneMenu value="#{escolhaCotacao.idFornecedor}">
+									<f:selectItems value="#{escolhaCotacao.cotacoesAuxiliares}"
+												   var="cot" itemLabel="#{cot.fornecedor}"
+												   itemValue="#{cot.fornecedorId}" />
+								</p:selectOneMenu>
+								<p:commandLink style="color:#fff" update="form-cotacao-escolha"
+											   styleClass="btn btn-primary btn-block" value="Escolher"
+											   action="#{escolhaCotacao.escolherCotacaoGlobal()}" />
 
 
-
-
-					<p:separator></p:separator>
-
-					<p:fieldset legend="Mapa Comparativo" toggleable="true"
-						collapsed="false" toggleSpeed="500">
-						<p:dataTable id="table-mapa-comparativo" var="item"
-							selection="#{escolhaCotacao.listaItensDeCompraAuxiliar}"
-							rowKey="#{item.id}" value="#{escolhaCotacao.itens}">
-							<f:facet name="header">
-								<p:messages id="msg_escolha" 
-									showSummary="false" closable="true" showDetail="true"
-									showIcon="true" />
-								<p:panelGrid columns="3" styleClass="ui-noborder">
-									<p:panelGrid>
-										<p:outputLabel value="Fornecedor: "
-											style="vertical-align:middle;" />
-										<p:spacer width="5px"></p:spacer>
-										<p:selectOneMenu value="#{escolhaCotacao.idFornecedor}"
-											style="vertical-align:middle;" id="fornecedor">
-											<f:selectItems value="#{escolhaCotacao.cotacoesAuxiliares}"
-												var="cot" itemLabel="#{cot.fornecedor}"
-												itemValue="#{cot.fornecedorId}" />
-										</p:selectOneMenu>
-									</p:panelGrid>
-									<p:commandLink
-										title="Escolher fornecedor para itens selecionados"
-										style="color:#fff"
-										update=":form-cotacao-escolha:table-mapa-comparativo,:form-cotacao-escolha:table-fornecedor-pagamento,:form-forma-pagamento-mode01"
-										styleClass="btn btn-primary btn-block" value="Escolher"
-										onclick="start()" onerror="stop()" onsuccess="stop()"
-										process="table-mapa-comparativo"
-										action="#{escolhaCotacao.openDialog()}" />
-
-
+								<p:outputPanel>
 
 									<p:commandLink style="color:#FFF" update="form-cotacao-escolha"
-										title="Justificatificar quando não escolher o fornecedor com menor preço"
-										styleClass="btn btn-success btn-block" process="@this"
-										value="Justificativa/Observação"
-										action="#{escolhaCotacao.mostrarJustificativa()}"></p:commandLink>
+												   styleClass="btn btn-success btn-block" process="@this"
+												   value="Justificativa/Observação"
+												   action="#{escolhaCotacao.mostrarJustificativa()}"></p:commandLink>
+
+								</p:outputPanel>
+
+								<p:outputLabel rendered="#{escolhaCotacao.mostraJustificativa}">
+
+								</p:outputLabel>
+
+								<p:outputLabel rendered="#{escolhaCotacao.mostraJustificativa}">
+
+								</p:outputLabel>
+								<p:outputPanel rendered="#{escolhaCotacao.mostraJustificativa}"
+											   style="float:right">
+									<p:panelGrid id="just" columns="1">
+										<p:inputTextarea style="width:100%"
+														 value="#{escolhaCotacao.observacaoMC.texto}"
+														 placeholder="Digite sua justificativa/observação nesse campo e clique em salvar, essa justificativa ou observação será impressa no mapa comparativo;"
+														 rows="5"></p:inputTextarea>
+										<p:commandButton icon="fa fa-fw fa-edit" process="just"
+														 update="form-cotacao-escolha"
+														 action="#{escolhaCotacao.salvarObservacao()}" value="Salvar"></p:commandButton>
+
+									</p:panelGrid>
+
+								</p:outputPanel>
+
+							</p:panelGrid>
+						</f:facet>
+
+						<p:columnGroup type="header">
+							<p:row>
+								<p:column rowspan="3" selectionMode="multiple"
+										  style="width:64px;text-align: center" />
+
+								<p:column style="width:64px;" rowspan="3" headerText="Qtd." />
+								<p:column rowspan="3" headerText="Itens" style="width:180px;" />
+								<p:column
+										colspan="#{2 * escolhaCotacao.cotacoesAuxiliares.size()}"
+										headerText="Valores" />
+
+							</p:row>
+							<p:row>
+								<ui:repeat value="#{escolhaCotacao.cotacoesAuxiliares}"
+										   var="fornecedor">
+									<p:column colspan="2" headerText="#{fornecedor.fornecedor}" />
+								</ui:repeat>
+							</p:row>
+
+							<p:row>
+								<ui:repeat value="#{escolhaCotacao.cotacoesAuxiliares}"
+										   var="fornecedor">
+									<p:column headerText="Valor" />
+									<p:column headerText="Total" />
+								</ui:repeat>
+							</p:row>
+
+						</p:columnGroup>
+
+
+						<p:column selectionMode="multiple"
+								  style="width:36px;text-align:center" />
+
+						<p:column>
+							<h:outputText value="#{item.quantidade}" />
+						</p:column>
+
+						<p:column>
+							<h:outputText value="#{item.produto.descricao.toLowerCase()}" />
+						</p:column>
+
+						<p:columns colspan="2"
+								   styleClass="#{escolhaCotacao.getHouveEscolhaCotacao(fornecedor1.fornecedorId, item.compra.id, item.id) ? 'highlight' : null}"
+								   value="#{escolhaCotacao.cotacoesAuxiliares}" var="fornecedor1">
+
+							<table>
+								<tr>
+									<td style="border: 0px"><h:outputText
+											rendered="#{escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id) > 0}"
+											value="#{escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id)}">
+										<f:convertNumber type="currency" maxFractionDigits="3"
+														 currencySymbol="R$" />
+									</h:outputText></td>
+
+									<td style="border: 0"><h:outputText
+											rendered="#{item.quantidade * escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id) > 0}"
+											value="#{item.quantidade * escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id)}">
+										<f:convertNumber type="currency" maxFractionDigits="2"
+														 currencySymbol="R$" />
+									</h:outputText></td>
+								</tr>
+							</table>
+
+						</p:columns>
+
+						<p:columnGroup type="footer">
+							<p:row>
+								<p:column footerText="#" style="text-align:center" />
+								<p:column></p:column>
+								<p:column footerText="Totais:" />
+								<p:columns colspan="2"
+										   value="#{escolhaCotacao.cotacoesAuxiliares}" var="fornecedor1"
+										   footerText="#{escolhaCotacao.getTotais(fornecedor1.totalDesconto)}" />
+							</p:row>
+						</p:columnGroup>
+
+					</p:dataTable>
+
+				</p:fieldset>
+
+
+				<p:panel id="table-fornecedor-pagamento">
+					<ui:repeat var="espelho" value="#{escolhaCotacao.espelhos}">
+
+						<p:dataTable var="pedido"
+									 rowStyleClass="#{pedido.houvePedido ? 'highlight_yellow' : null}"
+									 value="#{escolhaCotacao.getCotacoesParaEspelhoPedido(espelho.fornecedorId)}">
+							<f:facet name="header">
+
+
+								<p:commandLink
+										rendered="#{!escolhaCotacao.compra.versionLancamento.equals('MODE01')}"
+										styleClass="btn btn-primary fa fa-usd"
+										action="#{escolhaCotacao.selecionarFornecedor(espelho.fornecedorId,espelho.totalDesconto,espelho.fornecedor,espelho.totalValor)}"
+										style="color:#fff; margin: 2px 2px;"
+										update=":form-forma-pagamento"
+										oncomplete="PF('determinar_recurso').show()"
+										value="Determinar recurso #{espelho.fornecedor}">
+								</p:commandLink>
+
+								<p:commandLink
+										rendered="#{escolhaCotacao.compra.versionLancamento.equals('MODE01')}"
+										styleClass="btn btn-primary fa fa-usd"
+										action="#{escolhaCotacao.selecionarFornecedor(espelho.fornecedorId,espelho.totalDesconto,espelho.fornecedor,espelho.totalValor)}"
+										style="color:#fff; margin: 2px 2px;"
+										update=":form-forma-pagamento-mode01"
+										oncomplete="PF('determinar_recursoMODE01').show()"
+										value="*Determinar recurso #{espelho.fornecedor}">
+								</p:commandLink>
+
+								<p:commandButton title="Remover todos"
+												 rendered="#{!escolhaCotacao.existePedidoParaFornecedor(espelho.fornecedorId)}"
+												 update=":form-cotacao-escolha:table-mapa-comparativo :form-cotacao-escolha:table-fornecedor-pagamento"
+												 style="margin-left:10px;color:#000" icon="fa fa-fw fa-remove"
+												 value="Remover"
+												 action="#{escolhaCotacao.deletarTodosEscolhidos(espelho.fornecedorId)}">
+									<p:confirm header="Confirmação" message="Deletar todos?"
+											   icon="ui-icon-alert" />
+								</p:commandButton>
 
 
 
 
 
-									<p:outputPanel rendered="#{escolhaCotacao.mostraJustificativa}"
-										style="float:right">
-										<p:panelGrid id="just" columns="1">
-											<p:inputTextarea style="width:100%"
-												value="#{escolhaCotacao.observacaoMC.texto}"
-												placeholder="Digite sua justificativa/observação nesse campo e clique em salvar, essa justificativa ou observação será impressa no mapa comparativo;"
-												rows="5"></p:inputTextarea>
-											<p:commandButton icon="fa fa-fw fa-edit" process="just"
-												update="form-cotacao-escolha"
-												action="#{escolhaCotacao.salvarObservacao()}" value="Salvar"></p:commandButton>
+								<p:commandLink styleClass="btn btn-default"
+											   oncomplete="PF('prepara_aprovacao').show();"
+											   action="#{escolhaCotacao.prepararAprovacaoPedido(espelho)}"
+											   style="color:#000; margin: 2px 2px;float:right"
+											   update=":preparacao_aprovacao" value="Autorizar">
+								</p:commandLink>
 
-										</p:panelGrid>
 
-									</p:outputPanel>
+								<p:link
+										rendered="#{escolhaCotacao.existePedidoParaFornecedor(espelho.fornecedorId)}"
+										value="Pedido gerado, clique aqui para ir a tela de pedidos"
+										outcome="/main/pedidos"
+										style="color:#000;float:right;margin-right:10px;font-weight:bold">
+									<f:param name="comp" value="#{escolhaCotacao.compra.id}" />
 
-								</p:panelGrid>
+								</p:link>
+
 							</f:facet>
 
 							<p:columnGroup type="header">
 								<p:row>
-									<p:column rowspan="3" selectionMode="multiple"
-										style="width:64px;text-align: center" />
-
-									<p:column style="width:64px;" rowspan="3" headerText="Qtd." />
-									<p:column rowspan="3" headerText="Itens" style="width:180px;" />
-									<p:column
-										colspan="#{2 * escolhaCotacao.cotacoesAuxiliares.size()}"
-										headerText="Valores" />
-
+									<p:column rowspan="2" headerText="Item" />
+									<p:column style="text-align:center" colspan="5"
+											  headerText="#{espelho.fornecedor}" />
 								</p:row>
 								<p:row>
-									<ui:repeat value="#{escolhaCotacao.cotacoesAuxiliares}"
-										var="fornecedor">
-										<p:column colspan="2" headerText="#{fornecedor.fornecedor}" />
-									</ui:repeat>
+									<p:column style="text-align:right" headerText="Qtd." />
+									<p:column style="text-align:right" headerText="Valor unitário" />
+									<p:column style="text-align:right"
+											  headerText="Valor unitário c/ desconto" />
+									<p:column style="text-align:right" headerText="Total" />
+									<p:column style="text-align:center;width:60px;" headerText="x" />
 								</p:row>
 
-								<p:row>
-									<ui:repeat value="#{escolhaCotacao.cotacoesAuxiliares}"
-										var="fornecedor">
-										<p:column headerText="Valor" />
-										<p:column headerText="Total" />
-									</ui:repeat>
-								</p:row>
+
 
 							</p:columnGroup>
 
-
-							<p:column selectionMode="multiple"
-								style="width:36px;text-align:center" />
-
 							<p:column>
-								<h:outputText value="#{item.quantidade}" />
+								<h:outputText value="#{pedido.itemCompra.produto.descricao}" />
 							</p:column>
 
 							<p:column>
-								<h:outputText value="#{item.produto.descricao.toLowerCase()}" />
+								<h:outputText value="#{pedido.quantidade}" />
 							</p:column>
 
-							<p:columns colspan="2"
-								styleClass="#{escolhaCotacao.getHouveEscolhaCotacao(fornecedor1.fornecedorId, item.compra.id, item.id) ? 'highlight' : null}"
-								value="#{escolhaCotacao.cotacoesAuxiliares}" var="fornecedor1">
+							<p:column style="text-align:right">
+								<h:outputText value="#{pedido.valor}">
+									<f:convertNumber type="currency" maxFractionDigits="3"
+													 currencySymbol="R$" />
+								</h:outputText>
+							</p:column>
 
-								<table>
-									<tr>
-										<td style="border: 0px"><h:outputText
-												rendered="#{escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id) > 0}"
-												value="#{escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id)}">
-												<f:convertNumber type="currency" maxFractionDigits="3"
-													currencySymbol="R$" />
-											</h:outputText></td>
+							<p:column style="text-align:right;width:100px">
+								<h:outputText value="#{pedido.valorDesconto}">
+									<f:convertNumber type="currency" maxFractionDigits="3"
+													 currencySymbol="R$" />
+								</h:outputText>
+							</p:column>
 
-										<td style="border: 0"><h:outputText
-												rendered="#{item.quantidade * escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id) > 0}"
-												value="#{item.quantidade * escolhaCotacao.getValorCotacao(fornecedor1.fornecedorId, item.compra.id, item.id)}">
-												<f:convertNumber type="currency" maxFractionDigits="2"
-													currencySymbol="R$" />
-											</h:outputText></td>
-									</tr>
-								</table>
+							<p:column style="text-align:right">
+								<h:outputText
+										value="#{pedido.quantidade * pedido.valorDesconto}">
+									<f:convertNumber type="currency" maxFractionDigits="2"
+													 currencySymbol="R$" />
+								</h:outputText>
+							</p:column>
 
-							</p:columns>
+							<p:column style="text-align:center;width:100px;">
+
+								<p:commandLink title="Excluir"
+											   update=":form-cotacao-escolha:table-mapa-comparativo :form-cotacao-escolha:table-fornecedor-pagamento"
+											   style="margin-left:10px;color:#000" styleClass="fa fa-times"
+											   rendered="#{!escolhaCotacao.existePedidoParaFornecedor(espelho.fornecedorId)}"
+											   action="#{escolhaCotacao.deletarItemEspelhoPedido(pedido.id)}">
+									Excluir
+									<p:confirm header="Confirmação"
+											   message="Ao deletar o item não fará mais parte das escolhas."
+											   icon="ui-icon-alert" />
+								</p:commandLink>
+
+							</p:column>
 
 							<p:columnGroup type="footer">
 								<p:row>
-									<p:column footerText="#" style="text-align:center" />
+									<p:column colspan="4" footerText="Subtotal: "
+											  style="text-align:right" />
+									<p:column style="text-align:right"
+											  footerText="#{escolhaCotacao.getTotais(espelho.totalValor)}" />
 									<p:column></p:column>
-									<p:column footerText="Totais:" />
-									<p:columns colspan="2"
-										value="#{escolhaCotacao.cotacoesAuxiliares}" var="fornecedor1"
-										footerText="#{escolhaCotacao.getTotais(fornecedor1.totalDesconto)}" />
 								</p:row>
+
+								<p:row>
+									<p:column colspan="4" footerText="Desconto: "
+											  style="text-align:right" />
+									<p:column style="text-align:right"
+											  footerText="#{escolhaCotacao.getTotais(espelho.totalValor.subtract(espelho.totalDesconto))}" />
+									<p:column></p:column>
+								</p:row>
+
+								<p:row>
+									<p:column colspan="4" footerText="Total: "
+											  style="text-align:right" />
+									<p:column style="text-align:right"
+											  footerText="#{escolhaCotacao.getTotais(espelho.totalDesconto)}" />
+									<p:column></p:column>
+								</p:row>
+
+
+
 							</p:columnGroup>
 
 						</p:dataTable>
 
-					</p:fieldset>
+					</ui:repeat>
 
-					<p:separator></p:separator>
+				</p:panel>
 
-					<p:fieldset legend="Espelho do Pedido" toggleable="true"
-						id="table-fornecedor-pagamento">
-						<p:messages id="msg_espelho"  showSummary="false"
-							closable="true" showDetail="true" showIcon="true" />
-						<ui:repeat var="pedido" value="#{escolhaCotacao.pedidos}">
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
 
-							<p:dataTable var="itemPedido"
-								rowStyleClass="#{!itemPedido.pedido.statusCompra.nome.equals('Não iniciado/Solicitado') ? 'highlight' : null}"
-								value="#{escolhaCotacao.getItensPedidoByPedido(pedido)}">
-								<f:facet name="header">
-
-
-									<p:commandLink
-										title="Edição da fonte de recurso para pagemento da compra"
-										styleClass="btn btn-primary fa fa-usd"
-										action="#{escolhaCotacao.selecionarFornecedor(pedido)}"
-										style="color:#fff; margin: 2px 2px;"
-										update=":form-forma-pagamento-mode01" onclick="start()"
-										onerror="stop()" onsuccess="stop()"
-										value=" Editar Recurso #{pedido.fornecedor.nomeFantasia}">
-									</p:commandLink>
-
-									<p:commandLink title="Remover todos os itens"
-										rendered="#{escolhaCotacao.verificarPrivilegioExclusao() or pedido.statusCompra.nome.equals('Não iniciado/Solicitado')}"
-										update=":form-cotacao-escolha:table-mapa-comparativo :form-cotacao-escolha:table-fornecedor-pagamento"
-										styleClass="btn btn-danger fa fa-remove"
-										style="margin: 2px 2px;color:#fff" value=" Excluir Pedido"
-										action="#{escolhaCotacao.deletarPedido(pedido)}">
-										<p:confirm header="Confirmação" message="Deletar todos?"
-											icon="ui-icon-alert" />
-									</p:commandLink>
-
-									<p:commandLink styleClass="btn btn-success  fa fa-check"
-										title="Autorizar a compra, dever ser realizado pelo setor ADMINISTRATIVO!"
-										oncomplete="PF('prepara_aprovacao').show();"
-										action="#{escolhaCotacao.prepararAprovacaoPedido(pedido)}"
-										style="color:#fff; margin: 2px 2px"
-										update=":preparacao_aprovacao" value=" Autorizar">
-									</p:commandLink>
-
-									<p:link title="Visualizar pedidos"
-										rendered="#{pedido.statusCompra.nome.equals('Concluído')}"
-										value="Pedido gerado, clique aqui para ir a tela de pedidos"
-										outcome="/main/pedidos"
-										style="color:#000;margin-right:10px;font-weight:bold">
-										<f:param name="comp" value="#{escolhaCotacao.compra.id}" />
-
-									</p:link>
-
-								</f:facet>
-
-								<p:columnGroup type="header">
-									<p:row>
-										<p:column rowspan="2" headerText="Item" />
-										<p:column style="text-align:center" colspan="5"
-											headerText="#{pedido.fornecedor.nomeFantasia}" />
-									</p:row>
-									<p:row>
-										<p:column style="text-align:right" headerText="Qtd." />
-										<p:column style="text-align:right" headerText="Valor unitário" />
-										<p:column style="text-align:right"
-											headerText="Valor unitário c/ desconto" />
-										<p:column style="text-align:right" headerText="Total" />
-										<p:column style="text-align:center;width:60px;"
-											headerText="Ação" />
-									</p:row>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sim" type="button"
+									 styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+									 styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
 
 
-
-								</p:columnGroup>
-
-								<p:column>
-									<h:outputText
-										value="#{itemPedido.cotacao.itemCompra.produto.descricao}" />
-								</p:column>
-
-								<p:column>
-									<h:outputText value="#{itemPedido.cotacao.quantidade}" />
-								</p:column>
-
-								<p:column style="text-align:right">
-									<h:outputText value="#{itemPedido.cotacao.valor}">
-										<f:convertNumber type="currency" maxFractionDigits="3"
-											currencySymbol="R$" />
-									</h:outputText>
-								</p:column>
-
-								<p:column style="text-align:right;width:100px">
-									<h:outputText value="#{itemPedido.cotacao.valorDesconto}">
-										<f:convertNumber type="currency" maxFractionDigits="3"
-											currencySymbol="R$" />
-									</h:outputText>
-								</p:column>
-
-								<p:column style="text-align:right">
-									<h:outputText
-										value="#{itemPedido.cotacao.quantidade * itemPedido.cotacao.valorDesconto}">
-										<f:convertNumber type="currency" maxFractionDigits="2"
-											currencySymbol="R$" />
-									</h:outputText>
-								</p:column>
-
-								<p:column style="text-align:center;width:100px;">
-
-									<p:commandLink title="Excluir item do pedido" value=" Excluir"
-										update=":form-cotacao-escolha:table-mapa-comparativo :form-cotacao-escolha:table-fornecedor-pagamento"
-										style="color:#FFF;"
-										styleClass="btn btn-danger btn-xs fa fa-remove"
-										rendered="#{escolhaCotacao.verificarPrivilegioExclusao() or itemPedido.pedido.statusCompra.nome.equals('Não iniciado/Solicitado')}"
-										action="#{escolhaCotacao.deletarItemPedido(itemPedido)}">
-										<p:confirm header="Confirmação"
-											message="Ao deletar o item não fará mais parte das escolhas."
-											icon="ui-icon-alert" />
-									</p:commandLink>
-
-								</p:column>
-
-								<p:columnGroup type="footer">
-									<p:row>
-										<p:column colspan="4" footerText="Subtotal: "
-											style="text-align:right" />
-										<p:column style="text-align:right"
-											footerText="#{escolhaCotacao.getTotais(pedido.valorTotalComDesconto)}" />
-										<p:column></p:column>
-									</p:row>
-
-									<p:row>
-										<p:column colspan="4" footerText="Desconto: "
-											style="text-align:right" />
-										<p:column style="text-align:right"
-											footerText="#{escolhaCotacao.getTotais(pedido.valorTotalSemDesconto.subtract(pedido.valorTotalComDesconto))}" />
-										<p:column></p:column>
-									</p:row>
-
-									<p:row>
-										<p:column colspan="4" footerText="Total: "
-											style="text-align:right" />
-										<p:column style="text-align:right"
-											footerText="#{escolhaCotacao.getTotais(pedido.valorTotalComDesconto)}" />
-										<p:column></p:column>
-									</p:row>
-
-
-
-								</p:columnGroup>
-
-							</p:dataTable>
-
-						</ui:repeat>
-
-					</p:fieldset>
-
-					<br />
-					<br />
-					<br />
-					<br />
-					<br />
-
-					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-
-						<div align="center">
-							<p:commandButton value="Sim" type="button"
-								styleClass="ui-confirmdialog-yes " icon="ui-icon-check" />
-							<p:commandButton value="Não" type="button"
-								styleClass="ui-confirmdialog-no " icon="ui-icon-close" />
-						</div>
-					</p:confirmDialog>
-
-
-				</h:form>
-
-
-			</h:panelGroup>
-
+			</h:form>
 		</f:view>
 
 	</ui:define>
 
 	<ui:define name="adicionais">
 
-
-
-
-
-
-
 		<p:dialog header="Determinar recursos"
-			widgetVar="determinar_recursoMODE01" modal="true" showEffect="clip"
-			hideEffect="clip" resizable="false" width="800">
+				  widgetVar="determinar_recursoMODE01" modal="true" showEffect="clip"
+				  hideEffect="clip" resizable="false" width="800">
 			<h:form id="form-forma-pagamento-mode01">
 
-				<p:messages  showSummary="false" showDetail="true"
-					closable="true" />
+				<p:messages autoUpdate="true" showSummary="false" showDetail="true"
+							closable="true" />
 
-				<p:panelGrid columns="2" styleClass="ui-noborder">
-					<p:panelGrid columns="2" id="panel-lanc-acao-mode01"
-						styleClass="ui-noborder">
+				<p:panelGrid columns="2">
+					<p:panelGrid columns="2" id="panel-lanc-acao-mode01">
 
 
 						<p:outputLabel value="Linha Orçamentaria:" />
 
 						<p:selectOneMenu id="cate_compra" style="width:180px"
-							placeholder="Entre com o código/nome do projeto." size="25"
-							value="#{escolhaCotacao.lancamentoAcao.projetoRubrica}"
-							filter="true" filterMatchMode="contains" var="categoria"
-							converter="projetoRubricaConverter">
+										 placeholder="Entre com o código/nome do projeto." size="25"
+										 value="#{escolhaCotacao.lancamentoAcao.projetoRubrica}"
+										 filter="true" filterMatchMode="contains" var="categoria"
+										 converter="projetoRubricaConverter">
 
 							<f:selectItems value="#{escolhaCotacao.listaDeRubricasProjeto}"
-								var="ru" itemLabel="#{ru.nomeCategoria}" itemValue="#{ru}" />
+										   var="ru" itemLabel="#{ru.nomeCategoria}" itemValue="#{ru}" />
 
 
 							<p:column headerText="Código">
@@ -549,23 +537,23 @@
 							<p:column headerText="Saldo">
 								<h:outputText value="#{categoria.valorSaldo}">
 									<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
-										maxFractionDigits="2" locale="pt_BR" />
+													 maxFractionDigits="2" locale="pt_BR" />
 								</h:outputText>
 							</p:column>
 
 
 						</p:selectOneMenu>
 
-						<p:outputLabel value="Atividade:" rendered="false" />
+						<p:outputLabel value="Atividade:" rendered="false"/>
 
 						<p:selectOneMenu id="select_atividade" style="width:180px"
-							placeholder="Selecione a atividade do Projeto." size="25"
-							value="#{escolhaCotacao.lancamentoAcao.atividade}" filter="true"
-							filterMatchMode="contains" var="atividade"
-							converter="atividadeProjetoConverter" rendered="false">
+										 placeholder="Selecione a atividade do Projeto." size="25"
+										 value="#{escolhaCotacao.lancamentoAcao.atividade}"
+										 filter="true" filterMatchMode="contains" var="atividade"
+										 converter="atividadeProjetoConverter" rendered="false">
 
 							<f:selectItems value="#{escolhaCotacao.listaAtividadeProjeto}"
-								var="bean" itemLabel="#{bean.nome}" itemValue="#{bean}" />
+										   var="bean" itemLabel="#{bean.nome}" itemValue="#{bean}" />
 
 							<p:column headerText="Atividade">
 								<h:outputText value="#{atividade.nome}" />
@@ -575,7 +563,7 @@
 							<p:column headerText="Saldo">
 								<h:outputText value="#{atividade.saldo}">
 									<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
-										maxFractionDigits="2" locale="pt_BR" />
+													 maxFractionDigits="2" locale="pt_BR" />
 								</h:outputText>
 							</p:column>
 
@@ -586,52 +574,51 @@
 
 						<p:outputLabel value="Valor:" />
 						<p:inputText placeholder="Valor"
-							onkeypress="return formatarNumero(this,event,19,2);"
-							value="#{escolhaCotacao.lancamentoAcao.valor}"
-							style="width:180px;">
+									 onkeypress="return formatarNumero(this,event,19,2);"
+									 value="#{escolhaCotacao.lancamentoAcao.valor}"
+									 style="width:150px;margin-left:5px">
 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
-								locale="pt_BR" />
+											 locale="pt_BR" />
 
 						</p:inputText>
 						<p:commandLink styleClass="btn btn-primary"
-							rendered="#{escolhaCotacao.pedido.statusCompra.nome.equals('Não iniciado/Solicitado')}"
-							update="tab_lanc_acao-mode01 panel-liberacao-mode01 form-forma-pagamento-mode01"
-							icon="ui-icon-check"
-							action="#{escolhaCotacao.salvarLancamentoAcaoMODE01()}"
-							style="color:#fff" process="panel-lanc-acao-mode01"
-							value="Salvar" />
+									   rendered="#{!escolhaCotacao.existePedido}"
+									   update="tab_lanc_acao-mode01 panel-liberacao-mode01 form-forma-pagamento-mode01"
+									   icon="ui-icon-check"
+									   action="#{escolhaCotacao.salvarLancamentoAcaoMODE01()}"
+									   style="color:#fff;margin-left:5px;"
+									   process="panel-lanc-acao-mode01" value="Salvar" />
 
 					</p:panelGrid>
 
-					<p:panelGrid columns="2" id="panel-liberacao-mode01"
-						styleClass="ui-noborder">
+					<p:panelGrid columns="2" id="panel-liberacao-mode01">
 
 						<p:outputLabel value="Total a liberar:" />
 						<p:inputText disabled="true"
-							value="#{escolhaCotacao.valorTotalAliberar}">
+									 value="#{escolhaCotacao.valorTotalAliberar}">
 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
-								locale="pt_BR" />
+											 locale="pt_BR" />
 						</p:inputText>
 
 						<p:outputLabel value="Total liberado:" />
 						<p:inputText disabled="true" style="color:'red'"
-							value="#{escolhaCotacao.valorTotalLiberado}">
+									 value="#{escolhaCotacao.valorTotalLiberado}">
 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
-								locale="pt_BR" />
+											 locale="pt_BR" />
 						</p:inputText>
 
 						<p:outputLabel value="Falta liberar:" />
 						<p:inputText disabled="true"
-							value="#{escolhaCotacao.valorTotalFaltaLiberar}">
+									 value="#{escolhaCotacao.valorTotalFaltaLiberar}">
 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
-								locale="pt_BR" />
+											 locale="pt_BR" />
 						</p:inputText>
 
 					</p:panelGrid>
 				</p:panelGrid>
-				<p:separator></p:separator>
+
 				<p:dataTable id="tab_lanc_acao-mode01"
-					value="#{escolhaCotacao.lancamentos}" var="lancamento">
+							 value="#{escolhaCotacao.lancamentos}" var="lancamento">
 
 					<p:column headerText="Projeto">
 						<h:outputText value="#{lancamento.projetoRubrica.projeto.nome}" />
@@ -639,136 +626,304 @@
 
 					<p:column headerText="Fonte">
 						<h:outputText
-							value="#{lancamento.projetoRubrica.rubricaOrcamento.orcamento.titulo}" />
+								value="#{lancamento.projetoRubrica.rubricaOrcamento.orcamento.titulo}" />
 					</p:column>
 
 					<p:column headerText="Rubrica">
 						<h:outputText
-							value="#{lancamento.projetoRubrica.rubricaOrcamento.rubrica.nome}" />
+								value="#{lancamento.projetoRubrica.rubricaOrcamento.rubrica.nome}" />
 					</p:column>
 
 					<p:column headerText="Atividade">
-						<h:outputText value="#{lancamento.atividade.nome}" />
+						<h:outputText
+								value="#{lancamento.atividade.nome}" />
 					</p:column>
 
-					<p:column style="text-align:right" headerText="Valor">
+					<p:column style="text-align:right;width:150px;" headerText="Valor">
 						<h:outputText value="#{lancamento.valor}">
 							<f:convertNumber type="currency" maxFractionDigits="2"
-								currencySymbol="R$" />
+											 currencySymbol="R$" />
 						</h:outputText>
 					</p:column>
-					<p:column style="text-align:center" width="15%" headerText="Ação">
-						<p:commandLink title="Excluir Linha" style="color:#FFF;"
-							styleClass="btn btn-danger btn-xs fa fa-remove" value=" Excluir"
-							rendered="#{escolhaCotacao.pedido.statusCompra.nome.equals('Não iniciado/Solicitado')}"
-							update="tab_lanc_acao-mode01 :form-forma-pagamento-mode01"
-							action="#{escolhaCotacao.deletarLancamentoFormaDePagamento(lancamento)}">
+					<p:column>
+						<p:commandLink title="Deletar"
+									   rendered="#{!escolhaCotacao.existePedido}"
+									   update="tab_lanc_acao-mode01 :form-forma-pagamento-mode01"
+									   style="margin-left:10px;color:#000" styleClass="fa fa-times"
+									   action="#{escolhaCotacao.deletarLancamentoFormaDePagamento(lancamento.id)}">
+							Excluir
 							<p:confirm header="Confirmação"
-								message="Deletar forma de pagamento do pedido"
-								icon="ui-icon-alert" />
+									   message="Deletar forma de pagamento do pedido"
+									   icon="ui-icon-alert" />
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
 
 				<p:commandLink
-					update=":form-cotacao-escolha:table-mapa-comparativo :form-cotacao-escolha:table-fornecedor-pagamento :form-forma-pagamento-mode01"
-					value="Enviar para aprovação"
-					oncomplete="PF('determinar_recursoMODE01').hide()"
-					action="#{escolhaCotacao.enviarParaAprovacao()}"
-					style="margin-top:5px;color:#fff"
-					styleClass="btn btn-success btn-block" />
+						update=":form-cotacao-escolha:table-mapa-comparativo :form-cotacao-escolha:table-fornecedor-pagamento :form-forma-pagamento-mode01"
+						value="Enviar para aprovação"
+						action="#{escolhaCotacao.enviarParaAprovacao()}"
+						style="margin-top:5px;color:#fff"
+						styleClass="btn btn-primary btn-block" />
 
 			</h:form>
 		</p:dialog>
 
 
 
+		<p:dialog
+				rendered="#{!escolhaCotacao.compra.versionLancamento.equals('MODE01')}"
+				header="Determinar recursos" widgetVar="determinar_recurso"
+				modal="true" showEffect="clip" hideEffect="clip" resizable="false"
+				width="700">
+			<h:form id="form-forma-pagamento">
+
+				<p:messages autoUpdate="true" showSummary="false" showDetail="true"
+							closable="true" />
+
+				<p:panelGrid columns="2">
+					<p:panelGrid columns="2" id="panel-lanc-acao">
+						<p:outputLabel value="Fonte:" />
+						<p:selectOneMenu converter="fontePagadoraConverter"
+										 value="#{escolhaCotacao.lancamentoAcao.fontePagadora}">
+							<f:selectItems value="#{escolhaCotacao.formasDePagamento}"
+										   var="formaPagamento"
+										   itemLabel="#{formaPagamento.fontePagadora.nome}"
+										   itemValue="#{formaPagamento.fontePagadora}" />
+						</p:selectOneMenu>
+						<p:outputLabel value="Ação:" />
+						<p:selectOneMenu converter="acaoConverter"
+										 value="#{escolhaCotacao.lancamentoAcao.acao}">
+							<f:selectItems value="#{escolhaCotacao.formasDePagamento}"
+										   var="formaPagamento" itemLabel="#{formaPagamento.acao.codigo}"
+										   itemValue="#{formaPagamento.acao}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Atividade:" />
+
+						<p:selectOneMenu id="select_atividade2" style="width:180px"
+										 placeholder="Selecione a atividade do Projeto." size="25"
+										 value="#{escolhaCotacao.lancamentoAcao.atividade}"
+										 filter="true" filterMatchMode="contains" var="atividade"
+										 converter="atividadeProjetoConverter">
+
+							<f:selectItems value="#{escolhaCotacao.listaAtividadeProjeto}"
+										   var="bean" itemLabel="#{bean.nome}" itemValue="#{bean}" />
 
 
 
+							<p:column headerText="Atividade">
+								<h:outputText value="#{atividade.nome}" />
+							</p:column>
+
+
+							<p:column headerText="Saldo">
+								<h:outputText value="#{atividade.saldo}">
+									<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+													 maxFractionDigits="2" locale="pt_BR" />
+								</h:outputText>
+							</p:column>
+
+
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Valor:" />
+						<p:inputText placeholder="Valor"
+									 onkeypress="return formatarNumero(this,event,19,2);"
+									 value="#{escolhaCotacao.lancamentoAcao.valor}"
+									 style="width:150px;margin-left:5px">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+											 locale="pt_BR" />
+
+						</p:inputText>
+						<p:commandLink styleClass="btn btn-primary"
+									   update="tab_lanc_acao panel-liberacao form-forma-pagamento"
+									   icon="ui-icon-check"
+									   action="#{escolhaCotacao.salvarLancamentoAcao()}"
+									   style="color:#fff;margin-left:5px;" process="panel-lanc-acao"
+									   value="Enviar" />
+
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" id="panel-liberacao">
+
+						<p:outputLabel value="Total a liberar:" />
+						<p:inputText disabled="true"
+									 value="#{escolhaCotacao.valorTotalAliberar}">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+											 locale="pt_BR" />
+						</p:inputText>
+
+						<p:outputLabel value="Total liberado:" />
+						<p:inputText disabled="true" style="color:'red'"
+									 value="#{escolhaCotacao.valorTotalLiberado}">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+											 locale="pt_BR" />
+						</p:inputText>
+
+						<p:outputLabel value="Falta liberar:" />
+						<p:inputText disabled="true"
+									 value="#{escolhaCotacao.valorTotalFaltaLiberar}">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+											 locale="pt_BR" />
+						</p:inputText>
+
+					</p:panelGrid>
+				</p:panelGrid>
+
+				<p:dataTable id="tab_lanc_acao"
+							 value="#{escolhaCotacao.lancamentos}" var="lancamento">
+
+					<p:column headerText="Fonte">
+						<h:outputText value="#{lancamento.fontePagadora.nome}" />
+					</p:column>
+
+					<p:column headerText="Ação">
+						<h:outputText value="#{lancamento.acao.codigo}" />
+					</p:column>
+
+					<p:column style="text-align:right;width:150px;" headerText="Valor">
+						<h:outputText value="#{lancamento.valor}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+											 currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<p:commandLink title="Deletar"
+									   update="tab_lanc_acao :form-forma-pagamento"
+									   style="margin-left:10px;color:#000" styleClass="fa fa-times"
+									   action="#{escolhaCotacao.deletarLancamentoFormaDePagamento(lancamento.id)}">
+							Excluir
+							<p:confirm header="Confirmação"
+									   message="Deletar forma de pagamento do pedido"
+									   icon="ui-icon-alert" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+
+				<p:commandLink
+						update=":form-cotacao-escolha:table-mapa-comparativo :form-cotacao-escolha:table-fornecedor-pagamento :form-forma-pagamento"
+						value="Enviar para aprovação"
+						action="#{escolhaCotacao.enviarParaAprovacao()}"
+						style="margin-top:5px;color:#fff"
+						styleClass="btn btn-primary btn-block" />
+
+			</h:form>
+		</p:dialog>
+
+
+		<p:dialog header="Menor preço por item" widgetVar="selecao_cotacao"
+				  modal="false" showEffect="clip" hideEffect="clip" resizable="false"
+				  width="500">
+
+			<h:form id="selecao_cotacao_form">
+
+
+				<p:outputLabel style="margin-right:5px" value="Descrição" />
+				<h:outputText value="#{escolhaCotacao.item.toLowerCase()}" />
+
+				<p:messages id="msg-rank-item" showDetail="true" showSummary="false"
+							autoUpdate="false" closable="true" />
+				<p:dataTable rowIndexVar="indexRow" id="tab_cotacao"
+							 rowStyleClass="#{cot.houveEscolha ? 'highlight' : null}"
+							 selection="#{escolhaCotacao.cotacao}" rowKey="#{cot.id}"
+							 value="#{escolhaCotacao.cotacoes}" var="cot">
+
+					<p:column headerText="#" style="width:38px">
+						<h:outputText value="#{indexRow + 1}º" />
+					</p:column>
+
+					<p:column selectionMode="single"
+							  style="width:34px;text-align:center" />
+
+					<p:column headerText="Fornecedor">
+						<h:outputLabel value="#{cot.fornecedor.nomeFantasia}" />
+					</p:column>
+
+					<p:column headerText="Valor">
+						<h:outputLabel value="#{cot.valorDesconto}" />
+					</p:column>
+
+					<f:facet name="footer">
+						<p:commandButton process="tab_cotacao selecao_cotacao_form:obss"
+										 action="#{escolhaCotacao.escolherCotacao()}"
+										 update="selecao_cotacao_form :form-cotacao-escolha:table-mapa-comparativo :form-cotacao-escolha:table-fornecedor-pagamento"
+										 value="Escolher" />
+					</f:facet>
+
+				</p:dataTable>
+				<p:separator></p:separator>
+				<p:inputTextarea id="obss" style="width:100%" rows="5" cols="18"
+								 value="#{escolhaCotacao.obs.texto}"></p:inputTextarea>
+
+
+			</h:form>
+
+		</p:dialog>
 
 		<p:dialog widgetVar="prepara_aprovacao" modal="true" closable="true"
-			responsive="true" resizable="false" header="Enviar Para Aprovação"
-			closeOnEscape="true" showHeader="true" showEffect="clip"
-			hideEffect="clip">
+				  header="Enviar Para Aprovação" closeOnEscape="true" showHeader="true"
+				  showEffect="clip" hideEffect="clip">
 
 			<h:form id="preparacao_aprovacao">
-				<p:messages  closable="true" showDetail="true"
-					showIcon="true" showSummary="false" />
+				<p:messages autoUpdate="true" closable="true" showDetail="true"
+							showIcon="true" showSummary="false" />
 
-				<p:panelGrid columns="2" styleClass="ui-noborder"
-					style="margin-top:10px;margin-bottom:5px">
+				<p:panelGrid columns="2" style="margin-top:10px;margin-bottom:5px">
 
 					<p:outputLabel value="Data de entrega:" />
 					<p:calendar value="#{escolhaCotacao.pedido.dataEntrega}"
-						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+								timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
 
 					<p:outputLabel value="Data de pagamento:" />
 					<p:calendar value="#{escolhaCotacao.pedido.dataPagamento}"
-						timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+								timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
 
 					<p:outputLabel value="Condições de pagamento:" />
 					<p:selectOneMenu
-						value="#{escolhaCotacao.pedido.condicaoPagamentoEnum}">
+							value="#{escolhaCotacao.pedido.condicaoPagamentoEnum}">
 						<f:selectItems value="#{escolhaCotacao.condicoes}" var="condicao"
-							itemLabel="#{condicao.nome}" itemValue="#{condicao}" />
+									   itemLabel="#{condicao.nome}" itemValue="#{condicao}" />
 					</p:selectOneMenu>
-
-					<p:outputLabel value="Fornecedor:" />
-					<p:outputLabel
-						value="#{escolhaCotacao.pedido.fornecedor.nomeFantasia}" />
-
 
 					<p:outputLabel value="Tipo parcelamento:" />
 					<p:selectOneMenu value="#{escolhaCotacao.pedido.tipoParcelamento}">
 						<f:selectItems value="#{escolhaCotacao.tiposParcelas}"
-							var="parcela" itemLabel="#{parcela.nome}" itemValue="#{parcela}" />
+									   var="parcela" itemLabel="#{parcela.nome}" itemValue="#{parcela}" />
 					</p:selectOneMenu>
 
 					<p:outputLabel value="Quantidade de parcelas:" />
 					<p:inputText value="#{escolhaCotacao.pedido.quantidadeParcela}" />
 
-					<p:outputLabel value="Setor Responsável:" />
+					<p:outputLabel value="Responsável Expedição:" />
 					<p:selectOneMenu
-						value="#{escolhaCotacao.controleExpedicao.gestaoResponsavel}"
-						converter="gestaoConverter" filter="true"
-						filterMatchMode="contains">
+							value="#{escolhaCotacao.controleExpedicao.gestaoResponsavel}"
+							converter="gestaoConverter" filter="true"
+							filterMatchMode="contains">
 						<f:selectItems value="#{escolhaCotacao.listGestao}" var="gestao"
-							itemValue="#{gestao}" itemLabel="#{gestao.nome}" />
+									   itemValue="#{gestao}" itemLabel="#{gestao.nome}" />
 					</p:selectOneMenu>
 
 					<p:outputLabel value="Nome responsável:" />
 					<p:inputText
-						value="#{escolhaCotacao.controleExpedicao.nomeResponsavel}" />
+							value="#{escolhaCotacao.controleExpedicao.nomeResponsavel}" />
 
 					<p:outputLabel value="Observações" />
 					<p:inputTextarea cols="35"
-						value="#{escolhaCotacao.pedido.observacao}" />
-
-
-
-				</p:panelGrid>
-
-				<center>
+									 value="#{escolhaCotacao.pedido.observacao}" />
 
 					<p:commandLink styleClass="btn btn-success btn-block"
-						process="preparacao_aprovacao"
-						action="#{escolhaCotacao.aprovarEspelhoComoPedido()}"
-						style="color:#FFF; float:right"
-						update=":form-cotacao-escolha:table-fornecedor-pagamento"
-						value="Autorizar">
+								   process="preparacao_aprovacao"
+								   action="#{escolhaCotacao.aprovarEspelhoComoPedido()}"
+								   style="color:#FFF; margin: 2px 2px;float:right"
+								   update=":form-forma-pagamento :form-cotacao-escolha:table-fornecedor-pagamento"
+								   value="Autorizar">
 						<p:confirm header="Confirmação"
-							message="Após aprovação o pedido será gerado, deseja continuar?"
-							icon="ui-icon-alert" />
+								   message="Após aprovação o pedido será gerado, deseja continuar?"
+								   icon="ui-icon-alert" />
 					</p:commandLink>
 
-					<p:commandLink styleClass="btn btn-danger btn-block"
-						onclick="PF('prepara_aprovacao').hide()"
-						style="color:#FFF;float:left" value="Fechar" />
-
-
-				</center>
-
+				</p:panelGrid>
 
 			</h:form>
 

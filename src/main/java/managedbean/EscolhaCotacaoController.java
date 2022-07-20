@@ -141,6 +141,94 @@ public class EscolhaCotacaoController implements Serializable {
 	public EscolhaCotacaoController() {
 	}
 
+	public void aprovarEspelhoComoPedido() {
+		if (!this.verificaCamposPedido(this.pedido, this.controleExpedicao)) {
+			if (this.verificarPrivilegio()) {
+				Label_0397: {
+					try {
+						this.inicializaPedido(this.fornecedor, this.pedido);
+						this.pedido.setUsuarioGeradorPedido(this.usuarioSessao.getUsuario());
+						this.pedido.setStatusCompra(StatusCompra.CONCLUIDO);
+						this.pedido.setVersionLancamento("MODE01");
+						this.pedido = this.cotacaoService.salvarPedido(this.pedido, this.controleExpedicao, this.usuarioSessao.getUsuario());
+						if (this.pedido == null) {
+							final FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Aten\u00e7\u00e3o", "Erro ao gerar o pedido, contate o administrador do sistema");
+							FacesContext.getCurrentInstance().addMessage(null, message);
+							return;
+						}
+						this.carregarMapa();
+						this.cotacaoService.atualizarStatus(this.pedido.getCompra());
+						this.addMessage("", "Pedido gerado com sucesso!", FacesMessage.SEVERITY_INFO);
+						if (this.email.verificaInternet()) {
+							this.enviarEmailAprovacaoPedido2();
+							this.limparEmail();
+							break Label_0397;
+						}
+						final FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Aten\u00e7\u00e3o", "Problema de conex\u00e3o com a internet. O pedido foi gerado no entanto o e-mail de aviso n\u00e3o foi enviado, tente novamente mais tarde!");
+						FacesContext.getCurrentInstance().addMessage(null, message);
+					}
+					catch (NoResultException e2) {
+						final FacesMessage message2 = new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Rubrica sem saldo suficiente");
+						FacesContext.getCurrentInstance().addMessage((String)null, message2);
+					}
+					catch (Exception e) {
+						if (e.getMessage().equals("www.gmail.com")) {
+							final FacesMessage message2 = new FacesMessage(FacesMessage.SEVERITY_WARN, "Aten\u00e7\u00e3o", "Problema de conex\u00e3o com a internet. O pedido foi gerado no entanto o e-mail de aviso n\u00e3o foi enviado, tente novamente mais tarde!");
+							FacesContext.getCurrentInstance().addMessage(null, message2);
+						}
+						else {
+							final FacesMessage message2 = new FacesMessage(FacesMessage.SEVERITY_WARN, "Aten\u00e7\u00e3o", e.getMessage());
+							FacesContext.getCurrentInstance().addMessage(null, message2);
+						}
+					}
+					finally {
+						this.pedido = new Pedido();
+						this.controleExpedicao = new ControleExpedicao();
+					}
+				}
+				this.pedido = new Pedido();
+				this.controleExpedicao = new ControleExpedicao();
+			}
+			else {
+				final FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Aten\u00e7\u00e3o", "Voc\u00ea n\u00e3o tem privil\u00e9gios para esse tipo de a\u00e7\u00e3o, por favor contate o coordenador de compras!");
+				FacesContext.getCurrentInstance().addMessage(null, message);
+			}
+		}
+	}
+
+	public void escolherCotacao() {
+		if (this.cotacao != null) {
+			int cont = 1;
+			for (final Cotacao cotacaoAux : this.cotacoes) {
+				if (cotacaoAux.getId() != (long)this.cotacao.getId() && this.cotacao.getValorDesconto().doubleValue() > cotacaoAux.getValorDesconto().doubleValue()) {
+					if (this.obs.getTexto() == null) {
+						this.addMessage("", "Por favor explique o motivo de n\u00e3o comprar o menor pre\u00e7o!.", FacesMessage.SEVERITY_WARN);
+						this.addMessage("", "Explica\u00e7\u00e3o com no minimo 5 caracteres!", FacesMessage.SEVERITY_WARN);
+						return;
+					}
+					if (this.obs.getTexto().length() < 5) {
+						this.addMessage("", "Por favor explique o motivo de n\u00e3o comprar o menor pre\u00e7o!.", FacesMessage.SEVERITY_WARN);
+						this.addMessage("", "Explica\u00e7\u00e3o com no minimo 5 caracteres!", FacesMessage.SEVERITY_WARN);
+						return;
+					}
+				}
+				++cont;
+			}
+			this.cotacao.setHouveEscolha(Boolean.valueOf(true));
+			this.cotacaoService.salvar(this.cotacao);
+			this.cotacoes = (List<Cotacao>)this.cotacaoService.getCotacoes(this.cotacao.getItemCompra());
+			this.espelhos = (List<EspelhoPedido>)this.cotacaoService.getEspelhoPedido(this.cotacao.getCompra());
+			if (this.obs.getTexto().length() > 5) {
+				this.cotacaoService.salvarObservacao(this.obs);
+			}
+			this.addMessage("", "Cota\u00e7\u00e3o escolhida: " + this.cotacao.getFornecedor().getNomeFantasia() + " Valor: " + this.cotacao.getValor(), FacesMessage.SEVERITY_INFO);
+			this.cotacao = new Cotacao();
+		}
+		else {
+			this.addMessage("", "Selecione uma das cota\u00e7\u00f5es", FacesMessage.SEVERITY_ERROR);
+		}
+	}
+
 	public void carregarCotacoes() throws IOException {
 
 		/*
