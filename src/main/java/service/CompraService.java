@@ -299,6 +299,59 @@ public class CompraService implements Serializable {
 	}
 
 	@Transactional
+	public boolean salvar(final Compra compra, final User usuario, final List<Municipio> municipios) {
+		try {
+			Boolean verificaCampo = false;
+			if (compra.getTipoGestao() == null) {
+				this.addMessage("", "Campo Tipo de gest\u00e3o \u00e9 obrigat\u00f3rio.", FacesMessage.SEVERITY_ERROR);
+				verificaCampo = true;
+			}
+			else if (compra.getTipoLocalidade() == null) {
+				this.addMessage("", "Destino \u00e9 obrigat\u00f3rio.", FacesMessage.SEVERITY_ERROR);
+				verificaCampo = true;
+			}
+			else if (compra.getItens().isEmpty()) {
+				this.addMessage("", "Inserir ao menos 1 item na solicita\u00e7\u00e3o.", FacesMessage.SEVERITY_ERROR);
+				verificaCampo = true;
+			}
+			else if (compra.getGestao() == null) {
+				this.addMessage("", "Adicione uma coordenadoria/regional/superintend\u00eancia \u00e9 obrigat\u00f3rio.", FacesMessage.SEVERITY_ERROR);
+				verificaCampo = true;
+			}
+			else if (compra.getLocalidade() == null) {
+				this.addMessage("", "Destino \u00e9 obrigat\u00f3rio.", FacesMessage.SEVERITY_ERROR);
+				verificaCampo = true;
+			}
+			else {
+				if (compra.getId() == null) {
+					compra.setDataEmissao(new Date());
+					compra.setStatusCompra(StatusCompra.N_INCIADO);
+				}
+				if (verificaCampo) {
+					return false;
+				}
+				compra.setListCompraMunicipio((List)new ArrayList());
+				for (final Municipio municipio : municipios) {
+					final CompraMunicipio compraMunicipio = new CompraMunicipio(municipio, compra);
+					compra.getListCompraMunicipio().add(compraMunicipio);
+				}
+				compra.setCategoriaDespesaClass(compra.getItens().get(0).getProduto().getCategoriaDespesa());
+				if ((compra.getCategoriaDespesaClass().getNome().equals("FRETE SEDEX") || compra.getCategoriaDespesaClass().getNome().equals("FRETE PAC")) && compra.getItens().size() > 1) {
+					compra.setCategoriaDespesaClass(compra.getItens().get(1).getProduto().getCategoriaDespesa());
+				}
+				this.repositorio.salvarCompra((Lancamento)compra, usuario);
+				this.addMessage("", "Salvo com sucesso!!!", FacesMessage.SEVERITY_INFO);
+				return true;
+			}
+		}
+		catch (Exception e) {
+			this.addMessage("", "Erro ao salvar!!!", FacesMessage.SEVERITY_ERROR);
+			return false;
+		}
+		return false;
+	}
+
+	@Transactional
 	public boolean salvar(Compra compra, User usuario, List<Municipio> municipios, Integer type) {
 		List<CompraMunicipio> store = new ArrayList<CompraMunicipio>();
 		//compra.setListCompraMunicipio(new ArrayList<CompraMunicipio>());
@@ -314,13 +367,13 @@ public class CompraService implements Serializable {
 			if (compra.getItens().size() > 1)
 				compra.setCategoriaDespesaClass(compra.getItens().get(1).getProduto().getCategoriaDespesa());
 		}
-		
+
 		if (compra.getId() == null) {
 			compra.setDataEmissao(new Date());
 		}
 
 		try {
-			
+
 			if (type == 1) {
 				compra.setStatusCompra(StatusCompra.PENDENTE_APROVACAO);
 				compra = repositorio.salvarCompra(compra, usuario);

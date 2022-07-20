@@ -1154,47 +1154,90 @@ public class CompraController implements Serializable {
 	}
 
 	public void editarCompraMODE01() {
-		carregarProjetos();
-		carregarMunicipiosDeCompra();
-		// carregarUnidades();
-
-		if (compra.getId() == null) {
+		if (this.compra.getId() == null) {
 			return;
 		}
-
-		comprasFiltered = new ArrayList<>();
-
-		panelCadastro = true;
-		panelListagem = false;
-
-		compra = compraService.getCompraById(compra.getId());
-		buscarMunicipiosDeCompra();
-		compra.setLocalidade(compraService.getLocalidadeById(compra.getId()));
-		compra.setItens(new ArrayList<ItemCompra>());
-		compra.setItens(compraService.getItensByCompraAllProducts(compra));
-		compra.setLancamentosAcoes(compraService.getLancamentosAcoes(compra));
-
-		tipoGestao = compra.getTipoGestao().getNome();
-		local = compra.getTipoLocalidade().getNome();
-
-		if (compra.getLocalidade() instanceof Municipio) {
-			estados = compraService.getEstados(new Filtro());
-			idEstado = ((Municipio) compra.getLocalidade()).getEstado().getId();
-			localidades = compraService.getMunicipioByEstado(idEstado);
-		} else {
-			LocalRepositorio repo = CDILocator.getBean(LocalRepositorio.class);
-			localidades = compra.getTipoLocalidade().getLocalidade(repo);
+		this.comprasFiltered = new ArrayList<Compra>();
+		this.panelCadastro = true;
+		this.panelListagem = false;
+		this.carregarProjetos();
+		this.getProjetoByUsuario();
+		this.carregarMunicipiosDeCompra();
+		this.carregarUnidades();
+		this.compra = this.compraService.getCompraById(this.compra.getId());
+		this.buscarMunicipiosDeCompra();
+		this.compra.setItens((List)new ArrayList());
+		this.compra.setItens(this.compraService.getItensByCompraAllProducts(this.compra));
+		this.compra.setLancamentosAcoes(this.compraService.getLancamentosAcoes((Lancamento)this.compra));
+		this.tipoGestao = this.compra.getTipoGestao().getNome();
+		this.local = this.compra.getTipoLocalidade().getNome();
+		if (this.compra.getLocalidade() instanceof Municipio) {
+			this.estados = (List<Estado>)this.compraService.getEstados(new Filtro());
+			this.idEstado = ((Municipio)this.compra.getLocalidade()).getEstado().getId();
+			this.localidades = (List<Localidade>)this.compraService.getMunicipioByEstado(this.idEstado);
 		}
-
-		GestaoRepositorio repo = CDILocator.getBean(GestaoRepositorio.class);
-		gestoes = new ArrayList<>();
-		gestoes = compra.getTipoGestao().getGestao(repo);
-
-		carregarRubricas();
-
-		closeDialogLoading();
-
+		else {
+			final LocalRepositorio repo = (LocalRepositorio)CDILocator.getBean((Class)LocalRepositorio.class);
+			this.localidades = (List<Localidade>)this.compra.getTipoLocalidade().getLocalidade(repo);
+		}
+		final GestaoRepositorio repo2 = (GestaoRepositorio)CDILocator.getBean((Class)GestaoRepositorio.class);
+		this.gestoes = new ArrayList<Gestao>();
+		this.gestoes = (List<Gestao>)this.compra.getTipoGestao().getGestao(repo2);
+		this.carregarRubricas();
+		this.closeDialogLoading();
 	}
+
+	public void getProjetoByUsuario() {
+		if (this.usuarioSessao.getUsuario().getPerfil().getDescricao().equals("admin") || this.usuarioSessao.getUsuario().getPerfil().getDescricao().equals("financeiro")) {
+			this.listaProjeto = (List<Projeto>)this.projetoService.getProjetosbyUsuarioProjeto((User)null, this.filtro);
+			return;
+		}
+		this.filtro.setVerificVigenciaMenosDias(Boolean.valueOf(true));
+		this.listaProjeto = (List<Projeto>)this.projetoService.getProjetosbyUsuarioProjeto(this.usuarioSessao.getUsuario(), this.filtro);
+	}
+
+//	public void editarCompraMODE01() {
+//		carregarProjetos();
+//		carregarMunicipiosDeCompra();
+//		// carregarUnidades();
+//
+//		if (compra.getId() == null) {
+//			return;
+//		}
+//
+//		comprasFiltered = new ArrayList<>();
+//
+//		panelCadastro = true;
+//		panelListagem = false;
+//
+//		compra = compraService.getCompraById(compra.getId());
+//		buscarMunicipiosDeCompra();
+//		compra.setLocalidade(compraService.getLocalidadeById(compra.getId()));
+//		compra.setItens(new ArrayList<ItemCompra>());
+//		compra.setItens(compraService.getItensByCompraAllProducts(compra));
+//		compra.setLancamentosAcoes(compraService.getLancamentosAcoes(compra));
+//
+//		tipoGestao = compra.getTipoGestao().getNome();
+//		local = compra.getTipoLocalidade().getNome();
+//
+//		if (compra.getLocalidade() instanceof Municipio) {
+//			estados = compraService.getEstados(new Filtro());
+//			idEstado = ((Municipio) compra.getLocalidade()).getEstado().getId();
+//			localidades = compraService.getMunicipioByEstado(idEstado);
+//		} else {
+//			LocalRepositorio repo = CDILocator.getBean(LocalRepositorio.class);
+//			localidades = compra.getTipoLocalidade().getLocalidade(repo);
+//		}
+//
+//		GestaoRepositorio repo = CDILocator.getBean(GestaoRepositorio.class);
+//		gestoes = new ArrayList<>();
+//		gestoes = compra.getTipoGestao().getGestao(repo);
+//
+//		carregarRubricas();
+//
+//		closeDialogLoading();
+//
+//	}
 
 	public void editarCompra() {
 		comprasFiltered = new ArrayList<>();
@@ -1377,14 +1420,10 @@ public class CompraController implements Serializable {
 		
 		
 		closeDialogLoading();
-		
-		
-
-		
 
 	}
 
-	public String salvarCompraMODE01() {
+//	public String salvarCompraMODE01() {
 
 		// compra.setTipoGestao(buscarTipoGestao());
 		// compra.setTipoLocalidade(buscarTipoLocalidade());
@@ -1416,8 +1455,46 @@ public class CompraController implements Serializable {
 		// return "compra_new?faces-redirect=true";
 		// }
 
-		closeDialogLoading();
+//		closeDialogLoading();
+//
+//		return "";
+//	}
 
+	public String salvarCompraMODE01() {
+		this.compra.setTipoGestao(this.buscarTipoGestao());
+		this.compra.setTipoLocalidade(this.buscarTipoLocalidade());
+		this.compra.setVersionLancamento("MODE01");
+		if (this.municipiosDeCompraSelected.isEmpty()) {
+			this.addMessage("", "Por favor adicione no m\u00ednimo um munic\u00edpio para compra.", FacesMessage.SEVERITY_WARN);
+			this.closeDialogLoading();
+			return "";
+		}
+		if (this.compra.getBootUrgencia() && this.compra.getJustificativa().length() < 3) {
+			this.addMessage("", "Por favor justifique a urg\u00eancia.", FacesMessage.SEVERITY_WARN);
+			this.closeDialogLoading();
+			return "";
+		}
+		if (this.compra.getItens().isEmpty()) {
+			this.addMessage("", "Por favor adicione no m\u00ednimo um item de compra.", FacesMessage.SEVERITY_WARN);
+			this.closeDialogLoading();
+			return "";
+		}
+		if (this.compra.getLancamentosAcoes().isEmpty()) {
+			this.addMessage("", "Por favor adicione o recurso que ir\u00e1 custear as despesas.", FacesMessage.SEVERITY_WARN);
+			this.closeDialogLoading();
+			return "";
+		}
+		this.verificarFundoAmazonia();
+		if (this.compra.getId() == null) {
+			this.compra.setCodigo(this.gerarCodigo());
+			this.compra.setSolicitante(this.usuarioSessao.getUsuario().getColaborador());
+		}
+		if (this.compraService.salvar(this.compra, this.usuarioSessao.getUsuario(), (List)this.municipiosDeCompraSelected)) {
+			this.limpar();
+			this.closeDialogLoading();
+			return "compras?faces-redirect=true";
+		}
+		this.closeDialogLoading();
 		return "";
 	}
 
