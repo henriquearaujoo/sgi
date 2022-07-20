@@ -1989,7 +1989,7 @@ public class LancamentoRepository implements Serializable {
 	}
 
 	public Boolean buscarPagamentoByLancamento(Long id, String args) {
-		String jpql = "from PagamentoLancamento as pl where pl.lancamento.id = :id";
+		String jpql = "from PagamentoLancamento as pl where pl.lancamentoAcao.lancamento.id = :id";
 		Query query = this.manager.createQuery(jpql);
 		query.setParameter("id", id);
 		return query.getResultList().size() > 0 ? true : false;

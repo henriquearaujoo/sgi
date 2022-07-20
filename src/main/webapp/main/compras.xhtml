@@ -1137,9 +1137,10 @@
 						</p:link>
 
 						<p:commandLink title="Imprimir"
-									   styleClass="btn btn-default btn-xs glyphicon glyphicon-print"
+									   styleClass="btn btn-default btn-xs"
 									   target="_blank" style="margin-left:9px;" ajax="false"
 									   action="#{pedidoController.imprimirPedido()}">
+							<i class="fa fa-print"></i>
 							<f:setPropertyActionListener value="#{pedido}"
 														 target="#{pedidoController.pedido}" />
 						</p:commandLink>
@@ -1147,8 +1148,9 @@
 						<p:commandLink title="Notas"
 									   oncomplete="PF('dialog_arquivo').show();" update=":form-arquivo"
 									   action="#{pedidoController.carregarArquivos()}"
-									   styleClass="btn btn-default btn-xs glyphicon glyphicon-file"
+									   styleClass="btn btn-default btn-xs"
 									   process="@this" style="margin-left:9px;">
+							<i class="fa fa-file"></i>
 							<f:setPropertyActionListener value="#{pedido}"
 														 target="#{pedidoController.lancamentoAux}" />
 						</p:commandLink>
@@ -1159,9 +1161,10 @@
 								title="Excluir" update="@form" onstart="start()"
 								onclick="start()" onsuccess="stop();PF('dlg_pedido').hide();"
 								onerror="stop()"
-								styleClass="btn btn-default btn-xs glyphicon glyphicon-remove-circle"
+								styleClass="btn btn-default btn-xs"
 								style="margin-left:9px"
 								action="#{pedidoController.removerPedido()}">
+							<i class="fa fa-trash"></i>
 							<p:confirm header="Confirmar suspensão do pedido"
 									   icon="ui-icon-alert" message="Excluir pedido?" />
 							<f:setPropertyActionListener value="#{pedido}"
