@@ -349,7 +349,7 @@ public class CotacaoController implements Serializable {
 		toEmailAux.append(",");
 		toEmailAux.append("compra@fas-amazonas.org");
 
-		if (compra.getGestao().getId().longValue() == 10) {
+		if (compra.getGestao().getId() == 10L) {
 			toEmailAux.append(",");
 			toEmailAux.append("raquel.caldas@fas-amazonas.org");
 		}
@@ -359,18 +359,11 @@ public class CotacaoController implements Serializable {
 
 	public void enviarCotacaoEmail() {
 		try {
-
-			if (email.verificaInternet()) {
-				email.EnviarMapaComparativo(compra, cotacoesSelected);
-				addMessage("", "Mensagem enviada com sucesso", FacesMessage.SEVERITY_INFO);
-				limparEmail();
-			}
+			email.EnviarMapaComparativo(compra, cotacoesSelected);
+			addMessage("", "Mensagem enviada com sucesso", FacesMessage.SEVERITY_INFO);
+			limparEmail();
 
 		} catch (EmailException e) {
-			addMessage("", "Problema de conexão com a internet, "
-					+ "por favor contate o administrador do sistema, o seu envio não foi possível, tente mais tarde.",
-					FacesMessage.SEVERITY_WARN);
-		} catch (IOException e) {
 			addMessage("", "Problema de conexão com a internet, "
 					+ "por favor contate o administrador do sistema, o seu envio não foi possível, tente mais tarde.",
 					FacesMessage.SEVERITY_WARN);
