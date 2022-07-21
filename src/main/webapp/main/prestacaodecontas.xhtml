@@ -140,15 +140,17 @@
 				<p:column headerText="opções" width="150" exportable="false" style="text-align:center">
 					
 					<p:link title="Prestar contas" style="color:#fff;margin-left:9px;"
-						styleClass="btn btn-success btn-xs fa fa-money"
+						styleClass="btn btn-success btn-xs "
 						outcome="/main/prestacaodecontas_cadastro">
+						<i class="fa fa-money"></i>
 						<f:param name="ad" value="#{adiantamento.idAdiantamento}" />
 						<span style="font-family: Arial; margin-left: 3px">prestar
 							contas</span>
 					</p:link>
 
 					<p:commandLink style="margin-left:4px;color:#000"
-						styleClass="btn btn-default btn-xs fa fa-print">
+						styleClass="btn btn-default btn-xs ">
+						<i class="fa fa-print"></i>
 						<span style="font-family: Arial; margin-left: 3px">imprimir</span>
 					</p:commandLink>
 
