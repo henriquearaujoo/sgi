@@ -1,263 +1,193 @@
 <!DOCTYPE html>
 <ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+				xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:o="http://omnifaces.org/ui">
+
+
+	<f:metadata>
+		<o:viewParam name="comp" value="#{cotacaoController.compra}" />
+		<f:viewAction action="#{cotacaoController.carregarItens()}" />
+	</f:metadata>
 
 
 	<ui:define name="content">
+		<f:view>
 
-		<h:form id="form-cotacao" prependId="false">
 
-			<f:metadata>
-				<o:viewParam name="comp" value="#{cotacaoController.compra}" />
-				<f:viewAction action="#{cotacaoController.carregarItens()}" />
-			</f:metadata>
+			<h:form id="form-cotacao">
 
-			<p:messages id="message_cotacao" showSummary="false"
-				showDetail="true" closable="true">
-				<p:autoUpdate></p:autoUpdate>
-			</p:messages>
 
-			<p:dataTable value="#{cotacaoController.cotacoesAuxiliares}"
-				var="cotacao" selection="#{cotacaoController.cotacoesSelected}"
-				style="margin-bottom:0" rowKey="#{cotacao.fornecedorId}">
+				<p:messages id="message_cotacao" autoUpdate="true"
+							showSummary="false" showDetail="true" closable="true" />
+				<p:outputPanel style="margin-bottom:5px">
+					<div class="botao_central" align="left"
+						 style="width: 100%; background-color: rgba(51, 122, 183, 0.18);">
 
-				<p:column selectionMode="multiple"
-					style="width:36px;text-align:center" />
 
-				<p:column headerText="Fornecedor">
-					<h:outputText value="#{cotacao.fornecedor}" />
-				</p:column>
-
-				<p:column style="width:100px" headerText="Valor">
-					<h:outputText value="#{cotacao.totalValor}">
-						<f:convertNumber type="currency" maxFractionDigits="2"
-							currencySymbol="R$" />
-					</h:outputText>
-				</p:column>
-
-				<p:column style="width:100px" headerText="Valor c/ desconto">
-					<h:outputText value="#{cotacao.totalDesconto}">
-						<f:convertNumber type="currency" maxFractionDigits="2"
-							currencySymbol="R$" />
-					</h:outputText>
-				</p:column>
-
-				<p:column style="width:100px">
-
-					<p:link styleClass="btn btn-primary btn-sm" title="Editar"
-						outcome="/main/cotacaoCadastro">
-						<f:param name="forn" value="#{cotacao.fornecedorId}" />
-						<f:param name="comp" value="#{cotacaoController.compra.id}" />
-
-						<span class="pi pi-pencil"></span>
-					</p:link>
-
-					<p:commandLink title="Excluir" styleClass="btn btn-danger btn-sm"
-						action="#{cotacaoController.excluirCotacao(cotacao.compraId,cotacao.fornecedorId)}"
-						process="@this" update="form-cotacao message_cotacao">
-						<span class="pi pi-times-circle"></span>
-						<p:confirm header="Exclusão"
-							message="Você deseja excluir a cotação?"
-							icon="pi pi-exclamation-triangle" />
-					</p:commandLink>
-				</p:column>
-
-			</p:dataTable>
-
-			<div class="fixed-btn">
-
-				<p:panel id="btn-panel-p">
-
-					<div id="btn-panel-wizard" class="ui-g ui-fluid"
-						style="margin-bottom: 10px">
-
-						<div class="ui-g-12">
-
-							<p:link styleClass="btn btn-success"
+						<p:link styleClass="btn btn-primary" type="button"
 								rendered="#{cotacaoController.verificarAcessoACotacao()}"
-								outcome="/main/cotacaoCadastro" style="margin: 2px 2px;"
-								value="Novo">
-								<f:param name="comp" value="#{cotacaoController.compra.id}" />
+								outcome="/main/cotacaoCadastro"
+								style="color:#fff; margin: 2px 2px;" value="Novo">
+							<f:param name="comp" value="#{cotacaoController.compra.id}" />
 
-							</p:link>
+						</p:link>
 
-							<p:commandLink styleClass="btn btn-primary"
-								action="#{cotacaoController.prepararEmail()}"
-								update=":form-email"
-								onclick="setarWidth();PF('email_dlg').show();"
-								value="Enviar e-mail" style="margin-left:2px">
-								<p:resetInput target=":form-email :form-email:msg-email" />
+						<p:link title="Voltar" value="Voltar"
+								style="color:#fff; margin: 2px 2px;"
+								styleClass="btn btn-info"  outcome="/main/compras">
+						</p:link>
 
-								<p:link title="Voltar" value="Voltar" style="margin: 2px 2px;"
-									styleClass="btn btn-secondary" outcome="/main/compra_new">
-								</p:link>
+						<p:commandLink styleClass="btn btn-primary" type="button"
+									   rendered="true" target="_blank"
+									   action="#{cotacaoController.imprimirMapaComparativo()}"
+									   ajax="false" style="color:#fff; margin: 2px 2px;float:right"
+									   value="Imprimir mapa comparativo" />
 
-								<p:commandLink styleClass="btn btn-secondary" rendered="true"
-									target="_blank"
-									action="#{cotacaoController.imprimirMapaComparativo()}"
-									ajax="false" style="margin: 2px 2px;float:right"
-									value="Mapa comparativo" />
+						<p:commandLink styleClass="btn btn-primary" type="button"
+									   target="_blank"
+									   action="#{cotacaoController.imprimirFormulario()}" ajax="false"
+									   style="color:#fff; margin: 2px 2px;float:right"
+									   value="Imprimir formulário de cotação" />
 
-								<p:commandLink styleClass="btn btn-secondary" target="_blank"
-									action="#{cotacaoController.imprimirFormulario()}" ajax="false"
-									style="margin: 2px 2px;float:right"
-									value="Formulário de cotação" />
-							</p:commandLink>
+						<p:commandLink styleClass="btn btn-primary"
+									   action="#{cotacaoController.prepararEmail()}"
+									   update=":form-email" onclick="PF('email_dlg').show();"
+									   value="Enviar e-mail de cotação"
+									   style="color:#fff;margin-left:2px">
 
-						</div>
+							<p:resetInput target=":form-email :form-email:msg-email" />
+
+						</p:commandLink>
+
 
 					</div>
+				</p:outputPanel>
 
-				</p:panel>
+				<p:dataTable value="#{cotacaoController.cotacoesAuxiliares}"
+							 var="cotacao" selection="#{cotacaoController.cotacoesSelected}"
+							 style="margin-bottom:0" rowKey="#{cotacao.fornecedorId}">
 
-			</div>
 
-			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-				<p:commandButton value="Sim" type="button"
-					styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
-				<p:commandButton value="Não" type="button"
-					styleClass="ui-confirmdialog-no" icon="pi pi-times" />
-			</p:confirmDialog>
+					<p:column selectionMode="multiple"
+							  style="width:36px;text-align:center" />
 
-		</h:form>
+					<p:column headerText="Fornecedor">
+						<h:outputText value="#{cotacao.fornecedor}" />
+					</p:column>
 
+					<p:column style="width:100px">
+						<p:button value="Editar" outcome="/main/cotacaoCadastro"
+								  style="font-size:10px;" icon="fa fa-pencil">
+							<f:param name="forn" value="#{cotacao.fornecedorId}" />
+							<f:param name="comp" value="#{cotacaoController.compra.id}" />
+						</p:button>
+
+
+					</p:column>
+
+					<p:column style="width:100px" headerText="Valor">
+						<h:outputText value="#{cotacao.totalValor}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+											 currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+
+					<p:column style="width:100px" headerText="Valor c/ desconto">
+						<h:outputText value="#{cotacao.totalDesconto}">
+							<f:convertNumber type="currency" maxFractionDigits="2"
+											 currencySymbol="R$" />
+						</h:outputText>
+					</p:column>
+
+					<p:column style="width:100px">
+						<p:commandLink
+								action="#{cotacaoController.excluirCotacao(cotacao.compraId,cotacao.fornecedorId)}"
+								process="@this"
+								update="form-cotacao form-cotacao:message_cotacao">
+							<span class="fa fa-times"></span>
+						</p:commandLink>
+					</p:column>
+
+
+				</p:dataTable>
+
+
+
+
+
+			</h:form>
+		</f:view>
 
 	</ui:define>
 
 	<ui:define name="adicionais">
 
-		<script type="text/javascript">
-	function setarWidth() {
-		var htmlTag = document.getElementById('scroll-email');
-		htmlTag.style.height = Math.floor(window.innerHeight*0.9)+"px";	
-		htmlTag.style.width = Math.floor(window.innerWidth*0.98)+"px";	
-	}
-</script>
 
-		<style type="text/css">
-.ui-datalist {
-	margin-bottom: 20px;
-}
+		<p:dialog header="E-mail" widgetVar="email_dlg" modal="true"
+				  showEffect="clip" hideEffect="clip" width="48%">
 
-.ui-datalist-item {
-	padding: 3px;
-	margin-left: 20px;
-}
+			<h:form id="form-email" style="width:100%">
 
-.paginated .ui-datalist-data {
-	padding-left: 20px;
-}
+				<p:messages id="msg-email" autoUpdate="true" showDetail="true"
+							showSummary="false" closable="true" />
 
-body .ui-fileupload .ui-fileupload-content {
-	display: none !important;
-}
-</style>
+				<p:panelGrid columns="2" styleClass="ui-fluid" style="width:100%">
+
+					<p:outputLabel value="De:"></p:outputLabel>
+					<p:inputText disabled="true"
+								 value="#{cotacaoController.email.fromEmail}"></p:inputText>
+
+					<p:outputLabel value="Para:"></p:outputLabel>
+					<p:inputText disabled="true"
+								 value="#{cotacaoController.email.toEmail}"></p:inputText>
+
+					<p:outputLabel value="Assunto:"></p:outputLabel>
+					<p:inputText disabled="true"
+								 value="#{cotacaoController.email.subject}"></p:inputText>
 
 
-		<p:dialog header="E-mail: comprasgi@fas-amazonas.org"
-			closeOnEscape="true" closable="true" minimizable="true"
-			maximizable="true" widgetVar="email_dlg" modal="false"
-			showEffect="clip" style="width:100%; height:100%" hideEffect="clip">
 
-			<p:scrollPanel id="scroll-email" mode="native">
+					<p:fileUpload label="Anexos" update="tab_anexo"
+								  fileUploadListener="#{cotacaoController.handleFileUpload}"
+								  auto="true" sizeLimit="5000000"
+								  allowTypes="/(\.|\/)(doc|docx|xls|xlsx|pdf)$/" />
 
-				<div>
-					<h:form id="form-email" prependId="false">
+					<p:dataTable id="tab_anexo" value="#{cotacaoController.listAnexo}"
+								 var="path" rowIndexVar="index">
+						<p:column headerText="Nº" style="with:100%">
+							<h:outputText value="#{path}" />
 
-						<div class="ui-g ui-fluid" style="position: relative">
+							<p:commandLink title="Excluir" rendered="true" update="tab_anexo"
+										   styleClass="fa fa-times" style="font-size:14px;float:right"
+										   action="#{cotacaoController.removerAnexoEmail(index)}">
 
-							<div class="ui-g-12">
+								<f:setPropertyActionListener value="#{path}"
+															 target="#{cotacaoController.pathAnexo}"></f:setPropertyActionListener>
+							</p:commandLink>
 
-								<p:messages id="msg-email" showDetail="true" showSummary="false"
-									closable="true">
-									<p:autoUpdate></p:autoUpdate>
-								</p:messages>
+						</p:column>
+					</p:dataTable>
 
-							</div>
+				</p:panelGrid>
 
-							<div class="ui-g-12 form-group">
+				<p:separator />
 
-								<p:outputLabel value="Para:" for="to-email" />
-								<p:inputText id="to-email" disabled="true"
-									value="#{cotacaoController.email.toEmail}" />
+				<p:inputTextarea value="#{cotacaoController.email.content}"
+								 cols="50" rows="6">
+				</p:inputTextarea>
+				<br />
+				<p:commandLink update="form-email" styleClass="btn btn-primary"
+							   style="color:#fff" value="Enviar"
+							   action="#{cotacaoController.enviarCotacaoEmail()}"></p:commandLink>
 
-							</div>
+			</h:form>
 
-							<div class="ui-g-12 form-group">
 
-								<p:outputLabel value="Assunto:" for="subject-email"></p:outputLabel>
-								<p:inputText id="subject-email"
-									value="#{cotacaoController.email.subject}"></p:inputText>
-
-							</div>
-
-							<div class="ui-g-12">
-								<p:outputLabel value="Conteúdo:" for="content" />
-								<p:inputText id="content"
-									value="#{cotacaoController.email.content}" />
-							</div>
-
-							<div class="ui-g-12 form-group">
-								<p:fileUpload label="Anexos" update="list-anexo"
-									fileUploadListener="#{cotacaoController.handleFileUpload}"
-									auto="true" sizeLimit="5000000"
-									allowTypes="/(\.|\/)(doc|docx|xls|xlsx|pdf)$/">
-
-									<p:dataList rowIndexVar="index" id="list-anexo"
-										style="with:100%" value="#{cotacaoController.listAnexo}"
-										var="path" type="ordered">
-
-										<div class="ui-g ui-fluid">
-											<div class="ui-g-6">#{path}</div>
-
-											<div class="ui-g-6" style="text-align: right">
-												<p:commandLink id="btn-remove-anexo" title="Excluir"
-													rendered="true" update="list-anexo, btn-remove-anexo"
-													styleClass="btn btn-primary" style="font-size:14px;float:right"
-													action="#{cotacaoController.removerAnexoEmail(index)}">
-													<span class="pi pi-times-circle"></span>
-													<f:setPropertyActionListener value="#{path}"
-														target="#{cotacaoController.pathAnexo}"></f:setPropertyActionListener>
-												</p:commandLink>
-											</div>
-										</div>
-
-									</p:dataList>
-								</p:fileUpload>
-
-							</div>
-
-							<div class="ui-g-12">
-								<p:commandLink update="form-email"
-									styleClass="btn btn-primary btn-block" style="color:#fff"
-									value="Enviar" onclick="start()" oncomplete="stop()"
-									onerror="stop()"
-									action="#{cotacaoController.enviarCotacaoEmail()}" />
-
-							</div>
-
-						</div>
-
-					</h:form>
-
-				</div>
-
-			</p:scrollPanel>
-
-		</p:dialog>
-
-		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
-			showHeader="false" draggable="false" closable="false"
-			resizable="false">
-			<p:graphicImage library="image" name="aguarde.gif" />
-			<p:graphicImage style="width:120px;height:70px" library="image"
-				name="logofas.png" />
 		</p:dialog>
 
 

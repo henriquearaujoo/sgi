@@ -560,10 +560,13 @@ public class PedidoService implements Serializable {
 
 	}
 
-
 	public Boolean verificarPagamentos(Long id) {
 		return lancRepository.buscarPagamentoByLancamento(id, "");
 	}
+
+//	public Boolean verificarPagamentos(Long id) {
+//		return lancRepository.buscarPagamentoByLancamento(id, "");
+//	}
 
 	public Fornecedor getFornecedorById(Long id) {
 		return fornecedorRepositorio.getFornecedorPorId(id);

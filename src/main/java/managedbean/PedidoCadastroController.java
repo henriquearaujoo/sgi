@@ -84,42 +84,60 @@ public class PedidoCadastroController implements Serializable {
 
 	}
 
-	public void carregarPedidos() throws IOException {
-		// pedido = (Pedido)
-		// FacesContext.getCurrentInstance().getExternalContext().getFlash().get("pedido"+usuarioSessao.getNomeUsuario());
+//	public void carregarPedidos() throws IOException {
+//		// pedido = (Pedido)
+//		// FacesContext.getCurrentInstance().getExternalContext().getFlash().get("pedido"+usuarioSessao.getNomeUsuario());
+//
+//		if (pedido == null || pedido.getId() == null) {
+//			HttpServletResponse resp = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
+//					.getResponse();
+//			HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
+//					.getRequest();
+//			resp.sendRedirect(req.getContextPath() + "/main/compras.xhtml");
+//			return;
+//		}
+//
+//		/*
+//		 * fornecedores = pedidoService.getFornecedoresParaSelectBox(compra);
+//		 * pedido.setCompra(compra);
+//		 * pedido.setTipoGestao(compra.getTipoGestao());
+//		 * pedido.setGestao(compra.getGestao());
+//		 * pedido.setTipoLocalidade(compra.getTipoLocalidade());
+//		 * pedido.setLocalidade(compra.getLocalidade());
+//		 */
+//
+//		listGestao = pedidoService.buscarGestao();
+//
+//		fornecedores.add(pedido.getFornecedor());
+//		pedido.setItensPedidos(new ArrayList<>());
+//		pedido.setItensPedidos(pedidoService.getItensPedido(pedido));
+//		pedido.setTotalDeDesonto(pedido.getValorTotalSemDesconto().subtract(pedido.getValorTotalComDesconto()));
+//
+//		controleExpedicao = pedidoService.findControleExpedByPedido(pedido.getId());
+//
+//		if (controleExpedicao.getId() == null) {
+//			controleExpedicao = new ControleExpedicao();
+//			controleExpedicao.setNomeResponsavel("");
+//		}
+//
+//	}
 
-		if (pedido == null || pedido.getId() == null) {
-			HttpServletResponse resp = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
-					.getResponse();
-			HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
-					.getRequest();
-			resp.sendRedirect(req.getContextPath() + "/main/compras.xhtml");
+	public void carregarPedidos() throws IOException {
+		if (this.pedido == null || this.pedido.getId() == null) {
+			final HttpServletResponse resp = (HttpServletResponse)FacesContext.getCurrentInstance().getExternalContext().getResponse();
+			final HttpServletRequest req = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+			resp.sendRedirect(String.valueOf(req.getContextPath()) + "/main/compras.xhtml");
 			return;
 		}
-
-		/*
-		 * fornecedores = pedidoService.getFornecedoresParaSelectBox(compra);
-		 * pedido.setCompra(compra);
-		 * pedido.setTipoGestao(compra.getTipoGestao());
-		 * pedido.setGestao(compra.getGestao());
-		 * pedido.setTipoLocalidade(compra.getTipoLocalidade());
-		 * pedido.setLocalidade(compra.getLocalidade());
-		 */
-
-		listGestao = pedidoService.buscarGestao();
-
-		fornecedores.add(pedido.getFornecedor());
-		pedido.setItensPedidos(new ArrayList<>());
-		pedido.setItensPedidos(pedidoService.getItensPedido(pedido));
-		pedido.setTotalDeDesonto(pedido.getValorTotalSemDesconto().subtract(pedido.getValorTotalComDesconto()));
-
-		controleExpedicao = pedidoService.findControleExpedByPedido(pedido.getId());
-
-		if (controleExpedicao.getId() == null) {
-			controleExpedicao = new ControleExpedicao();
-			controleExpedicao.setNomeResponsavel("");
+		this.listGestao = (List<Gestao>)this.pedidoService.buscarGestao();
+		this.fornecedores.add(this.pedido.getFornecedor());
+		this.pedido.setItensPedidos((List)new ArrayList());
+		this.pedido.setItensPedidos(this.pedidoService.getItensPedido(this.pedido));
+		this.pedido.setTotalDeDesonto(this.pedido.getValorTotalSemDesconto().subtract(this.pedido.getValorTotalComDesconto()));
+		this.controleExpedicao = this.pedidoService.findControleExpedByPedido(this.pedido.getId());
+		if (this.controleExpedicao.getId() == null) {
+			(this.controleExpedicao = new ControleExpedicao()).setNomeResponsavel("");
 		}
-
 	}
 
 	private @Inject CotacaoService cotacaoService;
