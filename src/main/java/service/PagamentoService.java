@@ -167,6 +167,13 @@ public class PagamentoService implements Serializable {
 
 		return repositorio.getLancamentosParaValidacao(filtro);
 	}
+
+	@Transactional
+	public void desprovisionar(final List<LancamentoAuxiliar> list) {
+		for (final LancamentoAuxiliar lancamento : list) {
+			this.repositorio.desprovisionar(lancamento.getId());
+		}
+	}
 	
 	public void imprimir(Lancamento lancamento) {
 		LancamentoIterface lancamentoInterface = TipoLancamentoV4.valueOf(lancamento.getTipov4()).obterInstancia();
@@ -302,6 +309,7 @@ public class PagamentoService implements Serializable {
 
 	@Transactional
 	public void editarPagamento(PagamentoLancamento pagamento) {
+		repositorio.salvar(pagamento.getLancamentoAcao().getLancamento());
 		repositorio.salvar(pagamento.getLancamentoAcao());
 		repositorio.salvar(pagamento);
 	}
