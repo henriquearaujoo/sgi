@@ -280,15 +280,24 @@ public class ExecucaoFinanceiraController implements Serializable {
 		orcamentos = orcService.getOrcamentosFilter(filtro);
 	}
 
+//	public void filtrar() throws WriteException, IOException {
+//		lancamentos = new ArrayList<>();
+//		List<Orcamento> orcamentosAux = orcService.getOrcamentosFilter(filtro);
+//		for (Orcamento orcamento : orcamentosAux) {
+//			filtro.setIdDoacao(orcamento.getId());
+//			lancamentos.addAll(orcService.getExtratoCtrlDoacaoParaConferencia(filtro));
+//		}
+//		// filtro.setIdDoacao(new Long(1));
+//		// lancamentos.addAll(orcService.getExtratoCtrlDoacaoParaConferencia(filtro));
+//	}
+
 	public void filtrar() throws WriteException, IOException {
-		lancamentos = new ArrayList<>();
-		List<Orcamento> orcamentosAux = orcService.getOrcamentosFilter(filtro);
-		for (Orcamento orcamento : orcamentosAux) {
-			filtro.setIdDoacao(orcamento.getId());
-			lancamentos.addAll(orcService.getExtratoCtrlDoacaoParaConferencia(filtro));
+		this.lancamentos = new ArrayList<LancamentoAuxiliar>();
+		final List<Orcamento> orcamentosAux = (List<Orcamento>)this.orcService.getOrcamentosFilter(this.filtro);
+		for (final Orcamento orcamento : orcamentosAux) {
+			this.filtro.setIdDoacao(orcamento.getId());
+			this.lancamentos.addAll(this.orcService.getExtratoCtrlDoacaoParaConferencia(this.filtro));
 		}
-		// filtro.setIdDoacao(new Long(1));
-		// lancamentos.addAll(orcService.getExtratoCtrlDoacaoParaConferencia(filtro));
 	}
 
 	public void filtrarByProject() throws WriteException, IOException, NumberFormatException, ParseException {

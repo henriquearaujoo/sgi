@@ -295,7 +295,7 @@ public class ContasApagarController implements Serializable {
 
 		link = new LinkRelatorio();
 		link.setLabel("Execução Financeira");
-		link.setLink("rel_exec_financeiro");
+		link.setLink("conferencia_lancamentos_MODE01");
 		listaDeRelatorios.add(link);
 		
 //		link = new LinkRelatorio();
