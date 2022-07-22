@@ -298,10 +298,10 @@ public class ContasApagarController implements Serializable {
 		link.setLink("rel_exec_financeiro");
 		listaDeRelatorios.add(link);
 		
-		link = new LinkRelatorio();
-		link.setLabel("Compras detalhadas");
-		link.setLink("rel_compra_detail");
-		listaDeRelatorios.add(link);
+//		link = new LinkRelatorio();
+//		link.setLabel("Compras detalhadas");
+//		link.setLink("rel_compra_detail");
+//		listaDeRelatorios.add(link);
 
 		
 		link = new LinkRelatorio();
@@ -315,11 +315,10 @@ public class ContasApagarController implements Serializable {
 		link.setLink("relatorio_diaria");
 		listaDeRelatorios.add(link);
 
-		link = new LinkRelatorio();
-		link.setLabel("Relatório de lançamentos de contas");
-		link.setLink("relatorio_lancamentos_contas");
-		
-		listaDeRelatorios.add(link);
+//		link = new LinkRelatorio();
+//		link.setLabel("Relatório de lançamentos de contas");
+//		link.setLink("relatorio_lancamentos_contas");
+//		listaDeRelatorios.add(link);
 	}
 
 	public String redirecionarRelatorio() {
