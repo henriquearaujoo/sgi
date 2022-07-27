@@ -3,9 +3,35 @@ body, html{
 	font:0.9em "Open Sans", sans-serif;
 }
 
+.ui-datatable .ui-datatable-header,
+.ui-panel .ui-panel-titlebar {
+	background-color: #ffffff !important;
+	border: 1px solid #c8c8c8 !important;
+	color: #000000 !important;
+}
 
-        
+.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon {
+	color: #212121 !important;
+}
 
+.ui-dialog .ui-dialog-titlebar {
+	border: 1px solid #c8c8c8 !important;
+	background-color: #ffffff !important;
+	color: #0c0c0c !important;
+}
+
+.ui-tabs .ui-tabs-nav .ui-tabs-header {
+	background-color: #ffffff !important;
+	border: 1px solid #c8c8c8 !important;
+}
+
+.ui-tabs .ui-tabs-nav .ui-tabs-header.ui-state-active {
+	background-color: #ffffff !important;
+	border: 1px solid #c8c8c8 !important;
+}
+.ui-tabs .ui-tabs-nav .ui-tabs-header.ui-state-active a {
+	color: #849A39 !important;
+}
 .corpo-project{
 	
 	
