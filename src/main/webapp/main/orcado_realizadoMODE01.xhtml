@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:jsf="http://xmlns.jcp.org/jsf">
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+				xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 
 
@@ -28,244 +28,294 @@
 		</script>
 
 
-		<h:form id="form-orcado-realizado">
+		<h:form id="form_rel_contas" style="width:100%">
 
-			<f:metadata>
-				<f:viewAction action="#{report_financ_controller.init()}" />
-				<f:viewAction
-					action="#{report_financ_controller.prepararFiltrosParaConferenciaDeLancamentos()}" />
-			</f:metadata>
+			<p:notificationBar id="not" style="height:200px" position="bottom" effect="slide"
+							   styleClass="top" widgetVar="info">
+				<h:outputText value="#{report_financ_controller.textoInformativo}"
+							  style="font-size:12px;" />
+				<p:commandLink process="@this" styleClass="link-content"
+							   title="Informações" oncomplete="PF('info').hide();">
+					<span style="color: black; font-size: 25px"
+						  class="glyphicon glyphicon-remove"></span>
 
-			<p:messages id="message" showSummary="false" style="margin-top:10px"
-				showDetail="true" closable="true" showIcon="true">
+				</p:commandLink>
+			</p:notificationBar>
 
-				<p:autoUpdate />
-			</p:messages>
-
-
-			<p:breadCrumb class="breadcrumb-container">
+			<p:messages showIcon="false" autoUpdate="true" closable="true" />
 
 
-				<p:menuitem style="margin-top: 0.5vh" value="Categories"
-					url="home_new.xhtml" />
-				<p:menuitem value="Relatórios" url="relatorios_fin.xhtml" />
-				<p:menuitem value="Orçado x Realizado"
-					url="orcado_realizadoMODE01.xhtml" />
-			</p:breadCrumb>
 
-			<p:panel style="margin-bottom:20px">
+			<p:panel style="with:100%">
 
-				<div class="ui-g ui-fluid default-style-form-filter" style="margin-top: 8px">
-					<div class="ui-g-4 form-group focused">
-						<p:outputLabel for="fonte" value="Fonte:" styleClass="form-label" />
-						<p:selectCheckboxMenu id="fonte"
-							value="#{report_financ_controller.filtro.fontes}" filter="true"
-							filterMatchMode="startsWith" multiple="true">
+
+				<p:panelGrid columns="1" style="with:100%" cellpadding="5"
+							 cellspacing="5">
+
+					<p:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
+						<p:outputLabel value="Tipo de relatório:" />
+						<p:selectOneRadio id="tipo"
+										  value="#{report_financ_controller.filtro.tipoRelatorio}">
+							<f:selectItem itemLabel="Padrão" itemValue="PADRAO" />
+							<f:selectItem itemLabel="Consolidado" itemValue="CONSOLIDADO" />
+							<f:selectItem itemLabel="Linha orçamentária" itemValue="LINHA" />
+							<p:ajax event="change" update="coluna"
+									listener="#{report_financ_controller.atualizarColunas()}"></p:ajax>
+						</p:selectOneRadio>
+
+						<p:commandLink process="@this" styleClass="link-content"
+									   title="Informações" oncomplete="PF('info').show();" update="not"
+									   action="#{report_financ_controller.modificarTexto('tipo')}">
+							<span style="color: black; font-size: 15px"
+								  class="glyphicon glyphicon-question-sign"></span>
+
+						</p:commandLink>
+					</p:panelGrid>
+
+					<p:panelGrid columns="5" cellpadding="10" cellspacing="10">
+						<p:outputLabel value="Data início:" />
+						<p:calendar styleClass="font12-vi"
+									value="#{report_financ_controller.filtro.dataInicio}"
+									timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+						<p:outputLabel value="Data fim:" />
+						<p:calendar styleClass="font12-vi"
+									value="#{report_financ_controller.filtro.dataFinal}"
+									timeZone="America/Manaus" navigator="true" pattern="dd/MM/yyyy" />
+
+						<p:commandLink process="@this" styleClass="link-content"
+									   title="Informações" oncomplete="PF('info').show();" update="not"
+									   action="#{report_financ_controller.modificarTexto('data')}">
+							<span style="color: black; font-size: 15px"
+								  class="glyphicon glyphicon-question-sign"></span>
+
+						</p:commandLink>
+					</p:panelGrid>
+
+					<p:panelGrid columns="3" style="width:100%">
+						<p:outputLabel value="Fonte:" />
+						<p:selectCheckboxMenu id="fonte" style="width:120px"
+											  value="#{report_financ_controller.filtro.fontes}"
+											  label="Fonte/Parceiro" filter="true" filterMatchMode="contains">
 							<f:selectItems value="#{report_financ_controller.fontes}"
-								var="fonte" itemLabel="#{fonte.nome}" itemValue="#{fonte.id}" />
+										   var="fonte" itemLabel="#{fonte.nome}" itemValue="#{fonte.id}" />
 
 							<p:ajax update="doacoes"
-								listener="#{report_financ_controller.atualizarDoacoes()}" />
+									listener="#{report_financ_controller.atualizarDoacoes()}" />
 
 							<p:ajax event="toggleSelect" update="doacoes"
-								listener="#{report_financ_controller.atualizarDoacoes()}" />
+									listener="#{report_financ_controller.atualizarDoacoes()}" />
 						</p:selectCheckboxMenu>
-					</div>
 
-					<div class="ui-g-4 form-group focused">
-						<p:outputLabel for="doacoes" value="Doação:"
-							styleClass="form-label" />
+						<p:commandLink process="@this" styleClass="link-content"
+									   title="Informações" oncomplete="PF('info').show();" update="not"
+									   action="#{report_financ_controller.modificarTexto('fonte')}">
+							<span style="color: black; font-size: 15px"
+								  class="glyphicon glyphicon-question-sign"></span>
 
-						<p:selectCheckboxMenu id="doacoes" panelStyle="width:350px"
-							value="#{report_financ_controller.filtro.idDoacao}"
-							multiple="true" label="Doações" filter="true"
-							filterMatchMode="contains">
+						</p:commandLink>
+
+						<p:outputLabel value="Doação:" />
+						<p:selectOneMenu id="doacoes" style="width:150px"
+										 panelStyle="width:350px"
+										 value="#{report_financ_controller.filtro.idDoacao}"
+										 label="Doações" filter="true" filterMatchMode="contains">
 							<f:selectItem itemValue="0" noSelectionOption="true"
-								itemLabel="Doação" />
+										  itemLabel="Doação" />
 							<f:selectItems value="#{report_financ_controller.orcamentos}"
-								var="orc" itemLabel="#{orc.titulo}" itemValue="#{orc.id}" />
+										   var="orc" itemLabel="#{orc.titulo}" itemValue="#{orc.id}" />
 							<p:ajax update="projeto"
-								listener="#{report_financ_controller.carregarProjetos()}" />
+									listener="#{report_financ_controller.carregarProjetos()}" />
+
+						</p:selectOneMenu>
+
+						<p:commandLink process="@this" styleClass="link-content"
+									   title="Informações" oncomplete="PF('info').show();" update="not"
+									   action="#{report_financ_controller.modificarTexto('doacao')}">
+							<span style="color: black; font-size: 15px"
+								  class="glyphicon glyphicon-question-sign"></span>
+
+						</p:commandLink>
+
+
+						<p:outputLabel value="Plano de trabalho:" />
+						<p:selectCheckboxMenu id="plano" style="width:120px"
+											  value="#{report_financ_controller.filtro.planos}" label="Planos"
+											  filter="true" filterMatchMode="contains">
+							<f:selectItems
+									value="#{report_financ_controller.listPlanoDeTrabalho}"
+									var="plano" itemLabel="#{plano.titulo}" itemValue="#{plano.id}" />
+							<p:ajax listener="#{report_financ_controller.carregarProjetos()}"
+									update="projeto" />
+
+							<p:ajax event="toggleSelect"
+									listener="#{report_financ_controller.carregarProjetos()}"
+									update="projeto" />
 
 						</p:selectCheckboxMenu>
-					</div>
 
-					<div class="ui-g-4 form-group focused">
-						<p:outputLabel value="Projeto" styleClass="form-label" />
-						<p:selectCheckboxMenu id="projeto" panelStyle="width:350px"
-							required="true" multiple="true"
-							requiredMessage="Escolha um projeto ou mais para gerar o relatório"
-							value="#{report_financ_controller.filtro.projetos}"
-							label="Projetos" filter="true" filterMatchMode="contains">
+						<p:commandLink process="@this" styleClass="link-content"
+									   title="Informações" oncomplete="PF('info').show();" update="not"
+									   action="#{report_financ_controller.modificarTexto('plano')}">
+							<span style="color: black; font-size: 15px"
+								  class="glyphicon glyphicon-question-sign"></span>
+
+						</p:commandLink>
+
+
+						<p:outputLabel value="Projeto:" />
+						<p:selectCheckboxMenu id="projeto" style="width:150px"
+											  panelStyle="width:350px" required="true"
+											  requiredMessage="Escolha um projeto ou mais para gerar o relatório"
+											  value="#{report_financ_controller.filtro.projetos}"
+											  label="Projetos" filter="true" filterMatchMode="contains">
 							<f:selectItems value="#{report_financ_controller.projetos}"
-								var="projeto" itemLabel="#{projeto.codigo} - #{projeto.nome}"
-								itemValue="#{projeto.id}">
+										   var="projeto" itemLabel="#{projeto.codigo} - #{projeto.nome}"
+										   itemValue="#{projeto.id}">
+
 							</f:selectItems>
 						</p:selectCheckboxMenu>
 
-					</div>
-
-
-					<div class="ui-g-4 form-group focused">
-						<p:outputLabel for="gestao"
-							value="#{message['FILTER_MANAGEMENT']}" styleClass="form-label" />
-						<p:autoComplete id="gestao" scrollHeight="250"
-							converter="gestaoConverter"
-							value="#{report_financ_controller.filtro.gestao}"
-							completeMethod="#{report_financ_controller.findGestaoAutoComplete}"
-							var="ges" itemLabel="#{ges.nome}" itemValue="#{ges}"
-							effect="blind" />
-					</div>
-
-					<div class="ui-g-4 form-group focused">
-
-						<p:outputLabel for="filter-dt-inicio" value="Data incial:"
-							styleClass="form-label" />
-						<p:calendar id="filter-dt-inicio"
-							value="#{report_financ_controller.filtro.dataInicio}"
-							navigator="true" pattern="dd/MM/yyyy" />
-
-					</div>
-
-					<div class="ui-g-4 form-group focused">
-
-						<p:outputLabel for="filter-dt-final" value="Data final:"
-							styleClass="form-label" />
-						<p:calendar id="filter-dt-final"
-							value="#{report_financ_controller.filtro.dataFinal}"
-							navigator="true" pattern="dd/MM/yyyy" />
-
-					</div>
-
-					<div class="ui-g-4 form-group focused">
-						<p:outputLabel for="tipo" value="Tipo de Relatório"
-							styleClass="form-label" />
-						<p:selectOneMenu id="tipo" styleClass="mt-1"
-							value="#{report_financ_controller.filtro.tipoRelatorio}">
-							<f:selectItem itemLabel="Padrão" itemValue="PADRAO" />
-							<f:selectItem itemLabel="Consolidado" itemValue="CONSOLIDADO" />
-							<f:selectItem itemLabel="Linha Orçamentária" itemValue="LINHA" />
-						</p:selectOneMenu>
-					</div>
-
-					<div class="ui-g-12 d-flex justify-content-end">
-						<p:commandLink styleClass="btn btn-success btn-sm" ajax="false"
-							action="#{report_financ_controller.gerarOrcamentoExecutado()}"
-							onclick="start()" onsuccess="stop()" onerror="stop()"
-							style="color:#fff; margin: 8px 2px;">
-							<span class="fa fa-file-excel-o"
-								style="font-size: 20px; padding-right: 5px" aria-hidden="true"></span>
-							<span>Gerar relatório XLS</span>
-						</p:commandLink>
-
-						<p:commandLink rendered="false"
-							styleClass="btn btn-primary btn-sm fa fa-search"
-							onstart="start()" onsuccess="stop()" onerror="stop()"
-							update="tbl_exec_financeira"
-							action="#{report_financ_controller.filtrarByProject()}"
-							style="color:#fff; margin: 8px 2px;">
-							<span style="width: 40px; font-family: Arial">Visualizar
-								Execução</span>
+						<p:commandLink process="@this" styleClass="link-content"
+									   update="not"
+									   action="#{report_financ_controller.modificarTexto('projeto')}"
+									   title="Informações" oncomplete="PF('info').show();">
+							<span style="color: black; font-size: 15px"
+								  class="glyphicon glyphicon-question-sign"></span>
 
 						</p:commandLink>
 
-						<p:commandLink styleClass="btn btn-danger btn-sm"
-							action="#{compraDetalhadaController.limparFiltro()}"
-							process="@this" update="form-orcado-realizado"
-							style="color:#fff; margin: 8px 2px;">
-							<span class="fa fa-fw fa-trash-o"></span>
-							<span>Limpar filtro</span>
+						<p:outputLabel value="Colunas de relatório:" />
+						<p:selectCheckboxMenu id="coluna" style="width:150px"
+											  panelStyle="width:350px"
+											  disabled="#{!report_financ_controller.displayColunas}"
+											  value="#{report_financ_controller.filtro.colunasRelatorio}"
+											  label="Colunas">
+							<f:selectItems value="#{report_financ_controller.listaColunas}"
+										   var="col" itemLabel="#{col.label}" itemValue="#{col.valor}" />
+
+						</p:selectCheckboxMenu>
+
+						<p:commandLink process="@this" styleClass="link-content"
+									   title="Informações" oncomplete="PF('info').show();" update="not"
+									   action="#{report_financ_controller.modificarTexto('coluna')}">
+							<span style="color: black; font-size: 15px"
+								  class="glyphicon glyphicon-question-sign"></span>
 
 						</p:commandLink>
-					</div>
-
-					<p:dataTable id="tbl_exec_financeira" rendered="true"
-						sortBy="#{lancamento.nomeProjeto}" expandableRowGroups="true"
-						value="#{report_financ_controller.lancamentos}" var="lancamento">
-
-						<f:facet name="header">
- 
- 	 			Execução
-       				 						</f:facet>
-
-						<p:headerRow>
-							<p:column colspan="8">
-								<h:outputText style="padding:8px;font-size:11px"
-									value="#{lancamento.nomeProjeto}" />
-							</p:column>
-						</p:headerRow>
 
 
-						<p:column headerText="Dt. de Pagamento" style="width:6%">
-							<h:outputText value="#{lancamento.dataPagamento}">
-								<f:convertDateTime pattern="dd/MM/yyyy"
-									timeZone="America/Manaus" />
-							</h:outputText>
-						</p:column>
+					</p:panelGrid>
 
-						<p:column headerText="Dt. de Emissão" style="width:6%">
-							<h:outputText value="#{lancamento.dataEmissao}">
-								<f:convertDateTime pattern="dd/MM/yyyy"
-									timeZone="America/Manaus" />
-							</h:outputText>
-						</p:column>
 
-						<p:column headerText="Nº de documento" style="width:6%">
-							<h:outputText value="#{lancamento.numeroDocumento}" />
-						</p:column>
+				</p:panelGrid>
 
-						<p:column headerText="Nº de lançamento" style="width:6%">
-							<h:outputText value="#{lancamento.id}" />
-						</p:column>
+				<p:commandLink styleClass="btn btn-primary btn-sm "
+							   onstart="start()" onsuccess="stop()" onerror="stop()" ajax="false"
+							   action="#{report_financ_controller.gerarOrcamentoExecutado()}"
+							   style="color:#fff; margin: 8px 2px;">
+					<i class="fa fa-search"></i>
+					<span style="width: 40px; font-family: Arial">Gerar
+						relatório</span>
+				</p:commandLink>
 
-						<p:column headerText="Nota fiscal">
-							<h:outputText value="#{lancamento.notaFiscal}" />
-						</p:column>
+				<p:commandLink rendered="false"
+							   styleClass="btn btn-primary btn-sm " onstart="start()"
+							   onsuccess="stop()" onerror="stop()" update="tbl_exec_financeira"
+							   action="#{report_financ_controller.filtrarByProject()}"
+							   style="color:#fff; margin: 8px 2px;">
+					<i class="fa fa-search"></i>
+					<span style="width: 40px; font-family: Arial">Visualizar</span>
 
-						<p:column headerText="Pagador">
-							<h:outputText value="#{lancamento.contaPagadorLbl}" />
-						</p:column>
-
-						<p:column headerText="Recebedor" style="width:6%">
-							<h:outputText value="#{lancamento.contaRecebedorLbl}" />
-						</p:column>
-
-						<p:column headerText="Descrição">
-							<h:outputText value="#{lancamento.descricao}" />
-						</p:column>
-
-						<p:column headerText="Projeto">
-							<h:outputText value="#{lancamento.nomeProjeto}" />
-						</p:column>
-						<p:column headerText="Fonte">
-							<h:outputText value="#{lancamento.fonte}" />
-						</p:column>
-
-						<p:column headerText="Status" style="text-align:center">
-							<h:outputText value="P"
-								rendered="#{lancamento.status.equals('PROVISIONADO')}" />
-							<h:outputText value="E"
-								rendered="#{lancamento.status.equals('EFETIVADO')}" />
-						</p:column>
-
-						<p:column headerText="Entrada">
-							<h:outputText value="#{lancamento.entrada}">
-								<f:convertNumber type="currency" maxFractionDigits="2"
-									currencySymbol="R$" />
-							</h:outputText>
-						</p:column>
-
-						<p:column headerText="Saída">
-							<h:outputText value="#{lancamento.saida}">
-								<f:convertNumber type="currency" maxFractionDigits="2"
-									currencySymbol="R$" />
-							</h:outputText>
-						</p:column>
-					</p:dataTable>
-
-				</div>
-
+				</p:commandLink>
 			</p:panel>
+
+			<p:dataTable id="tbl_exec_financeira" rendered="false"
+						 sortBy="#{lancamento.nomeProjeto}" expandableRowGroups="true"
+						 value="#{report_financ_controller.lancamentos}" var="lancamento">
+
+				<f:facet name="header">
+
+					Execução
+					<p:commandButton id="toggler" type="button" value="Columns"
+									 style="float:right" icon="ui-icon-calculator" />
+					<p:columnToggler datasource="tbl_exec_financeira" trigger="toggler" />
+				</f:facet>
+
+				<p:headerRow>
+					<p:column colspan="8">
+						<h:outputText style="padding:8px;font-size:11px"
+									  value="#{lancamento.nomeProjeto}" />
+					</p:column>
+				</p:headerRow>
+
+
+				<p:column headerText="Dt. de Pagamento">
+					<h:outputText value="#{lancamento.dataPagamento}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Dt. de Emissão">
+					<h:outputText value="#{lancamento.dataEmissao}">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Nº de documento">
+					<h:outputText value="#{lancamento.numeroDocumento}" />
+				</p:column>
+
+				<p:column headerText="Nº de lançamento">
+					<h:outputText value="#{lancamento.id}" />
+				</p:column>
+
+				<p:column headerText="Nota fiscal">
+					<h:outputText value="#{lancamento.notaFiscal}" />
+				</p:column>
+
+				<p:column headerText="Pagador" style="width:15%">
+					<h:outputText value="#{lancamento.contaPagadorLbl}" />
+				</p:column>
+
+				<p:column headerText="Recebedor" style="width:15%">
+					<h:outputText value="#{lancamento.contaRecebedorLbl}" />
+				</p:column>
+
+				<p:column headerText="Descrição" style="width:15%">
+					<h:outputText value="#{lancamento.descricao}" />
+				</p:column>
+
+				<p:column headerText="Projeto">
+					<h:outputText value="#{lancamento.nomeProjeto}" />
+				</p:column>
+				<p:column headerText="Fonte">
+					<h:outputText value="#{lancamento.fonte}" />
+				</p:column>
+
+				<p:column headerText="Status" style="text-align:center">
+					<h:outputText value="P"
+								  rendered="#{lancamento.status.equals('PROVISIONADO')}" />
+					<h:outputText value="E"
+								  rendered="#{lancamento.status.equals('EFETIVADO')}" />
+				</p:column>
+
+				<p:column headerText="Entrada">
+					<h:outputText value="#{lancamento.entrada}">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+										 currencySymbol="R$" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Saída">
+					<h:outputText value="#{lancamento.saida}">
+						<f:convertNumber type="currency" maxFractionDigits="2"
+										 currencySymbol="R$" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+
+
 
 		</h:form>
 	</ui:define>
@@ -273,11 +323,11 @@
 	<ui:define name="adicionais">
 
 		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
-			showHeader="false" draggable="false" closable="false"
-			resizable="false">
+				  showHeader="false" draggable="false" closable="false"
+				  resizable="false">
 			<p:graphicImage library="image" name="aguarde.gif" />
 			<p:graphicImage style="width:120px;height:70px" library="image"
-				name="logofas.png" />
+							name="logofas.png" />
 		</p:dialog>
 
 	</ui:define>

@@ -17,11 +17,11 @@
 			function start() {
 			    PF('statusDialog').show();
 			}
-			 
+
 			function stop() {
 			    PF('statusDialog').hide();
 			}
-			
+
 			function stopDlgfilter() {
 			    PF('dlg_filtro_compra').hide();
 			}
@@ -86,32 +86,34 @@
 
 				</p:panelGrid>
 
-				<p:commandLink styleClass="btn btn-primary btn-sm fa fa-search"
+				<p:commandLink styleClass="btn btn-primary btn-sm"
 					onstart="start()" onsuccess="stop()" onerror="stop()" ajax="false"
 					action="#{report_financ_controller.gerarConferenciaDeLancamentosMODE01()}"
 					style="color:#fff; margin: 8px 2px;">
+					<i class="fa fa-search"></i>
 					<span style="width: 40px; font-family: Arial">Gerar
 						relatório</span>
 				</p:commandLink>
 
-				<p:commandLink styleClass="btn btn-primary btn-sm fa fa-search"
+				<p:commandLink styleClass="btn btn-primary btn-sm"
 					onstart="start()" onsuccess="stop()" onerror="stop()"
 					update="tbl_exec_financeira"
 					action="#{report_financ_controller.filtrar()}"
 					style="color:#fff; margin: 8px 2px;">
+					<i class=" fa fa-search"></i>
 					<span style="width: 40px; font-family: Arial">Visualizar</span>
 				</p:commandLink>
 			</p:panel>
 
 			<p:dataTable id="tbl_exec_financeira" sortBy="#{lancamento.fonte}"
-				expandableRowGroups="true" 
+				expandableRowGroups="true"
 				value="#{report_financ_controller.lancamentos}" var="lancamento">
 
 				<f:facet name="header">
- 
+
  	 			Execução
        				 <p:commandButton id="toggler" type="button" value="Columns"
-						style="float:right" icon="ui-icon-calculator" />
+						style="float:right" icon="fa fa-calculator" />
 					<p:columnToggler datasource="tbl_exec_financeira" trigger="toggler" />
 				</f:facet>
 

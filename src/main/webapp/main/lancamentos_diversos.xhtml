@@ -96,23 +96,26 @@
 							<span class="glyphicon glyphicon-search" ></span><span  style="margin: 3px;">Procurar</span>
 						</p:commandLink>
 
-						<p:link styleClass="btn btn-success btn-sm fa fa-cart-plus"
+						<p:link styleClass="btn btn-success btn-sm "
 							style="color:#fff;margin: 8px 2px;"
 							outcome="/main/lancamentos_diversos_cadastro"
 							title="Adicionar novo">
+							<i class="fa fa-cart-plus"></i>
 							<span style="font-family: Arial">Novo</span>
 						</p:link>
 						
-						<p:commandLink styleClass="btn btn-danger btn-sm fa fa-remove"
+						<p:commandLink styleClass="btn btn-danger btn-sm "
 							title="Limpar" process="@this" onstart="start()"
 							onsuccess="stop()" onerror="stop()"
 							action="#{diversos_coontroller.limpar()}"
 							update=":form_cadastro_diversos"
 							style="color:#fff; margin: 8px 2px;">
+							<i class="fa fa-remove"></i>
 							<span style="width: 40px; font-family: Arial">Limpar</span>
 						</p:commandLink>
 						
 						<p:commandLink styleClass="btn btn-primary btn-sm" update="dialog_help"
+									   rendered="false"
 								oncomplete="PF('dialog_help').show();" onerror="stop();" onsuccess="stop();"
 								onclick="start();"
 								style="color:#fff; margin: 8px 2px;">
@@ -171,17 +174,19 @@
 				<p:column headerText="Ação" style="width:100px;" >
 
 					<p:link
-						styleClass="btn btn-default btn-xs glyphicon glyphicon-edit"
+						styleClass="btn btn-default btn-xs "
 						outcome="/main/lancamentos_diversos_cadastro"
-						style="font-size:10px;color:#000">
+						style="color:#000">
+						<i class="fa fa-pencil-square-o"></i>
 						<f:param name="lanc" value="#{lanc.id}" />
 					</p:link>
 
-					<p:commandLink title="excluir" style="color:#fff;margin-left:5px"
-						styleClass="btn btn-danger btn-xs glyphicon glyphicon-remove-circle"
+					<p:commandLink title="excluir" style="color:#fff;margin-left:1px"
+						styleClass="btn btn-danger btn-xs "
 						action="#{diversos_coontroller.excluirLancamentoAvulso(indexRow)}"
 						process="@this" update="table-lancav" onclick="start()"
 						onsuccess="stop()" onerror="stop()">
+						<i class="glyphicon glyphicon-remove-circle"></i>
 						<p:confirm message="Excluir lançamento?" />
 						<f:setPropertyActionListener value="#{lanc}"
 							target="#{diversos_coontroller.lancamentoAux}" />
@@ -189,9 +194,10 @@
 					</p:commandLink>
 					
 					<p:commandLink title="Mudar Status"
-						styleClass="btn btn-primary btn-xs glyphicon glyphicon-cog" 
-						style="margin-left:5px;" update="formDialogAlterarStatus"
+						styleClass="btn btn-primary btn-xs "
+						style="margin-left:1px;" update="formDialogAlterarStatus"
 						 oncomplete="PF('dialogAlterarStatus').show()" rendered="#{diversos_coontroller.usuarioSessao.usuario.perfil.descricao == 'admin'}" >
+						<i class="glyphicon glyphicon-cog"></i>
 						<f:setPropertyActionListener value="#{lanc}"
 							target="#{diversos_coontroller.lancamentoAux}" />
 					</p:commandLink>

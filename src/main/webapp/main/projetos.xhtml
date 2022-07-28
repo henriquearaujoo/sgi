@@ -83,7 +83,7 @@
 							completeMethod="#{projetoBean.findGestaoAutoComplete}" var="ges"
 							itemLabel="#{ges.nome}" itemValue="#{ges}" effect="blind" />
 					</div>
-					
+
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group focused">
 
 						<p:outputLabel for="filter-dt-inicio" value="Data incial:"
@@ -103,7 +103,7 @@
 							pattern="dd/MM/yyyy" />
 
 					</div>
-					
+
 					<div class="ui-g-12 ui-md-6 ui-lg-12 form-group focused">
 						<p:outputLabel for="projeto" value="#{message['FILTER_PROJECT']}"
 							styleClass="form-label" />
@@ -113,7 +113,7 @@
 							completeMethod="#{projetoBean.completeProjetoByUserV2}" var="pro"
 							itemLabel="#{pro.nome}" itemValue="#{pro}" effect="blind" />
 					</div>
-					
+
 					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group"
 						style="display: none;">
 						<p:outputLabel value="#{message['FILTER_PLANE']}" />
@@ -184,7 +184,7 @@
 
 							<p:column headerText="Data Início" style="text-align: center;" sortBy="#{projeto.dataInicio}">
 								<h:outputText value="#{projeto.dataInicio}">
-									<f:convertDateTime pattern="dd/MM/yyyy" />								
+									<f:convertDateTime pattern="dd/MM/yyyy" />
 								</h:outputText>
 							</p:column>
 
@@ -356,8 +356,7 @@
 
 		<p:dialog header="Detalhes do Projeto" styleClass="help"
 			widgetVar="dlg_detalhes_projeto" resizable="false" showEffect="clip"
-			hideEffect="clip" blockScroll="true" onHide="unlockedScroll()"
-			onShow="blockedScroll()">
+			hideEffect="clip" blockScroll="true">
 			<h:form id="form-detalhes-projeto">
 				<p:messages id="msg-detelhes-projeto" showSummary="false"
 					showDetail="true" closable="true" />

@@ -1,537 +1,585 @@
 <!DOCTYPE html>
 <ui:composition template="/WEB-INF/LayoutFullPage.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:jsf="http://xmlns.jcp.org/jsf">
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+				xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+
+
 
 
 	<ui:define name="content">
 
 		<script type="text/javascript">
 			function start() {
-			    PF('statusDialog').show();
-			}
-			 
-			function stop() {
-			    PF('statusDialog').hide();
-			}
-			
-			function stopDlgfilter() {
-			    PF('dlg_filtro_compra').hide();
+				PF('statusDialog').show();
 			}
 
-			function setarWidthHeight(id) {
-				var htmlTag = document.getElementById(id);
-				htmlTag.style.height = Math.floor(window.innerHeight*0.98)+"px";	
-				htmlTag.style.width = Math.floor(window.innerWidth*0.98)+"px";	
-				
+			function stop() {
+				PF('statusDialog').hide();
+			}
+
+			function stopDlgfilter() {
+				PF('dlg_filtro_compra').hide();
 			}
 		</script>
 
-
 		<f:metadata>
-			<!-- <o:viewParam name="lancamento" value="#{pagamentoController.lancamento}" /> -->
 			<f:viewAction action="#{liberacao_lancamento_controller.init()}" />
 		</f:metadata>
 
-
-		<h:form id="form-lancamento-pagamento" styleClass="default-style-form-filter">
-
-			<p:messages showDetail="true" closable="true" id="msg_lancamento">
-				<p:autoUpdate></p:autoUpdate>
-			</p:messages>
-
-			<p:breadCrumb class="breadcrumb-container">
-
-
+		<h:form>
+			<p:breadCrumb>
 				<p:menuitem value="Categories" url="home_new.xhtml" />
-				<p:menuitem value="Lançamentos para validação" />
+				<p:menuitem value="Lista de Lançamentos para Validação" />
 			</p:breadCrumb>
+		</h:form>
 
-			<p:panel id="filter-list">
+		<p:panel id="toggleable" header="Lançamentos não validados"
+				 toggleable="true" closable="false" toggleSpeed="500" closeSpeed="500"
+				 widgetVar="panel" style="margin-bottom:20px">
 
-				<div class="ui-g ui-fluid">
-					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
-						<h:outputText value="Lançamento:" />
-						<p:inputText placeholder="lançamento"
-							value="#{liberacao_lancamento_controller.filtro.lancamentoID}" />
-					</div>
-					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
-						<h:outputText value="Pagamento início:" />
 
+			<h:form id="form-lancamento-pagamento">
+				<p:messages autoUpdate="true" showSummary="false" showDetail="true"
+							closable="true" showIcon="true" />
+
+				<p:panelGrid columns="4" styleClass="ui-noborder">
+					<h:outputText value="Lançamento:" />
+					<p:inputText placeholder="Nº lançamento"
+								 value="#{liberacao_lancamento_controller.filtro.lancamentoID}" />
+
+					<h:outputText value="Período de Pgto:" style="float:right" />
+					<h:panelGroup>
 						<p:calendar size="10"
-							value="#{liberacao_lancamento_controller.filtro.dataInicio}"
-							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
-					</div>
-					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
-						<h:outputText value="Pagamento fim:" />
+									value="#{liberacao_lancamento_controller.filtro.dataInicio}"
+									navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+						-
 						<p:calendar size="10"
-							value="#{liberacao_lancamento_controller.filtro.dataFinal}"
-							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+									value="#{liberacao_lancamento_controller.filtro.dataFinal}"
+									navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
 
-					</div>
-					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
-						<h:outputText value="Emissão início:" />
-
+					</h:panelGroup>
+					<h:outputText value="Paríodo de Emissão:" style="float:right" />
+					<h:panelGroup>
 						<p:calendar size="10"
-							value="#{liberacao_lancamento_controller.filtro.dataInicioEmissao}"
-							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
-					</div>
-					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
-
-						<h:outputText value="Emissão fim:" />
+									value="#{liberacao_lancamento_controller.filtro.dataInicioEmissao}"
+									navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+						-
 						<p:calendar size="10"
-							value="#{liberacao_lancamento_controller.filtro.dataFinalEmissao}"
-							navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
-
-					</div>
-
-					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
-						<h:outputText value="Projeto:" />
-						<p:autoComplete placeholder="Projeto" size="30"
-							value="#{liberacao_lancamento_controller.filtro.projeto}"
-							completeMethod="#{liberacao_lancamento_controller.completeProjetos}"
-							var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}"
-							converter="projetoConverter">
-
-							<p:column>
-								<h:outputText value="#{projeto.codigo}" />
-							</p:column>
-
-							<p:column>
-								<h:outputText value="#{projeto.nome}" />
-							</p:column>
-
-						</p:autoComplete>
-					</div>
-
-					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group">
-						<h:outputText value="Pagador:" />
-						<p:autoComplete
-							value="#{liberacao_lancamento_controller.filtro.pagador}"
-							completeMethod="#{liberacao_lancamento_controller.completeConta}"
-							var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
-							converter="contaConverter" />
-
-					</div>
-
-					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
-						<h:outputText value="Recebedor:" />
-						<p:autoComplete
-							value="#{liberacao_lancamento_controller.filtro.fornecedor}"
-							completeMethod="#{liberacao_lancamento_controller.completeConta}"
-							var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
-							converter="contaConverter" />
-
-					</div>
-					<div class="ui-g-12 ui-md-6 ui-lg-3 form-group ">
-						<h:outputText value="Status:" />
-
-						<p:selectOneMenu style="margin: 2px 2px;"
-							value="#{liberacao_lancamento_controller.filtro.statusPagamentoInt}">
-							<f:selectItem noSelectionOption="true" itemLabel="Selecione" />
-							<f:selectItem itemLabel="Validado" itemValue="0" />
-							<f:selectItem itemLabel="Não Validado" itemValue="1" />
-
-						</p:selectOneMenu>
+									value="#{liberacao_lancamento_controller.filtro.dataFinalEmissao}"
+									navigator="true" timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+					</h:panelGroup>
 
 
-					</div>
-					<div class="ui-g-12">
-						<p:commandLink styleClass="btn btn-primary btn-sm"
-							onstart="start()" onsuccess="stop()" onerror="stop()"
-							title="Filtrar Pagamentos"
-							action="#{liberacao_lancamento_controller.carregarLancamentos()}"
-							update=":form-lancamento-pagamento:table-lancamentos"
-							style="color:#fff; margin: 8px 2px;">
-							<span class="fa fa-fw fa-search"></span>
-							<span style="margin: 3px;">Buscar</span>
-						</p:commandLink>
 
-						<p:commandLink styleClass="btn btn-danger btn-sm "
-							title="Limpar filtros e seleção" process="@this"
-							onstart="start()" onsuccess="stop()" onerror="stop()"
-							action="#{liberacao_lancamento_controller.limpar()}"
-							update=":form-lancamento-pagamento"
-							style="color:#fff; margin: 8px 2px;">
-							<span class="fa fa-fw fa-trash-o"></span>
-							<span style="margin: 3px;">Limpar</span>
-						</p:commandLink>
 
-						<p:commandLink onstart="start()" onsuccess="stop();"
-							onerror="stop()" title="Validar Pagamentos"
-							styleClass="btn btn-success btn-sm fa "
-							update=":form-lancamento-pagamento:table-lancamentos"
-							action="#{liberacao_lancamento_controller.validarLancamentos()}"
-							style="color:#fff; margin: 8px 2px;">
+					<h:outputText value="Projeto:" />
+					<p:autoComplete placeholder="Projeto" size="30"
+									value="#{liberacao_lancamento_controller.filtro.projeto}"
+									completeMethod="#{liberacao_lancamento_controller.completeProjetos}"
+									var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}"
+									converter="projetoConverter">
 
-							<p:confirm header="Confirmação" icon="ui-icon-alert"
-								message="Desejar validar os lançamentos selecionados?" />
-							<span class="fa fa-check"></span>
-							<span style="margin: 3px;">Validar</span>
-						</p:commandLink>
+						<p:column>
+							<h:outputText value="#{projeto.codigo}" />
+						</p:column>
 
-						<p:commandLink styleClass="btn btn-warning btn-sm "
-							onstart="start()" onsuccess="stop()" onerror="stop()"
-							title="Estornar Pagamentos"
-							update=":form-lancamento-pagamento:table-lancamentos"
-							action="#{liberacao_lancamento_controller.invalidarLancamentos()}"
-							style="color:#fff; margin: 8px 2px;">
+						<p:column>
+							<h:outputText value="#{projeto.nome}" />
+						</p:column>
 
-							<p:confirm header="Confirmação" icon="ui-icon-alert"
-								message="Desejar estornar os lançamentos selecionados?" />
-							<span class="fa fa-times"></span>
-							<span style="margin: 3px;">Estornar</span>
-						</p:commandLink>
+					</p:autoComplete>
 
-						<p:commandLink styleClass="btn btn-primary btn-sm"
-							oncomplete="PF('dialog_help').show();" onerror="stop();" onsuccess="stop();"
-							onclick="start();"
-							style="color:#fff; margin: 8px 2px;">
-							<span class="fa fa-fw fa-question"></span>
-							<span>Ajuda</span>
-						</p:commandLink>
+					<h:outputText value="Fornecedor:" />
+					<p:autoComplete placeholder="Fornecedor" size="30"
+									value="#{liberacao_lancamento_controller.filtro.contaFiltro}"
+									completeMethod="#{liberacao_lancamento_controller.completeConta}"
+									var="conta" itemLabel="#{conta.nomeConta}" itemValue="#{conta}"
+									converter="contaConverter" />
 
-					</div>
-					
-				</div>
 
-				<p:separator></p:separator>
-	
+					<h:outputText value="Status:" />
+
+					<p:selectOneMenu style="margin: 2px 2px;"
+									 value="#{liberacao_lancamento_controller.filtro.statusPagamentoInt}">
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItem itemLabel="Validado" itemValue="0" />
+						<f:selectItem itemLabel="Não Validado" itemValue="1" />
+
+					</p:selectOneMenu>
+				</p:panelGrid>
+
+				<h:panelGroup>
+
+					<p:commandLink styleClass="btn btn-primary btn-sm "
+								   onstart="start()" onsuccess="stop()" onerror="stop()"
+								   title="Filtrar Pagamentos"
+								   action="#{liberacao_lancamento_controller.carregarLancamentos()}"
+								   update=":form-lancamento-pagamento:table-lancamentos"
+								   style="color:#fff; margin: 8px 2px;">
+						<i class="fa fa-search"></i>
+						<span style="width: 40px; font-family: Arial">Buscar</span>
+					</p:commandLink>
+
+					<p:commandLink styleClass="btn btn-danger btn-sm "
+								   title="Limpar filtros e seleção" process="@this" onstart="start()"
+								   onsuccess="stop()" onerror="stop()"
+								   action="#{liberacao_lancamento_controller.limpar()}"
+								   update=":form-lancamento-pagamento"
+								   style="color:#fff; margin: 8px 2px;">
+						<i class="fa fa-remove"></i>
+						<span style="width: 40px; font-family: Arial">Limpar</span>
+					</p:commandLink>
+
+					<p:commandLink onstart="start()" onsuccess="stop()"
+								   onerror="stop()" title="Validar Pagamentos"
+								   styleClass="btn btn-success btn-sm "
+								   update=":form-lancamento-pagamento:table-lancamentos"
+								   action="#{liberacao_lancamento_controller.validarLancamentos()}"
+								   style="color:#fff; margin: 8px 2px;">
+						<i class="fa fa-check-square-o"></i>
+						<span style="width: 40px; font-family: Arial">Validar</span>
+					</p:commandLink>
+
+					<p:commandLink styleClass="btn btn-warning btn-sm "
+								   onstart="start()" onsuccess="stop()" onerror="stop()"
+								   title="Estornar Pagamentos"
+								   update=":form-lancamento-pagamento:table-lancamentos"
+								   action="#{liberacao_lancamento_controller.invalidarLancamentos()}"
+								   style="color:#fff; margin: 8px 2px;">
+						<i class="fa fa-reply"></i>
+						<span style="width: 40px; font-family: Arial">Estorno</span>
+					</p:commandLink>
+
+				</h:panelGroup>
+
+
 
 				<p:dataTable id="table-lancamentos" rowKey="#{lancamento.id}"
-					reflow="true"
-					selection="#{liberacao_lancamento_controller.lancamentosSelected}"
-					value="#{liberacao_lancamento_controller.lancamentos}"
-					var="lancamento" paginator="true" rows="10">
+							 selection="#{liberacao_lancamento_controller.lancamentosSelected}"
+							 value="#{liberacao_lancamento_controller.lancamentos}"
+							 var="lancamento" paginator="true" rows="10">
 					<p:column selectionMode="multiple"
-						style="width:35px;text-align:center" />
+							  style="width:35px;text-align:center" />
 
-					<p:column headerText="Codigo" style="text-align:center">
+					<p:column headerText="Nº" style="width:70px;text-align:center">
 						<h:outputText value="#{lancamento.codigoLancamento}" />
 					</p:column>
 
-					<p:column headerText="Emissão" style="text-align:center" sortBy="#{lancamento.dataEmissao}">
+					<p:column headerText="Emissão" style="width:90px;text-align:center">
 						<h:outputText value="#{lancamento.dataEmissao}">
 							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
 						</h:outputText>
 					</p:column>
 
 
-					<p:column headerText="Pagamento" style="text-align:center" sortBy="#{lancamento.dataPagamento}">
+					<p:column headerText="Pagamento"
+							  style="width:90px;text-align:center">
 						<h:outputText value="#{lancamento.dataPagamento}">
 							<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus" />
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="Pagador" style="text-align:center" sortBy="#{lancamento.contaPagadorLbl}">
+					<p:column headerText="Pagador"
+							  style="width:150px;text-align:center">
 						<h:outputText value="#{lancamento.contaPagadorLbl}" />
 					</p:column>
 
-					<p:column headerText="Fornecedor" style="text-align:center">
+					<p:column headerText="Fornecedor"
+							  style="width:150px;text-align:center">
 						<h:outputText value="#{lancamento.contaRecebedorLbl}" />
 					</p:column>
 
-					<p:column headerText="Status" style="text-align:center">
+					<p:column headerText="Status" style="width:100px;text-align:center">
 						<h:outputText styleClass="tamanho-status status-verde"
-							style="color:#fff" rendered="#{lancamento.statusPagamento == 0}"
-							value="Validado" />
+									  style="color:#fff" rendered="#{lancamento.statusPagamento == 0}"
+									  value="Validado" />
 						<h:outputText styleClass="tamanho-status status-vermelho"
-							style="color:#fff" rendered="#{lancamento.statusPagamento == 1}"
-							value="Não validado" />
+									  style="color:#fff" rendered="#{lancamento.statusPagamento == 1}"
+									  value="Não validado" />
 
 
 					</p:column>
 
-					<p:column headerText="Fonte de recurso" style="text-align:center">
+					<p:column headerText="Fonte de recurso"
+							  style="width:100px;text-align:center">
 						<h:outputText value="#{lancamento.fonte}" />
 					</p:column>
 
-					<p:column headerText="Projeto" style="text-align:center">
+					<p:column headerText="Projeto"
+							  style="width:200px;text-align:center">
 						<h:outputText value="#{lancamento.nomeProjeto}" />
 					</p:column>
 
-					<p:column headerText="Valor lançamento" style="text-align:center">
+					<p:column headerText="Valor lançamento"
+							  style="width:75px;text-align:center">
 						<h:outputText value="#{lancamento.valorLancamento}">
 							<f:convertNumber type="currency" locale="pt_BR" />
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="Valor pago" style="text-align:center" sortBy="#{lancamento.valorPagoAcao}">
+					<p:column headerText="Valor pago"
+							  style="width:75px;text-align:center">
 						<h:outputText value="#{lancamento.valorPagoAcao}">
 							<f:convertNumber type="currency" locale="pt_BR" />
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="Opções" style="text-align:center">
-
-						<p:menuButton value="Ações">
-
-							<p:menuitem icon="pi pi-pencil" value="Editar" onstart="start()"
-								onsuccess="stop()" onerror="stop()"
-								onclick="setarWidthHeight('form-edit-pagamento-tab2')"
-								oncomplete="PF('dlg_edt_pagamento_tab2').show()"
-								update=":form-edit-pagamento-tab2:panel-edit-pgto"
-								action="#{liberacao_lancamento_controller.prepararEdicao(lancamento.idPagamento)}" />
-
-							<p:menuitem icon="pi pi-folder-open" value="Documentos"
-								rendered="true" onstart="start()" onsuccess="stop()"
-								onerror="stop()" process="@this"
-								onclick="setarWidthHeight('id-anexo')"
-								oncomplete="PF('dialog_arquivo').show();"
-								update="main-panel-anexo"
-								action="#{liberacao_lancamento_controller.carregarArquivos(lancamento.codigoLancamento)}" />
-
-
-							<p:menuitem icon="fa fa-print" value="Visualizar PDF"
-								rendered="#{!lancamento.tipov4.equals('AR') and !lancamento.tipov4.equals('BA') and 
-								!lancamento.tipov4.equals('CP') and !lancamento.tipov4.equals('DE') and !lancamento.tipov4.equals('TF')
-								and !lancamento.tipov4.equals('LA') and !lancamento.tipov4.equals('SD')}"
-								onstart="start()" onsuccess="stop()" onerror="stop()"
-								process="@this" ajax="false" target="_blank"
-								action="#{liberacao_lancamento_controller.imprimir(lancamento)}" />
-
-							<p:menuitem icon="fa fa-print" value="Visuzalizar mapa comparativo"
-								rendered="#{lancamento.tipov4.equals('PC')}" onstart="start()"
-								onsuccess="stop()" onerror="stop()" process="@this" ajax="false"
-								target="_blank"
-								action="#{liberacao_lancamento_controller.imprimirMapa(lancamento.compraID)}" />
-
-
-						</p:menuButton>
-
-
-						<p:commandLink title="Gerar imposto" rendered="false"
-							styleClass="btn btn-default btn-xs "
-							update=":form-imposto :form-imposto:table-imposto"
-							onclick="start()"
-							action="#{liberacao_lancamento_controller.listarImpostos(lancamento.id,lancamento.idPagamento)}"
-							onerror="stop()" onsuccess="stop()"
-							oncomplete="PF('dlg_impostos').show()">
-							<span class="fa fa-fw fa-money"></span>
+					<p:column headerText="Opções" style="width:50px;text-align:center">
+						<p:commandLink style="margin-right:5px"
+									   styleClass="btn btn-default btn-xs"
+									   update=":form-edit-pagamento-tab2" onclick="start()"
+									   onerror="stop()" onsuccess="stop()"
+									   oncomplete="PF('dlg_edt_pagamento_tab2').show()"
+									   action="#{liberacao_lancamento_controller.prepararEdicao(lancamento.idPagamento)}">
+							<i class="fa fa-pencil-square-o"></i>
 						</p:commandLink>
-
 					</p:column>
 
+
+
+
 				</p:dataTable>
-			</p:panel>
-			
-		</h:form>
+
+
+			</h:form>
+
+		</p:panel>
+		<p:separator />
 	</ui:define>
 
 	<ui:define name="adicionais">
-	
-		<p:dialog header="Senha" widgetVar="dialogValid"
-			resizable="false" closable="false" modal="true" showEffect="clip"
-			hideEffect="clip">
-			<h:form id="form_valid" styleClass="default-style-form-filter">
-				<p:messages showDetail="true" closable="true" autoUpdate="true" />
-				<p:panelGrid columns="2" styleClass="ui-noborder">
-					<p:outputLabel for="senha" value="Senha:" />
-					<p:password id="senha" label="senha"
-						value="#{liberacao_lancamento_controller.aprouve.senha}" required="true" />
+
+
+		<p:dialog widgetVar="dlg_edt_pagamento_tab2" closable="true"
+				  modal="true" resizable="true" header="Pagamento" showEffect="clip"
+				  hideEffect="clip">
+			<h:form id="form-edit-pagamento-tab2">
+				<p:messages id="edit-pagamento-tab2-msg" autoUpdate="true"
+							showSummary="false" showDetail="true" closable="true"
+							showIcon="true" />
+				<p:panelGrid columns="2">
+
+					<p:panelGrid columns="2">
+						<f:facet name="header">
+							<p:outputLabel value="Informações gerais"></p:outputLabel>
+						</f:facet>
+
+						<p:outputLabel value="Lançamento:" />
+						<h:outputText
+								value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.lancamento.id}" />
+
+						<p:outputLabel value="N° Nota:" />
+						<p:inputText
+								value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.lancamento.notaFiscal}" />
+
+						<p:outputLabel value="Data:" />
+						<p:calendar navigator="true"
+									value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.dataPagamento}"
+									timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+
+						<p:outputLabel value="Valor:" />
+						<p:inputText
+								value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.valor}"
+								onkeypress="return formatarNumero(this,event,19,2);">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+											 locale="pt_BR" />
+						</p:inputText>
+
+					</p:panelGrid>
+
+					<p:panelGrid columns="2"
+								 rendered="#{liberacao_lancamento_controller.editarLinha}">
+						<f:facet name="header">
+							<p:outputLabel value="Edição recursos" />
+						</f:facet>
+
+						<p:outputLabel value="Linhas orçamentárias:"
+									   rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.rubricaOrcamento != null}" />
+						<p:autoComplete id="cate_compra" placeholder="Categoria" size="40"
+										rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.rubricaOrcamento != null}"
+										value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.rubricaOrcamento}"
+										completeMethod="#{custo_pessoal_controller.completeRubricasDeOrcamento}"
+										var="categoria" itemLabel="#{categoria.rubrica.nome}"
+										itemValue="#{categoria}" converter="rubricaOrcamentoConverter">
+
+							<p:column headerText="Doação">
+								<h:outputText value="#{categoria.orcamento.fonte.nome}" />
+							</p:column>
+
+							<p:column headerText="Doação">
+								<h:outputText value="#{categoria.orcamento.titulo}" />
+							</p:column>
+
+							<p:column headerText="Componente">
+								<h:outputText value="#{categoria.componente.nome}" />
+							</p:column>
+
+							<p:column headerText="SubComponente">
+								<h:outputText value="#{categoria.subComponente.nome}" />
+							</p:column>
+
+							<p:column headerText="Categoria">
+								<h:outputText value="#{categoria.rubrica.nome}" />
+							</p:column>
+
+						</p:autoComplete>
+
+						<h:outputText value="Projetos:"
+									  rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}" />
+						<p:selectOneMenu
+								value="#{liberacao_lancamento_controller.projetoAux}"
+								style="width:160px" filter="true" filterMatchMode="contains"
+								rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}">
+							<f:selectItem noSelectionOption="true" />
+							<f:selectItems
+									value="#{liberacao_lancamento_controller.listaProjeto}"
+									var="projeto" itemLabel="#{projeto.nome}" itemValue="#{projeto}" />
+							<p:ajax update="lbl_linha linha_orcament" onstart="start()"
+									onerror="stop()" onsuccess="stop()"
+									listener="#{liberacao_lancamento_controller.listaRubricas()}" />
+						</p:selectOneMenu>
+
+
+						<h:outputText value="Linha orçamentária:"
+									  rendered="#{liberacao_lancamento_controller.projetoAux != null}" />
+
+						<p:selectOneMenu id="linha_orcament" style="width:160px"
+										 rendered="#{liberacao_lancamento_controller.projetoAux != null}"
+										 placeholder="Entre com o código/nome do projeto." size="25"
+										 value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica}"
+										 filter="true" filterMatchMode="contains" var="categoria"
+										 converter="projetoRubricaConverter">
+
+							<f:selectItems
+									value="#{liberacao_lancamento_controller.listaDeRubricasProjeto}"
+									var="ru" itemLabel="#{ru.nomeCategoria}" itemValue="#{ru}" />
+
+
+							<p:column headerText="Código">
+								<h:outputText value="#{categoria.codigo}" />
+							</p:column>
+
+							<p:column headerText="Fonte">
+								<h:outputText value="#{categoria.nomeFonte}" />
+							</p:column>
+
+							<p:column headerText="Projeto">
+								<h:outputText value="#{categoria.nomeProjeto}" />
+							</p:column>
+
+							<p:column headerText="Componente">
+								<h:outputText value="#{categoria.nomeComponente}" />
+							</p:column>
+
+							<p:column headerText="SubComponente">
+								<h:outputText value="#{categoria.nomeSubComponente}" />
+							</p:column>
+
+							<p:column headerText="Linha orçamentária">
+								<h:outputText value="#{categoria.nomeCategoria}" />
+							</p:column>
+
+							<p:column headerText="Saldo">
+								<h:outputText value="#{categoria.valorSaldo}">
+									<f:convertNumber currencySymbol="R$:" minFractionDigits="2"
+													 maxFractionDigits="2" locale="pt_BR" />
+								</h:outputText>
+							</p:column>
+
+
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Descrição:" />
+						<p:inputTextarea cols="50"
+										 value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.lancamento.descricao}" />
+
+					</p:panelGrid>
+
+
+					<p:panelGrid columns="2"
+								 rendered="#{!liberacao_lancamento_controller.editarLinha}">
+						<f:facet name="header">
+							<p:outputLabel value="Recursos"></p:outputLabel>
+						</f:facet>
+
+						<p:outputLabel value="Linhas orçamentárias:"
+									   rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.rubricaOrcamento != null}" />
+						<p:autoComplete id="cate_compra_2" placeholder="Categoria"
+										size="40"
+										rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.rubricaOrcamento != null}"
+										value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.rubricaOrcamento}"
+										completeMethod="#{custo_pessoal_controller.completeRubricasDeOrcamento}"
+										var="categoria" itemLabel="#{categoria.rubrica.nome}"
+										itemValue="#{categoria}" converter="rubricaOrcamentoConverter">
+
+							<p:column headerText="Doação">
+								<h:outputText value="#{categoria.orcamento.fonte.nome}" />
+							</p:column>
+
+							<p:column headerText="Doação">
+								<h:outputText value="#{categoria.orcamento.titulo}" />
+							</p:column>
+
+							<p:column headerText="Componente">
+								<h:outputText value="#{categoria.componente.nome}" />
+							</p:column>
+
+							<p:column headerText="SubComponente">
+								<h:outputText value="#{categoria.subComponente.nome}" />
+							</p:column>
+
+							<p:column headerText="Categoria">
+								<h:outputText value="#{categoria.rubrica.nome}" />
+							</p:column>
+
+						</p:autoComplete>
+
+
+						<p:outputLabel value="Fonte:"
+									   rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}" />
+
+						<p:outputLabel
+								rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}"
+								value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica.rubricaOrcamento.orcamento.titulo}" />
+
+						<p:outputLabel value="Doação:"
+									   rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}" />
+
+						<p:outputLabel
+								rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}"
+								value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica.rubricaOrcamento.orcamento.fonte.nome}" />
+
+
+						<p:outputLabel value="Projetos:"
+									   rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}" />
+
+						<p:outputLabel
+								rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}"
+								value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica.projeto.nome}" />
+
+						<h:outputText id="lbl_linha" value="Linha orçamentária:"
+									  rendered="#{liberacao_lancamento_controller.projetoAux != null}" />
+
+						<p:outputLabel
+								rendered="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica != null}"
+								value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.projetoRubrica.rubricaOrcamento.rubrica.nome}" />
+
+
+
+
+						<p:outputLabel value="Descrição:" />
+						<p:inputTextarea cols="50"
+										 value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.lancamento.descricao}" />
+
+
+
+					</p:panelGrid>
+
+
+
 
 				</p:panelGrid>
 
 				<p:separator />
-				<center>
-					<p:commandLink process="form_valid,senha"
-						update=":form-lancamento-pagamento" styleClass="btn btn-primary"
-						style="color:#ffffff;width:90px" onclick="start();PF('dialogValid').hide()"
-						oncomplete="stop()" onerror="stop()"
-						action="#{liberacao_lancamento_controller.validar()}" value="Enviar" />
-					<p:spacer width="3px" />
-					<p:commandLink update=":form-lancamento-pagamento" immediate="true"
-						styleClass="btn btn-danger" style="color:#ffffff;width:90px"
-						value="Cancelar" onclick="PF('dialogValid').hide()" />
-
-				</center>
-
-			</h:form>
-		</p:dialog>
-		
-		<p:dialog id="dialog_help" widgetVar="dialog_help" styleClass="help" header="Ajuda"
-			showEffect="clip" hideEffect="drop" draggable="false" maximizable="true" minimizable="true" 
-			resizable="true" blockScroll="true" onHide="unlockedScroll()" onShow="blockedScroll()" >
-				<ui:include src="dialog/help/help_liberacao_lancamento.xhtml" />
-			</p:dialog>
-
-		<p:dialog widgetVar="dlg_edt_pagamento_tab2" modal="true" width="100%"
-			height="100%" closable="true" closeOnEscape="true" showHeader="true"
-			header="Edição de pagamento" showEffect="clip" hideEffect="clip">
-
-			<ui:include src="/main/dialog/validacao/edicao_lancamento.xhtml" />
-
-		</p:dialog>
-
-		<p:dialog header="Anexos" widgetVar="dialog_arquivo" hideEffect="clip"
-			closeOnEscape="true" showEffect="clip" width="100%" height="100%"
-			modal="true">
-
-			<ui:include src="/main/dialog/validacao/anexos.xhtml" />
-
-		</p:dialog>
-
-		
-
-		<p:dialog widgetVar="dlg_impostos" closable="true" modal="true"
-			resizable="true" width="70%" header="Impostos" showEffect="clip"
-			hideEffect="clip">
-
-			<h:form id="form-imposto">
-
-				<p:messages showDetail="true" showSummary="false" showIcon="true"
-					closable="true" />
-
-				<div class="ui-g ui-fluid">
-
-					<p:focus context="form-imposto" />
-
-					<div class="ui-g-6">
-						<h:outputText value="Tipo:" />
-						<p:selectOneMenu filter="true" filterMatchMode="contains"
-							required="true" requiredMessage="Preencha o campo 'Tipo'."
-							value="#{liberacao_lancamento_controller.imposto.tipo}">
-							<f:selectItem itemLabel="Selecione: " noSelectionOption="true" />
-							<f:selectItems
-								value="#{liberacao_lancamento_controller.tipoImposto}"
-								var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.nome}" />
-						</p:selectOneMenu>
-					</div>
-
-					<div class="ui-g-2">
-						<h:outputText value="Valor:" />
-						<p:inputText required="true"
-							requiredMessage="Preencha o campo 'Valor'."
-							value="#{liberacao_lancamento_controller.imposto.valor}"
-							onkeypress="return formatarNumero(this,event,19,2);">
-
-							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
-								locale="pt_BR" />
-
-						</p:inputText>
-					</div>
 
 
-					<div class="ui-g-2">
-						<br />
-						<p:commandLink update="form-imposto table-imposto"
-							process="form-imposto" onclick="start();" oncomplete="stop();"
-							onerror="stop();"
-							action="#{liberacao_lancamento_controller.salvarImposto()}"
-							style="color:#fff" styleClass="btn btn-primary btn-sm">
-							<span class="glyphicon glyphicon-floppy-disk"></span>
-							<span style="margin: 3px;">Salvar</span>
-						</p:commandLink>
-					</div>
+				<p:commandLink style="color:#fff"
+							   update=":form-lancamento-pagamento"
+							   process="form-edit-pagamento-tab2"
+							   styleClass="btn btn-primary btn-default "
+							   action="#{liberacao_lancamento_controller.editarPagamentoTab2()}"
+							   onclick="start()" onerror="stop()" oncomplete="stop()">
+					<i class="fa fa-check-square-o"></i>
+					<span style="width: 40px; font-family: Arial">Salvar</span>
+				</p:commandLink>
 
-					<p:dataTable id="table-imposto" paginator="true" rows="5"
-						value="#{liberacao_lancamento_controller.impostos}" var="imposto">
 
-						<p:column headerText="Lançamento">
-							<h:outputText
-								value="#{imposto.pagamentoLancamento.lancamentoAcao.lancamento.id}" />
-						</p:column>
+				<p:commandLink style="color:#fff;margin-left:5px"
+							   rendered="#{!liberacao_lancamento_controller.editarLinha}"
+							   onstart="start()" onsuccess="stop()" onerror="stop()"
+							   update=":form-lancamento-pagamento form-edit-pagamento-tab2"
+							   process="form-edit-pagamento-tab2"
+							   styleClass="btn btn-primary btn-default btn-sm "
+							   action="#{liberacao_lancamento_controller.changeMode()}">
+					<i class="fa fa-check-square-o"></i>
+					<span style="width: 40px; font-family: Arial">Editar linha</span>
+				</p:commandLink>
 
-						<p:column headerText="Tipo" style="width:150px;text-align:left">
-							<h:outputText value="#{imposto.tipo.nome}" />
-						</p:column>
-
-						<p:column headerText="Valor" style="width:120px;text-align:right">
-							<h:outputText value="#{imposto.valor}">
-								<f:convertNumber type="currency" locale="pt_BR" />
-							</h:outputText>
-						</p:column>
-
-						<p:column headerText="Guia">
-							<h:outputText rendered="#{imposto.guia != null}"
-								value="#{imposto.guia.id}" />
-							<h:outputText rendered="#{imposto.guia == null}"
-								value="Sem guia de pagamento" />
-
-						</p:column>
-
-						<p:column headerText="ações" style="width:100px">
-
-							<p:commandLink onclick="start();" oncomplete="stop();"
-								onerror="stop();" process="@this"
-								action="#{liberacao_lancamento_controller.removerImposto(imposto)}"
-								value="Remover" update="table-imposto">
-
-							</p:commandLink>
-
-						</p:column>
-
-					</p:dataTable>
-
-				</div>
+				<p:commandLink style="color:#fff;margin-left:5px"
+							   rendered="#{liberacao_lancamento_controller.editarLinha}"
+							   onstart="start()" onsuccess="stop()" onerror="stop()"
+							   update=":form-lancamento-pagamento form-edit-pagamento-tab2"
+							   process="form-edit-pagamento-tab2"
+							   styleClass="btn btn-danger btn-default btn-sm "
+							   action="#{liberacao_lancamento_controller.changeMode()}">
+					<i class="fa fa-close"></i>
+					<span style="width: 40px; font-family: Arial">Cancelar
+						edição</span>
+				</p:commandLink>
 
 			</h:form>
-
 		</p:dialog>
-
-
-
-
-
 
 		<p:dialog widgetVar="pagamentoConta" header="Pagamento"
-			closable="true" width="700" modal="true" showEffect="clip"
-			hideEffect="clip" resizable="false">
+				  closable="true" width="700" modal="true" showEffect="clip"
+				  hideEffect="clip" resizable="false">
 
 			<h:form id="form-pagamento">
-				<p:messages showIcon="true" showSummary="false" showDetail="true" />
+				<p:messages autoUpdate="true" showIcon="true" showSummary="false"
+							showDetail="true" />
 				<p:panelGrid columns="2">
 					<p:panelGrid columns="2">
 						<p:outputLabel value="Tipo:" />
 						<p:selectOneMenu
-							value="#{liberacao_lancamento_controller.pagamento.tipoParcelamento}">
+								value="#{liberacao_lancamento_controller.pagamento.tipoParcelamento}">
 
 							<f:selectItems
-								value="#{liberacao_lancamento_controller.parcelamentos}"
-								var="parcelamento" itemValue="#{parcelamento}"
-								itemLabel="#{parcelamento.nome}" />
+									value="#{liberacao_lancamento_controller.parcelamentos}"
+									var="parcelamento" itemValue="#{parcelamento}"
+									itemLabel="#{parcelamento.nome}" />
 						</p:selectOneMenu>
 
 						<p:outputLabel value="Nº Parcelas:" />
 						<p:inputText
-							value="#{liberacao_lancamento_controller.pagamento.quantidadeParcela}"
-							style="width:40px" />
+								value="#{liberacao_lancamento_controller.pagamento.quantidadeParcela}"
+								style="width:40px" />
 
 
 						<p:outputLabel value="Conta:" />
 						<p:selectOneMenu filter="true" filterMatchMode="contains"
-							value="#{liberacao_lancamento_controller.pagamento.conta}"
-							converter="contaConverter">
+										 value="#{liberacao_lancamento_controller.pagamento.conta}"
+										 converter="contaConverter">
 							<f:selectItems value="#{liberacao_lancamento_controller.contas}"
-								var="conta" itemValue="#{conta}" itemLabel="#{conta.nomeConta}" />
+										   var="conta" itemValue="#{conta}" itemLabel="#{conta.nomeConta}" />
 						</p:selectOneMenu>
 
 						<p:outputLabel value="Pagamento:" />
 						<p:calendar navigator="true"
-							value="#{liberacao_lancamento_controller.pagamento.dataPagamento}"
-							timeZone="America/Manaus" pattern="dd/MM/yyyy">
+									value="#{liberacao_lancamento_controller.pagamento.dataPagamento}"
+									timeZone="America/Manaus" pattern="dd/MM/yyyy">
 						</p:calendar>
 
 						<p:outputLabel value="Valor:" />
 						<p:inputText placeholder="Valor" required="true"
-							requiredMessage="Preencha o campo Valor."
-							onkeypress="return formatarNumero(this,event,19,2);"
-							value="#{liberacao_lancamento_controller.pagamento.valor}"
-							style="width:150px;margin-left:5px">
+									 requiredMessage="Preencha o campo Valor."
+									 onkeypress="return formatarNumero(this,event,19,2);"
+									 value="#{liberacao_lancamento_controller.pagamento.valor}"
+									 style="width:150px;margin-left:5px">
 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
-								locale="pt_BR" />
+											 locale="pt_BR" />
 						</p:inputText>
 
 
 						<p:commandLink styleClass="btn btn-primary"
-							action="#{liberacao_lancamento_controller.salvarPagamento()}"
-							update="totais :form-pagamento"
-							style="color:#fff;margin-left:5px;" value="Enviar" />
+									   action="#{liberacao_lancamento_controller.salvarPagamento()}"
+									   update="totais :form-pagamento"
+									   style="color:#fff;margin-left:5px;" value="Enviar" />
 
 					</p:panelGrid>
 
@@ -539,30 +587,30 @@
 
 						<p:outputLabel value="Total a pagar:" />
 						<p:inputText id="total-a-pagar" disabled="true"
-							value="#{liberacao_lancamento_controller.totalApagar}">
+									 value="#{liberacao_lancamento_controller.totalApagar}">
 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
-								locale="pt_BR" />
+											 locale="pt_BR" />
 						</p:inputText>
 
 						<p:outputLabel value="Total pago:" />
 						<p:inputText id="total-pago" disabled="true" style="color:'red'"
-							value="#{liberacao_lancamento_controller.totalPago}">
+									 value="#{liberacao_lancamento_controller.totalPago}">
 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
-								locale="pt_BR" />
+											 locale="pt_BR" />
 						</p:inputText>
 
 						<p:outputLabel id="total-falta" value="Falta pagar:" />
 						<p:inputText disabled="true"
-							value="#{liberacao_lancamento_controller.totalFaltaPagar}">
+									 value="#{liberacao_lancamento_controller.totalFaltaPagar}">
 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
-								locale="pt_BR" />
+											 locale="pt_BR" />
 						</p:inputText>
 					</p:panelGrid>
 
 				</p:panelGrid>
 
 				<p:dataTable value="#{liberacao_lancamento_controller.pagamentos}"
-					var="pagamento">
+							 var="pagamento">
 
 					<p:column headerText="Conta">
 						<h:outputText value="#{pagamento.conta.nomeConta}" />
@@ -588,19 +636,19 @@
 
 					<p:column>
 						<p:commandLink style="margin-right:5px" value="editar"
-							process="@this" onclick="PF('dlg_edt_pagamento').show()"
-							update=":form-edit-pagamento">
+									   process="@this" onclick="PF('dlg_edt_pagamento').show()"
+									   update=":form-edit-pagamento">
 							<f:setPropertyActionListener value="#{pagamento}"
-								target="#{liberacao_lancamento_controller.pagamentoLancAuxiliar}" />
+														 target="#{liberacao_lancamento_controller.pagamentoLancAuxiliar}" />
 						</p:commandLink>
 
 						<p:commandLink value="excluir" process="@this"
-							action="#{liberacao_lancamento_controller.removerPagamento()}"
-							update=":form-pagamento">
+									   action="#{liberacao_lancamento_controller.removerPagamento()}"
+									   update=":form-pagamento">
 							<p:confirm header="Confirmação" icon="ui-icon-alert"
-								message="Desejar excluir pagamento?" />
+									   message="Desejar excluir pagamento?" />
 							<f:setPropertyActionListener value="#{pagamento}"
-								target="#{liberacao_lancamento_controller.pagamento}" />
+														 target="#{liberacao_lancamento_controller.pagamento}" />
 						</p:commandLink>
 					</p:column>
 
@@ -608,48 +656,48 @@
 
 				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
 					<p:commandButton value="Sim" type="button"
-						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									 styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
 					<p:commandButton value="Não" type="button"
-						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+									 styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
 				</p:confirmDialog>
 
 			</h:form>
 		</p:dialog>
 
 		<p:dialog widgetVar="dlg_edt_pagamento" closable="true"
-			resizable="true" header="Pagamento" showEffect="clip"
-			hideEffect="clip">
+				  resizable="true" header="Pagamento" showEffect="clip"
+				  hideEffect="clip">
 			<h:form id="form-edit-pagamento">
 				<p:panelGrid columns="2">
 					<p:outputLabel value="Lançamento:" />
 					<h:outputText
-						value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.lancamento.id}" />
+							value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.lancamentoAcao.lancamento.id}" />
 
 					<p:outputLabel value="Data:" />
 					<p:calendar navigator="true"
-						value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.dataPagamento}"
-						timeZone="America/Manaus" pattern="dd/MM/yyyy" />
+								value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.dataPagamento}"
+								timeZone="America/Manaus" pattern="dd/MM/yyyy" />
 
 					<p:outputLabel value="Valor:" />
 					<p:inputText
-						value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.valor}">
+							value="#{liberacao_lancamento_controller.pagamentoLancAuxiliar.valor}">
 						<f:convertNumber type="currency" locale="pt_BR" />
 					</p:inputText>
 				</p:panelGrid>
 				<p:separator />
 				<p:commandLink style="color:#fff" value="Salvar"
-					update=":form-pagamento" styleClass="btn btn-primary btn-default"
-					action="#{liberacao_lancamento_controller.editarPagamento()}"
-					oncomplete="PF('dlg_edt_pagamento').hide()" />
+							   update=":form-pagamento" styleClass="btn btn-primary btn-default"
+							   action="#{liberacao_lancamento_controller.editarPagamento()}"
+							   oncomplete="PF('dlg_edt_pagamento').hide()" />
 			</h:form>
 		</p:dialog>
 
 		<p:dialog modal="true" style="z-index:1000" widgetVar="statusDialog"
-			showHeader="false" draggable="false" closable="false"
-			resizable="false">
+				  showHeader="false" draggable="false" closable="false"
+				  resizable="false">
 			<p:graphicImage library="image" name="aguarde.gif" />
 			<p:graphicImage style="width:120px;height:70px" library="image"
-				name="logofas.png" />
+							name="logofas.png" />
 		</p:dialog>
 
 

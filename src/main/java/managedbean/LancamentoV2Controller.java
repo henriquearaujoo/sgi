@@ -618,105 +618,144 @@ public class LancamentoV2Controller implements Serializable {
 	}
 
 	public void editarPagamentoTab2() {
-		// Boolean verificarSaldo = true;
-		// if(pagamentoLancAuxiliar.getContaRecebedor().getTipo().equals("CB")) {
-		// verificarSaldo = false;
-		// }
-
-		// if(verificarSaldo) {
-		// if
-		// (!calculatorRubricaRepositorio.verificarSaldoRubrica(pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica().getId(),
-		// pagamentoLancAuxiliar.getLancamentoAcao().getValor())) {
-		// addMessage("", "Saldo de rubrica insuficiente", FacesMessage.SEVERITY_WARN);
-		// return;
-		// }
-		//
-		// }
-
-		try {
-
-			if (gerarReembolso) {
-
-				if (dataReembolso == null)
-					throw new Exception("A data do reembolso é obrigatória");
-			}
-
-			Boolean LinhaOrcamentariaDiferente = false;
-			Boolean RubricaDiferenteReembolsavel = false;
-			Boolean projetoRubricaNull = false;
-
-			PagamentoLancamento old = service.findPagamentoById(pagamentoLancAuxiliar.getId());
-			Boolean efetivado = pagamentoLancAuxiliar.getStt().equals(StatusPagamentoLancamento.EFETIVADO);
-			Boolean valorDiferente = (!old.getValor().equals(pagamentoLancAuxiliar.getValor()));
-			Boolean dataDiferente = (!old.getDataPagamento().equals(pagamentoLancAuxiliar.getDataPagamento()));
-			Boolean valorMaior = ((pagamentoLancAuxiliar.getValor().compareTo(old.getValor()) > 0));
-
-			if (pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica() != null) {
-				LinhaOrcamentariaDiferente = (!pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica()
-						.equals(old.getLancamentoAcao().getProjetoRubrica()));
-				RubricaDiferenteReembolsavel = (!pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica()
-						.getRubricaOrcamento().getRubrica().getNome().contains("Reembolsável"));
-				projetoRubricaNull = true;
-			}
-
-			Boolean diferenteDeEntrada = (!verificaConta(pagamentoLancAuxiliar));
-
-			if (efetivado) {
-
-				if (valorDiferente || dataDiferente) {
-					addMessage("", "Este Lancamento se encontra 'EFETIVADO' não é possivel alterar (data) ou (valor)!",
-							FacesMessage.SEVERITY_WARN);
+		Boolean LinhaOrcamentariaDiferente = false;
+		Boolean RubricaDiferenteReembolsavel = false;
+		Boolean projetoRubricaNull = false;
+		final PagamentoLancamento old = this.service.findPagamentoById(this.pagamentoLancAuxiliar.getId());
+		final Boolean efetivado = this.pagamentoLancAuxiliar.getStt().equals((Object)StatusPagamentoLancamento.EFETIVADO);
+		final Boolean valorDiferente = !old.getValor().equals(this.pagamentoLancAuxiliar.getValor());
+		final Boolean dataDiferente = !old.getDataPagamento().equals(this.pagamentoLancAuxiliar.getDataPagamento());
+		final Boolean valorMaior = this.pagamentoLancAuxiliar.getValor().compareTo(old.getValor()) > 0;
+		if (this.pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica() != null) {
+			LinhaOrcamentariaDiferente = !this.pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica().equals((Object)old.getLancamentoAcao().getProjetoRubrica());
+			RubricaDiferenteReembolsavel = !this.pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica().getRubricaOrcamento().getRubrica().getNome().contains("Reembols\u00e1vel");
+			projetoRubricaNull = true;
+		}
+		final Boolean diferenteDeEntrada = !this.verificaConta(this.pagamentoLancAuxiliar);
+		if (efetivado && (valorDiferente || dataDiferente)) {
+			this.addMessage("", "Este Lancamento se encontra 'EFETIVADO' n\u00e3o \u00e9 possivel alterar (data) ou (valor)!", FacesMessage.SEVERITY_WARN);
+			return;
+		}
+		if (projetoRubricaNull && (valorMaior || LinhaOrcamentariaDiferente) && RubricaDiferenteReembolsavel && diferenteDeEntrada) {
+			if (LinhaOrcamentariaDiferente) {
+				if (!this.calculatorRubricaRepositorio.verificarSaldoRubrica(this.pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica().getId(), this.pagamentoLancAuxiliar.getValor())) {
+					this.addMessage("", "Saldo de rubrica insuficiente", FacesMessage.SEVERITY_WARN);
 					return;
 				}
 			}
-
-			if (projetoRubricaNull) {
-				if (valorMaior || LinhaOrcamentariaDiferente) {
-					if (RubricaDiferenteReembolsavel && diferenteDeEntrada) {
-						if (LinhaOrcamentariaDiferente) {
-							// Quando se troca a linha orcamentaria verifica-se o valor esta disponivel
-							if (!calculatorRubricaRepositorio.verificarSaldoRubrica(
-									pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica().getId(),
-									(pagamentoLancAuxiliar.getValor()))) {
-								addMessage("", "Saldo de rubrica insuficiente", FacesMessage.SEVERITY_WARN);
-								return;
-							}
-						} else {
-							// Quando não se troca a linha orcametaria verifica se tem disponilvel apenas a
-							// diferença
-							if (!calculatorRubricaRepositorio.verificarSaldoRubrica(
-									pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica().getId(),
-									(pagamentoLancAuxiliar.getValor().subtract(old.getValor())))) {
-								addMessage("", "Saldo de rubrica insuficiente", FacesMessage.SEVERITY_WARN);
-								return;
-							}
-						}
-					}
-				}
+			else if (!this.calculatorRubricaRepositorio.verificarSaldoRubrica(this.pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica().getId(), this.pagamentoLancAuxiliar.getValor().subtract(old.getValor()))) {
+				this.addMessage("", "Saldo de rubrica insuficiente", FacesMessage.SEVERITY_WARN);
+				return;
 			}
-
-			service.editarPagamento(pagamentoLancAuxiliar);
-
-			if (gerarReembolso) {
-
-				inserirReembolso("reembolso", "REEMBOLSO - " + lancamentoReembolso.getDescricao(),
-						lancamentoReembolso.getCodigo(), lancamentoReembolso.getDepesaReceita(), pagamentoLancAuxiliar,
-						lancamentoReembolso, dataReembolso, conta, pagamentoLancAuxiliar.getConta());
-			}
-
-			pagamentoLancAuxiliar = new PagamentoLancamento();
-			// carregarPagamentosPE();
-			carregarLancamentos();
-
-			PrimeFaces current = PrimeFaces.current();
-			current.executeScript("PF('dlg_edt_pagamento_tab2').hide();");
-
-			addMessage("", "Salvo com Sucesso!", FacesMessage.SEVERITY_INFO);
-		} catch (Exception e) {
-			e.printStackTrace();
-			addMessage("", e.getMessage(), FacesMessage.SEVERITY_ERROR);
 		}
+		this.service.editarPagamento(this.pagamentoLancAuxiliar);
+		this.pagamentoLancAuxiliar = new PagamentoLancamento();
+		this.carregarLancamentos();
+		final PrimeFaces current = PrimeFaces.current();
+		current.executeScript("PF('dlg_edt_pagamento_tab2').hide();");
+		this.addMessage("", "Salvo com Sucesso!", FacesMessage.SEVERITY_INFO);
 	}
+
+//	public void editarPagamentoTab2() {
+//		// Boolean verificarSaldo = true;
+//		// if(pagamentoLancAuxiliar.getContaRecebedor().getTipo().equals("CB")) {
+//		// verificarSaldo = false;
+//		// }
+//
+//		// if(verificarSaldo) {
+//		// if
+//		// (!calculatorRubricaRepositorio.verificarSaldoRubrica(pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica().getId(),
+//		// pagamentoLancAuxiliar.getLancamentoAcao().getValor())) {
+//		// addMessage("", "Saldo de rubrica insuficiente", FacesMessage.SEVERITY_WARN);
+//		// return;
+//		// }
+//		//
+//		// }
+//
+//		try {
+//
+//			if (gerarReembolso) {
+//
+//				if (dataReembolso == null)
+//					throw new Exception("A data do reembolso é obrigatória");
+//			}
+//
+//			Boolean LinhaOrcamentariaDiferente = false;
+//			Boolean RubricaDiferenteReembolsavel = false;
+//			Boolean projetoRubricaNull = false;
+//
+//			PagamentoLancamento old = service.findPagamentoById(pagamentoLancAuxiliar.getId());
+//			Boolean efetivado = pagamentoLancAuxiliar.getStt().equals(StatusPagamentoLancamento.EFETIVADO);
+//			Boolean valorDiferente = (!old.getValor().equals(pagamentoLancAuxiliar.getValor()));
+//			Boolean dataDiferente = (!old.getDataPagamento().equals(pagamentoLancAuxiliar.getDataPagamento()));
+//			Boolean valorMaior = ((pagamentoLancAuxiliar.getValor().compareTo(old.getValor()) > 0));
+//
+//			if (pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica() != null) {
+//				LinhaOrcamentariaDiferente = (!pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica()
+//						.equals(old.getLancamentoAcao().getProjetoRubrica()));
+//				RubricaDiferenteReembolsavel = (!pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica()
+//						.getRubricaOrcamento().getRubrica().getNome().contains("Reembolsável"));
+//				projetoRubricaNull = true;
+//			}
+//
+//			Boolean diferenteDeEntrada = (!verificaConta(pagamentoLancAuxiliar));
+//
+//			if (efetivado) {
+//
+//				if (valorDiferente || dataDiferente) {
+//					addMessage("", "Este Lancamento se encontra 'EFETIVADO' não é possivel alterar (data) ou (valor)!",
+//							FacesMessage.SEVERITY_WARN);
+//					return;
+//				}
+//			}
+//
+//			if (projetoRubricaNull) {
+//				if (valorMaior || LinhaOrcamentariaDiferente) {
+//					if (RubricaDiferenteReembolsavel && diferenteDeEntrada) {
+//						if (LinhaOrcamentariaDiferente) {
+//							// Quando se troca a linha orcamentaria verifica-se o valor esta disponivel
+//							if (!calculatorRubricaRepositorio.verificarSaldoRubrica(
+//									pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica().getId(),
+//									(pagamentoLancAuxiliar.getValor()))) {
+//								addMessage("", "Saldo de rubrica insuficiente", FacesMessage.SEVERITY_WARN);
+//								return;
+//							}
+//						} else {
+//							// Quando não se troca a linha orcametaria verifica se tem disponilvel apenas a
+//							// diferença
+//							if (!calculatorRubricaRepositorio.verificarSaldoRubrica(
+//									pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica().getId(),
+//									(pagamentoLancAuxiliar.getValor().subtract(old.getValor())))) {
+//								addMessage("", "Saldo de rubrica insuficiente", FacesMessage.SEVERITY_WARN);
+//								return;
+//							}
+//						}
+//					}
+//				}
+//			}
+//
+//			service.editarPagamento(pagamentoLancAuxiliar);
+//
+//			if (gerarReembolso) {
+//
+//				inserirReembolso("reembolso", "REEMBOLSO - " + lancamentoReembolso.getDescricao(),
+//						lancamentoReembolso.getCodigo(), lancamentoReembolso.getDepesaReceita(), pagamentoLancAuxiliar,
+//						lancamentoReembolso, dataReembolso, conta, pagamentoLancAuxiliar.getConta());
+//			}
+//
+//			pagamentoLancAuxiliar = new PagamentoLancamento();
+//			// carregarPagamentosPE();
+//			carregarLancamentos();
+//
+//			PrimeFaces current = PrimeFaces.current();
+//			current.executeScript("PF('dlg_edt_pagamento_tab2').hide();");
+//
+//			addMessage("", "Salvo com Sucesso!", FacesMessage.SEVERITY_INFO);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			addMessage("", e.getMessage(), FacesMessage.SEVERITY_ERROR);
+//		}
+//	}
 
 	public Boolean verificaConta(PagamentoLancamento pagamentoLancamento) {
 		return (pagamentoLancamento.getContaRecebedor().getTipo().equals("CB"));
@@ -740,6 +779,7 @@ public class LancamentoV2Controller implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
 	}
+
 
 	public StatusPagamentoLancamento[] getStatusPagamento() {
 		return StatusPagamentoLancamento.values();
@@ -796,6 +836,21 @@ public class LancamentoV2Controller implements Serializable {
 		}
 	}
 
+//	public void prepararEdicao(final Long id) {
+//		try {
+//			this.editarLinha = (this.editarLinha == null && false);
+//			this.pagamentoLancAuxiliar = new PagamentoLancamento();
+//			this.pagamentoLancAuxiliar = this.service.findPagamentoById(id);
+//			this.projetoAux = null;
+//			if (this.pagamentoLancAuxiliar.getLancamentoAcao() != null && this.pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica() != null) {
+//				this.projetoAux = new Projeto();
+//				this.projetoAux = this.pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica().getProjeto();
+//				this.listaRubricas();
+//			}
+//		}
+//		catch (Exception ex) {}
+//	}
+
 	public Boolean getContaAlterada() {
 
 		if (pagamentoLancAuxiliar != null && conta != null && conta.getId() != null
@@ -825,40 +880,68 @@ public class LancamentoV2Controller implements Serializable {
 		listCategoriaFinanceira = service.buscarCategoriasFin();
 	}
 
-	public void prepararTarifa(Long id) {
-		tarifa = new TarifaBancaria();
-		pagamentoLancAuxiliar = new PagamentoLancamento();
-		pagamentoLancAuxiliar = service.findPagamentoById(id);
+//	public void prepararTarifa(Long id) {
+//		tarifa = new TarifaBancaria();
+//		pagamentoLancAuxiliar = new PagamentoLancamento();
+//		pagamentoLancAuxiliar = service.findPagamentoById(id);
+//
+//		tarifa.setContaPagador(pagamentoLancAuxiliar.getConta());
+//		tarifa.setContaRecebedor(service.getDefaultRecebedorTarifa());
+//		tarifa.setDataEmissao(pagamentoLancAuxiliar.getDataPagamento());
+//		tarifa.setDataPagamento(pagamentoLancAuxiliar.getDataPagamento());
+//		tarifa.setTipoParcelamento(TipoParcelamento.PARCELA_UNICA);
+//		tarifa.setQuantidadeParcela(1);
+//		tarifa.setDataDocumentoFiscal(pagamentoLancAuxiliar.getDataPagamento());
+//		// TODO pegar o lancamento do lancamento acao
+//		tarifa.setDescricao(
+//				"Tarifa referente ao lançamento: " + pagamentoLancAuxiliar.getLancamentoAcao().getLancamento().getId());
+//		tarifa.setLancamentosAcoes(new ArrayList<>());
+//		tarifa.setVersionLancamento("MODE01");
+//		tarifa.setValorTotalComDesconto(service.getTarifa());
+//		tarifa.setStatusCompra(StatusCompra.CONCLUIDO);
+//		tarifa.setIdTarifado(pagamentoLancAuxiliar.getLancamentoAcao().getLancamento().getId());
+//		tarifa.setDepesaReceita(DespesaReceita.DESPESA);
+//
+//		if (!pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica().getRubricaOrcamento().getOrcamento()
+//				.getFonte().getNome().equals("Fundo Amazônia")) {
+//			tarifa.getLancamentosAcoes().add(new LancamentoAcao(service.getTarifa(),
+//					pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica()));
+//
+//			tipoTarifa = "projeto";
+//		} else {
+//			tarifa.getLancamentosAcoes().add(new LancamentoAcao(service.getTarifa(), service.getRubricaDespesasAdm()));
+//			tipoTarifa = "doacao";
+//		}
+//
+//		// Rubrica Orcamento ID = 64
+//	}
 
-		tarifa.setContaPagador(pagamentoLancAuxiliar.getConta());
-		tarifa.setContaRecebedor(service.getDefaultRecebedorTarifa());
-		tarifa.setDataEmissao(pagamentoLancAuxiliar.getDataPagamento());
-		tarifa.setDataPagamento(pagamentoLancAuxiliar.getDataPagamento());
-		tarifa.setTipoParcelamento(TipoParcelamento.PARCELA_UNICA);
-		tarifa.setQuantidadeParcela(1);
-		tarifa.setDataDocumentoFiscal(pagamentoLancAuxiliar.getDataPagamento());
-		// TODO pegar o lancamento do lancamento acao
-		tarifa.setDescricao(
-				"Tarifa referente ao lançamento: " + pagamentoLancAuxiliar.getLancamentoAcao().getLancamento().getId());
-		tarifa.setLancamentosAcoes(new ArrayList<>());
-		tarifa.setVersionLancamento("MODE01");
-		tarifa.setValorTotalComDesconto(service.getTarifa());
-		tarifa.setStatusCompra(StatusCompra.CONCLUIDO);
-		tarifa.setIdTarifado(pagamentoLancAuxiliar.getLancamentoAcao().getLancamento().getId());
-		tarifa.setDepesaReceita(DespesaReceita.DESPESA);
-
-		if (!pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica().getRubricaOrcamento().getOrcamento()
-				.getFonte().getNome().equals("Fundo Amazônia")) {
-			tarifa.getLancamentosAcoes().add(new LancamentoAcao(service.getTarifa(),
-					pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica()));
-
-			tipoTarifa = "projeto";
-		} else {
-			tarifa.getLancamentosAcoes().add(new LancamentoAcao(service.getTarifa(), service.getRubricaDespesasAdm()));
-			tipoTarifa = "doacao";
+	public void prepararTarifa(final Long id) {
+		this.tarifa = new TarifaBancaria();
+		this.pagamentoLancAuxiliar = new PagamentoLancamento();
+		this.pagamentoLancAuxiliar = this.service.findPagamentoById(id);
+		this.tarifa.setContaPagador(this.pagamentoLancAuxiliar.getConta());
+		this.tarifa.setContaRecebedor(this.service.getDefaultRecebedorTarifa());
+		this.tarifa.setDataEmissao(this.pagamentoLancAuxiliar.getDataPagamento());
+		this.tarifa.setDataPagamento(this.pagamentoLancAuxiliar.getDataPagamento());
+		this.tarifa.setTipoParcelamento(TipoParcelamento.PARCELA_UNICA);
+		this.tarifa.setQuantidadeParcela(Integer.valueOf(1));
+		this.tarifa.setDataDocumentoFiscal(this.pagamentoLancAuxiliar.getDataPagamento());
+		this.tarifa.setDescricao("Tarifa referente ao lan\u00e7amento: " + this.pagamentoLancAuxiliar.getLancamentoAcao().getLancamento().getId());
+		this.tarifa.setLancamentosAcoes((List)new ArrayList());
+		this.tarifa.setVersionLancamento("MODE01");
+		this.tarifa.setValorTotalComDesconto(this.service.getTarifa());
+		this.tarifa.setStatusCompra(StatusCompra.CONCLUIDO);
+		this.tarifa.setIdTarifado(this.pagamentoLancAuxiliar.getLancamentoAcao().getLancamento().getId());
+		this.tarifa.setDepesaReceita(DespesaReceita.DESPESA);
+		if (!this.pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica().getRubricaOrcamento().getOrcamento().getFonte().getNome().equals("Fundo Amaz\u00f4nia")) {
+			this.tarifa.getLancamentosAcoes().add(new LancamentoAcao(this.service.getTarifa(), this.pagamentoLancAuxiliar.getLancamentoAcao().getProjetoRubrica()));
+			this.tipoTarifa = "projeto";
 		}
-
-		// Rubrica Orcamento ID = 64
+		else {
+			this.tarifa.getLancamentosAcoes().add(new LancamentoAcao(this.service.getTarifa(), this.service.getRubricaDespesasAdm()));
+			this.tipoTarifa = "doacao";
+		}
 	}
 
 	public void removerPagamento() {
@@ -894,27 +977,48 @@ public class LancamentoV2Controller implements Serializable {
 		}
 	}
 
+//	public void efetivarMultiplos() {
+//
+//		if (lancamentosSelected.isEmpty()) {
+//			FacesContext.getCurrentInstance().addMessage("msg_lancamento", new FacesMessage(FacesMessage.SEVERITY_WARN,
+//					"", "Selecione pelo menos um lançamento para efetivar!"));
+//			return;
+//		}
+//
+//		/*
+//		 * for (LancamentoAuxiliar la : lancamentosSelected) { if
+//		 * (la.getStatus().equals("EFETIVADO")) { continue; } }
+//		 */
+//
+//		// TODO
+//		if(ValidarAcesso.checkIfUserCanApprove(usuarioSessao.getUsuario(),
+//											   AprouveSigla.CONCILIACAO,
+//											   service)) {
+//			executeScript("PF('dialogValid').show();");
+//		} else {
+//			addMessage("Sem autorização:", "Você não tem autorização para efetivar esse lançamento.", FacesMessage.SEVERITY_ERROR);
+//		}
+//	}
+
 	public void efetivarMultiplos() {
-
-		if (lancamentosSelected.isEmpty()) {
-			FacesContext.getCurrentInstance().addMessage("msg_lancamento", new FacesMessage(FacesMessage.SEVERITY_WARN,
-					"", "Selecione pelo menos um lançamento para efetivar!"));
-			return;
+		for (final LancamentoAuxiliar la : this.lancamentosSelected) {
+			if (la.getStatus().equals("EFETIVADO")) {}
 		}
+		this.service.efetivarMultiplos((List)this.lancamentosSelected);
+		this.carregarLancamentos();
+		this.lancamentosSelected = new ArrayList<LancamentoAuxiliar>();
+	}
 
-		/*
-		 * for (LancamentoAuxiliar la : lancamentosSelected) { if
-		 * (la.getStatus().equals("EFETIVADO")) { continue; } }
-		 */
-		
-		// TODO
-		if(ValidarAcesso.checkIfUserCanApprove(usuarioSessao.getUsuario(), 
-											   AprouveSigla.CONCILIACAO, 
-											   service)) {
-			executeScript("PF('dialogValid').show();");
-		} else {
-			addMessage("Sem autorização:", "Você não tem autorização para efetivar esse lançamento.", FacesMessage.SEVERITY_ERROR);
+	public void desprovisionar() {
+		for (final LancamentoAuxiliar lancamento : this.lancamentosSelected) {
+			if (lancamento.getStatus().equals("EFETIVADO")) {
+				FacesContext.getCurrentInstance().addMessage("msg_lancamento", new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Existem um ou mais Lan\u00e7amentos Efetivados desmarque-os e tente novamente!"));
+				return;
+			}
 		}
+		this.service.desprovisionar((List)this.lancamentosSelected);
+		this.carregarLancamentos();
+		this.lancamentosSelected = new ArrayList<LancamentoAuxiliar>();
 	}
 
 	// TODO: Put it on the util package

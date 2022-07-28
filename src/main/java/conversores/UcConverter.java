@@ -1,44 +1,34 @@
 package conversores;
 
+import model.UnidadeConservacao;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.FacesConverter;
-import javax.inject.Named;
-
-import model.Localidade;
-import model.UnidadeConservacao;
-import repositorio.LocalRepositorio;
-import repositorio.UnidadeConservacaoRepositorio;
 import util.CDILocator;
+import repositorio.LocalRepositorio;
+import javax.faces.convert.FacesConverter;
+import javax.faces.convert.Converter;
 
-@Named(value = "uc_converter")
-@FacesConverter(forClass = UnidadeConservacao.class)
-public class UcConverter implements Converter {
-
-	private UnidadeConservacaoRepositorio repository;
+@FacesConverter("uc_converter")
+public class UcConverter implements Converter
+{
+	private LocalRepositorio repository;
 
 	public UcConverter() {
-		this.repository = CDILocator.getBean(UnidadeConservacaoRepositorio.class);
+		this.repository = (LocalRepositorio)CDILocator.getBean((Class)LocalRepositorio.class);
 	}
 
-	public Object getAsObject(FacesContext context, UIComponent component, String value) {
-
+	public Object getAsObject(final FacesContext context, final UIComponent component, final String value) {
 		UnidadeConservacao retorno = new UnidadeConservacao();
 		if (value != null) {
-			retorno = repository.findById(Long.parseLong(value));
+			retorno = this.repository.findUcByCodigo(new Long(value));
 		}
-		;
 		return retorno;
 	}
 
-	public String getAsString(FacesContext context, UIComponent component, Object value) {
-		if (value != null) {
-			if (((UnidadeConservacao) value).getId() != null) {
-				return ((UnidadeConservacao) value).getId().toString();
-			}
+	public String getAsString(final FacesContext context, final UIComponent component, final Object value) {
+		if (value != null && ((UnidadeConservacao)value).getId() != null) {
+			return ((UnidadeConservacao)value).getId().toString();
 		}
 		return null;
 	}
-
 }

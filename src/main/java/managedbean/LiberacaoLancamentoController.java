@@ -600,18 +600,8 @@ public class LiberacaoLancamentoController implements Serializable {
 	}
 
 	public void validarLancamentos() {
-		if(ValidarAcesso.checkIfUserCanApprove(usuarioSessao.getUsuario(),
-											   AprouveSigla.VALIDACAO,
-											   service)) {
-			
-			executeScript("PF('dialogValid').show();");
-			
-		} else {
-			addMessage("Sem autorização:", 
-					"Você não tem autorização para Validar.",
-					FacesMessage.SEVERITY_ERROR);
-		}
-		
+		this.service.validarLancamentos((List)this.lancamentosSelected);
+		this.carregarLancamentos();
 	}
 	
 	public void cleanInput() {
@@ -630,38 +620,49 @@ public class LiberacaoLancamentoController implements Serializable {
 		}
 	}
 
+//	public void invalidarLancamentos() {
+//		if (ValidarAcesso.checkIfUserCanApprove(usuarioSessao.getUsuario(),
+//												AprouveSigla.VALIDACAO,
+//												service)) {
+//			for (LancamentoAuxiliar lancamento : lancamentosSelected) {
+//				if (lancamento.getStatus().equals("EFETIVADO")) {
+//					FacesContext.getCurrentInstance().addMessage("msg_lancamento",
+//							new FacesMessage(FacesMessage.SEVERITY_WARN, "",
+//									"Existem um ou mais Lançamentos Efetivados desmarque-os e tente novamente!"));
+//					return;
+//				}
+//			}
+//
+//			executeScript("PF('dialogValid').show()");
+//
+//			if(ValidarAcesso.checkPasswordAprouve(usuarioSessao.getUsuario(),
+//												  AprouveSigla.VALIDACAO,
+//												  aprouve, service)) {
+//				service.invalidarLancamentos(lancamentosSelected);
+//				carregarLancamentos();
+//			} else {
+//				addMessage("Erro de validação:", "Senha incorreta!",
+//							FacesMessage.SEVERITY_WARN);
+//			}
+//
+//		}else {
+//			addMessage("Sem autorização:",
+//					"Você não tem autorização para Estornar.",
+//					FacesMessage.SEVERITY_ERROR);
+//		}
+//
+//	}
 	public void invalidarLancamentos() {
-		if (ValidarAcesso.checkIfUserCanApprove(usuarioSessao.getUsuario(),
-												AprouveSigla.VALIDACAO, 
-												service)) {
-			for (LancamentoAuxiliar lancamento : lancamentosSelected) {
-				if (lancamento.getStatus().equals("EFETIVADO")) {
-					FacesContext.getCurrentInstance().addMessage("msg_lancamento",
-							new FacesMessage(FacesMessage.SEVERITY_WARN, "",
-									"Existem um ou mais Lançamentos Efetivados desmarque-os e tente novamente!"));
-					return;
-				}
+		for (final LancamentoAuxiliar lancamento : this.lancamentosSelected) {
+			if (lancamento.getStatus().equals("EFETIVADO")) {
+				FacesContext.getCurrentInstance().addMessage("msg_lancamento", new FacesMessage(FacesMessage.SEVERITY_WARN, "", "Existem um ou mais Lan\u00e7amentos Efetivados desmarque-os e tente novamente!"));
+				return;
 			}
-			
-			executeScript("PF('dialogValid').show()");
-			
-			if(ValidarAcesso.checkPasswordAprouve(usuarioSessao.getUsuario(), 
-												  AprouveSigla.VALIDACAO, 
-												  aprouve, service)) {
-				service.invalidarLancamentos(lancamentosSelected);
-				carregarLancamentos();	
-			} else {
-				addMessage("Erro de validação:", "Senha incorreta!",
-							FacesMessage.SEVERITY_WARN);
-			}
-			
-		}else {
-			addMessage("Sem autorização:", 
-					"Você não tem autorização para Estornar.",
-					FacesMessage.SEVERITY_ERROR);
 		}
-		
+		this.service.invalidarLancamentos((List)this.lancamentosSelected);
+		this.carregarLancamentos();
 	}
+
 	
 	public void executeScript(String script) {
 		PrimeFaces current = PrimeFaces.current();

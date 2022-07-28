@@ -106,20 +106,22 @@
 				<h:panelGroup>
 
 					
-					<p:commandLink styleClass="btn btn-primary btn-sm fa fa-search"
+					<p:commandLink styleClass="btn btn-primary btn-sm "
 						onstart="start()" onsuccess="stop()" onerror="stop()"
 						action="#{recursosProjetoBean.filtraRecurosProjeto()}"
 						update="table-relacao"
 						style="color:#fff; margin: 8px 2px;">
+						<i class="fa fa-search"></i>
 						<span style="width: 40px; font-family: Arial">Buscar</span>
 					</p:commandLink>
 					
-					<p:commandLink styleClass="btn btn-primary btn-sm fa fa-remove"
+					<p:commandLink styleClass="btn btn-primary btn-sm "
 						title="Limpar" process="@this" onstart="start()"
 						onsuccess="stop()" onerror="stop()"
 						action="#{recursosProjetoBean.limpar()}"
 						update="form-lancamento-pagamento"
 						style="color:#fff; margin: 8px 2px;">
+						<i class="fa fa-remove"></i>
 						<span style="width: 40px; font-family: Arial">Limpar</span>
 					</p:commandLink>
 
