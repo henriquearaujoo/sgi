@@ -94,12 +94,13 @@
 				<f:facet name="header">
 
 					<h:panelGrid columns="2" styleClass="semBorda">
-						<p:commandLink styleClass="btn btn-default btn-sm fa fa-search"
+						<p:commandLink styleClass="btn btn-default btn-sm "
 							action="#{custo_pessoal_controller.prepararReembolso()}"
 							oncomplete="PF('dlg_cadastro_reembolso').show();"
 							onclick="start()" onsuccess="stop()" onerror="stop()"
 							update=":cadastro_reembolso"
 							style="color:#000; margin: 8px 2px;float:right">
+							<i class="fa fa-search" />
 							<span style="font-family: Arial">Reembolsar</span>
 						</p:commandLink>
 					</h:panelGrid>
