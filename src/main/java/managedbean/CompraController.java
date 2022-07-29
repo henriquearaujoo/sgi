@@ -608,7 +608,7 @@ public class CompraController implements Serializable {
 		// carregarMunicipiosDeCompra();
 		carregarProjetos();
 		carregarCategorias();
-		// getProjetoByUsuario();
+		getProjetoByUsuario();
 		// carregarItensDetalhados();
 		//filtro = new Filtro();
 
@@ -810,23 +810,35 @@ public class CompraController implements Serializable {
 
 	private List<UnidadeDeCompra> unidades = new ArrayList<>();
 
+//	public void addItem() {
+//
+//		itemCompra.setUnidade(itemCompra.getUnidadeM().getDescricao());
+//		itemCompra.setCompra(compra);
+//		compra.getItens().add(itemCompra);
+//
+//		if (!itemCompra.getProduto().getDescricao().equals("FRETE SEDEX")
+//				&& !itemCompra.getProduto().getDescricao().equals("FRETE PAC")) {
+//			if (verificaCategoria()) {
+//				addMessage("", "Você não pode inserir dois itens de segmentos diferentes.",
+//						FacesMessage.SEVERITY_ERROR);
+//				compra.getItens().remove(compra.getItens().size() - 1);
+//				return;
+//			}
+//		}
+//
+//		itemCompra = new ItemCompra();
+//	}
+
 	public void addItem() {
-
-		itemCompra.setUnidade(itemCompra.getUnidadeM().getDescricao());
-		itemCompra.setCompra(compra);
-		compra.getItens().add(itemCompra);
-
-		if (!itemCompra.getProduto().getDescricao().equals("FRETE SEDEX")
-				&& !itemCompra.getProduto().getDescricao().equals("FRETE PAC")) {
-			if (verificaCategoria()) {
-				addMessage("", "Você não pode inserir dois itens de segmentos diferentes.",
-						FacesMessage.SEVERITY_ERROR);
-				compra.getItens().remove(compra.getItens().size() - 1);
-				return;
-			}
+		this.itemCompra.setUnidade(this.itemCompra.getProduto().getUnidadeDeCompra().getDescricao());
+		this.itemCompra.setCompra(this.compra);
+		this.compra.getItens().add(this.itemCompra);
+		if (!this.itemCompra.getProduto().getDescricao().equals("FRETE SEDEX") && !this.itemCompra.getProduto().getDescricao().equals("FRETE PAC") && this.verificaCategoria()) {
+			this.addMessage("", "Voc\u00ea n\u00e3o pode inserir dois itens de segmentos diferentes.", FacesMessage.SEVERITY_ERROR);
+			this.compra.getItens().remove(this.compra.getItens().size() - 1);
+			return;
 		}
-
-		itemCompra = new ItemCompra();
+		this.itemCompra = new ItemCompra();
 	}
 
 	public void carregarUnidades() {
@@ -1045,24 +1057,41 @@ public class CompraController implements Serializable {
 
 	
 
+//	public String gerarCodigo() {
+//
+//		StringBuilder s = new StringBuilder("SC");
+//
+//		Calendar calendar = Calendar.getInstance();
+//		int ano = calendar.get(Calendar.YEAR);
+//		int mes = calendar.get(Calendar.MONTH) + 1;
+//		int dia = calendar.get(Calendar.DAY_OF_MONTH);
+//		int minuto = calendar.get(Calendar.MINUTE);
+//		int segundo = calendar.get(Calendar.SECOND);
+//		int milisegundo = calendar.get(Calendar.MILLISECOND);
+//
+//		s.append(String.valueOf(ano).substring(2));
+//		s.append(String.valueOf(mes));
+//		s.append(String.valueOf(dia));
+//		s.append(String.valueOf(minuto));
+//		s.append(String.valueOf(segundo));
+//
+//		return s.toString();
+//	}
+
 	public String gerarCodigo() {
-
-		StringBuilder s = new StringBuilder("SC");
-
-		Calendar calendar = Calendar.getInstance();
-		int ano = calendar.get(Calendar.YEAR);
-		int mes = calendar.get(Calendar.MONTH) + 1;
-		int dia = calendar.get(Calendar.DAY_OF_MONTH);
-		int minuto = calendar.get(Calendar.MINUTE);
-		int segundo = calendar.get(Calendar.SECOND);
-		int milisegundo = calendar.get(Calendar.MILLISECOND);
-
+		final StringBuilder s = new StringBuilder("SC");
+		final Calendar calendar = Calendar.getInstance();
+		final int ano = calendar.get(1);
+		final int mes = calendar.get(2) + 1;
+		final int dia = calendar.get(5);
+		final int minuto = calendar.get(12);
+		final int segundo = calendar.get(13);
+		final int milisegundo = calendar.get(14);
 		s.append(String.valueOf(ano).substring(2));
 		s.append(String.valueOf(mes));
 		s.append(String.valueOf(dia));
 		s.append(String.valueOf(minuto));
 		s.append(String.valueOf(segundo));
-
 		return s.toString();
 	}
 	

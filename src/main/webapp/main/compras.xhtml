@@ -899,7 +899,7 @@
 													<p:panelGrid columns="4" styleClass="semBorda">
 
 														<h:panelGrid id="projeto" columns="1">
-															<h:outputText value="Projetos1: " />
+															<h:outputText value="Projetos: " />
 															<p:selectOneMenu value="#{compraController.projetoAux}"
 																			 style="width:180px" filter="true"
 																			 filterMatchMode="contains" converter="projetoConverter">
@@ -1013,11 +1013,12 @@
 															<h:outputText value=":: " />
 															<p:commandLink onclick="start()" id="teste2"
 																		   onerror="stop()" oncomplete="stop()"
-																		   styleClass="btn btn-success btn-xm fa fa-save"
+																		   styleClass="btn btn-success btn-xm "
 																		   process="lancamento_acao" type="button"
 																		   update="tab_rubrica_proejto"
 																		   action="#{compraController.adicionarNovaAcao()}"
 																		   style="color:#fff; margin: 2px 2px; height:28px">
+																<i class="fa fa-save"></i>
 																<span style="font-family: Arial">Adicionar</span>
 															</p:commandLink>
 														</h:panelGrid>

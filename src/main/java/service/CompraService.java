@@ -2,6 +2,7 @@ package service;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -339,7 +340,8 @@ public class CompraService implements Serializable {
 				if ((compra.getCategoriaDespesaClass().getNome().equals("FRETE SEDEX") || compra.getCategoriaDespesaClass().getNome().equals("FRETE PAC")) && compra.getItens().size() > 1) {
 					compra.setCategoriaDespesaClass(compra.getItens().get(1).getProduto().getCategoriaDespesa());
 				}
-				this.repositorio.salvarCompra((Lancamento)compra, usuario);
+				compra.getLancamentosAcoes().forEach(acao -> acao.setValor(BigDecimal.valueOf(0)));
+				this.repositorio.salvarCompra(compra, usuario);
 				this.addMessage("", "Salvo com sucesso!!!", FacesMessage.SEVERITY_INFO);
 				return true;
 			}
@@ -383,6 +385,7 @@ public class CompraService implements Serializable {
 						FacesMessage.SEVERITY_INFO);
 			} else {
 				compra.setStatusCompra(StatusCompra.PENDENTE_APROVACAO);
+				compra.getLancamentosAcoes().forEach(acao -> acao.setValor(BigDecimal.valueOf(0)));
 				compra = repositorio.salvarCompra(compra, usuario);
 				addMessage("", "Salvo com sucesso.", FacesMessage.SEVERITY_INFO);
 			}
