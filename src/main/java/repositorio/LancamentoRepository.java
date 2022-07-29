@@ -1582,17 +1582,37 @@ public class LancamentoRepository implements Serializable {
 		return query.getResultList();
 	}
 
-	public Compra salvarCompra(Lancamento lancamento, User usuario) {
+//	public Compra salvarCompra(Lancamento lancamento, User usuario) {
+//
+//		String siglaPrivilegio = "NEW";
+//		if (lancamento.getId() != null) {
+//			siglaPrivilegio = "EDIT";
+//		}
+//
+//		lancamento = this.manager.merge(lancamento);
+//		lancamento.setNumeroDocumento(lancamento.getId().toString());
+//
+//		logRepositorio.saveLogLancamento(lancamento, usuario, siglaPrivilegio);
+//
+//		return (Compra) lancamento;
+//	}
 
-		String siglaPrivilegio = "NEW";
-		if (lancamento.getId() != null) {
-			siglaPrivilegio = "EDIT";
-		}
-		
+	public Compra salvarCompra(Lancamento lancamento, final User usuario) {
 		lancamento = this.manager.merge(lancamento);
 		lancamento.setNumeroDocumento(lancamento.getId().toString());
-		
-		logRepositorio.saveLogLancamento(lancamento, usuario, siglaPrivilegio);
+		final LogStatus log = new LogStatus();
+		log.setUsuario(usuario);
+		log.setData(new Date());
+		log.setSigla(lancamento.getGestao().getSigla());
+		if (lancamento.getId() != null) {
+			log.setSiglaPrivilegio("EDIT");
+		}
+		else {
+			log.setStatusLog(StatusCompra.N_INCIADO);
+			log.setSiglaPrivilegio("NEW");
+		}
+		log.setLancamento(lancamento);
+		this.manager.merge((Object)log);
 
 		return (Compra) lancamento;
 	}
