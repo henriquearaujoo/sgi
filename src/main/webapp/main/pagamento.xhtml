@@ -233,28 +233,31 @@
 
 
                             <h:panelGroup>
-                                <p:commandLink styleClass="btn btn-primary btn-sm fa fa-search"
+                                <p:commandLink styleClass="btn btn-primary btn-sm "
                                                ajax="false" action="#{pagamentoController.filtrar()}"
                                                onclick="start()" onsuccess="stop()" onerror="stop()"
                                                update=":form-listagem:table-compras"
                                                style="color:#fff; margin: 8px 2px;">
+                                    <i class="fa fa-search"/>
                                     <span style="font-family: Arial;">Procurar</span>
                                 </p:commandLink>
 
-                                <p:commandLink styleClass="btn btn-danger btn-sm fa fa-trash-o"
+                                <p:commandLink styleClass="btn btn-danger btn-sm "
                                                action="#{pagamentoController.limparFiltro()}"
                                                update=":form-listagem" process="@this"
                                                style="color:#fff; margin: 8px 2px;">
+                                    <i class="fa fa-trash-o"/>
                                     <span style="font-family: Arial;">Limpar filtro</span>
                                 </p:commandLink>
 
 
                                 <p:commandLink
-                                        styleClass="btn btn-success btn-sm fa fa-dollar"
+                                        styleClass="btn btn-success btn-sm "
                                         style="color:#fff;margin: 8px 2px;" onclick="start()"
                                         onsuccess="stop()" onerror="stop()"
                                         action="#{pagamentoController.iniciarNovoPagamento()}"
                                         update="panel-content" title="Adicionar Pagamento">
+                                    <i class="fa fa-dollar"/>
                                     <span style="font-family: Arial;">Novo</span>
                                 </p:commandLink>
 
@@ -347,8 +350,9 @@
                             <p:commandLink title="Notas"
                                            oncomplete="PF('dialog_arquivo').show();" update=":form-arquivo"
                                            action="#{pagamentoController.carregarArquivos()}"
-                                           styleClass="glyphicon glyphicon-file" process="@this"
+                                           process="@this"
                                            style="font-size:14px;margin-right:9px;margin-left:9px;">
+                                <i class="glyphicon glyphicon-file" />
 
                                 <f:setPropertyActionListener value="#{pagamento}"
                                                              target="#{pagamentoController.lancamentoAux}"/>
@@ -356,19 +360,19 @@
                             </p:commandLink>
 
 
-                            <p:commandLink title="Imprimir"
-                                           styleClass="glyphicon glyphicon-print" target="_blank"
+                            <p:commandLink title="Imprimir" target="_blank"
                                            style="font-size:14px;margin-left:9px;" update="panel-content"
                                            ajax="false" action="#{pagamentoController.imprimir()}">
+                                <i class="glyphicon glyphicon-print"/>
                                 <f:setPropertyActionListener value="#{pagamento}"
                                                              target="#{pagamentoController.pagamento}"/>
                             </p:commandLink>
 
                             <p:commandLink title="Mudar Status"
-                                           styleClass="glyphicon glyphicon-cog"
                                            style="font-size:14px;margin-left:9px;" update="formDialogAlterarStatus"
                                            oncomplete="PF('dialogAlterarStatus').show()"
                                            rendered="#{pagamentoController.usuarioSessao.usuario.perfil.descricao == 'admin'}">
+                                <i class="glyphicon glyphicon-cog"/>
                                 <f:setPropertyActionListener value="#{pagamento}"
                                                              target="#{pagamentoController.pagamento}"/>
                             </p:commandLink>
